@@ -7,26 +7,25 @@ to change behaviour.
 > **Merging into `main` deploys panoptes.watch to production** (Cloudflare Pages).
 > Everything you merge is public within minutes. Act accordingly.
 
-**Authority order:** this runbook → `AUTHORING.md` (site content rules, which are
-non-negotiable) → `seo/business-observability/config.json` → `AGENT_HANDOFF.md`
-(editorial rules) → `briefs.json` → `publication_calendar.csv` (intended order only).
+**Authority order:** this runbook → `AUTHORING.md` (site content rules and the
+"Blog" section, non-negotiable) → `seo/business-observability/config.json` →
+`PRODUCT_TRUTH.md` → `AGENT_HANDOFF.md` (editorial rules) → `briefs.json` →
+`publication_calendar.csv` (intended order only).
 
-Where the handoff and this runbook differ, this runbook wins. In particular:
-**URLs are `/resources/<slug>/`, not `/blog/<slug>/`** (`config.json` → `url_map`),
-and BO-01 is already `covered` by the existing `/business-observability/` page, which
-is the pillar for every "link to BO-01" instruction.
+BO-01 is already `covered` by the existing `/business-observability/` page, which is
+the pillar for every "link to BO-01" instruction.
 
 ## Files
 
 | Path | Purpose |
 |---|---|
-| `seo/business-observability/config.json` | Domain, voice, url_map, overlap watchlist |
-| `seo/business-observability/records/BO-XX.json` | One state record per brief (JSON contract; `markdown` holds the `.astro` source path) |
-| `src/pages/resources/<slug>.astro` | The article (uses `ArticleLayout`) |
-| `src/data/site.ts` → `RESOURCES` | Register every new article here (append at the end) |
-| `src/pages/resources/index.astro` → `META` | Hub card for every new article |
+| `seo/business-observability/config.json` | Voice, byline, categories, url_map, overlap watchlist |
+| `seo/business-observability/PRODUCT_TRUTH.md` | What may be said about Panoptes (proposed; design intent only) |
+| `seo/business-observability/records/BO-XX.json` | One state record per brief (JSON contract) |
+| `content/blog/<slug>.md` | The article. Adding it is the whole publishing step |
+| `content/blog/_template.md`, `src/lib/blog-schema.ts` | Front-matter template and schema (unknown keys fail the build) |
 | `seo/business-observability/RUN_LOG.md` | Append-only log, one section per run |
-| `scripts/validate_seo.py` | Campaign gate; must pass with the build before merging |
+| `scripts/validate_seo.py` | Campaign gate |
 
 Record `status` values: `queued` → `ready` (merged into main) → `live` (canonical
 URL fetched and confirmed). Also `held` (failed QA; `hold_reason`; retried later),
@@ -46,7 +45,8 @@ site page already serves this intent, `covered_by`).
 4. **Pick work.** Next up-to-2 briefs by `priority_order` with status `held` or
    `queued` (held first). Cannibalisation check first:
    - Read every live page listed for that brief in `config.json` →
-     `cannibalisation_watchlist`, and skim `src/pages/resources/` for overlap.
+     `cannibalisation_watchlist`, plus the existing `content/blog/` posts and
+     `src/pages/resources/` guides.
    - WebSearch the keyword; compare intent with sibling briefs (highest-risk:
      BO-02/04/10/11 and BO-06/09).
    - If an existing page already serves the intent, set `covered` + `covered_by`.
@@ -55,56 +55,68 @@ site page already serves this intent, `covered_by`).
      Never write near-duplicates to hit quota.
 5. **Research.** Fetch every `external_references` URL in the brief. Cite only URLs
    that resolved **and** support the sentence they are attached to; list them in
-   `validated_external_urls` (exact strings used in `href`). Read
-   `PRODUCT_TRUTH.md` (and `config.json` → `positioning_note`) before saying
-   anything about Panoptes. It is proposed, not validated: capabilities are design
-   intent only. Follow
-   AUTHORING.md rules 1–5 (no invented customers, stats, results; unconfirmed
-   capabilities in "designed to" language; third-party products only as examples).
-6. **Write** `src/pages/resources/<slug>.astro`. Copy the structure of
-   `src/pages/resources/business-process-monitoring.astro`:
-   - `ArticleLayout` props: `title` (the H1, sentence case), `metaTitle`
-     (~50–60 chars), `description` (~140–160 chars), `eyebrow`, `dek`,
-     `related` (2–3 hrefs that exist in `RESOURCES`), `published` (today, ISO).
-   - Body is HTML: `<p>`, `<h2>` per brief outline item (sentence case), `<h3>`,
-     `<table>`, `<div class="callout">`, `<ul>`. No `<h1>`. FAQs as an `<h2>` with
-     `<h3>` questions (3–5, genuine questions).
+   `validated_external_urls` (exact strings used in links). Read `PRODUCT_TRUTH.md`
+   and `config.json` → `positioning_note` before saying anything about Panoptes. It
+   is proposed, not validated: capabilities are design intent only. Follow
+   AUTHORING.md content rules 1–9.
+6. **Write** `content/blog/<last segment of url_map path>.md` from
+   `content/blog/_template.md` (delete the template's comments). Front matter:
+
+   ```yaml
+   ---
+   id: "BO-03"
+   title: "SEO title, ~50-60 chars"
+   meta_description: "~140-160 chars; also the standfirst and card text"
+   slug: "/blog/business-observability-tools/"
+   canonical_url: "https://panoptes.watch/blog/business-observability-tools/"
+   primary_keyword: "business observability tools"
+   author: "Katy Simmons"            # config.json → author_byline
+   reviewed: "YYYY-MM-DD"            # today
+   published: "YYYY-MM-DD"           # today
+   category: "Buying and evaluation" # one of config.json → categories
+   tags: ["…", "…"]                  # 2–5, reuse existing tags where possible
+   ---
+   ```
+
+   No other keys unless the template allows them (`cover` needs a real file in
+   `public/blog/` plus `image_alt`; omit both unless you made one).
+   - **Voice:** `config.json` → `brand_voice` and `brand_voice_guardrails`. Modern,
+     upbeat and AI-first in perspective, but every claim concrete and sourced.
+   - Body: exactly one `# H1` (the brief's working H1, sentence case), then a `##`
+     per brief outline item, `###` below. FAQs as `## Frequently asked questions`
+     with 3–5 `###` genuine questions.
    - Answer the search intent in the first 100 words. Hit the brief word range.
-   - The brief's original-value asset as an HTML table/list, or an SVG in
-     `public/diagrams/` that follows AUTHORING.md's SVG conventions, shown with
-     `RbDiagram` like the template. Illustrative data must be labelled as such.
-   - Internal links: 3–5, relative, trailing slash, only to routes that exist in
-     `src/pages` (existing pages and earlier campaign articles are all fine).
-     Include `/business-observability/` where natural, plus `/demo/` for a CTA.
-     If a brief's link target is not written yet, add a `next_link_update_tasks`
-     entry `{"target": "BO-XX", "anchor": "...", "section": "..."}`.
-   - British English. No generic SaaS filler.
-7. **Register** the article: append `{ label, href, icon }` to `RESOURCES` in
-   `src/data/site.ts` (icon from `public/icons/ui/`), and add a `META` entry in
-   `src/pages/resources/index.astro` (title, desc, mins, group, topics).
-8. **Link maintenance.** For any record whose `next_link_update_tasks` target now
-   exists as a page, add the contextual link in that article and remove the task.
-   Add natural reciprocal links from older campaign articles to the new ones.
-9. **QA.** Run every check from AGENT_HANDOFF.md step 7 that you can actually do.
+   - The brief's original-value asset as a Markdown table/list, or an SVG in
+     `public/diagrams/` following AUTHORING.md's SVG conventions. Label
+     illustrative data and hypothetical examples as such.
+   - Internal links: 3–5, relative, trailing slash, only to routes that exist
+     (`src/pages/**` or published `content/blog/*.md`). Include
+     `/business-observability/` where natural and `/demo/` for the CTA. If a
+     brief's link target is not written yet, add a `next_link_update_tasks` entry
+     `{"target": "BO-XX", "anchor": "...", "section": "..."}` instead.
+7. **Link maintenance.** For any record whose `next_link_update_tasks` target now
+   exists, add the contextual link in that article (set `updated:` to today) and
+   remove the task. Add natural reciprocal links from older campaign posts.
+8. **QA.** Run every check from AGENT_HANDOFF.md step 7 that you can actually do.
    Record each in `qa_findings` as `{"check", "result": "pass|fail|not_run", "note"}`.
    Anything not performed is `not_run` with the reason, never `pass`. If a claim is
    unsupported or a check fails and you cannot fix it, set `held` with
-   `hold_reason`, and remove that article's page and registrations from this run.
-10. **Update records** for shipped articles: `status: ready`,
-    `markdown: "src/pages/resources/<slug>.astro"`, `metadata` (title, metaTitle,
-    description, slug, published, word_count), `canonical_url`
-    (`https://panoptes.watch` + url_map path), `publish_timestamp` (ISO 8601 UTC),
-    `validated_internal_urls`.
-11. **Log.** Append a section to `RUN_LOG.md`: date, shipped/held/merged/covered,
+   `hold_reason` and remove that article file from this run.
+9. **Update records** for shipped articles: `status: ready`,
+   `markdown: "content/blog/<slug>.md"`, `metadata` (title, meta_description, h1,
+   slug, author, category, tags, word_count), `canonical_url`, `publish_timestamp`
+   (ISO 8601 UTC), `validated_internal_urls`.
+10. **Log.** Append a section to `RUN_LOG.md`: date, shipped/held/merged/covered,
     link updates, checks not run, human follow-ups.
-12. **Gate.** All three must pass. Fix the content until they do; never edit the
-    validator, the build scripts or the link checker to get a pass.
+11. **Gate.** All of these must pass. Fix the content until they do; never edit
+    the validator, tests, schema, build scripts or link checker to get a pass.
     ```
     python3 scripts/validate_seo.py
+    npm test
     npm run build
     npm run check:links
     ```
-13. **Ship (auto-merge).** Commit, `git push -u origin seo/run-<date>`, open a PR to
+12. **Ship (auto-merge).** Commit, `git push -u origin seo/run-<date>`, open a PR to
     `main` titled `SEO: <ids> (<date>)` with the RUN_LOG section as the body, then
     squash-merge it with the GitHub `merge_pull_request` tool and delete the branch.
     If the merge fails, rebase on `origin/main`, re-run the gate, retry once; if it
@@ -113,9 +125,9 @@ site page already serves this intent, `covered_by`).
 ## Hard limits
 
 - At most 2 new articles per run. Shipping 0 or 1 is fine; quality over quota.
-- Only touch: `src/pages/resources/<new or campaign slug>.astro`, `RESOURCES` in
-  `src/data/site.ts`, `META` in `src/pages/resources/index.astro`, new SVGs in
-  `public/diagrams/`, and `seo/business-observability/` (except this runbook, `PRODUCT_TRUTH.md`,
-  `briefs.json`, `AGENT_HANDOFF.md` and `config.json`, which are human-owned).
-  Do not edit existing non-campaign pages, layouts, components or styles.
+- Only touch: `content/blog/<campaign slug>.md`, new SVGs in `public/diagrams/`
+  or images in `public/blog/`, and `seo/business-observability/` (except this
+  runbook, `PRODUCT_TRUTH.md`, `briefs.json`, `AGENT_HANDOFF.md` and `config.json`,
+  which are human-owned). Do not edit pages, layouts, components, styles, tests
+  or non-campaign blog posts.
 - Never claim a page is live, a test was run, or a source says something it does not.

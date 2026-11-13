@@ -2,16 +2,16 @@
 """Validate the business-observability SEO campaign before merging to main.
 
 Merging to main deploys panoptes.watch, so this is a publishing gate. It checks
-the per-article records (JSON contract), each shipped Astro article, internal
-links against real routes in src/pages, external links against the validated
-list, hub/nav registration, and the 2-per-day cap. Run it together with
-`npm run build && npm run check:links`. Exit code 1 on any error. Stdlib only.
+the per-article records (JSON contract), each shipped Markdown article in
+content/blog/, internal links against real routes and blog posts, external links
+against the validated list, byline/category, and the 2-per-day cap. The site's
+own `npm test` and `npm run build` enforce the front-matter schema
+(src/lib/blog-schema.ts); run them too. Exit code 1 on any error. Stdlib only.
 """
 import json
 import re
 import sys
 from collections import Counter
-from html import unescape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -23,14 +23,18 @@ RECORD_KEYS = {
     "validated_internal_urls", "qa_findings", "canonical_url", "publish_timestamp",
     "next_link_update_tasks", "hold_reason", "merged_into", "covered_by", "owner",
 }
+FRONT_KEYS = {
+    "id", "title", "meta_description", "slug", "canonical_url", "primary_keyword",
+    "author", "reviewed", "published", "category",
+}
 QA_RESULTS = {"pass", "fail", "not_run"}
-BANNED = ["TODO", "lorem ipsum", "REPLACE_", "unlock insights", "supercharge", "seamless"]
+BANNED = ["TODO", "lorem ipsum", "REPLACE_", "unlock insights", "supercharge", "seamless", "revolutionise"]
 
 errors, warnings = [], []
 err, warn = errors.append, warnings.append
 
 
-def routes():
+def routes(content_dir):
     out = set()
     for p in PAGES.rglob("*.astro"):
         rel = "/" + p.relative_to(PAGES).as_posix()[:-len(".astro")]
@@ -38,26 +42,33 @@ def routes():
             continue
         rel = re.sub(r"/index$", "/", rel)
         out.add(rel if rel.endswith("/") else rel + "/")
+    for p in content_dir.glob("*.md"):
+        if not p.name.startswith("_"):
+            fm, _ = parse_front_matter(p.read_text())
+            if not (fm or {}).get("draft") == "true":
+                out.add(f"/blog/{p.stem}/")
     return out
 
 
-def prop(src, name):
-    m = re.search(r'\b%s="([^"]*)"' % name, src)
-    return unescape(m.group(1)) if m else None
+def parse_front_matter(text):
+    if not text.startswith("---\n"):
+        return None, text
+    end = text.find("\n---\n", 4)
+    if end == -1:
+        return None, text
+    fm = {}
+    for line in text[4:end].splitlines():
+        m = re.match(r'^([a-z_]+):\s*(.*?)\s*$', line)
+        if m:
+            v = m.group(2)
+            if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
+                v = v[1:-1]
+            fm[m.group(1)] = v
+    return fm, text[end + 5:]
 
 
-def body_of(src):
-    # drop Astro frontmatter, then keep what is inside <ArticleLayout ...> ... </ArticleLayout>
-    src = re.sub(r"\A---.*?\n---\n", "", src, flags=re.S)
-    m = re.search(r"<ArticleLayout\b.*?>(.*)</ArticleLayout>", src, flags=re.S)
-    return m.group(1) if m else ""
-
-
-def words(html):
-    text = re.sub(r"<(script|style)\b.*?</\1>", " ", html, flags=re.S)
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = re.sub(r"\{[^{}]*\}", " ", text)
-    return len(re.findall(r"[A-Za-z0-9][\w'’-]*", unescape(text)))
+def strip_code(body):
+    return re.sub(r"```.*?```", "", body, flags=re.S)
 
 
 def main():
@@ -66,9 +77,10 @@ def main():
     origin = config["canonical_base"].rstrip("/")
     url_map = config["url_map"]
     cap = config.get("max_articles_per_run", 2)
-    route_set = routes()
-    site_ts = (ROOT / "src/data/site.ts").read_text()
-    hub = (PAGES / "resources/index.astro").read_text()
+    content_dir = ROOT / config.get("content_dir", "content/blog")
+    author = config.get("author_byline")
+    categories = set(config.get("categories") or [])
+    route_set = routes(content_dir)
 
     records = {}
     for path in sorted((CAMPAIGN / "records").glob("BO-*.json")):
@@ -110,44 +122,58 @@ def main():
 
         # ---- shipped article checks ----
         path = url_map[rid]
+        file_slug = path.strip("/").split("/")[-1]
+        expected_file = f"{config.get('content_dir', 'content/blog')}/{file_slug}.md"
         for k in ("markdown", "metadata", "canonical_url", "publish_timestamp"):
             if not rec.get(k):
                 err(f"{rid}: status {st} but {k} empty")
         if rec.get("canonical_url") != origin + path:
             err(f"{rid}: canonical_url {rec.get('canonical_url')} != {origin + path}")
+        if rec.get("markdown") != expected_file:
+            err(f"{rid}: markdown should be {expected_file!r}, got {rec.get('markdown')!r}")
         if not rec.get("qa_findings"):
             err(f"{rid}: shipped without qa_findings")
         if any(f.get("result") == "fail" for f in rec.get("qa_findings") or []):
             err(f"{rid}: shipped with a failing QA check")
         if (rec.get("publish_timestamp") or "")[:10]:
             per_day[rec["publish_timestamp"][:10]] += 1
-        if path not in route_set:
-            err(f"{rid}: no page for {path} in src/pages")
-            continue
-        expected_file = f"src/pages{path.rstrip('/')}.astro"
-        if rec.get("markdown") != expected_file:
-            err(f"{rid}: markdown should be {expected_file!r}, got {rec.get('markdown')!r}")
-        src = (ROOT / expected_file).read_text()
-        if "ArticleLayout" not in src:
-            err(f"{rid}: article does not use ArticleLayout")
-        for bad in BANNED:
-            if bad.lower() in src.lower():
-                err(f"{rid}: contains banned/placeholder text {bad!r}")
-        title, meta_title, desc = prop(src, "title"), prop(src, "metaTitle"), prop(src, "description")
-        if not title or not desc or not prop(src, "dek") or not prop(src, "published"):
-            err(f"{rid}: ArticleLayout needs title, description, dek and published")
-        seo_title = meta_title or title or ""
-        if not 30 <= len(seo_title) <= 75:
-            warn(f"{rid}: SEO title length {len(seo_title)}")
-        if desc and not 110 <= len(desc) <= 170:
-            warn(f"{rid}: meta description length {len(desc)}")
 
-        body = body_of(src)
-        if re.search(r"<h1\b", body):
-            err(f"{rid}: body must not contain <h1> (ArticleLayout renders it)")
-        if len(re.findall(r"<h2\b", body)) < 3:
-            err(f"{rid}: fewer than 3 <h2> sections")
-        n = words(body)
+        md = ROOT / expected_file
+        if not md.is_file():
+            err(f"{rid}: {expected_file} not found")
+            continue
+        text = md.read_text()
+        fm, body = parse_front_matter(text)
+        if fm is None:
+            err(f"{rid}: missing front matter")
+            continue
+        if FRONT_KEYS - fm.keys():
+            err(f"{rid}: front matter missing {sorted(FRONT_KEYS - fm.keys())}")
+        if fm.get("id") != rid:
+            err(f"{rid}: front matter id {fm.get('id')!r}")
+        if fm.get("slug") != path or fm.get("canonical_url") != origin + path:
+            err(f"{rid}: front matter slug/canonical_url do not match {path}")
+        if fm.get("draft") == "true":
+            err(f"{rid}: shipped record but article is a draft")
+        if author and fm.get("author") != author:
+            err(f"{rid}: author {fm.get('author')!r} should be {author!r}")
+        if categories and fm.get("category") not in categories:
+            err(f"{rid}: category {fm.get('category')!r} not in config categories")
+        for bad in BANNED:
+            if bad.lower() in text.lower():
+                err(f"{rid}: contains banned/placeholder text {bad!r}")
+        tl, ml = len(fm.get("title", "")), len(fm.get("meta_description", ""))
+        if not 30 <= tl <= 70:
+            warn(f"{rid}: SEO title length {tl}")
+        if not 110 <= ml <= 170:
+            warn(f"{rid}: meta description length {ml}")
+
+        prose = strip_code(body)
+        if len(re.findall(r"^# \S", prose, flags=re.M)) != 1:
+            err(f"{rid}: expected exactly one '# ' H1")
+        if len(re.findall(r"^## \S", prose, flags=re.M)) < 3:
+            err(f"{rid}: fewer than 3 '## ' sections")
+        n = len(re.findall(r"\b[\w'’-]+\b", re.sub(r"\]\([^)]*\)", "]", prose)))
         lo, hi = (int(x) for x in briefs[rid]["target_length_words"].split("-"))
         if n < lo * 0.85 or n > hi * 1.25:
             err(f"{rid}: {n} words, brief range {lo}-{hi}")
@@ -157,7 +183,8 @@ def main():
         validated_ext = set(rec.get("validated_external_urls") or [])
         if not validated_ext:
             warn(f"{rid}: no validated external URLs")
-        for href in re.findall(r'href="([^"]+)"', body):
+        links = re.findall(r"\]\(([^)\s]+)", prose) + re.findall(r'href="([^"]+)"', prose)
+        for href in links:
             if href.startswith(("http://", "https://")):
                 if href.startswith(origin):
                     err(f"{rid}: use a relative internal link, not {href}")
@@ -171,11 +198,6 @@ def main():
                 err(f"{rid}: internal link without trailing slash: {href}")
             elif target not in route_set:
                 err(f"{rid}: internal link to non-existent page {href}")
-
-        if f"href: '{path}'" not in site_ts:
-            err(f"{rid}: {path} not registered in RESOURCES (src/data/site.ts)")
-        if f"'{path}'" not in hub:
-            err(f"{rid}: {path} has no META entry in src/pages/resources/index.astro")
 
     for day, n in per_day.items():
         if n > cap:
