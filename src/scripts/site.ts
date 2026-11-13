@@ -40,16 +40,37 @@ const open = (t: HTMLButtonElement) => {
   const p = document.getElementById(t.getAttribute('aria-controls')!); if (p) p.hidden = false;
 };
 let hoverTimer: number | undefined;
+// A pointer user who hovers then clicks would otherwise close the menu they just opened.
+let hoverOpenedAt = 0;
 triggers.forEach((t, i) => {
   const item = t.closest('[data-nav-item]')!;
-  t.addEventListener('click', () => (t.getAttribute('aria-expanded') === 'true' ? closeAll() : open(t)));
+  const panel = document.getElementById(t.getAttribute('aria-controls')!)!;
+  const links = () => $$<HTMLAnchorElement>('a', panel);
+  t.addEventListener('click', () => {
+    const expanded = t.getAttribute('aria-expanded') === 'true';
+    if (expanded && Date.now() - hoverOpenedAt < 600) return;
+    if (expanded) closeAll(); else open(t);
+  });
   t.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); open(t); $<HTMLAnchorElement>('a', document.getElementById(t.getAttribute('aria-controls')!)!)?.focus(); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); open(t); links()[0]?.focus(); }
     if (e.key === 'ArrowRight') { e.preventDefault(); triggers[(i + 1) % triggers.length].focus(); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); triggers[(i - 1 + triggers.length) % triggers.length].focus(); }
   });
+  // Up/Down/Home/End move between links inside an open panel; Esc (below) closes it and returns focus to the trigger.
+  panel.addEventListener('keydown', (e) => {
+    const list = links(); const at = list.indexOf(document.activeElement as HTMLAnchorElement);
+    let n = -1;
+    if (e.key === 'ArrowDown') n = Math.min(at + 1, list.length - 1);
+    if (e.key === 'ArrowUp') { if (at <= 0) { e.preventDefault(); t.focus(); return; } n = at - 1; }
+    if (e.key === 'Home') n = 0;
+    if (e.key === 'End') n = list.length - 1;
+    if (n > -1) { e.preventDefault(); list[n].focus(); }
+  });
   if (matchMedia('(hover: hover)').matches) {
-    item.addEventListener('mouseenter', () => { clearTimeout(hoverTimer); hoverTimer = window.setTimeout(() => open(t), 80); });
+    item.addEventListener('mouseenter', () => {
+      clearTimeout(hoverTimer);
+      hoverTimer = window.setTimeout(() => { if (t.getAttribute('aria-expanded') !== 'true') { open(t); hoverOpenedAt = Date.now(); } }, 80);
+    });
     item.addEventListener('mouseleave', () => { clearTimeout(hoverTimer); hoverTimer = window.setTimeout(() => closeAll(), 160); });
   }
   item.addEventListener('focusout', (e) => { if (!item.contains((e as FocusEvent).relatedTarget as Node)) { t.setAttribute('aria-expanded', 'false'); const p = document.getElementById(t.getAttribute('aria-controls')!); if (p) p.hidden = true; } });
@@ -57,7 +78,7 @@ triggers.forEach((t, i) => {
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   const openT = triggers.find((t) => t.getAttribute('aria-expanded') === 'true');
-  if (openT) { closeAll(); openT.focus(); }
+  if (openT) { closeAll(); openT.focus(); return; }
   if (burger?.getAttribute('aria-expanded') === 'true') { toggleMobile(false); burger.focus(); }
 });
 document.addEventListener('click', (e) => { if (!(e.target as Element).closest('[data-nav-item]')) closeAll(); });
@@ -72,6 +93,8 @@ function toggleMobile(force?: boolean) {
   burger.setAttribute('aria-label', next ? 'Close menu' : 'Open menu');
   mobileNav.hidden = !next;
   document.body.style.overflow = next ? 'hidden' : '';
+  // Content behind the open menu is covered: keep it out of the tab order and accessibility tree.
+  $$('main, .site-footer').forEach((el) => { el.inert = next; });
 }
 burger?.addEventListener('click', () => toggleMobile());
 matchMedia('(min-width: 1081px)').addEventListener('change', (e) => { if (e.matches) toggleMobile(false); });

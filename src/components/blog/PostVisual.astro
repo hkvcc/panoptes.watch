@@ -1,0 +1,36 @@
+---
+/**
+ * Image area for blog cards and the featured slot. Uses the article's `cover` when it has
+ * one; otherwise (featured slot only) a quiet branded tile — never a stock or invented image.
+ */
+import type { Post } from '../../lib/blog';
+interface Props { post: Post; size?: 'card' | 'feature'; eager?: boolean }
+const { post, size = 'card', eager = false } = Astro.props;
+---
+{post.cover ? (
+  <div class:list={['pv', `pv-${size}`]}>
+    <img src={post.cover} alt={post.coverAlt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  </div>
+) : (
+  <div class:list={['pv', 'pv-tile', `pv-${size}`]} aria-hidden="true">
+    <svg class="pv-mark" viewBox="0 0 64 64" fill="none">
+      <path d="M37.95 45.74 A17 17 0 1 1 51.74 31.95" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+      <path d="M33 47.5 A23.5 23.5 0 1 1 56.5 24" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".45" />
+      <circle cx="35" cy="29" r="4" fill="currentColor" />
+      <circle cx="47.6" cy="41.6" r="2.8" fill="currentColor" opacity=".6" />
+    </svg>
+  </div>
+)}
+<style>
+  .pv { position: relative; overflow: hidden; background: var(--surface-2); border-bottom: 1px solid var(--border); aspect-ratio: 16 / 9; }
+  .pv-feature { aspect-ratio: auto; height: 100%; min-height: 260px; border-bottom: 0; }
+  .pv img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pv-tile {
+    color: var(--accent);
+    background-color: var(--surface-2);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .pv-mark { position: absolute; right: -8%; bottom: -22%; width: 62%; height: auto; opacity: .55; }
+  .pv-feature .pv-mark { width: 70%; right: -6%; bottom: -18%; opacity: .5; }
+</style>

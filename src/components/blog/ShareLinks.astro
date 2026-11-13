@@ -1,0 +1,44 @@
+---
+/** Plain outbound share links (no third-party scripts or embeds) plus copy-to-clipboard. */
+import Icon from '../Icon.astro';
+interface Props { title: string; url: string }
+const { title, url } = Astro.props;
+const enc = encodeURIComponent;
+const links = [
+  { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}` },
+  { label: 'X', href: `https://x.com/intent/post?url=${enc(url)}&text=${enc(title)}` },
+  { label: 'Email', href: `mailto:?subject=${enc(title)}&body=${enc(url)}`, icon: 'mail' },
+];
+---
+<div class="share">
+  <p class="share-label" id="share-label">Share this article</p>
+  <ul aria-labelledby="share-label">
+    {links.map((l) => (
+      <li><a href={l.href} class="share-btn" target={l.icon ? undefined : '_blank'} rel={l.icon ? undefined : 'noopener noreferrer'}>
+        {l.icon && <Icon name={l.icon} />}{l.label}{!l.icon && <span class="sr-only"> (opens in a new tab)</span>}
+      </a></li>
+    ))}
+    <li><button type="button" class="share-btn" data-copy-link={url}><Icon name="link" /><span data-copy-text>Copy link</span></button></li>
+  </ul>
+</div>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-link]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = btn.querySelector('[data-copy-text]')!;
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copyLink!);
+        text.textContent = 'Link copied';
+      } catch {
+        text.textContent = 'Copy failed';
+      }
+      setTimeout(() => (text.textContent = 'Copy link'), 2000);
+    });
+  });
+</script>
+<style>
+  .share-label { font: 500 .72rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 .8rem; }
+  .share ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .share-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font: 500 .88rem/1 var(--font-body); text-decoration: none; cursor: pointer; }
+  .share-btn:hover { border-color: var(--accent); color: var(--accent-text); }
+  .share-btn :global(svg) { width: 16px; height: 16px; }
+</style>

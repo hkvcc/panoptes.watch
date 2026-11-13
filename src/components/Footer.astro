@@ -1,45 +1,66 @@
 ---
 import Logo from './Logo.astro';
 import CopyEmail from './CopyEmail.astro';
-import { FOOTER, SITE } from '../data/site';
+import { FOOTER, FOOTER_LEGAL, SITE } from '../data/site';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <div class="container container-wide">
     <div class="ft-top">
       <div class="ft-brand">
-        <a href="/" aria-label="Panoptes home"><Logo /></a>
+        <a href="/" class="ft-logo" aria-label="Panoptes home"><Logo /></a>
         <p class="ft-tag">{SITE.tagline}</p>
-        <p class="muted small">Your systems tell you they're running. Panoptes tells you whether your business is working.</p>
+        <p class="ft-sub">Your systems tell you they're running. Panoptes tells you whether your business is working.</p>
+      </div>
+      <div class="ft-contact">
+        <p class="ft-title">Talk to us</p>
         <CopyEmail email={SITE.salesEmail} />
       </div>
-      <div class="ft-cols">
-        {FOOTER.map((col) => (
-          <nav class="ft-col" aria-label={col.title}>
-            <p class="ft-title">{col.title}</p>
-            <ul>{col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
-          </nav>
-        ))}
-      </div>
     </div>
+    <nav class="ft-cols" aria-label="Footer">
+      {FOOTER.map((col) => (
+        <div class="ft-col">
+          <h2 class="ft-title">{col.title}</h2>
+          <ul>{col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+        </div>
+      ))}
+    </nav>
     <div class="ft-bottom">
-      <span>© {year} Panoptes. All rights reserved.</span>
-      <span class="ft-links"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/cookies/">Cookies</a><a href="/sitemap.xml">Sitemap</a></span>
+      <p class="ft-copy">© {year} Panoptes. All rights reserved.</p>
+      <nav aria-label="Legal">
+        <ul class="ft-legal">{FOOTER_LEGAL.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+      </nav>
     </div>
   </div>
 </footer>
 <style>
-  .site-footer { border-top: 1px solid var(--border); background: var(--bg-2); padding: clamp(56px, 7vw, 88px) 0 32px; font-size: .92rem; }
-  .ft-top { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: clamp(32px, 6vw, 80px); }
+  .site-footer { border-top: 1px solid var(--border); background: var(--bg-2); padding: clamp(48px, 6vw, 72px) 0 28px; font-size: .9rem; }
+  .ft-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 48px; padding-bottom: clamp(32px, 4vw, 44px); border-bottom: 1px solid var(--border); }
+  .ft-brand { max-width: 440px; }
+  .ft-logo { display: inline-flex; border-radius: var(--radius-xs); }
+  .ft-logo:focus-visible { outline-offset: 4px; }
   .ft-brand :global(.logo) { height: 28px; }
-  .ft-tag { font: 600 1.1rem/1.3 var(--font-display); margin: 1.2rem 0 .5rem; }
-  .ft-cols { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
-  .ft-title { font: 500 .72rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 1rem; }
-  .ft-col ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .55rem; }
-  .ft-col a, .ft-links a { color: var(--text-2); text-decoration: none; }
-  .ft-col a:hover, .ft-links a:hover { color: var(--accent-text); }
-  .ft-bottom { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--text-3); font-size: .84rem; }
-  .ft-links { display: flex; gap: 20px; flex-wrap: wrap; }
-  @media (max-width: 1080px) { .ft-top { grid-template-columns: 1fr; } .ft-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (max-width: 600px) { .ft-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .ft-tag { font: 600 1.1rem/1.3 var(--font-display); color: var(--text); margin: 1.1rem 0 .35rem; }
+  .ft-sub { color: var(--text-2); margin: 0; line-height: 1.55; }
+  .ft-contact { display: grid; gap: .7rem; }
+  .ft-contact .ft-title { margin: 0; }
+  .ft-cols { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 32px 24px; padding-block: clamp(32px, 4vw, 44px); }
+  .ft-title { font: 500 .72rem/1.2 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 .9rem; }
+  .ft-col ul, .ft-legal { list-style: none; padding: 0; margin: 0; }
+  .ft-col ul { display: grid; gap: 2px; }
+  /* 4px vertical padding brings each link to a ≥24px target (WCAG 2.5.8). */
+  .ft-col a { display: inline-block; padding: 4px 0; line-height: 1.4; color: var(--text-2); text-decoration: none; }
+  .ft-col a:hover, .ft-legal a:hover { color: var(--accent-text); text-decoration: underline; }
+  .ft-bottom { padding-top: 24px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px; color: var(--text-3); font-size: .84rem; }
+  .ft-copy { margin: 0; }
+  .ft-legal { display: flex; flex-wrap: wrap; gap: 0 20px; }
+  .ft-legal a { display: inline-block; padding: 4px 0; color: var(--text-2); text-decoration: none; }
+  @media (max-width: 1080px) { .ft-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 640px) {
+    .ft-top { align-items: flex-start; }
+    .ft-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
+    .ft-col a { padding: 6px 0; }
+    .ft-bottom { flex-direction: column-reverse; align-items: flex-start; }
+    .ft-legal { gap: 0 18px; }
+  }
 </style>

@@ -1,0 +1,45 @@
+---
+import PostVisual from './PostVisual.astro';
+import { formatDate, isoDate, type Post } from '../../lib/blog';
+interface Props { post: Post }
+const { post } = Astro.props;
+---
+<section class="fa" aria-labelledby="fa-title" data-featured={post.id}>
+  <article class="fa-card">
+    <div class="fa-body">
+      <p class="fa-kicker"><span class="fa-flag">Featured</span><span>{post.category.label}</span></p>
+      <h2 id="fa-title" class="fa-title"><a href={post.href} class="fa-link">{post.heading}</a></h2>
+      <p class="fa-desc">{post.description}</p>
+      <p class="fa-meta">
+        <span>{post.author}</span><span aria-hidden="true">·</span>
+        <time datetime={isoDate(post.published)}>{formatDate(post.published)}</time><span aria-hidden="true">·</span>
+        <span>{post.minutes} min read</span>
+      </p>
+      <span class="link-arrow" aria-hidden="true">Read the article</span>
+    </div>
+    <div class:list={['fa-visual', { 'fa-deco': !post.cover }]}><PostVisual post={post} size="feature" eager /></div>
+  </article>
+</section>
+<style>
+  .fa { margin-bottom: clamp(40px, 5vw, 64px); }
+  .fa-card { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; transition: border-color .2s; }
+  .fa-card:hover { border-color: var(--accent); }
+  .fa-card:has(.fa-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .fa-body { display: flex; flex-direction: column; padding: clamp(28px, 4vw, 52px); }
+  .fa-kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 1.2rem; font: 500 .74rem/1.2 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent-text); }
+  .fa-flag { background: var(--accent); color: var(--on-accent); border-radius: var(--radius-pill); padding: .38em .8em; }
+  .fa-title { font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1.15; margin: 0 0 .8rem; max-width: 24ch; }
+  .fa-link { color: var(--text); text-decoration: none; }
+  .fa-link::after { content: ''; position: absolute; inset: 0; }
+  .fa-link:focus-visible { outline: none; }
+  .fa-desc { color: var(--text-2); font-size: 1.05rem; line-height: 1.6; margin: 0 0 1.4rem; max-width: 56ch; }
+  .fa-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 1.6rem; font: 500 .78rem/1.4 var(--font-mono); color: var(--text-3); }
+  .fa-body .link-arrow { margin-top: auto; }
+  .fa-visual { border-left: 1px solid var(--border); }
+  @media (max-width: 860px) {
+    .fa-card { grid-template-columns: minmax(0, 1fr); }
+    .fa-visual { order: -1; border-left: 0; border-bottom: 1px solid var(--border); }
+    .fa-visual :global(.pv-feature) { min-height: 0; aspect-ratio: 16 / 7; }
+    .fa-deco { display: none; }
+  }
+</style>

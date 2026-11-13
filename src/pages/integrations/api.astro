@@ -207,7 +207,7 @@ const guidance = [
   <!-- Flow -->
   <section class="section section-alt">
     <div class="container">
-      <SectionHead eyebrow="How it fits together" title="Events in. Answers and alerts out." lede="Three directions, one model: your systems send events, applications query the model, and Panoptes pushes signals to the tools where work already happens." />
+      <SectionHead eyebrow="How it fits together" title="Events in. Answers and alerts out." lede="Three directions, one model: your systems send events, applications query the model, and Panoptes can push signals to the tools where work already happens." />
       <div class="reveal">
         <Diagram class="hide-sm" src="/diagrams/api-events-query-webhooks.svg" alt="Your systems post business events to an ingest step that validates the schema, deduplicates by idempotency key, resolves entity references and orders events by occurred_at. Events update the business model, which can be queried through the API and which sends outbound webhooks such as signal.opened." frame="api · events, queries and webhooks" illustrative={false} zoom />
         <Diagram class="show-sm" src="/diagrams/api-events-query-webhooks-vertical.svg" alt="Your systems post events to ingest, which feeds the business model; the model can be queried and sends outbound webhooks." frame="api flow" illustrative={false} />

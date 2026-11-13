@@ -1,0 +1,279 @@
+---
+/**
+ * The /blog/ article browser: keyword search, category chips, tag filter, sort and
+ * pagination, all reflected in the URL so filtered views can be shared. Every card is
+ * rendered at build time (so the page works and is crawlable without JavaScript); the
+ * script below only shows, hides and orders them using src/lib/blog-query.ts.
+ * Full-text search loads /blog/search-index.json the first time someone types.
+ */
+import BlogCard from './BlogCard.astro';
+import Icon from '../Icon.astro';
+import { categoriesOf, type Post } from '../../lib/blog';
+import { PAGE_SIZE } from '../../lib/blog-query';
+
+interface Props { posts: Post[]; featuredId?: string }
+const { posts, featuredId } = Astro.props;
+const categories = categoriesOf(posts);
+const tagLabels = Object.fromEntries(posts.flatMap((p) => p.tags.map((t) => [t.slug, t.label])));
+const catLabels = Object.fromEntries(categories.map((c) => [c.slug, c.label]));
+// Initial server render = the default view: featured article in its own slot, first page of the rest.
+// The featured card is still rendered (hidden, last) so search and filters can include it.
+const gridPosts = posts.filter((p) => p.id !== featuredId);
+const featuredPost = posts.find((p) => p.id === featuredId);
+---
+<div class="bb" data-blog data-tag-labels={JSON.stringify(tagLabels)} data-cat-labels={JSON.stringify(catLabels)}>
+  <div class="bb-controls" data-blog-controls>
+    <div class="bb-search">
+      <label for="blog-q" class="sr-only">Search articles</label>
+      <span class="bb-search-ico" aria-hidden="true"><Icon name="search" /></span>
+      <input id="blog-q" class="input bb-input" type="search" name="q" placeholder="Search articles" autocomplete="off" spellcheck="false" maxlength="120" data-search />
+      <button type="button" class="bb-clear" aria-label="Clear search" data-clear hidden><Icon name="close" /></button>
+    </div>
+    <div class="bb-sort">
+      <label for="blog-sort" class="bb-sort-label">Sort</label>
+      <select id="blog-sort" class="select bb-select" data-sort>
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+      </select>
+    </div>
+    {categories.length > 1 && (
+      <div class="bb-cats" role="group" aria-label="Filter by category">
+        <button type="button" class="bb-chip" data-cat="" aria-pressed="true">All <span class="bb-count" data-count>{posts.length}</span></button>
+        {categories.map((c) => (
+          <button type="button" class="bb-chip" data-cat={c.slug} aria-pressed="false">{c.label} <span class="bb-count" data-count>{c.count}</span></button>
+        ))}
+      </div>
+    )}
+    <div class="bb-active" data-active hidden>
+      <span class="bb-tag" data-tag-pill hidden>Tag: <strong data-tag-name></strong>
+        <button type="button" class="bb-tag-x" aria-label="Remove tag filter" data-tag-clear><Icon name="close" /></button>
+      </span>
+      <button type="button" class="bb-reset" data-reset>Clear all filters</button>
+    </div>
+  </div>
+
+  <div class="bb-head">
+    <h2 class="bb-h" id="all-articles" tabindex="-1">All articles</h2>
+    <p class="bb-status" role="status" aria-live="polite" data-status>{posts.length} {posts.length === 1 ? 'article' : 'articles'}</p>
+  </div>
+
+  <ul class="bb-grid" data-list>
+    {gridPosts.map((post) => <BlogCard post={post} />)}
+    {featuredPost && <BlogCard post={featuredPost} hidden />}
+  </ul>
+  {gridPosts.length > PAGE_SIZE && <style is:inline>{`html:not(.no-js) [data-list] > li:nth-child(n+${PAGE_SIZE + 1}) { display: none; }`}</style>}
+
+  <div class="bb-empty" data-empty hidden>
+    <span class="bb-empty-ico" aria-hidden="true"><Icon name="search" /></span>
+    <p class="bb-empty-title">No articles match these filters</p>
+    <p class="muted" data-empty-text>Try a different keyword or category.</p>
+    <button type="button" class="btn btn-sm" data-reset>Clear all filters</button>
+  </div>
+
+  <nav class="bb-pager" aria-label="Article pages" data-pager hidden></nav>
+</div>
+
+<script>
+  import { PAGE_SIZE, categoryCounts, isFiltered, pageList, parseState, runQuery, serializeState, type QueryItem, type QueryState } from '../../lib/blog-query';
+
+  const root = document.querySelector<HTMLElement>('[data-blog]');
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const $ = <T extends Element>(s: string) => root.querySelector<T>(s);
+    const list = $<HTMLUListElement>('[data-list]')!;
+    const cards = [...root.querySelectorAll<HTMLLIElement>('[data-post]')];
+    const byId = new Map(cards.map((el) => [el.dataset.id!, el]));
+    const items: QueryItem[] = cards.map((el) => ({
+      id: el.dataset.id!, category: el.dataset.category!, tags: (el.dataset.tags ?? '').split(' ').filter(Boolean),
+      date: Number(el.dataset.date), meta: el.dataset.meta ?? '',
+    }));
+    const featured = document.querySelector<HTMLElement>('[data-featured]');
+    const featuredId = featured?.dataset.featured;
+    const tagLabels: Record<string, string> = JSON.parse(root.dataset.tagLabels ?? '{}');
+    const catLabels: Record<string, string> = JSON.parse(root.dataset.catLabels ?? '{}');
+
+    const input = $<HTMLInputElement>('[data-search]')!;
+    const clearBtn = $<HTMLButtonElement>('[data-clear]')!;
+    const sortSel = $<HTMLSelectElement>('[data-sort]')!;
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-cat]')];
+    const status = $<HTMLElement>('[data-status]')!;
+    const empty = $<HTMLElement>('[data-empty]')!;
+    const emptyText = $<HTMLElement>('[data-empty-text]')!;
+    const pager = $<HTMLElement>('[data-pager]')!;
+    const active = $<HTMLElement>('[data-active]')!;
+    const tagPill = $<HTMLElement>('[data-tag-pill]')!;
+    const heading = $<HTMLElement>('#all-articles')!;
+
+    // The server render hides cards beyond page 1 with a CSS rule; from here on the script decides.
+    root.querySelector('style')?.remove();
+
+    let state: QueryState = parseState(new URLSearchParams(location.search));
+    let index: Promise<void> | null = null;
+
+    const loadIndex = () =>
+      (index ??= fetch('/blog/search-index.json')
+        .then((r) => (r.ok ? r.json() : []))
+        .then((rows: { id: string; text: string }[]) => {
+          const map = new Map(rows.map((r) => [r.id, r.text]));
+          items.forEach((it) => (it.body = map.get(it.id)));
+          render();
+        })
+        .catch(() => { /* metadata search still works */ }));
+
+    const plural = (n: number) => `${n} ${n === 1 ? 'article' : 'articles'}`;
+
+    function describe(s: QueryState): string {
+      const bits: string[] = [];
+      if (s.q) bits.push(`matching “${s.q}”`);
+      if (s.category) bits.push(`in ${catLabels[s.category] ?? s.category}`);
+      if (s.tag) bits.push(`tagged “${tagLabels[s.tag] ?? s.tag}”`);
+      return bits.join(' ');
+    }
+
+    function render() {
+      if (state.q) loadIndex();
+      const res = runQuery(items, state, featuredId);
+      state.page = res.page;
+
+      cards.forEach((c) => (c.hidden = true));
+      for (const id of res.ids) {
+        const el = byId.get(id)!;
+        el.hidden = false;
+        list.append(el);
+      }
+      if (featured) featured.hidden = !res.showFeatured;
+
+      const counts = categoryCounts(items, state);
+      let all = 0;
+      counts.forEach((n) => (all += n));
+      for (const chip of chips) {
+        const slug = chip.dataset.cat ?? '';
+        chip.setAttribute('aria-pressed', String(state.category === slug));
+        chip.querySelector('[data-count]')!.textContent = String(slug ? counts.get(slug) ?? 0 : all);
+      }
+
+      // Never overwrite what the reader is typing (e.g. when the search index finishes loading).
+      if (document.activeElement !== input) input.value = state.q;
+      clearBtn.hidden = !state.q;
+      sortSel.value = state.sort;
+      tagPill.hidden = !state.tag;
+      if (state.tag) tagPill.querySelector('[data-tag-name]')!.textContent = tagLabels[state.tag] ?? state.tag;
+      active.hidden = !isFiltered(state);
+
+      const shown = res.ids.length + (res.showFeatured ? 1 : 0);
+      const filterText = describe(state);
+      if (!res.total) {
+        status.textContent = `No articles ${filterText}`.trim();
+        emptyText.textContent = filterText ? `Nothing ${filterText}. Try a different keyword, or clear the filters.` : 'Try a different keyword or category.';
+      } else if (res.pages > 1) {
+        const offset = res.showFeatured || (!isFiltered(state) && featuredId) ? 1 : 0;
+        const start = (res.page - 1) * PAGE_SIZE + 1 + (res.page > 1 ? offset : 0);
+        status.textContent = `Showing ${start}–${start + shown - 1} of ${plural(res.total)} ${filterText}`.trim();
+      } else {
+        status.textContent = `${plural(res.total)} ${filterText}`.trim();
+      }
+      empty.hidden = res.total > 0;
+      list.hidden = res.ids.length === 0;
+
+      pager.hidden = res.pages < 2;
+      pager.innerHTML = res.pages < 2 ? '' : [
+        `<button type="button" class="bb-pg bb-pg-nav" data-page="${res.page - 1}" ${res.page === 1 ? 'disabled' : ''}>Previous</button>`,
+        ...pageList(res.page, res.pages).map((p) => p === '…'
+          ? '<span class="bb-pg-gap" aria-hidden="true">…</span>'
+          : `<button type="button" class="bb-pg" data-page="${p}" aria-label="Page ${p}"${p === res.page ? ' aria-current="page"' : ''}>${p}</button>`),
+        `<button type="button" class="bb-pg bb-pg-nav" data-page="${res.page + 1}" ${res.page === res.pages ? 'disabled' : ''}>Next</button>`,
+      ].join('');
+    }
+
+    function commit(next: Partial<QueryState>, mode: 'push' | 'replace' = 'push') {
+      state = { ...state, ...next };
+      render();
+      const url = `${location.pathname}${serializeState(state)}${location.hash}`;
+      if (url !== `${location.pathname}${location.search}${location.hash}`) history[mode === 'push' ? 'pushState' : 'replaceState'](null, '', url);
+    }
+
+    let timer: number | undefined;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = window.setTimeout(() => commit({ q: input.value.replace(/\s+/g, ' ').trim(), page: 1 }, 'replace'), 150);
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && input.value) { e.preventDefault(); clearTimeout(timer); input.value = ''; commit({ q: '', page: 1 }, 'replace'); }
+    });
+    input.addEventListener('focus', () => { loadIndex(); }, { once: true });
+    clearBtn.addEventListener('click', () => { clearTimeout(timer); input.value = ''; commit({ q: '', page: 1 }); input.focus(); });
+    sortSel.addEventListener('change', () => commit({ sort: sortSel.value === 'oldest' ? 'oldest' : 'newest', page: 1 }));
+    chips.forEach((chip) => chip.addEventListener('click', () => commit({ category: chip.dataset.cat ?? '', page: 1 })));
+    root.querySelector('[data-tag-clear]')!.addEventListener('click', () => commit({ tag: '', page: 1 }));
+    root.querySelectorAll('[data-reset]').forEach((b) => b.addEventListener('click', () => { clearTimeout(timer); input.value = ''; commit({ q: '', category: '', tag: '', page: 1 }); input.focus(); }));
+    pager.addEventListener('click', (e) => {
+      const btn = (e.target as Element).closest<HTMLButtonElement>('[data-page]');
+      if (!btn || btn.disabled) return;
+      commit({ page: Number(btn.dataset.page) });
+      heading.focus({ preventScroll: true });
+      heading.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+    window.addEventListener('popstate', () => { state = parseState(new URLSearchParams(location.search)); render(); });
+
+    render();
+  }
+</script>
+
+<style>
+  .bb-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 16px; align-items: center; padding-bottom: 24px; margin-bottom: 28px; border-bottom: 1px solid var(--border); }
+  :global(html.no-js) .bb-controls { display: none; }
+  .bb-search { position: relative; }
+  .bb-search-ico { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-3); display: grid; pointer-events: none; }
+  .bb-search-ico :global(svg) { width: 18px; height: 18px; }
+  .bb-input { padding-left: 44px; padding-right: 48px; }
+  .bb-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+  .bb-clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; display: grid; place-items: center; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--text-2); cursor: pointer; }
+  .bb-clear:hover { color: var(--text); background: var(--surface-2); }
+  .bb-clear[hidden] { display: none; }
+  .bb-clear :global(svg) { width: 16px; height: 16px; }
+  .bb-sort { display: flex; align-items: center; gap: 10px; }
+  .bb-sort-label { font: 500 .78rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+  .bb-select { width: auto; min-width: 160px; }
+  .bb-cats { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+  .bb-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border: 1px solid var(--border-strong); border-radius: var(--radius-pill); background: var(--surface); color: var(--text-2); font: 500 .9rem/1 var(--font-body); cursor: pointer; transition: border-color .15s, color .15s, background-color .15s; }
+  .bb-chip:hover { border-color: var(--accent); color: var(--text); }
+  .bb-chip[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .bb-count { font: 500 .74rem/1 var(--font-mono); padding: .3em .55em; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--text-2); }
+  .bb-chip[aria-pressed='true'] .bb-count { background: rgba(255, 255, 255, .2); color: var(--on-accent); }
+  .bb-active { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .bb-active[hidden], .bb-tag[hidden] { display: none; }
+  .bb-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 4px 4px 12px; border-radius: var(--radius-pill); background: var(--accent-soft); color: var(--accent-text); font-size: .88rem; }
+  .bb-tag-x { width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
+  .bb-tag-x:hover { background: var(--surface); }
+  .bb-tag-x :global(svg) { width: 14px; height: 14px; }
+  .bb-reset { border: 0; background: none; padding: 6px 0; color: var(--accent-text); font: 600 .9rem/1 var(--font-body); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .bb-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 22px; }
+  .bb-h { font-size: clamp(1.4rem, 2.4vw, 1.8rem); margin: 0; scroll-margin-top: calc(var(--header-h) + 24px); }
+  .bb-h:focus { outline: none; }
+  .bb-status { margin: 0; font: 500 .82rem/1.4 var(--font-mono); color: var(--text-3); }
+  .bb-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .bb-grid[hidden] { display: none; }
+  .bb-empty { text-align: center; padding: clamp(40px, 6vw, 72px) 24px; border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); background: var(--bg-2); }
+  .bb-empty[hidden] { display: none; }
+  .bb-empty-ico { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-text); margin-bottom: 14px; }
+  .bb-empty-ico :global(svg) { width: 22px; height: 22px; }
+  .bb-empty-title { font: 600 1.2rem/1.3 var(--font-display); margin: 0 0 .4rem; }
+  .bb-pager { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; margin-top: 40px; }
+  .bb-pager[hidden] { display: none; }
+  .bb-pager :global(.bb-pg) { min-width: 42px; height: 42px; padding: 0 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font: 500 .92rem/1 var(--font-body); cursor: pointer; }
+  .bb-pager :global(.bb-pg:hover:not(:disabled)) { border-color: var(--accent); }
+  .bb-pager :global(.bb-pg[aria-current='page']) { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .bb-pager :global(.bb-pg:disabled) { opacity: .45; cursor: not-allowed; }
+  .bb-pager :global(.bb-pg-gap) { padding: 0 6px; color: var(--text-3); }
+  @media (max-width: 1000px) { .bb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) {
+    .bb-controls { grid-template-columns: minmax(0, 1fr); }
+    .bb-sort { justify-content: space-between; }
+    .bb-select { flex: 1; }
+    .bb-cats { flex-wrap: nowrap; overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter) 6px; scrollbar-width: thin; }
+    .bb-chip { flex: none; }
+    .bb-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    .bb-pager :global(.bb-pg-nav) { flex: 1 1 40%; }
+  }
+</style>

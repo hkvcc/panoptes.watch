@@ -3,8 +3,7 @@ import DocPage from '../components/company/DocPage.astro';
 import { SITE } from '../data/site';
 import { LEGAL, lastUpdatedLabel, operatorHtml, missingIdentity } from '../data/legal';
 
-const crumbs = [{ label: 'Website terms of use', href: '/terms/' }];
-const placeholders = missingIdentity.map((m) => `[${m}]`);
+const crumbs = [{ label: 'Legal', href: '/legal/' }, { label: 'Website terms of use', href: '/terms/' }];
 ---
 <DocPage
   title="Website terms of use"
@@ -12,11 +11,21 @@ const placeholders = missingIdentity.map((m) => `[${m}]`);
   eyebrow="Legal · Terms"
   lede="The rules for using the panoptes.watch website. These terms cover the website only — use of the Panoptes product is governed by a separate customer agreement."
   breadcrumbs={crumbs}
-  ogImage="/social/og-default.png"
+  ogImage="/social/og-company.png"
   updated={lastUpdatedLabel}
-  draft
-  placeholders={placeholders}
+  draft={!LEGAL.reviewed}
+  placeholders={missingIdentity}
+  legalNav
 >
+  <h2 id="summary">Summary</h2>
+  <ul>
+    <li><strong>Website only.</strong> These terms cover your use of panoptes.watch. Use of the Panoptes product is governed by a separate written agreement with each customer.</li>
+    <li><strong>Illustrative content.</strong> Dashboards, figures and scenarios on the site use fictional data, and capabilities described as vision are not commitments.</li>
+    <li><strong>Fair use.</strong> You may read, download and share pages, and refer to Panoptes using our brand files, but not misuse the site or reuse its content commercially without permission.</li>
+    <li><strong>Liability.</strong> The site is provided “as is”, within the limits the law allows.</li>
+  </ul>
+  <p>These terms sit alongside our <a href="/privacy/">privacy notice</a> and <a href="/cookies/">cookie notice</a>. All of the website’s legal documents are listed on the <a href="/legal/">legal information page</a>.</p>
+
   <h2 id="about-these-terms">About these terms</h2>
   <p>These terms of use apply to your use of the website at panoptes.watch (the “site”). By using the site you agree to them. If you do not agree, please do not use the site.</p>
   <p>The site is operated by <Fragment set:html={operatorHtml()} />. You can contact us at <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>.</p>
@@ -72,5 +81,5 @@ const placeholders = missingIdentity.map((m) => `[${m}]`);
   <p>These terms, and any dispute arising from them or from your use of the site, are governed by the law of {LEGAL.governingLaw}. {LEGAL.courts.charAt(0).toUpperCase() + LEGAL.courts.slice(1)} have jurisdiction, subject to any mandatory rights you may have to bring proceedings where you live.</p>
 
   <h2 id="contact">Contact</h2>
-  <p>Questions about these terms: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>.</p>
+  <p>Questions about these terms: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>. See also the <a href="/legal/">legal information page</a>.</p>
 </DocPage>

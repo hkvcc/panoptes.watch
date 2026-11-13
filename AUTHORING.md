@@ -58,6 +58,8 @@ Layout: `container`, `container-narrow`, `container-wide`, `section`, `section-t
 Type: `eyebrow`, `lede`, `muted`, `small`, `note`, `gradient-text`, `kpi`, `kpi-label`, `mono`.
 UI: `btn btn-primary|btn-ghost|btn-sm|btn-lg`, `btn-row`, `link-arrow`, `card card-link|card-raised|card-tint|card-accent`, `icon-tile`, `badge badge-outline|badge-ok|badge-warn|badge-crit`, `illustrative`, `checklist`, `dl-grid`, `pill-list`, `table-wrap > table.table`, `prose` (+ `.callout`), `faq`, form classes (`field`, `input`, `select`, `textarea`, `form-grid`, `check`, `form-status`), `frame`/`frame-bar`, `reveal` (fade-in on scroll), `bg-grid`, `bg-glow`, `hide-sm`/`show-sm`.
 
+Radius/focus tokens: `--radius-xs|sm|(default)|lg|xl|pill`, `--focus-ring`, `--border-input` (form fields, ≥3:1). Nav/footer data: `NAV`, `BLOG`, `FOOTER`, `FOOTER_LEGAL` in `src/data/site.ts`.
+
 Colour tokens: `--text --text-2 --text-3 --bg --bg-2 --surface --surface-2 --elevated --border --border-strong --accent --accent-text --accent-soft --purple --purple-rich --purple-bright --ok/--warn/--crit (+ -text, -bg)`. Never hard-code light-only colours in page CSS; use tokens so dark mode works.
 
 ## SVG asset conventions (diagrams & illustrations)
@@ -70,6 +72,19 @@ Colour tokens: `--text --text-2 --text-3 --bg --bg-2 --surface --surface-2 --ele
 - Any `id`s are auto-prefixed on inline, so gradients/markers are safe.
 - Keep text ≥ 10px at the native viewBox width and design at the width it will display (≈ 560–1100 wide). For wide diagrams also provide a vertical `-vertical.svg` variant and switch with `hide-sm`/`show-sm`.
 - Data in mockups must be visibly fictional (`frame` adds an "Illustrative data" tag).
+
+## Blog (`/blog/`) — code-first articles
+
+Articles are Markdown files in `content/blog/`. **Adding a file is the whole publishing step**: on the next build the article gets its page at `/blog/<filename>/`, appears in the `/blog/` listing, search, category and tag filters, related-article suggestions, `sitemap.xml`, `/blog/rss.xml` and the search index. There is no CMS, database or list to update; publishing is a merge to `main` (Cloudflare Pages deploys it).
+
+1. Copy `content/blog/_template.md` to `content/blog/<slug>.md` (lowercase words and hyphens; the filename is the URL).
+2. Fill in the front matter. Required: `title` (SEO title), `meta_description`, and a date (`published`, or `reviewed` for campaign articles). Recommended: `category`, `tags`, `author`. Optional: `updated`, `cover` + `image_alt`, `featured`, `draft`. Unknown keys fail the build, as do a `slug`/`canonical_url` that don't match the filename and a `cover` file that doesn't exist.
+3. Write one `# Heading` (the on-page H1) followed by `##` sections. Tables, code fences (highlighted in both themes), images and links are supported. Three or more `##` sections add a table of contents.
+4. `npm run dev` previews it (drafts included, marked "Draft"); `npm test` and `npm run build` must pass.
+
+Rules: the content rules below apply in full. No invented customers, results, statistics or product capabilities; examples are labelled hypothetical. Categories come only from articles' front matter, so keep them few and reuse existing ones. The scheduled SEO agent writes into the same folder (see `seo/business-observability/RUNBOOK.md`).
+
+Code: schema `src/lib/blog-schema.ts`, loader `src/lib/blog.ts`, search/filter/sort/pagination logic `src/lib/blog-query.ts` (shared by the browser and the tests), routes `src/pages/blog/`, components `src/components/blog/`. Filtered views live in the URL (`/blog/?q=onboarding&category=metrics&tag=kpis&sort=oldest&page=2`); the canonical URL is always `/blog/`.
 
 ## Content rules (non-negotiable)
 
@@ -87,6 +102,7 @@ Colour tokens: `--text --text-2 --text-3 --bg --bg-2 --surface --surface-2 --ele
 
 ```
 npm run build                      # full build + route verification
+npm test                           # blog unit, build and browser tests (Node 22.6+; browser tests need Chrome)
 npx astro build --outDir /tmp/x    # isolated build (use when several people build at once)
 node scripts/check-links.mjs       # internal link + asset checker (after build)
 ```

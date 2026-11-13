@@ -3,19 +3,19 @@ import DocPage from '../components/company/DocPage.astro';
 import { SITE } from '../data/site';
 import { LEGAL, lastUpdatedLabel, operatorHtml, missingIdentity } from '../data/legal';
 
-const crumbs = [{ label: 'Cookie notice', href: '/cookies/' }];
-const placeholders = missingIdentity.map((m) => `[${m}]`);
+const crumbs = [{ label: 'Legal', href: '/legal/' }, { label: 'Cookie notice', href: '/cookies/' }];
 ---
 <DocPage
   title="Cookie notice"
-  description="The panoptes.watch website sets no cookies of its own and uses no analytics or ad trackers. One local storage key remembers your theme; our host may set security cookies."
+  description="panoptes.watch sets no cookies of its own and runs no analytics or ad trackers. One local storage key remembers your theme; our host may set security cookies."
   eyebrow="Legal · Cookies"
   lede="This site sets no cookies of its own and uses no analytics or advertising trackers. It remembers one thing in your browser — your light or dark theme, if you choose one — and our hosting provider may set strictly necessary security cookies."
   breadcrumbs={crumbs}
-  ogImage="/social/og-default.png"
+  ogImage="/social/og-company.png"
   updated={lastUpdatedLabel}
-  draft
-  placeholders={placeholders}
+  draft={!LEGAL.reviewed}
+  placeholders={missingIdentity}
+  legalNav
 >
   <h2 id="summary">Summary</h2>
   <table>
@@ -28,7 +28,7 @@ const placeholders = missingIdentity.map((m) => `[${m}]`);
       <tr><td>Security cookies set by our hosting provider</td><td>Possibly — strictly necessary, see below</td></tr>
     </tbody>
   </table>
-  <p>Because the site uses only strictly necessary technologies and storage you request yourself, it does not show a cookie consent banner.</p>
+  <p>Because the site uses only strictly necessary technologies and storage you request yourself, it does not show a cookie consent banner. How we handle personal data more generally is set out in our <a href="/privacy/">privacy notice</a>.</p>
 
   <h2 id="what-are-cookies">What cookies and similar technologies are</h2>
   <p>Cookies are small text files a website asks your browser to store and send back with later requests. Similar technologies, such as the browser’s local storage, let a site keep small amounts of information on your device without sending it with every request. Under UK and EU rules (including the UK Privacy and Electronic Communications Regulations and the EU ePrivacy Directive), storing or reading information on your device generally needs your consent, unless it is strictly necessary to provide something you have asked for.</p>
@@ -50,7 +50,8 @@ const placeholders = missingIdentity.map((m) => `[${m}]`);
 
   <h2 id="what-we-do-not-use">What we do not use</h2>
   <p>The site does not load analytics tools, advertising or remarketing tags, tracking pixels, session recording tools, social media plugins or embedded third-party content. Fonts, images and scripts are served from our own domain, and the site’s security policy prevents pages from loading scripts from anywhere else.</p>
-  <p>If that ever changes, we will update this notice first and ask for your consent where the law requires it.</p>
+  <p>Share links that some pages offer (for example to LinkedIn or X) are ordinary links and set no cookies on this site; a copy-link button uses your browser’s clipboard only. If you follow a share link, the destination service’s own cookie and privacy policies apply.</p>
+  <p>If any of this changes, we will update this notice first and ask for your consent where the law requires it.</p>
 
   <h2 id="managing">Managing cookies and storage</h2>
   <ul>
@@ -62,7 +63,7 @@ const placeholders = missingIdentity.map((m) => `[${m}]`);
   <p>We will update this notice if the way the site uses cookies or browser storage changes. The “last updated” date at the top shows the latest revision.</p>
 
   <h2 id="contact">Contact</h2>
-  <p>This site is operated by <Fragment set:html={operatorHtml(false)} />. Questions about this notice: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>. See also our <a href="/privacy/">privacy notice</a> and <a href="/terms/">website terms of use</a>.</p>
+  <p>This site is operated by <Fragment set:html={operatorHtml(false)} />. Questions about this notice: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>. See also our <a href="/privacy/">privacy notice</a>, <a href="/terms/">website terms of use</a> and the <a href="/legal/">legal information page</a>.</p>
 </DocPage>
 
 <style>

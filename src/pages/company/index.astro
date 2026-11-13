@@ -11,7 +11,7 @@ import { SITE } from '../../data/site';
 const crumbs = [{ label: 'Company', href: '/company/' }];
 
 const mission = [
-  { k: 'Visible', i: 'eye', d: 'How work actually flows — from first contact to cash collected, from order to delivery — shown as it happens, across every system involved, not reassembled from exports at month end.' },
+  { k: 'Visible', i: 'eye', d: 'How work actually flows — from first contact to cash collected, from order to delivery — shown as close to when it happens as the source systems allow, not reassembled from exports at month end.' },
   { k: 'Understandable', i: 'rootcause', d: 'When an outcome moves, the reasons should be traceable: which process changed first, which dependency it rests on, and how confident anyone can be about the link.' },
   { k: 'Actionable', i: 'actions', d: 'A finding is only useful once someone owns it. Visibility should lead to a named owner, a coordinated response and a measured result.' },
 ];
@@ -45,7 +45,7 @@ const schema = [
   { '@type': 'AboutPage', name: 'About Panoptes', url: `${SITE.origin}/company/`, about: { '@id': `${SITE.origin}/#org` } },
 ];
 ---
-<BaseLayout title="About Panoptes" description="Panoptes exists to make the real workings of every business visible, understandable and actionable. Our mission, the idea behind the name, what we believe and our brand assets." ogImage="/social/og-company.png" breadcrumbs={crumbs} schema={schema}>
+<BaseLayout title="About Panoptes" description="Panoptes exists to make the real workings of a business visible, understandable and actionable. Our mission, the name, what we believe and brand assets." ogImage="/social/og-company.png" breadcrumbs={crumbs} schema={schema}>
   <PageHero eyebrow="About Panoptes" title="Making the real workings of every business <span class='gradient-text'>visible</span>." lede="Software teams can see inside their systems at any moment. The people who run the business usually cannot see inside the business itself. Panoptes exists to close that gap." breadcrumbs={crumbs} split>
     <div class="btn-row">
       <a class="btn btn-primary" href="/company/vision/">Read the vision<Icon name="arrow" class="arrow" /></a>

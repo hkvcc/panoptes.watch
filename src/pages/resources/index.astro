@@ -122,7 +122,7 @@ const schema = {
 ---
 <BaseLayout
   title="Business Observability Resources and Guides"
-  description="Guides, comparisons and reference material on business observability: what it is, how it differs from BI and system observability, and how to put it into practice."
+  description="Guides, comparisons and reference material on business observability: what it is, how it differs from BI and system observability, and how to apply it."
   ogImage="/social/og-resources.png"
   breadcrumbs={crumbs}
   schema={schema}
@@ -137,6 +137,7 @@ const schema = {
       <a class="btn btn-primary" href={featured.href}>Start with the introduction</a>
       <a class="btn btn-ghost" href="/resources/business-observability-glossary/">Open the glossary</a>
     </div>
+    <p class="small muted blog-note">Looking for shorter articles and analysis? Read the <a href="/blog/">Panoptes blog</a>.</p>
   </PageHero>
 
   <section class="section-tight">
@@ -145,7 +146,7 @@ const schema = {
         <div class="featured-copy">
           <p class="eyebrow">Featured · Start here</p>
           <h2><a href={featured.href}>{featured.title}</a></h2>
-          <p class="lede">The definitive introduction: the origins of observability thinking, a working definition, the five building blocks, what business observability is not, a five-stage maturity model and a seven-step way to begin.</p>
+          <p class="lede">A complete introduction: the origins of observability thinking, a working definition, the five building blocks, what business observability is not, a five-stage maturity model and a seven-step way to begin.</p>
           <p class="meta mono"><Icon name="clock" /> {featured.mins} min read · Foundations</p>
           <a class="link-arrow" href={featured.href}>Read the guide</a>
         </div>
@@ -158,7 +159,7 @@ const schema = {
 
   <section class="section-tight" aria-label="Resource library">
     <div class="container">
-      <SectionHead eyebrow="Library" title="All guides" lede="Eleven pieces, grouped from foundations to reference. Filter by topic to find what is relevant to you." />
+      <SectionHead eyebrow="Library" title="All guides" lede={`${items.length} guides, grouped from foundations to reference. Filter by topic to find what is relevant to you.`} />
       <div class="filter" role="group" aria-label="Filter guides by topic">
         <button type="button" class="chip" data-topic="all" aria-pressed="true">All topics</button>
         {TOPICS.map((t) => <button type="button" class="chip" data-topic={t.id} aria-pressed="false">{t.label}</button>)}
@@ -237,6 +238,7 @@ const schema = {
 </script>
 
 <style>
+  .blog-note { margin-top: 1rem; }
   .featured { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
   .featured h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); margin-bottom: .4em; }
   .featured h2 a { color: inherit; text-decoration: none; }

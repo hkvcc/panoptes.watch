@@ -2,9 +2,17 @@
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import { NAV } from '../data/site';
+import { NAV, type NavGroup } from '../data/site';
 const path = Astro.url.pathname;
-const isActive = (href: string) => href !== '/' && path.startsWith(href);
+const under = (href: string) => href !== '/' && path.startsWith(href);
+// A group is "active" when the current page is the group hub or any page it links to.
+const isActive = (g: NavGroup) => under(g.href) || g.columns.some((c) => c.links.some((l) => under(l.href))) || (!!g.feature && under(g.feature.href));
+// Mobile list: group links plus the featured page (which is otherwise desktop-only), de-duplicated.
+const mobileLinks = (g: NavGroup) => {
+  const links = g.columns.flatMap((c) => c.links).filter((l) => l.href !== g.href);
+  if (g.feature && !links.some((l) => l.href === g.feature!.href)) links.push({ label: g.feature.label ?? g.feature.title, href: g.feature.href });
+  return links;
+};
 ---
 <header class="site-header" data-header>
   <div class="container container-wide hdr">
@@ -14,7 +22,7 @@ const isActive = (href: string) => href !== '/' && path.startsWith(href);
       <ul class="nav-list">
         {NAV.map((g, i) => (
           <li class="nav-item" data-nav-item>
-            <button type="button" class:list={['nav-trigger', { active: isActive(g.href) }]} aria-expanded="false" aria-controls={`mega-${i}`} data-nav-trigger>
+            <button type="button" class:list={['nav-trigger', { active: isActive(g) }]} aria-expanded="false" aria-controls={`mega-${i}`} data-nav-trigger>
               {g.label}<Icon name="chevron" class="chev" />
             </button>
             <div class="mega" id={`mega-${i}`} data-mega hidden>
@@ -37,8 +45,8 @@ const isActive = (href: string) => href !== '/' && path.startsWith(href);
                   ))}
                 </div>
                 {g.feature ? (
-                  <a href={g.feature.href} class="mega-feature">
-                    <span class="eyebrow">Featured</span>
+                  <a href={g.feature.href} class="mega-feature" aria-current={path === g.feature.href ? 'page' : undefined}>
+                    <span class="eyebrow">{g.feature.eyebrow ?? 'Featured'}</span>
                     <strong>{g.feature.title}</strong>
                     <span>{g.feature.text}</span>
                     <span class="link-arrow">{g.feature.cta}</span>
@@ -63,12 +71,12 @@ const isActive = (href: string) => href !== '/' && path.startsWith(href);
 
   <div class="mobile-nav" id="mobile-nav" data-mobile-nav hidden>
     <nav aria-label="Mobile">
-      {NAV.map((g, i) => (
-        <details class="m-group">
+      {NAV.map((g) => (
+        <details class="m-group" open={isActive(g) || undefined}>
           <summary>{g.label}<Icon name="chevron" class="chev" /></summary>
           <ul>
-            <li><a href={g.href}>{g.label} overview</a></li>
-            {g.columns.flatMap((c) => c.links).filter((l) => l.href !== g.href).map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+            <li><a href={g.href} aria-current={path === g.href ? 'page' : undefined}>{g.label} overview</a></li>
+            {mobileLinks(g).map((l) => <li><a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a></li>)}
           </ul>
         </details>
       ))}
@@ -84,14 +92,16 @@ const isActive = (href: string) => href !== '/' && path.startsWith(href);
   .site-header { position: sticky; top: 0; z-index: 100; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); border-bottom: 1px solid transparent; transition: border-color .2s, background .2s; }
   .site-header:global(.scrolled) { border-bottom-color: var(--border); }
   .hdr { display: flex; align-items: center; gap: 24px; height: var(--header-h); }
-  .brand { display: inline-flex; flex: none; border-radius: 6px; }
+  .brand { display: inline-flex; flex: none; border-radius: var(--radius-xs); }
+  .brand:focus-visible { outline-offset: 4px; }
   .brand :global(.logo) { height: 28px; }
   .nav-desktop { flex: 1; display: flex; justify-content: center; }
   .nav-list { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; }
   .nav-item { position: relative; }
-  .nav-trigger { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 10px 12px; border-radius: 999px; font: 500 .92rem/1 var(--font-body); color: var(--text-2); cursor: pointer; transition: color .15s, background .15s; }
+  .nav-trigger { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 10px 12px; border-radius: var(--radius-pill); font: 500 .92rem/1 var(--font-body); color: var(--text-2); cursor: pointer; transition: color .15s, background .15s; }
   .nav-trigger:hover, .nav-trigger[aria-expanded='true'], .nav-trigger.active { color: var(--text); }
   .nav-trigger[aria-expanded='true'] { background: var(--bg-2); }
+  .nav-trigger:focus-visible { outline-offset: 1px; }
   .nav-trigger :global(.chev) { width: 14px; height: 14px; transition: transform .2s var(--ease); opacity: .7; }
   .nav-trigger[aria-expanded='true'] :global(.chev) { transform: rotate(180deg); }
   .mega { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%); background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); min-width: 380px; overflow: hidden; animation: mega-in .18s var(--ease); }
@@ -104,13 +114,16 @@ const isActive = (href: string) => href !== '/' && path.startsWith(href);
   .mega-title { font: 500 .7rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 8px 10px 10px; }
   .mega-links { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
   .mega-links.two { grid-template-columns: 1fr 1fr; }
-  .mega-link { display: flex; gap: 12px; align-items: flex-start; padding: 10px; border-radius: 10px; text-decoration: none; color: var(--text); }
+  .mega-link { display: flex; gap: 12px; align-items: flex-start; padding: 10px; border-radius: var(--radius-sm); text-decoration: none; color: var(--text); }
   .mega-link:hover, .mega-link:focus-visible { background: var(--bg-2); }
+  .mega-link:focus-visible, .mega-feature:focus-visible { outline-offset: -2px; }
+  .mega-link[aria-current='page'] strong { color: var(--accent-text); }
   .mega-link strong { display: block; font-weight: 600; font-size: .9rem; line-height: 1.3; }
   .mega-link small { display: block; color: var(--text-2); font-size: .8rem; line-height: 1.35; margin-top: 2px; }
-  .mega-ico { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-radius: 9px; background: var(--accent-soft); color: var(--accent-text); }
+  .mega-ico { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent-text); }
   .mega-ico :global(svg) { width: 17px; height: 17px; }
-  .mega-feature { display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 12px; text-decoration: none; color: var(--text-2); font-size: .86rem; line-height: 1.5; background: linear-gradient(160deg, var(--accent-soft), transparent 80%), var(--surface-2); border: 1px solid var(--border); }
+  .mega-feature { display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: var(--radius); text-decoration: none; color: var(--text-2); font-size: .86rem; line-height: 1.5; background: var(--surface-2); border: 1px solid var(--border); transition: border-color .15s; }
+  .mega-feature:hover { border-color: var(--accent); }
   .mega-feature strong { color: var(--text); font-family: var(--font-display); font-size: 1.05rem; }
   .mega-feature .eyebrow { margin: 0; }
   .mega-feature .link-arrow { margin-top: auto; font-size: .86rem; }
@@ -130,12 +143,14 @@ const isActive = (href: string) => href !== '/' && path.startsWith(href);
   .mobile-nav { border-top: 1px solid var(--border); background: var(--bg); max-height: calc(100dvh - var(--header-h)); overflow-y: auto; }
   .mobile-nav nav { padding: 8px var(--gutter) 28px; }
   .m-group { border-bottom: 1px solid var(--border); }
-  .m-group summary { list-style: none; display: flex; justify-content: space-between; align-items: center; padding: 16px 0; font: 600 1.05rem/1 var(--font-display); cursor: pointer; }
+  .m-group summary { list-style: none; display: flex; justify-content: space-between; align-items: center; padding: 16px 0; min-height: 48px; font: 600 1.05rem/1 var(--font-display); cursor: pointer; }
   .m-group summary::-webkit-details-marker { display: none; }
   .m-group summary :global(.chev) { width: 18px; height: 18px; transition: transform .2s; }
   .m-group[open] summary :global(.chev) { transform: rotate(180deg); }
   .m-group ul { list-style: none; padding: 0 0 14px; margin: 0; display: grid; gap: 2px; }
-  .m-group a { display: block; padding: 10px 12px; border-radius: 10px; color: var(--text-2); text-decoration: none; }
+  .m-group a { display: block; padding: 12px; border-radius: var(--radius-sm); color: var(--text-2); text-decoration: none; }
+  .m-group a[aria-current='page'] { color: var(--accent-text); font-weight: 600; }
+  .m-group summary:focus-visible, .m-group a:focus-visible { outline-offset: -2px; }
   .m-group a:hover { background: var(--bg-2); color: var(--text); }
   .m-actions { display: grid; gap: 10px; margin-top: 22px; }
 

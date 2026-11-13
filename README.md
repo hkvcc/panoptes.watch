@@ -12,6 +12,7 @@ npm run dev        # http://localhost:4321
 npm run build      # → dist/ (static output + route verification)
 npm run preview    # serve the built site locally
 npm run check:links  # after a build: verify every internal link, anchor and asset
+npm test           # blog tests: unit, fixture build, browser (Node 22.6+, Chrome)
 ```
 
 Node 18.17+ (22 recommended).
@@ -39,6 +40,8 @@ Node 18.17+ (22 recommended).
 │   ├── styles/global.css   Design tokens and component styles
 │   └── lib/svg.ts          Build-time SVG inliner (ID namespacing, a11y attributes)
 ├── functions/api/contact.ts  Cloudflare Pages Function for form submissions
+├── content/blog/            Blog articles (Markdown) — one file per article, see AUTHORING.md
+├── tests/                  node:test suites for the blog (unit, build, browser)
 ├── scripts/                Asset generation, post-build verification, link checker, manifest, screenshot utility
 ├── deployment/             cloudflare-pages.md, forms.md
 ├── AUTHORING.md            How to add pages, components and diagrams; content rules
@@ -62,4 +65,4 @@ The logo symbol is an abstract **P** whose bowl is an aperture/iris, with a deta
 
 ## Content principles
 
-All product data in mockups is fictional and labelled as illustrative. The site makes no claims about customers, certifications, results or company history; capabilities that are not confirmed are described as design intent or product vision. Third-party products named in the integrations directory are examples of the ecosystem, not claims of availability. Legal pages are clearly marked drafts pending legal review.
+All product data in mockups is fictional and labelled as illustrative. The site makes no claims about customers, certifications, results or company history; capabilities that are not confirmed are described as design intent or product vision. Third-party products named in the integrations directory are examples of the ecosystem, not claims of availability. Legal pages (indexed at /legal/) are clearly marked drafts pending legal review. The blog publishes no articles until real ones are merged into content/blog/.

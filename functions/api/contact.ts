@@ -175,7 +175,8 @@ async function deliver(env: Env, sub: Submission, meta: Parameters<typeof compos
             text,
           }),
         });
-        if (!res.ok) console.error('Resend delivery failed', res.status, (await res.text()).slice(0, 300));
+        // Status only: Resend error bodies can echo submitted values such as the visitor's email address.
+        if (!res.ok) console.error('Resend delivery failed', res.status);
         return res.ok;
       } catch (err) { console.error('Resend delivery error', String(err)); return false; }
     })());

@@ -1,0 +1,43 @@
+---
+/**
+ * Article card for the blog grid. The data-* attributes are what the client-side
+ * search/filter script reads (see BlogBrowser.astro and src/lib/blog-query.ts).
+ */
+import PostVisual from './PostVisual.astro';
+import { formatDate, isoDate, metaText, type Post } from '../../lib/blog';
+interface Props { post: Post; hidden?: boolean }
+const { post, hidden = false } = Astro.props;
+---
+<li class="bc" hidden={hidden} data-post data-id={post.id} data-category={post.category.slug} data-tags={post.tags.map((t) => t.slug).join(' ')}
+  data-date={post.published.getTime()} data-meta={metaText(post)}>
+  <article class="bc-card">
+    {post.cover && <PostVisual post={post} />}
+    <div class="bc-body">
+      <p class="bc-kicker"><span>{post.category.label}</span>{post.draft && <span class="badge badge-warn">Draft</span>}</p>
+      <h3 class="bc-title"><a href={post.href} class="bc-link">{post.heading}</a></h3>
+      <p class="bc-desc">{post.description}</p>
+      <p class="bc-meta">
+        <time datetime={isoDate(post.published)}>{formatDate(post.published)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{post.minutes} min read</span>
+      </p>
+    </div>
+  </article>
+</li>
+<style>
+  .bc { display: flex; }
+  .bc[hidden] { display: none; }
+  .bc-card { position: relative; display: flex; flex-direction: column; width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color .2s; }
+  .bc-card:hover { border-color: var(--accent); }
+  .bc-card:focus-within { border-color: var(--accent); }
+  .bc-body { display: flex; flex-direction: column; flex: 1; padding: 22px 24px 24px; min-height: 220px; }
+  .bc-kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 .7rem; font: 500 .72rem/1.2 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent-text); }
+  .bc-title { font-size: 1.18rem; line-height: 1.3; margin: 0 0 .55rem; }
+  .bc-link { color: var(--text); text-decoration: none; }
+  /* Whole card is clickable via the title link's overlay; the link itself keeps the focus ring. */
+  .bc-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  .bc-link:focus-visible { outline: none; }
+  .bc-card:has(.bc-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .bc-desc { color: var(--text-2); font-size: .95rem; line-height: 1.55; margin: 0 0 1.1rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .bc-meta { margin: auto 0 0; display: flex; flex-wrap: wrap; gap: 6px; font: 500 .76rem/1.4 var(--font-mono); color: var(--text-3); }
+</style>

@@ -9,7 +9,7 @@ export const SITE = {
 };
 
 export type NavLink = { label: string; href: string; desc?: string; icon?: string };
-export type NavGroup = { label: string; href: string; intro: string; columns: { title?: string; links: NavLink[] }[]; feature?: { title: string; text: string; href: string; cta: string } };
+export type NavGroup = { label: string; href: string; intro: string; columns: { title?: string; links: NavLink[] }[]; feature?: { title: string; text: string; href: string; cta: string; eyebrow?: string; label?: string } };
 
 export const PLATFORM: NavLink[] = [
   { label: 'Business Graph', href: '/platform/business-graph/', desc: 'Entities, relationships and dependencies', icon: 'graph' },
@@ -61,6 +61,8 @@ export const RESOURCES: NavLink[] = [
   { label: 'Glossary', href: '/resources/business-observability-glossary/', icon: 'list' },
 ];
 
+export const BLOG: NavLink = { label: 'Blog', href: '/blog/', desc: 'Articles and analysis on business observability', icon: 'book' };
+
 export const NAV: NavGroup[] = [
   {
     label: 'Platform', href: '/platform/', intro: 'The capabilities that make a business observable.',
@@ -81,8 +83,9 @@ export const NAV: NavGroup[] = [
     columns: [{ title: 'Connect', links: INTEGRATIONS }],
   },
   {
-    label: 'Resources', href: '/resources/', intro: 'Guides and essays on business observability.',
-    columns: [{ title: 'Guides', links: RESOURCES.slice(0, 6) }, { title: 'Deep dives', links: RESOURCES.slice(6, 11) }],
+    label: 'Resources', href: '/resources/', intro: 'Guides, articles and analysis on business observability.',
+    columns: [{ title: 'Guides', links: RESOURCES.slice(0, 6) }, { title: 'Deep dives', links: RESOURCES.slice(6) }],
+    feature: { eyebrow: 'Blog', label: BLOG.label, title: 'Articles and analysis', text: 'Writing on business observability: how operations, revenue and customer outcomes connect.', href: BLOG.href, cta: 'Read the blog' },
   },
   {
     label: 'Company', href: '/company/', intro: 'Why Panoptes exists.',
@@ -94,10 +97,24 @@ export const NAV: NavGroup[] = [
   },
 ];
 
-export const FOOTER = [
-  { title: 'Platform', links: [{ label: 'Platform overview', href: '/platform/' }, { label: 'How it works', href: '/how-it-works/' }, ...PLATFORM.map(({ label, href }) => ({ label, href }))] },
-  { title: 'Solutions', links: [{ label: 'All solutions', href: '/solutions/' }, ...SOLUTIONS.map(({ label, href }) => ({ label, href }))] },
-  { title: 'Use cases', links: [{ label: 'All use cases', href: '/use-cases/' }, ...USE_CASES.map(({ label, href }) => ({ label, href }))] },
-  { title: 'Learn', links: [{ label: 'Business Observability', href: '/business-observability/' }, { label: 'Resources hub', href: '/resources/' }, { label: 'Glossary', href: '/resources/business-observability-glossary/' }, ...INTEGRATIONS.map(({ label, href }) => ({ label, href }))] },
-  { title: 'Company', links: [{ label: 'About', href: '/company/' }, { label: 'Vision', href: '/company/vision/' }, { label: 'Contact', href: '/contact/' }, { label: 'Book a demo', href: '/demo/' }, { label: 'Privacy', href: '/privacy/' }, { label: 'Terms', href: '/terms/' }, { label: 'Cookies', href: '/cookies/' }] },
+type FooterLink = { label: string; href: string };
+const pick = (links: NavLink[]): FooterLink[] => links.map(({ label, href }) => ({ label, href }));
+
+export const FOOTER: { title: string; links: FooterLink[] }[] = [
+  { title: 'Platform', links: [{ label: 'Platform overview', href: '/platform/' }, { label: 'How it works', href: '/how-it-works/' }, ...pick(PLATFORM)] },
+  { title: 'Solutions', links: [{ label: 'All solutions', href: '/solutions/' }, ...pick(SOLUTIONS)] },
+  { title: 'Use cases', links: [{ label: 'All use cases', href: '/use-cases/' }, ...pick(USE_CASES)] },
+  { title: 'Integrations', links: [{ label: 'Overview', href: '/integrations/' }, ...pick(INTEGRATIONS.slice(1))] },
+  { title: 'Resources', links: [{ label: 'Blog', href: BLOG.href }, { label: 'Business observability', href: '/business-observability/' }, { label: 'Resources hub', href: '/resources/' }, { label: 'Glossary', href: '/resources/business-observability-glossary/' }] },
+  { title: 'Company', links: [{ label: 'About', href: '/company/' }, { label: 'Vision', href: '/company/vision/' }, { label: 'Contact', href: '/contact/' }, { label: 'Book a demo', href: '/demo/' }] },
+];
+
+/** Footer bottom bar: legal and trust links (not repeated in the columns above). */
+export const FOOTER_LEGAL: FooterLink[] = [
+  { label: 'Privacy notice', href: '/privacy/' },
+  { label: 'Terms of use', href: '/terms/' },
+  { label: 'Cookie notice', href: '/cookies/' },
+  { label: 'Legal', href: '/legal/' },
+  { label: 'Security', href: '/integrations/security-governance/' },
+  { label: 'Sitemap', href: '/sitemap.xml' },
 ];

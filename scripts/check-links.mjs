@@ -24,7 +24,8 @@ for (const file of html) {
     const url = m[1];
     if (/^(https?:|mailto:|tel:|data:|javascript:)/.test(url)) continue;
     if (url.startsWith('#')) { if (url.length > 1 && !ids.get(file).has(url.slice(1))) problems.push(`${route} → missing anchor ${url}`); continue; }
-    const [p, hash] = url.split('#');
+    const [pq, hash] = url.split('#');
+    const p = pq.split('?')[0]; // query strings (e.g. /blog/?tag=kpis) don't change the target file
     const abs = p.startsWith('/') ? p : path.posix.join(route, p);
     if (!exists(abs)) problems.push(`${route} → ${url}`);
     else if (!abs.match(/\.[a-z0-9]+$/i) && !abs.endsWith('/')) problems.push(`${route} → ${url} (missing trailing slash)`);

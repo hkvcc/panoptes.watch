@@ -9,7 +9,10 @@
     "build": "astro build && node scripts/postbuild.mjs",
     "preview": "astro preview",
     "assets": "node scripts/generate-assets.mjs",
-    "check:links": "node scripts/check-links.mjs"
+    "check:links": "node scripts/check-links.mjs",
+    "test": "node --experimental-strip-types --no-warnings=ExperimentalWarning --test --test-concurrency=1 tests/*.test.ts tests/blog-build.test.mjs tests/blog-e2e.test.mjs",
+    "test:unit": "node --experimental-strip-types --no-warnings=ExperimentalWarning --test tests/*.test.ts",
+    "validate:seo": "python3 scripts/validate_seo.py"
   },
   "engines": {
     "node": ">=18.17"

@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import FeaturedArticle from '../../components/blog/FeaturedArticle.astro';
+import BlogBrowser from '../../components/blog/BlogBrowser.astro';
+import { BLOG_TITLE, getPosts, isoDate, pickFeatured } from '../../lib/blog';
+import { RESOURCES, SITE } from '../../data/site';
+
+const posts = await getPosts();
+const featured = pickFeatured(posts);
+const crumbs = [{ label: 'Blog', href: '/blog/' }];
+const url = new URL('/blog/', SITE.origin).href;
+const schema = {
+  '@type': 'Blog', name: BLOG_TITLE, url, inLanguage: 'en-GB',
+  publisher: { '@type': 'Organization', name: SITE.name, url: SITE.origin },
+  ...(posts.length && {
+    blogPost: posts.slice(0, 20).map((p) => ({ '@type': 'BlogPosting', headline: p.heading, url: p.url, datePublished: isoDate(p.published) })),
+  }),
+};
+const guides = RESOURCES.filter((r) => !r.href.includes('glossary')).slice(0, 6);
+---
+<BaseLayout
+  title="Blog: business observability in practice"
+  description="Articles from Panoptes on business observability: monitoring business processes, KPIs and outcomes, with worked examples and implementation guidance."
+  ogImage="/social/og-resources.png"
+  schema={schema}
+  breadcrumbs={crumbs}
+>
+  <link slot="head" rel="alternate" type="application/rss+xml" title={BLOG_TITLE} href="/blog/rss.xml" />
+
+  <header class="blog-hero bg-glow">
+    <div class="bg-grid blog-grid" aria-hidden="true"></div>
+    <div class="container container-wide">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Blog</span></li></ol></nav>
+      <div class="blog-hero-row">
+        <div>
+          <p class="eyebrow">Panoptes blog</p>
+          <h1>Business observability in practice</h1>
+          <p class="lede">Articles on watching how a business actually runs: process flow, customer journeys, revenue and the signals between them. Written to be useful whether or not you use Panoptes.</p>
+        </div>
+        <div class="blog-hero-links">
+          <a href="/resources/" class="link-arrow">In-depth guides</a>
+          <a href="/blog/rss.xml" class="blog-rss"><Icon name="signal" /> RSS feed</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section-tight blog-main">
+    <div class="container container-wide">
+      {posts.length ? (
+        <>
+          {featured && <FeaturedArticle post={featured} />}
+          <BlogBrowser posts={posts} featuredId={featured?.id} />
+        </>
+      ) : (
+        <div class="blog-empty">
+          <div class="blog-empty-intro">
+            <span class="icon-tile"><Icon name="book" /></span>
+            <h2>No articles published yet</h2>
+            <p class="muted">New articles will appear here as they are published, and in the <a href="/blog/rss.xml">RSS feed</a>. Our longer guides cover the fundamentals in the meantime.</p>
+          </div>
+          <ul class="blog-empty-guides">
+            {guides.map((g) => (
+              <li><a href={g.href} class="card card-link"><span class="icon-tile"><Icon name={g.icon ?? 'book'} /></span><span class="bg-guide">{g.label}</span><span class="link-arrow">Read the guide</span></a></li>
+            ))}
+          </ul>
+          <a href="/resources/" class="btn">Browse all guides</a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <CTA title="See your own operations this way." text="Panoptes is designed to model how work, money and customers move through your business, and to flag where that flow changes." />
+</BaseLayout>
+
+<style>
+  .blog-hero { padding: clamp(48px, 7vw, 96px) 0 clamp(36px, 5vw, 56px); border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+  .blog-grid { position: absolute; inset: 0; z-index: -1; -webkit-mask-image: radial-gradient(ellipse 70% 80% at 60% 0%, #000, transparent 75%); mask-image: radial-gradient(ellipse 70% 80% at 60% 0%, #000, transparent 75%); }
+  .blog-hero h1 { font-size: clamp(2.3rem, 5vw, 3.8rem); max-width: 18ch; }
+  .blog-hero .lede { max-width: 60ch; margin-bottom: 0; }
+  .blog-hero-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 48px; }
+  .blog-hero-links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding-bottom: 6px; }
+  .blog-rss { display: inline-flex; align-items: center; gap: 8px; color: var(--text-2); text-decoration: none; font-weight: 500; }
+  .blog-rss:hover { color: var(--accent-text); }
+  .blog-rss :global(svg) { width: 16px; height: 16px; }
+  .blog-main { padding-bottom: var(--section); }
+  .blog-empty { display: grid; justify-items: start; gap: 28px; }
+  .blog-empty-intro { max-width: 62ch; }
+  .blog-empty-intro h2 { margin: 1rem 0 .5rem; font-size: clamp(1.5rem, 2.6vw, 2rem); }
+  .blog-empty-guides { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .blog-empty-guides .card { height: 100%; display: flex; flex-direction: column; gap: 14px; }
+  .bg-guide { font: 600 1.06rem/1.35 var(--font-display); color: var(--text); }
+  .blog-empty-guides .link-arrow { margin-top: auto; font-size: .92rem; }
+  @media (max-width: 900px) { .blog-empty-guides { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .blog-empty-guides { grid-template-columns: minmax(0, 1fr); } }
+</style>
