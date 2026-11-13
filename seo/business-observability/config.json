@@ -1,0 +1,21 @@
+{
+  "campaign": "business-observability",
+  "site_domain": "panoptes.watch",
+  "site_domain_confirmed": false,
+  "canonical_base": "https://panoptes.watch",
+  "timezone": "Europe/London",
+  "start_date": "2026-11-14",
+  "max_articles_per_run": 2,
+  "audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers",
+  "brand_voice": "Plain, precise, vendor-neutral, evidence-led. British English. No hype, no superlatives without evidence.",
+  "product_truth_source": null,
+  "product_truth_note": "No product truth source configured: make NO claims about our own product, pricing, customers or results. CTAs stay unlinked unless the target is in existing_pages.",
+  "cms": null,
+  "cms_note": "No CMS credentials. Output is publication-ready Markdown merged into main. Never claim a post is live unless its canonical URL has been fetched and resolves.",
+  "content_dir": "content/blog",
+  "existing_pages": [],
+  "author_byline": "Panoptes Editorial Team",
+  "model_note": "Runs on a low-cost model via a scheduled cloud session; see RUNBOOK.md.",
+  "scheduled_task_id": "trig_01ShpDYjhxvZPtGgZnF6G93S",
+  "schedule": "Daily 10:37 Europe/London, fresh cloud session per run"
+}

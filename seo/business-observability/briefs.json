@@ -1,0 +1,1337 @@
+{
+  "campaign": "Business Observability SEO",
+  "created": "2026-11-13",
+  "domain": "REPLACE_WITH_SITE_DOMAIN",
+  "publication_rate_per_day": 2,
+  "briefs": [
+    {
+      "id": "BO-01",
+      "priority_order": 1,
+      "keyword": "business observability",
+      "title": "What Is Business Observability? Definition, Examples and Benefits",
+      "slug": "/blog/business-observability/",
+      "intent": "informational",
+      "editorial_angle": "Canonical pillar: explain business events + technical telemetry + business outcomes; distinguish BI, monitoring and process mining.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1400-1900",
+      "outline_h2": [
+        "Definition and scope",
+        "Why uptime does not equal business success",
+        "How business events, traces, KPIs and process context fit together",
+        "Four practical examples",
+        "Benefits and limitations",
+        "Implementation roadmap",
+        "FAQs"
+      ],
+      "original_asset": "Annotated business-events-to-outcomes diagram",
+      "external_references": [
+        {
+          "name": "IBM",
+          "url": "https://www.ibm.com/think/insights/business-observability"
+        },
+        {
+          "name": "DynatraceGuide",
+          "url": "https://www.dynatrace.com/knowledge-base/business-observability/"
+        },
+        {
+          "name": "OTelSignals",
+          "url": "https://opentelemetry.io/docs/concepts/signals/"
+        }
+      ],
+      "internal_links_to": [
+        "BO-02",
+        "BO-06",
+        "BO-12",
+        "BO-16"
+      ],
+      "suggested_anchor_texts": [
+        "business observability platform",
+        "business process observability",
+        "business observability use cases",
+        "business observability architecture"
+      ],
+      "cta": "Explore the implementation guide",
+      "editorial_warning": "Own definition; other pages must link here rather than redefine extensively",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-02",
+          "planned_url": "/blog/business-observability-platform/",
+          "anchor": "business observability platform"
+        },
+        {
+          "id": "BO-06",
+          "planned_url": "/blog/business-process-observability/",
+          "anchor": "business process observability"
+        },
+        {
+          "id": "BO-12",
+          "planned_url": "/blog/business-observability-use-cases/",
+          "anchor": "business observability use cases"
+        },
+        {
+          "id": "BO-16",
+          "planned_url": "/blog/business-observability-architecture/",
+          "anchor": "business observability architecture"
+        }
+      ]
+    },
+    {
+      "id": "BO-02",
+      "priority_order": 2,
+      "keyword": "business observability platform",
+      "title": "Business Observability Platform: Capabilities, Architecture and Evaluation Criteria",
+      "slug": "/blog/business-observability-platform/",
+      "intent": "commercial investigation",
+      "editorial_angle": "Buyer page: explain must-have platform components and a defensible evaluation method; not a generic definition.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1400-1900",
+      "outline_h2": [
+        "Platform capabilities",
+        "Event ingestion and correlation",
+        "Business KPI mapping",
+        "Alerts and action workflows",
+        "Security and governance",
+        "Demo evaluation scorecard",
+        "FAQs"
+      ],
+      "original_asset": "Weighted platform evaluation scorecard",
+      "external_references": [
+        {
+          "name": "DynatracePlatform",
+          "url": "https://www.dynatrace.com/platform/business-observability/"
+        },
+        {
+          "name": "DynatraceDocs",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability"
+        },
+        {
+          "name": "BusinessFlow",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow"
+        }
+      ],
+      "internal_links_to": [
+        "BO-01",
+        "BO-03",
+        "BO-04",
+        "BO-16"
+      ],
+      "suggested_anchor_texts": [
+        "business observability",
+        "business observability tools",
+        "business observability software",
+        "business observability architecture"
+      ],
+      "cta": "Download the platform scorecard",
+      "editorial_warning": "Potential overlap with software/solutions: assess SERP before publishing all three",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-01",
+          "planned_url": "/blog/business-observability/",
+          "anchor": "business observability"
+        },
+        {
+          "id": "BO-03",
+          "planned_url": "/blog/business-observability-tools/",
+          "anchor": "business observability tools"
+        },
+        {
+          "id": "BO-04",
+          "planned_url": "/blog/business-observability-software/",
+          "anchor": "business observability software"
+        },
+        {
+          "id": "BO-16",
+          "planned_url": "/blog/business-observability-architecture/",
+          "anchor": "business observability architecture"
+        }
+      ]
+    },
+    {
+      "id": "BO-03",
+      "priority_order": 3,
+      "keyword": "business observability tools",
+      "title": "Business Observability Tools: Categories, Examples and Selection Checklist",
+      "slug": "/blog/business-observability-tools/",
+      "intent": "commercial investigation",
+      "editorial_angle": "Tools taxonomy, not fabricated top-10 rankings; map user needs to observability, BI, BPM and process mining categories.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1400-1900",
+      "outline_h2": [
+        "Tool categories",
+        "Core and adjacent vendors with evidence",
+        "Comparison matrix",
+        "Pricing model questions",
+        "Selection by company size",
+        "Proof-of-concept checklist",
+        "FAQs"
+      ],
+      "original_asset": "Evidence-backed category comparison matrix",
+      "external_references": [
+        {
+          "name": "Gartner",
+          "url": "https://www.gartner.com/en/documents/6688834"
+        },
+        {
+          "name": "DynatracePlatform",
+          "url": "https://www.dynatrace.com/platform/business-observability/"
+        },
+        {
+          "name": "IBMProcessMining",
+          "url": "https://www.ibm.com/think/topics/process-mining"
+        }
+      ],
+      "internal_links_to": [
+        "BO-02",
+        "BO-04",
+        "BO-13"
+      ],
+      "suggested_anchor_texts": [
+        "business observability platform",
+        "business observability software",
+        "real-time business transaction monitoring"
+      ],
+      "cta": "Use the tool-selection checklist",
+      "editorial_warning": "Do not assert vendor capabilities/prices beyond cited pages",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-02",
+          "planned_url": "/blog/business-observability-platform/",
+          "anchor": "business observability platform"
+        },
+        {
+          "id": "BO-04",
+          "planned_url": "/blog/business-observability-software/",
+          "anchor": "business observability software"
+        },
+        {
+          "id": "BO-13",
+          "planned_url": "/blog/real-time-business-transaction-monitoring/",
+          "anchor": "real-time business transaction monitoring"
+        }
+      ]
+    },
+    {
+      "id": "BO-04",
+      "priority_order": 4,
+      "keyword": "business observability software",
+      "title": "Business Observability Software: Features, Deployment and Buying Guide",
+      "slug": "/blog/business-observability-software/",
+      "intent": "transactional/commercial",
+      "editorial_angle": "Focus on procurement and implementation economics; distinct from #2 platform architecture and #3 tool categories.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1400-1900",
+      "outline_h2": [
+        "Who needs the software",
+        "Functional requirements",
+        "Data integrations",
+        "Build versus buy",
+        "Total cost of ownership model",
+        "Procurement questions",
+        "FAQs"
+      ],
+      "original_asset": "TCO worksheet with explicitly illustrative numbers",
+      "external_references": [
+        {
+          "name": "DynatraceDocs",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability"
+        },
+        {
+          "name": "BusinessReporting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-reporting"
+        },
+        {
+          "name": "OTelIntro",
+          "url": "https://opentelemetry.io/docs/"
+        }
+      ],
+      "internal_links_to": [
+        "BO-02",
+        "BO-03",
+        "BO-18"
+      ],
+      "suggested_anchor_texts": [
+        "business observability platform",
+        "business observability tools",
+        "business observability implementation"
+      ],
+      "cta": "Request a technical requirements review",
+      "editorial_warning": "Merge/canonicalise into #2 if SERPs are equivalent",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-02",
+          "planned_url": "/blog/business-observability-platform/",
+          "anchor": "business observability platform"
+        },
+        {
+          "id": "BO-03",
+          "planned_url": "/blog/business-observability-tools/",
+          "anchor": "business observability tools"
+        },
+        {
+          "id": "BO-18",
+          "planned_url": "/blog/business-observability-implementation/",
+          "anchor": "business observability implementation"
+        }
+      ]
+    },
+    {
+      "id": "BO-05",
+      "priority_order": 5,
+      "keyword": "real-time business monitoring",
+      "title": "Real-Time Business Monitoring: KPIs, Alerts and Operational Use Cases",
+      "slug": "/blog/real-time-business-monitoring/",
+      "intent": "informational/commercial",
+      "editorial_angle": "Explain freshness, event ingestion, anomaly detection and incident-to-action loops; contrast scheduled BI reporting.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "What real-time means",
+        "Streaming data and latency",
+        "Choosing critical KPIs",
+        "Threshold vs anomaly alerts",
+        "Operational examples",
+        "Alert fatigue and governance",
+        "FAQs"
+      ],
+      "original_asset": "Event-to-alert sequence diagram",
+      "external_references": [
+        {
+          "name": "BusinessReporting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-reporting"
+        },
+        {
+          "name": "Alerting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/alert-from-business-events-or-flow"
+        },
+        {
+          "name": "GoogleCloud",
+          "url": "https://docs.cloud.google.com/architecture/framework/reliability/observability"
+        }
+      ],
+      "internal_links_to": [
+        "BO-01",
+        "BO-08",
+        "BO-14"
+      ],
+      "suggested_anchor_texts": [
+        "business observability",
+        "business KPI monitoring",
+        "business observability dashboards"
+      ],
+      "cta": "Explore business KPI monitoring",
+      "editorial_warning": "Do not promise sub-second latency without evidence",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-01",
+          "planned_url": "/blog/business-observability/",
+          "anchor": "business observability"
+        },
+        {
+          "id": "BO-08",
+          "planned_url": "/blog/business-kpi-monitoring/",
+          "anchor": "business KPI monitoring"
+        },
+        {
+          "id": "BO-14",
+          "planned_url": "/blog/business-observability-dashboards/",
+          "anchor": "business observability dashboards"
+        }
+      ]
+    },
+    {
+      "id": "BO-06",
+      "priority_order": 6,
+      "keyword": "business process observability",
+      "title": "Business Process Observability: Track Every Step from Start to Finish",
+      "slug": "/blog/business-process-observability/",
+      "intent": "informational/commercial",
+      "editorial_angle": "Processes and business-event correlation across multi-step customer journeys.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "What makes a process observable",
+        "Events, milestones and IDs",
+        "Bottlenecks and drop-offs",
+        "Process anomaly patterns",
+        "Onboarding and checkout examples",
+        "Instrumentation steps",
+        "FAQs"
+      ],
+      "original_asset": "Sample process schema with correlation_id",
+      "external_references": [
+        {
+          "name": "BusinessFlow",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow"
+        },
+        {
+          "name": "ProcessMonitoring",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-process-monitoring"
+        },
+        {
+          "name": "FlowSetup",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow/set-up-business-flow"
+        }
+      ],
+      "internal_links_to": [
+        "BO-01",
+        "BO-09",
+        "BO-19"
+      ],
+      "suggested_anchor_texts": [
+        "business observability",
+        "end-to-end business process monitoring",
+        "business observability vs process mining"
+      ],
+      "cta": "See the end-to-end monitoring playbook",
+      "editorial_warning": "Avoid claiming all tools provide automatic process discovery",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-01",
+          "planned_url": "/blog/business-observability/",
+          "anchor": "business observability"
+        },
+        {
+          "id": "BO-09",
+          "planned_url": "/blog/end-to-end-business-process-monitoring/",
+          "anchor": "end-to-end business process monitoring"
+        },
+        {
+          "id": "BO-19",
+          "planned_url": "/blog/business-observability-vs-process-mining/",
+          "anchor": "business observability vs process mining"
+        }
+      ]
+    },
+    {
+      "id": "BO-07",
+      "priority_order": 7,
+      "keyword": "business observability vs monitoring",
+      "title": "Business Observability vs Traditional Monitoring: Key Differences",
+      "slug": "/blog/business-observability-vs-monitoring/",
+      "intent": "informational/comparison",
+      "editorial_angle": "Answer comparison directly with examples, not inflated claims about observability replacing monitoring.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Definitions",
+        "What each measures",
+        "Detection and root-cause workflows",
+        "Example: payment checkout",
+        "Comparison table",
+        "When to use both",
+        "FAQs"
+      ],
+      "original_asset": "Side-by-side technical-to-business impact table",
+      "external_references": [
+        {
+          "name": "IBM",
+          "url": "https://www.ibm.com/think/insights/business-observability"
+        },
+        {
+          "name": "DynatraceGuide",
+          "url": "https://www.dynatrace.com/knowledge-base/business-observability/"
+        },
+        {
+          "name": "OTelSignals",
+          "url": "https://opentelemetry.io/docs/concepts/signals/"
+        }
+      ],
+      "internal_links_to": [
+        "BO-01",
+        "BO-05",
+        "BO-17"
+      ],
+      "suggested_anchor_texts": [
+        "business observability",
+        "real-time business monitoring",
+        "business observability metrics"
+      ],
+      "cta": "Read the business observability guide",
+      "editorial_warning": "Do not present monitoring as obsolete",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-01",
+          "planned_url": "/blog/business-observability/",
+          "anchor": "business observability"
+        },
+        {
+          "id": "BO-05",
+          "planned_url": "/blog/real-time-business-monitoring/",
+          "anchor": "real-time business monitoring"
+        },
+        {
+          "id": "BO-17",
+          "planned_url": "/blog/business-observability-metrics/",
+          "anchor": "business observability metrics"
+        }
+      ]
+    },
+    {
+      "id": "BO-08",
+      "priority_order": 8,
+      "keyword": "business KPI monitoring",
+      "title": "Business KPI Monitoring: Metrics, Dashboards and Alerts That Drive Action",
+      "slug": "/blog/business-kpi-monitoring/",
+      "intent": "informational/commercial",
+      "editorial_angle": "How to select and operationalise business KPIs, with targets, owners and actionable alerts.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "KPI vs metric",
+        "KPI selection framework",
+        "Conversion, revenue and process KPIs",
+        "Data quality",
+        "Dashboard vs alerting",
+        "Owners and escalation",
+        "FAQs"
+      ],
+      "original_asset": "KPI dictionary: definition, formula, frequency, owner, action",
+      "external_references": [
+        {
+          "name": "MicrosoftKPI",
+          "url": "https://learn.microsoft.com/en-gb/dynamics365/business-central/analytics-about-kpis"
+        },
+        {
+          "name": "PowerBI",
+          "url": "https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-kpi"
+        },
+        {
+          "name": "BusinessReporting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-reporting"
+        }
+      ],
+      "internal_links_to": [
+        "BO-05",
+        "BO-14",
+        "BO-17"
+      ],
+      "suggested_anchor_texts": [
+        "real-time business monitoring",
+        "business observability dashboards",
+        "business observability metrics"
+      ],
+      "cta": "Use the KPI dashboard template",
+      "editorial_warning": "Separate business-outcome KPIs from technical SLIs",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-05",
+          "planned_url": "/blog/real-time-business-monitoring/",
+          "anchor": "real-time business monitoring"
+        },
+        {
+          "id": "BO-14",
+          "planned_url": "/blog/business-observability-dashboards/",
+          "anchor": "business observability dashboards"
+        },
+        {
+          "id": "BO-17",
+          "planned_url": "/blog/business-observability-metrics/",
+          "anchor": "business observability metrics"
+        }
+      ]
+    },
+    {
+      "id": "BO-09",
+      "priority_order": 9,
+      "keyword": "end-to-end business process monitoring",
+      "title": "End-to-End Business Process Monitoring: A Practical Implementation Guide",
+      "slug": "/blog/end-to-end-business-process-monitoring/",
+      "intent": "informational/how-to",
+      "editorial_angle": "Hands-on instrument-and-monitor guide; deeper than #6 conceptual article.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Map a process",
+        "Define milestones and correlation IDs",
+        "Capture events",
+        "Measure duration and fallout",
+        "Alerting and investigation",
+        "Test cases",
+        "FAQs"
+      ],
+      "original_asset": "Sample instrumentation checklist for order-to-cash",
+      "external_references": [
+        {
+          "name": "ProcessMonitoring",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-process-monitoring"
+        },
+        {
+          "name": "FlowSetup",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow/set-up-business-flow"
+        },
+        {
+          "name": "BusinessFlow",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow"
+        }
+      ],
+      "internal_links_to": [
+        "BO-06",
+        "BO-19",
+        "BO-16"
+      ],
+      "suggested_anchor_texts": [
+        "business process observability",
+        "business observability vs process mining",
+        "business observability architecture"
+      ],
+      "cta": "Download the implementation checklist",
+      "editorial_warning": "Ensure examples are illustrative, not claims of an actual deployment",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-06",
+          "planned_url": "/blog/business-process-observability/",
+          "anchor": "business process observability"
+        },
+        {
+          "id": "BO-19",
+          "planned_url": "/blog/business-observability-vs-process-mining/",
+          "anchor": "business observability vs process mining"
+        },
+        {
+          "id": "BO-16",
+          "planned_url": "/blog/business-observability-architecture/",
+          "anchor": "business observability architecture"
+        }
+      ]
+    },
+    {
+      "id": "BO-10",
+      "priority_order": 10,
+      "keyword": "business observability solutions",
+      "title": "Business Observability Solutions by Use Case and Industry",
+      "slug": "/blog/business-observability-solutions/",
+      "intent": "commercial investigation",
+      "editorial_angle": "Problem/solution matching across industries and processes, not another platform features page.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Common business problems",
+        "Retail checkout",
+        "Financial onboarding",
+        "SaaS activation",
+        "Insurance claims",
+        "Integration patterns",
+        "Evaluation rubric",
+        "FAQs"
+      ],
+      "original_asset": "Industry-to-use-case decision matrix",
+      "external_references": [
+        {
+          "name": "DynatracePlatform",
+          "url": "https://www.dynatrace.com/platform/business-observability/"
+        },
+        {
+          "name": "BusinessFlow",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow"
+        },
+        {
+          "name": "AzureUsage",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/app/usage"
+        }
+      ],
+      "internal_links_to": [
+        "BO-02",
+        "BO-15",
+        "BO-20"
+      ],
+      "suggested_anchor_texts": [
+        "business observability platform",
+        "AI-powered business observability",
+        "business observability for financial services"
+      ],
+      "cta": "Find the right use-case blueprint",
+      "editorial_warning": "Merge into #2 if SERP intent cannot be separated",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-02",
+          "planned_url": "/blog/business-observability-platform/",
+          "anchor": "business observability platform"
+        },
+        {
+          "id": "BO-15",
+          "planned_url": "/blog/ai-powered-business-observability/",
+          "anchor": "AI-powered business observability"
+        },
+        {
+          "id": "BO-20",
+          "planned_url": "/blog/business-observability-for-financial-services/",
+          "anchor": "business observability for financial services"
+        }
+      ]
+    },
+    {
+      "id": "BO-11",
+      "priority_order": 11,
+      "keyword": "best business observability platforms",
+      "title": "Best Business Observability Platforms: How to Compare Options",
+      "slug": "/blog/best-business-observability-platforms/",
+      "intent": "commercial comparison",
+      "editorial_angle": "Transparent shortlist methodology, vendor categories and neutral evaluation; not unsupported rankings.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1400-1900",
+      "outline_h2": [
+        "What qualifies as business observability",
+        "Selection methodology",
+        "Candidate platforms and documented capabilities",
+        "Hands-on test plan",
+        "Pricing questions",
+        "Limitations",
+        "FAQs"
+      ],
+      "original_asset": "Vendor scorecard with citations and unscored unknowns",
+      "external_references": [
+        {
+          "name": "Gartner",
+          "url": "https://www.gartner.com/en/documents/6688834"
+        },
+        {
+          "name": "DynatracePlatform",
+          "url": "https://www.dynatrace.com/platform/business-observability/"
+        },
+        {
+          "name": "DynatraceDocs",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability"
+        }
+      ],
+      "internal_links_to": [
+        "BO-02",
+        "BO-03",
+        "BO-04"
+      ],
+      "suggested_anchor_texts": [
+        "business observability platform",
+        "business observability tools",
+        "business observability software"
+      ],
+      "cta": "Get the evaluation scorecard",
+      "editorial_warning": "No made-up top ranking, prices, reviews or product testing",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-02",
+          "planned_url": "/blog/business-observability-platform/",
+          "anchor": "business observability platform"
+        },
+        {
+          "id": "BO-03",
+          "planned_url": "/blog/business-observability-tools/",
+          "anchor": "business observability tools"
+        },
+        {
+          "id": "BO-04",
+          "planned_url": "/blog/business-observability-software/",
+          "anchor": "business observability software"
+        }
+      ]
+    },
+    {
+      "id": "BO-12",
+      "priority_order": 12,
+      "keyword": "business observability use cases",
+      "title": "Business Observability Use Cases: 8 Practical Examples",
+      "slug": "/blog/business-observability-use-cases/",
+      "intent": "informational",
+      "editorial_angle": "Specific measurable stories from payment failures to onboarding abandonment, marked as hypothetical unless backed by named case studies.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Use-case selection criteria",
+        "Checkout conversions",
+        "Customer onboarding",
+        "Order fulfilment",
+        "Billing anomalies",
+        "Support SLA",
+        "Inventory exceptions",
+        "Activation",
+        "Measurement framework"
+      ],
+      "original_asset": "Eight event-to-KPI mini-blueprints",
+      "external_references": [
+        {
+          "name": "DynatracePlatform",
+          "url": "https://www.dynatrace.com/platform/business-observability/"
+        },
+        {
+          "name": "BusinessReporting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-reporting"
+        },
+        {
+          "name": "AzureUsage",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/app/usage"
+        }
+      ],
+      "internal_links_to": [
+        "BO-01",
+        "BO-10",
+        "BO-20"
+      ],
+      "suggested_anchor_texts": [
+        "business observability",
+        "business observability solutions",
+        "business observability for financial services"
+      ],
+      "cta": "Explore an industry implementation",
+      "editorial_warning": "Label scenarios hypothetical and never invent performance improvements",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-01",
+          "planned_url": "/blog/business-observability/",
+          "anchor": "business observability"
+        },
+        {
+          "id": "BO-10",
+          "planned_url": "/blog/business-observability-solutions/",
+          "anchor": "business observability solutions"
+        },
+        {
+          "id": "BO-20",
+          "planned_url": "/blog/business-observability-for-financial-services/",
+          "anchor": "business observability for financial services"
+        }
+      ]
+    },
+    {
+      "id": "BO-13",
+      "priority_order": 13,
+      "keyword": "real-time business transaction monitoring",
+      "title": "Real-Time Business Transaction Monitoring: Events, Failures and Revenue Impact",
+      "slug": "/blog/real-time-business-transaction-monitoring/",
+      "intent": "informational/commercial",
+      "editorial_angle": "Focus on individual transactions and business outcomes; differentiate APM traces from financial ledger/audit-grade data.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Transaction vs request",
+        "IDs and event schemas",
+        "Payment and order flows",
+        "Missing/duplicate events",
+        "Failure diagnosis",
+        "Privacy and reconciliation",
+        "FAQs"
+      ],
+      "original_asset": "Illustrative transaction event schema and failure matrix",
+      "external_references": [
+        {
+          "name": "BusinessEvents",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/bo-basic-concepts"
+        },
+        {
+          "name": "EndToEndExample",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/end-to-end-example"
+        },
+        {
+          "name": "AzureTelemetry",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/app/data-model-complete"
+        }
+      ],
+      "internal_links_to": [
+        "BO-05",
+        "BO-09",
+        "BO-20"
+      ],
+      "suggested_anchor_texts": [
+        "real-time business monitoring",
+        "end-to-end business process monitoring",
+        "business observability for financial services"
+      ],
+      "cta": "Explore process alerting",
+      "editorial_warning": "Do not imply compliance-grade audit without controls and evidence",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-05",
+          "planned_url": "/blog/real-time-business-monitoring/",
+          "anchor": "real-time business monitoring"
+        },
+        {
+          "id": "BO-09",
+          "planned_url": "/blog/end-to-end-business-process-monitoring/",
+          "anchor": "end-to-end business process monitoring"
+        },
+        {
+          "id": "BO-20",
+          "planned_url": "/blog/business-observability-for-financial-services/",
+          "anchor": "business observability for financial services"
+        }
+      ]
+    },
+    {
+      "id": "BO-14",
+      "priority_order": 14,
+      "keyword": "business observability dashboards",
+      "title": "Business Observability Dashboards: KPIs, Design Patterns and Examples",
+      "slug": "/blog/business-observability-dashboards/",
+      "intent": "informational/how-to",
+      "editorial_angle": "Design dashboards with executive, ops and engineering views and drill-down; avoid static vanity reports.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Audience and questions",
+        "KPI hierarchy",
+        "Dashboard layout",
+        "Process funnel",
+        "Alerts vs dashboards",
+        "Freshness and access",
+        "FAQs"
+      ],
+      "original_asset": "Text wireframe plus dashboard acceptance checklist",
+      "external_references": [
+        {
+          "name": "PowerBI",
+          "url": "https://learn.microsoft.com/en-us/power-bi/visuals/power-bi-visualization-kpi"
+        },
+        {
+          "name": "BusinessReporting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-reporting"
+        },
+        {
+          "name": "BusinessFlow",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow"
+        }
+      ],
+      "internal_links_to": [
+        "BO-08",
+        "BO-05",
+        "BO-17"
+      ],
+      "suggested_anchor_texts": [
+        "business KPI monitoring",
+        "real-time business monitoring",
+        "business observability metrics"
+      ],
+      "cta": "Download the dashboard wireframe",
+      "editorial_warning": "Dashboard examples are mockups, not product screenshots",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-08",
+          "planned_url": "/blog/business-kpi-monitoring/",
+          "anchor": "business KPI monitoring"
+        },
+        {
+          "id": "BO-05",
+          "planned_url": "/blog/real-time-business-monitoring/",
+          "anchor": "real-time business monitoring"
+        },
+        {
+          "id": "BO-17",
+          "planned_url": "/blog/business-observability-metrics/",
+          "anchor": "business observability metrics"
+        }
+      ]
+    },
+    {
+      "id": "BO-15",
+      "priority_order": 15,
+      "keyword": "AI-powered business observability",
+      "title": "AI-Powered Business Observability: Anomaly Detection and Safe Automation",
+      "slug": "/blog/ai-powered-business-observability/",
+      "intent": "informational/commercial",
+      "editorial_angle": "Explain achievable AI workflows and limitations; distinguish statistical anomaly detection, predictive models and agentic remediation.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "AI use cases",
+        "Data prerequisites",
+        "Anomaly vs forecast",
+        "Root-cause hypotheses",
+        "Human-in-loop automation",
+        "Evaluation and false positives",
+        "FAQs"
+      ],
+      "original_asset": "AI escalation decision tree",
+      "external_references": [
+        {
+          "name": "Alerting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/alert-from-business-events-or-flow"
+        },
+        {
+          "name": "DynatraceGuide",
+          "url": "https://www.dynatrace.com/knowledge-base/business-observability/"
+        },
+        {
+          "name": "GoogleCloud",
+          "url": "https://docs.cloud.google.com/architecture/framework/reliability/observability"
+        }
+      ],
+      "internal_links_to": [
+        "BO-05",
+        "BO-16",
+        "BO-18"
+      ],
+      "suggested_anchor_texts": [
+        "real-time business monitoring",
+        "business observability architecture",
+        "business observability implementation"
+      ],
+      "cta": "Review the AI readiness checklist",
+      "editorial_warning": "Avoid unsupported autonomous-remediation or accuracy claims",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-05",
+          "planned_url": "/blog/real-time-business-monitoring/",
+          "anchor": "real-time business monitoring"
+        },
+        {
+          "id": "BO-16",
+          "planned_url": "/blog/business-observability-architecture/",
+          "anchor": "business observability architecture"
+        },
+        {
+          "id": "BO-18",
+          "planned_url": "/blog/business-observability-implementation/",
+          "anchor": "business observability implementation"
+        }
+      ]
+    },
+    {
+      "id": "BO-16",
+      "priority_order": 16,
+      "keyword": "business observability architecture",
+      "title": "Business Observability Architecture: Events, Telemetry, Storage and Action",
+      "slug": "/blog/business-observability-architecture/",
+      "intent": "technical informational",
+      "editorial_angle": "Concrete reference architecture from source apps to business events, joining signals and action systems.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1400-1900",
+      "outline_h2": [
+        "Reference architecture",
+        "Event contracts",
+        "Collection and instrumentation",
+        "Correlation and enrichment",
+        "Storage/retention",
+        "KPI computation",
+        "Alert/response",
+        "Security"
+      ],
+      "original_asset": "Vendor-neutral ASCII architecture and event contract",
+      "external_references": [
+        {
+          "name": "OTelIntro",
+          "url": "https://opentelemetry.io/docs/"
+        },
+        {
+          "name": "OTelSignals",
+          "url": "https://opentelemetry.io/docs/concepts/signals/"
+        },
+        {
+          "name": "BusinessEvents",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/bo-basic-concepts"
+        },
+        {
+          "name": "GoogleCloud",
+          "url": "https://docs.cloud.google.com/architecture/framework/reliability/observability"
+        }
+      ],
+      "internal_links_to": [
+        "BO-01",
+        "BO-09",
+        "BO-18"
+      ],
+      "suggested_anchor_texts": [
+        "business observability",
+        "end-to-end business process monitoring",
+        "business observability implementation"
+      ],
+      "cta": "See the implementation roadmap",
+      "editorial_warning": "Clearly distinguish OpenTelemetry technical signals from bespoke business events",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-01",
+          "planned_url": "/blog/business-observability/",
+          "anchor": "business observability"
+        },
+        {
+          "id": "BO-09",
+          "planned_url": "/blog/end-to-end-business-process-monitoring/",
+          "anchor": "end-to-end business process monitoring"
+        },
+        {
+          "id": "BO-18",
+          "planned_url": "/blog/business-observability-implementation/",
+          "anchor": "business observability implementation"
+        }
+      ]
+    },
+    {
+      "id": "BO-17",
+      "priority_order": 17,
+      "keyword": "business observability metrics",
+      "title": "Business Observability Metrics: 20 KPIs to Connect IT and Revenue",
+      "slug": "/blog/business-observability-metrics/",
+      "intent": "informational",
+      "editorial_angle": "Metric library showing formula, source, owner, action and segmentation; avoid arbitrary thresholds.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Outcome vs process vs technical metrics",
+        "Conversion",
+        "Fulfilment",
+        "Revenue",
+        "Error impact",
+        "Freshness",
+        "Metric ownership",
+        "Metric anti-patterns"
+      ],
+      "original_asset": "20-KPI matrix with metric definitions and sample calculations",
+      "external_references": [
+        {
+          "name": "BusinessReporting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-reporting"
+        },
+        {
+          "name": "MicrosoftKPI",
+          "url": "https://learn.microsoft.com/en-gb/dynamics365/business-central/analytics-about-kpis"
+        },
+        {
+          "name": "FlowKPIs",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow/reported-kpis"
+        }
+      ],
+      "internal_links_to": [
+        "BO-08",
+        "BO-14",
+        "BO-13"
+      ],
+      "suggested_anchor_texts": [
+        "business KPI monitoring",
+        "business observability dashboards",
+        "real-time business transaction monitoring"
+      ],
+      "cta": "Use the KPI dictionary",
+      "editorial_warning": "No unsupported industry benchmarks",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-08",
+          "planned_url": "/blog/business-kpi-monitoring/",
+          "anchor": "business KPI monitoring"
+        },
+        {
+          "id": "BO-14",
+          "planned_url": "/blog/business-observability-dashboards/",
+          "anchor": "business observability dashboards"
+        },
+        {
+          "id": "BO-13",
+          "planned_url": "/blog/real-time-business-transaction-monitoring/",
+          "anchor": "real-time business transaction monitoring"
+        }
+      ]
+    },
+    {
+      "id": "BO-18",
+      "priority_order": 18,
+      "keyword": "business observability implementation",
+      "title": "How to Implement Business Observability: A 30/60/90-Day Roadmap",
+      "slug": "/blog/business-observability-implementation/",
+      "intent": "how-to",
+      "editorial_angle": "Practical phased rollout and validation using one critical process before scaling.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1400-1900",
+      "outline_h2": [
+        "Stakeholders and goals",
+        "Choose pilot process",
+        "Instrument business events",
+        "Reconcile data",
+        "Build KPIs",
+        "Alert and runbooks",
+        "30/60/90 milestones",
+        "ROI evaluation"
+      ],
+      "original_asset": "30/60/90 implementation plan with pass/fail gates",
+      "external_references": [
+        {
+          "name": "FlowSetup",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow/set-up-business-flow"
+        },
+        {
+          "name": "BusinessEvents",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/bo-basic-concepts"
+        },
+        {
+          "name": "OTelIntro",
+          "url": "https://opentelemetry.io/docs/"
+        },
+        {
+          "name": "Alerting",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/alert-from-business-events-or-flow"
+        }
+      ],
+      "internal_links_to": [
+        "BO-16",
+        "BO-09",
+        "BO-15"
+      ],
+      "suggested_anchor_texts": [
+        "business observability architecture",
+        "end-to-end business process monitoring",
+        "AI-powered business observability"
+      ],
+      "cta": "Download the rollout checklist",
+      "editorial_warning": "Do not treat timeline as guaranteed",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-16",
+          "planned_url": "/blog/business-observability-architecture/",
+          "anchor": "business observability architecture"
+        },
+        {
+          "id": "BO-09",
+          "planned_url": "/blog/end-to-end-business-process-monitoring/",
+          "anchor": "end-to-end business process monitoring"
+        },
+        {
+          "id": "BO-15",
+          "planned_url": "/blog/ai-powered-business-observability/",
+          "anchor": "AI-powered business observability"
+        }
+      ]
+    },
+    {
+      "id": "BO-19",
+      "priority_order": 19,
+      "keyword": "business observability vs process mining",
+      "title": "Business Observability vs Process Mining: Differences, Overlap and Use Cases",
+      "slug": "/blog/business-observability-vs-process-mining/",
+      "intent": "comparison",
+      "editorial_angle": "Distinguish real-time live outcome tracking from historical process discovery/conformance, while acknowledging overlap.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Simple definitions",
+        "Data and methods",
+        "Live monitoring vs discovery",
+        "Architecture",
+        "Which to use when",
+        "Side-by-side case study",
+        "FAQs"
+      ],
+      "original_asset": "Decision tree: observability, process mining, or both",
+      "external_references": [
+        {
+          "name": "IBMProcessMining",
+          "url": "https://www.ibm.com/think/topics/process-mining"
+        },
+        {
+          "name": "ProcessMonitoring",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-process-monitoring"
+        },
+        {
+          "name": "IBM",
+          "url": "https://www.ibm.com/think/insights/business-observability"
+        }
+      ],
+      "internal_links_to": [
+        "BO-06",
+        "BO-09",
+        "BO-01"
+      ],
+      "suggested_anchor_texts": [
+        "business process observability",
+        "end-to-end business process monitoring",
+        "business observability"
+      ],
+      "cta": "See process monitoring examples",
+      "editorial_warning": "Avoid categorical claims; product capabilities overlap",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-06",
+          "planned_url": "/blog/business-process-observability/",
+          "anchor": "business process observability"
+        },
+        {
+          "id": "BO-09",
+          "planned_url": "/blog/end-to-end-business-process-monitoring/",
+          "anchor": "end-to-end business process monitoring"
+        },
+        {
+          "id": "BO-01",
+          "planned_url": "/blog/business-observability/",
+          "anchor": "business observability"
+        }
+      ]
+    },
+    {
+      "id": "BO-20",
+      "priority_order": 20,
+      "keyword": "business observability for financial services",
+      "title": "Business Observability for Financial Services: Payments, Onboarding and Risk Signals",
+      "slug": "/blog/business-observability-for-financial-services/",
+      "intent": "vertical informational/commercial",
+      "editorial_angle": "Ground around customer onboarding and payment process reliability; distinguish process telemetry from regulated financial monitoring.",
+      "target_audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers; adapt to stated intent",
+      "target_length_words": "1100-1600",
+      "outline_h2": [
+        "Financial process pain points",
+        "KYC/onboarding flow",
+        "Payment failure and reconciliation",
+        "Technical and business events",
+        "PII minimisation and access",
+        "KPIs",
+        "Pilot plan",
+        "FAQs"
+      ],
+      "original_asset": "Illustrative onboarding event schema with redacted IDs",
+      "external_references": [
+        {
+          "name": "BusinessFlow",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/business-flow"
+        },
+        {
+          "name": "EndToEndExample",
+          "url": "https://docs.dynatrace.com/docs/observe/business-observability/end-to-end-example"
+        },
+        {
+          "name": "GoogleCloud",
+          "url": "https://docs.cloud.google.com/architecture/framework/reliability/observability"
+        }
+      ],
+      "internal_links_to": [
+        "BO-13",
+        "BO-12",
+        "BO-18"
+      ],
+      "suggested_anchor_texts": [
+        "real-time business transaction monitoring",
+        "business observability use cases",
+        "business observability implementation"
+      ],
+      "cta": "Explore the financial-services pilot checklist",
+      "editorial_warning": "Do not assert legal/regulatory compliance without jurisdiction-specific primary sources",
+      "status": "planned",
+      "internal_link_targets": [
+        {
+          "id": "BO-13",
+          "planned_url": "/blog/real-time-business-transaction-monitoring/",
+          "anchor": "real-time business transaction monitoring"
+        },
+        {
+          "id": "BO-12",
+          "planned_url": "/blog/business-observability-use-cases/",
+          "anchor": "business observability use cases"
+        },
+        {
+          "id": "BO-18",
+          "planned_url": "/blog/business-observability-implementation/",
+          "anchor": "business observability implementation"
+        }
+      ]
+    }
+  ]
+}
