@@ -1,0 +1,289 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import Tabs from '../../components/Tabs.astro';
+import TabPanel from '../../components/TabPanel.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'Business Health', href: '/platform/business-health/' }];
+
+type Ind = { n: string; band: string; st: 'ok' | 'warn' | 'crit'; now: string; sig: string };
+const domains: { id: string; label: string; icon: string; obj: string; owner: string; inds: Ind[] }[] = [
+  { id: 'revenue', label: 'Revenue', icon: 'revenue', obj: 'Earned revenue is collected in full and on time', owner: 'Revenue operations',
+    inds: [
+      { n: 'Payment completion', band: '94–97% (by hour)', st: 'warn', now: '92.8%', sig: 'Authorisations and declines by route' },
+      { n: 'Invoices collected within terms', band: '≥ 88%', st: 'ok', now: '90.4%', sig: 'Invoice issued, due and paid events' },
+      { n: 'Expected vs collected revenue gap', band: '≤ 1.5% of billed', st: 'ok', now: '1.1%', sig: 'Billing, payment and ledger entries' },
+      { n: 'Failed renewals recovered', band: '60–75% within 7 days', st: 'ok', now: '68%', sig: 'Renewal attempts and retries' },
+    ] },
+  { id: 'customers', label: 'Customers', icon: 'customers', obj: 'New customers reach first value quickly', owner: 'Customer onboarding',
+    inds: [
+      { n: 'Time to first value (median)', band: '≤ 1.5 days', st: 'crit', now: '2.4 days', sig: 'Sign-up, setup and first-use events' },
+      { n: 'Onboarding completion', band: '78–85%', st: 'warn', now: '76%', sig: 'Onboarding stage events by cohort' },
+      { n: 'Early support contacts per account', band: '≤ 0.6', st: 'ok', now: '0.5', sig: 'Cases opened in first 30 days' },
+    ] },
+  { id: 'operations', label: 'Operations', icon: 'operations', obj: 'Work flows through teams without building up', owner: 'Operations',
+    inds: [
+      { n: 'Verification queue age (p90)', band: '≤ 8 hours', st: 'warn', now: '11 h', sig: 'Case entered and left stage events' },
+      { n: 'Throughput vs arrivals', band: '≥ 1.0 over a week', st: 'warn', now: '0.94', sig: 'Cases started and completed' },
+      { n: 'Rework rate', band: '≤ 10% of cases', st: 'ok', now: '8%', sig: 'Cases sent back to an earlier stage' },
+    ] },
+  { id: 'delivery', label: 'Delivery', icon: 'delivery', obj: 'Orders are delivered as promised', owner: 'Fulfilment',
+    inds: [
+      { n: 'Dispatched before carrier cut-off', band: '≥ 96%', st: 'ok', now: '97.2%', sig: 'Pick, pack and dispatch events' },
+      { n: 'Delivered by promised date', band: '≥ 94%', st: 'ok', now: '95.1%', sig: 'Carrier tracking milestones' },
+      { n: 'Delivery exceptions resolved in 1 day', band: '≥ 85%', st: 'ok', now: '88%', sig: 'Exception cases and resolutions' },
+    ] },
+  { id: 'finance', label: 'Finance', icon: 'finance', obj: 'Operations and the ledger agree', owner: 'Finance operations',
+    inds: [
+      { n: 'Unreconciled payments (age > 3 days)', band: '≤ 0.5% of volume', st: 'ok', now: '0.3%', sig: 'Payment settlement and ledger entries' },
+      { n: 'Cost per order', band: 'within ±5% of plan', st: 'warn', now: '+6.8%', sig: 'Process effort and cost-centre spend' },
+      { n: 'Refunds as share of new revenue', band: '≤ 3%', st: 'ok', now: '2.6%', sig: 'Refund and dispute events' },
+    ] },
+];
+const stLabel = { ok: 'In band', warn: 'Near edge', crit: 'Outside band' } as const;
+const stBadge = { ok: 'badge-ok', warn: 'badge-warn', crit: 'badge-crit' } as const;
+---
+<BaseLayout title="Business Health" description="Define what working means for each part of the business: objectives, indicators with expected bands and service expectations, rolled into scores you can always explain." ogImage="/social/og-platform.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Platform · Business Health" title="Know whether the business is <span class='gradient-text'>actually working.</span>" lede="Business Health turns “is everything OK?” into something you can observe. Objectives describe what the business must achieve, indicators measure them against expected bands, and service expectations make your promises explicit, all on the same shared model." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#domains">Browse example indicators</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/diagrams/business-health-model-tree-vertical.svg" alt="Health model: the objective 'orders are paid for and delivered as promised' breaks into three indicators with expected bands (payment completion is near the edge of its band), each fed by two observable signals." frame="health model" zoom class="hero-tree" />
+    </Fragment>
+  </PageHero>
+
+  <!-- Building blocks -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="What it does" title="Three building blocks, one chain of reasoning." lede="Every health score in Panoptes is the top of a tree you can walk down: from what the business is trying to achieve, to how that is measured, to the events it is measured on." />
+      <div class="tree-wide reveal hide-sm">
+        <Diagram src="/diagrams/business-health-model-tree.svg" alt="The same health model laid out left to right: objective, then three indicators with bands, then the signals that feed each one." frame="objective → indicators → signals" />
+      </div>
+      <ol class="blocks">
+        <li class="reveal">
+          <span class="b-k">Objective</span>
+          <h3>What must be true</h3>
+          <p class="muted">A plain-language statement of an outcome, with an owner. “New customers reach first value quickly.” “Orders are delivered as promised.” Objectives are business commitments, not metrics.</p>
+        </li>
+        <li class="reveal">
+          <span class="b-k">Indicator</span>
+          <h3>How you would know</h3>
+          <p class="muted">A measurable quantity attached to the objective, computed from the Business Graph, with an expected band and a direction. Time to first value; dispatch before cut-off; collected versus billed.</p>
+        </li>
+        <li class="reveal">
+          <span class="b-k">Service expectation</span>
+          <h3>What you promised</h3>
+          <p class="muted">Business-level service expectations, such as an onboarding decision within one business day, are tracked as projected attainment on open work, not just a percentage reported after the month has closed.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="why">
+        <div>
+          <p class="eyebrow">Why it matters</p>
+          <h2>Green at month end. Broken on Monday morning.</h2>
+          <p class="lede">Most business metrics are reported as averages over a period, compared against a single target. That hides almost everything operators need to know.</p>
+        </div>
+        <div class="why-body">
+          <p>A service commitment can show 97% attainment for the month while every Monday morning breaches it, because weekend backlog meets a fixed team. A payment completion rate can look stable because a fall in one region is offset by growth in another. A cost per order can drift for weeks before anyone compares it with plan.</p>
+          <p>Business Health is designed to close those gaps in three ways. Indicators are measured continuously and at the grain where problems actually occur: by hour, region, route, segment. “Normal” is a band that moves with the business rather than a single line. And every indicator stays connected to the objective it serves and the owner responsible for it, so a change is never just a number on a chart.</p>
+          <a href="/resources/business-health-metrics/" class="link-arrow">Read: choosing business health metrics</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Expected bands -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Expected bands" title="“Normal” is a range, and it moves." lede="A single threshold is either too loose to catch real problems or too tight to be believed. Bands describe the range an indicator should sit in at a given moment, and where each band comes from stays visible." />
+      <div class="bands">
+        <div class="band reveal">
+          <svg viewBox="0 0 200 70" aria-hidden="true"><path d="M0 22 H200 V48 H0Z" class="bd-fill"/><path d="M0 36 L20 33 L40 38 L60 34 L80 37 L100 32 L120 36 L140 35 L160 38 L180 33 L200 35" class="bd-line"/></svg>
+          <h3>Learned from history</h3>
+          <p class="muted small">The typical range over recent comparable periods. Useful when there is no explicit target yet, and a starting point for agreeing one.</p>
+        </div>
+        <div class="band reveal">
+          <svg viewBox="0 0 200 70" aria-hidden="true"><path d="M0 40 C40 10 60 10 100 28 S160 50 200 20 V44 C160 72 140 56 100 50 S40 32 0 62Z" class="bd-fill"/><path d="M0 52 C40 22 60 24 100 40 S160 60 200 32" class="bd-line"/></svg>
+          <h3>Shaped by seasonality</h3>
+          <p class="muted small">Bands that follow time of day, day of week and known calendar effects, so Monday 09:00 is compared with other Monday mornings rather than with Sunday night.</p>
+        </div>
+        <div class="band reveal">
+          <svg viewBox="0 0 200 70" aria-hidden="true"><path d="M0 14 H200 V40 H0Z" class="bd-fill"/><path d="M0 40 H200" class="bd-commit"/><path d="M0 28 L30 26 L60 30 L90 27 L120 33 L150 38 L170 44 L200 47" class="bd-line"/></svg>
+          <h3>Set by a commitment</h3>
+          <p class="muted small">A hard edge from a promise: an SLA, a carrier cut-off, contractual payment terms. Crossing it is a business event in its own right, whatever history says.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Composite -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="split comp">
+        <div class="reveal">
+          <Diagram src="/diagrams/business-health-composite.svg" alt="Composite health score of 76 built from four weighted indicators. Payment completion carries 40% of the weight and is outside its band, which is the main reason the score is not higher. Fictional data." frame="composite score" zoom />
+        </div>
+        <div>
+          <p class="eyebrow">Composite scores</p>
+          <h2>One number is useful only if you can take it apart.</h2>
+          <p class="muted">Leaders want a single view of whether a domain is healthy. The risk is a score that nobody can explain, and therefore nobody acts on. Panoptes is designed so that every composite can be decomposed on demand.</p>
+          <ul class="rules">
+            <li><strong>Visible weights.</strong> Each indicator’s weight is explicit, owned and versioned like any other definition.</li>
+            <li><strong>Scored against bands.</strong> Indicators contribute according to where they sit relative to their band, not raw values on different scales.</li>
+            <li><strong>No averaging away a breach.</strong> An indicator outside a commitment band is flagged on its own, however good the rest of the score looks.</li>
+            <li><strong>Always one click from evidence.</strong> From the score to the indicator, to the segment, to the events behind it.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Domains (interactive) -->
+  <section id="domains" class="section">
+    <div class="container">
+      <SectionHead eyebrow="Interactive" title="Example indicators, domain by domain." lede="Select a domain to see an example objective, the indicators that would measure it, their expected bands and the signals behind them." />
+      <Tabs uid="hd" label="Business domains" tabs={domains.map((d) => ({ id: d.id, label: d.label }))} class="hd-tabs">
+        {domains.map((d, di) => {
+          const worst = d.inds.some((i) => i.st === 'crit') ? 'crit' : d.inds.some((i) => i.st === 'warn') ? 'warn' : 'ok';
+          return (
+            <TabPanel uid="hd" id={d.id} first={di === 0}>
+              <div class="hd">
+                <div class="hd-head">
+                  <span class="icon-tile"><Icon name={d.icon} /></span>
+                  <div>
+                    <p class="kpi-label">Objective · owned by {d.owner}</p>
+                    <h3>{d.obj}</h3>
+                  </div>
+                  <span class:list={['badge', stBadge[worst]]}>{worst === 'ok' ? 'All indicators in band' : worst === 'warn' ? 'Watch' : 'Needs attention'}</span>
+                </div>
+                <div class="table-wrap">
+                  <table class="table hd-table">
+                    <thead><tr><th scope="col">Indicator</th><th scope="col">Expected band</th><th scope="col">Now</th><th scope="col">Status</th><th scope="col">Built from</th></tr></thead>
+                    <tbody>
+                      {d.inds.map((i) => (
+                        <tr><th scope="row">{i.n}</th><td class="mono">{i.band}</td><td class="mono">{i.now}</td><td><span class:list={['badge', stBadge[i.st]]}>{stLabel[i.st]}</span></td><td class="muted">{i.sig}</td></tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p class="illustrative mt-1">Illustrative data · bands and values are fictional examples</p>
+              </div>
+            </TabPanel>
+          );
+        })}
+      </Tabs>
+    </div>
+  </section>
+
+  <!-- Scenario -->
+  <section class="section section-alt">
+    <div class="container container-narrow">
+      <p class="eyebrow">Scenario</p>
+      <h2>The onboarding objective that slipped by a day.</h2>
+      <div class="scen-body">
+        <p>A B2B software company sets an objective: <em>new customers reach first value within a day and a half</em>. Each team’s own reporting looks fine. Sales closes deals on schedule, support response times are within target, and the product team sees normal activation once accounts are set up.</p>
+        <p>Business Health measures the objective end to end, from signed contract to first meaningful use, and the median slides from inside the band to well outside it over three weeks. Because the indicator is attached to the Business Graph, Panoptes can show where the extra time sits: accounts are waiting longer for a security review step that sits between two teams, and the wait is concentrated in larger accounts.</p>
+        <p>Nobody had a metric for that hand-off, so nobody owned it. The objective did. The finding goes to the onboarding owner with the evidence attached, and the follow-up is measured against the same band. <strong>The outcome to measure</strong> is whether time to first value returns to its band and stays there, not whether a report turns green.</p>
+      </div>
+      <p class="illustrative">Illustrative scenario</p>
+    </div>
+  </section>
+
+  <!-- Connects -->
+  <section class="section">
+    <div class="container">
+      <div class="conn">
+        <div>
+          <p class="eyebrow">How it connects</p>
+          <h2>Health is where observation gets its meaning.</h2>
+          <p class="muted">Indicators are computed on entities from the <a href="/platform/business-graph/">Business Graph</a>. Their bands feed <a href="/platform/anomaly-detection/">Anomaly Detection</a>, which decides what counts as meaningful change. Scores and breaches feed the <a href="/platform/command-center/">Command Center</a>, and objectives give <a href="/platform/actions-automation/">Actions &amp; Automation</a> a clear owner and a clear definition of “fixed”.</p>
+        </div>
+        <RelatedLinks title="Related capabilities" items={[
+          { label: 'Anomaly Detection', href: '/platform/anomaly-detection/', desc: 'Meaningful change against expected bands', icon: 'anomaly' },
+          { label: 'Command Center', href: '/platform/command-center/', desc: 'Health and priorities in one view', icon: 'command' },
+          { label: 'Process Intelligence', href: '/platform/process-intelligence/', desc: 'Why a flow indicator moved', icon: 'process' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight section-alt">
+    <div class="container">
+      <RelatedLinks eyebrow="Use cases" title="Business Health in practice" items={[
+        { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Watch commitments before they break', icon: 'target' },
+        { label: 'Operational efficiency', href: '/use-cases/operational-efficiency/', desc: 'Cost, effort and rework in context', icon: 'spark' },
+        { label: 'For executives', href: '/solutions/executives/', desc: 'One honest picture of the business', icon: 'compass' },
+        { label: 'Business health metrics', href: '/resources/business-health-metrics/', desc: 'Guide: what to measure and why', icon: 'book' },
+      ]} />
+    </div>
+  </section>
+
+  <CTA title="Define what “working” means for your business." text="Bring one objective you care about. We will show how Panoptes would break it into indicators, bands and signals." />
+</BaseLayout>
+
+<style>
+  :global(.hero-tree) { max-width: 440px; margin-inline: auto; }
+  .tree-wide { max-width: 900px; margin: 0 auto clamp(28px, 4vw, 48px); }
+  .hd-table tr:last-child th { border-bottom: 0; }
+  .blocks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; background: var(--surface); }
+  .blocks li { padding: clamp(22px, 3vw, 36px); position: relative; }
+  .blocks li + li { border-left: 1px solid var(--border); }
+  .blocks li:not(:last-child)::after { content: ''; position: absolute; right: -9px; top: 40px; width: 16px; height: 16px; background: var(--surface); border-top: 1px solid var(--border); border-right: 1px solid var(--border); transform: rotate(45deg); z-index: 1; }
+  .b-k { display: inline-block; font: 500 .72rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--accent-text); background: var(--accent-soft); padding: 6px 10px; border-radius: 999px; margin-bottom: 1rem; }
+  .blocks h3 { font-size: 1.3rem; }
+  @media (max-width: 860px) {
+    .blocks { grid-template-columns: 1fr; }
+    .blocks li + li { border-left: 0; border-top: 1px solid var(--border); }
+    .blocks li:not(:last-child)::after { right: auto; left: 40px; top: auto; bottom: -9px; transform: rotate(135deg); }
+  }
+
+  .why { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  .why-body p { color: var(--text-2); }
+  @media (max-width: 860px) { .why { grid-template-columns: 1fr; } }
+
+  .bands { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .band { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; background: var(--surface); }
+  .band svg { width: 100%; height: auto; display: block; margin-bottom: 1rem; border-radius: 8px; background: var(--bg-2); }
+  .bd-fill { fill: var(--accent-soft); }
+  .bd-line { fill: none; stroke: var(--accent); stroke-width: 2; }
+  .bd-commit { fill: none; stroke: var(--crit); stroke-width: 1.5; stroke-dasharray: 4 3; }
+  .band h3 { font-size: 1.1rem; }
+  @media (max-width: 860px) { .bands { grid-template-columns: 1fr; } }
+
+  .comp { grid-template-columns: minmax(0, 1.35fr) minmax(0, .75fr); gap: clamp(28px, 4vw, 56px); }
+  @media (max-width: 960px) { .comp { grid-template-columns: minmax(0, 1fr); } }
+  .rules { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: .9rem; }
+  .rules li { padding-left: 1.2rem; border-left: 2px solid var(--accent); color: var(--text-2); font-size: .95rem; }
+  .rules strong { color: var(--text); }
+
+  :global(.hd-tabs) :global([role='tablist']) { margin-inline: 0; }
+  .hd { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(18px, 3vw, 30px); }
+  .hd-head { display: flex; align-items: center; gap: 16px; margin-bottom: 1.4rem; flex-wrap: wrap; }
+  .hd-head .icon-tile { margin: 0; }
+  .hd-head > div { flex: 1; min-width: 200px; }
+  .hd-head .kpi-label { margin-bottom: .3rem; }
+  .hd-head h3 { margin: 0; font-size: clamp(1.2rem, 2vw, 1.5rem); }
+  .hd-table th[scope='row'] { font: 600 .92rem/1.35 var(--font-body); text-transform: none; letter-spacing: 0; color: var(--text); background: transparent; }
+  .hd-table td.mono { white-space: nowrap; }
+  .hd-table td.muted { font-size: .88rem; }
+
+  .scen-body { margin: 1.4rem 0; }
+  .scen-body p { color: var(--text-2); font-size: 1.05rem; }
+  .scen-body strong { color: var(--text); }
+
+  .conn { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 64px); align-items: start; }
+  .conn :global(.related-list) { grid-template-columns: 1fr; }
+  @media (max-width: 860px) { .conn { grid-template-columns: 1fr; } }
+</style>

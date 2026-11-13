@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import ProductScreen from '../../components/solutions/ProductScreen.astro';
+import RoleSwitcher from '../../components/solutions/RoleSwitcher.astro';
+
+const crumbs = [{ label: 'Solutions', href: '/solutions/' }, { label: 'Finance', href: '/solutions/finance/' }];
+
+// Day the issue began vs the day finance typically learns of it (35 = close day +4).
+const late = [
+  { t: 'Month-end surprises', d: 'Revenue lands 4% under forecast. The cause — a payment route whose success rate fell on the 9th — was visible in operational data for three weeks.', start: 9, found: 35 },
+  { t: 'Unreconciled payments', d: 'Processor settlements arrive net of fees, in batches, across currencies. Items that do not match sit in a suspense account until someone works through them at close.', start: 3, found: 34 },
+  { t: 'Recognised vs collected', d: 'Revenue is recognised on invoice; cash depends on payment success, disputes and terms. The gap between the two is reported, but rarely explained by cause.', start: 12, found: 33 },
+  { t: 'Cost per transaction drift', d: 'Unit cost creeps up 9% with flat volume. The ledger shows the total; it does not show that a new manual check doubled rework in one process.', start: 6, found: 36 },
+  { t: 'Contract-to-invoice leakage', d: 'Usage above plan is not billed, a discount runs past its end date, a price change is not applied to renewals. Each is small; none is found until an audit or a customer query.', start: 1, found: 38 },
+];
+const DAYS = 38; // 31 days + 7 close days
+
+const gap = [
+  { id: 'unbilled', t: 'Usage not billed', v: 0.09, cls: 'warn', cause: 'Metered usage above plan limits is recorded in the product, but the billing run only picks up plan changes. 37 accounts exceeded their tier this month.', where: 'Contract → Order → Invoice', owner: 'Billing operations', watch: 'Metered usage vs invoiced quantity, per account, daily' },
+  { id: 'failed', t: 'Failed payments', v: 0.21, cls: 'crit', cause: 'Card payments on one regional route started failing more often on the 14th. Retries recover some; the rest become overdue invoices.', where: 'Invoice → Payment', owner: 'Payments team', watch: 'Payment success by route, method and issuer against expected range' },
+  { id: 'refunds', t: 'Refunds & disputes', v: 0.07, cls: 'warn', cause: 'Refunds are in line with history, but disputes doubled on orders shipped late — a fulfilment problem showing up as a finance cost.', where: 'Payment → Settlement', owner: 'Finance + fulfilment', watch: 'Dispute rate by reason, linked to the order’s delivery outcome' },
+  { id: 'timing', t: 'Timing & unapplied cash', v: 0.12, cls: 'warn', cause: 'Bank transfers without a usable reference cannot be matched to invoices. The cash is in the bank but the invoices still look unpaid.', where: 'Settlement → Reconcile → Ledger', owner: 'Accounts receivable', watch: 'Received vs matched, ageing of unapplied items' },
+];
+
+const groups = [
+  { g: 'Money movement', rows: [['Expected vs billed vs collected', 'Three totals for the same period, from contracts, invoices and cash', 'Separates leakage from timing'], ['Payment success rate', 'Captured ÷ attempted, by route, method and issuer', 'The most common hidden revenue gap'], ['Days to cash', 'Invoice issued to cash received, by segment', 'Working capital and forecast accuracy']] },
+  { g: 'Reconciliation', rows: [['Unmatched items', 'Count, value and age of unreconciled transactions', 'What will land on the close'], ['Fee variance', 'Settled fees vs contracted rates, per processor', 'Small per transaction, material in total'], ['Unapplied cash', 'Received but not matched to an invoice', 'Overstates receivables and dunning']] },
+  { g: 'Unit economics', rows: [['Cost per transaction', 'By process and channel, including rework', 'Shows where cost is created'], ['Manual touches per case', 'Effort that does not move work forward', 'Leading indicator of cost drift'], ['Refund and dispute cost', 'Including handling time and fees', 'Links finance cost to operational cause']] },
+  { g: 'Forecast', rows: [['Deferred first billing', 'Signed revenue whose first invoice has slipped', 'Explains timing gaps before close'], ['Collections at risk', 'Invoices exposed to failing routes or disputes', 'Cash forecast revisions, earlier'], ['Variance explained', 'Share of forecast variance with an attributed cause', 'Fewer surprises in the close pack']] },
+];
+
+const decisions = [
+  { i: 'finance', t: 'Re-route or renegotiate payments', d: 'Move volume away from an underperforming route, or take fee variance back to the processor with evidence.' },
+  { i: 'calendar', t: 'Revise the forecast mid-month', d: 'Adjust cash and revenue expectations when the operational cause appears, not after close.' },
+  { i: 'audit', t: 'Fix leakage at its source', d: 'Close the gap between usage and billing, or contract terms and invoices, rather than writing it off.' },
+  { i: 'spark', t: 'Invest where unit cost is created', d: 'Fund the process change that removes rework, with a measurable cost-per-transaction target.' },
+  { i: 'list', t: 'Prioritise the close', d: 'Work unreconciled items by value and age, and know which are timing and which are loss.' },
+  { i: 'shield', t: 'Set tolerances that mean something', d: 'Agree expected ranges for success rates, fees and ageing, and be told when they are breached.' },
+];
+
+const faqs = [
+  { q: 'Does Panoptes replace our ERP or reconciliation tools?', a: 'No. Systems of record stay where they are. Panoptes is designed to read from them, connect money movement to the operational events that caused it, and explain variances — not to post journals or replace reconciliation workflows.' },
+  { q: 'Which finance systems can it connect to?', a: 'The categories are typically ERP and accounting, billing, payment processors, banks and the data warehouse. Specific connectors are confirmed during evaluation. See <a href="/integrations/data-sources/">data sources</a>.' },
+  { q: 'How is financial data protected?', a: 'Least-privilege, read-oriented connections, role-based access to parts of the model, and encryption in transit and at rest are core design principles. See <a href="/integrations/security-governance/">security &amp; governance</a>.' },
+  { q: 'Can it prove why revenue fell?', a: 'It can show which operational changes coincide with the variance and how they connect to it through the model. It labels these as correlations until they are verified, so the explanation in the close pack is one you can stand behind.' },
+];
+---
+<BaseLayout title="Business observability for finance" description="For CFOs and finance teams: connect money movement to the operations that cause it — expected vs collected revenue, unreconciled items, leakage and unit cost drift." ogImage="/social/og-solutions.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Solutions · Finance" title="Know why the numbers moved — before the close." lede="Finance sees outcomes: revenue, cash, cost. The causes sit in operations — a failing payment route, unbilled usage, a process that started needing rework. Panoptes connects the two, so variances arrive with an explanation, and early enough to act on." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#gap">Explain a gap</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/illustrations/finance-payment-trace.svg" alt="One fictional order traced from invoice to ledger: a failed first payment, a retry three days later, and a settlement fee above the contracted rate leaving a $6.20 variance" frame="trace · order A-20931" zoom />
+    </Fragment>
+  </PageHero>
+
+  <!-- Problems as a timeline -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="The finance visibility gap" title="Most surprises start weeks before the close." lede="Each of these problems begins inside an operational process and travels into the ledger. By the time finance sees it, the month is over. The bars show when each issue began in a fictional month, and when it is typically discovered." />
+      <div class="late reveal" role="list">
+        <div class="late-axis" aria-hidden="true">
+          <span style="left:0%">Day 1</span><span style={`left:${(14 / DAYS) * 100}%`}>Day 15</span><span class="close" style={`left:${(31 / DAYS) * 100}%`}>Close →</span>
+        </div>
+        {late.map((r) => (
+          <div class="late-row" role="listitem">
+            <div class="late-copy"><h3>{r.t}</h3><p class="muted small">{r.d}</p></div>
+            <div class="late-track" role="img" aria-label={`Began on day ${r.start}; typically found ${r.found > 31 ? `${r.found - 31} working days into the close` : `on day ${r.found}`}`}>
+              <span class="late-close" style={`left:${(31 / DAYS) * 100}%`}></span>
+              <span class="late-bar" style={`left:${((r.start - 1) / DAYS) * 100}%; width:${((r.found - r.start) / DAYS) * 100}%`}></span>
+              <span class="late-dot start" style={`left:${((r.start - 1) / DAYS) * 100}%`}></span>
+              <span class="late-dot found" style={`left:${((r.found - 1) / DAYS) * 100}%`}></span>
+            </div>
+          </div>
+        ))}
+        <p class="late-legend note"><span class="lg s"></span>Began — observable in operational data <span class="lg f"></span>Typically found by finance</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive gap -->
+  <section class="section section-alt" id="gap">
+    <div class="container">
+      <SectionHead eyebrow="Interactive · explain the gap" title="From “collected is $0.49M short” to four owned causes." lede="Expected revenue for the month was $4.80M; collected was $4.31M. Select each part of the bridge to see the operational cause behind it. The scenario and figures are fictional." />
+      <div class="gapbox reveal" data-gap>
+        <div class="bridge" role="group" aria-label="Bridge from expected to collected revenue">
+          <div class="br-row total"><span class="br-l">Expected</span><span class="br-track"><span class="br-bar" style="left:0;width:81%"></span></span><span class="br-v">$4.80M</span></div>
+          {(() => { let run = 4.8; return gap.map((g, i) => { const a = run - g.v; const left = ((a - 3.9) / 1) * 90; const w = (g.v / 1) * 90; run = a; return (
+            <button type="button" class="br-row" data-gap-btn={g.id} aria-pressed={i === 1 ? 'true' : 'false'}>
+              <span class="br-l">{g.t}</span>
+              <span class="br-track"><span class={`br-bar ${g.cls}`} style={`left:${left}%;width:${w}%`}></span></span>
+              <span class="br-v">−${g.v.toFixed(2)}M</span>
+            </button>
+          ); }); })()}
+          <div class="br-row total"><span class="br-l">Collected</span><span class="br-track"><span class="br-bar" style={`left:0;width:${(4.31 - 3.9) * 90}%`}></span></span><span class="br-v">$4.31M</span></div>
+          <p class="note br-note">Bars start at $3.9M to make the differences visible.</p>
+        </div>
+        <div class="gap-detail" aria-live="polite">
+          {gap.map((g, i) => (
+            <div data-gap-panel={g.id} hidden={i !== 1}>
+              <p class="kpi-label">Operational cause</p>
+              <h3>{g.t} · −${g.v.toFixed(2)}M</h3>
+              <p>{g.cause}</p>
+              <dl class="dl-grid small">
+                <dt>Where it happens</dt><dd class="mono">{g.where}</dd>
+                <dt>Owner</dt><dd>{g.owner}</dd>
+                <dt>What Panoptes watches</dt><dd>{g.watch}</dd>
+              </dl>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Illustrative workflow" title="Order to cash to ledger, observed end to end." lede="Panoptes models each step money passes through and compares expected with actual at every hand-off. Leakage is rarely one large failure. It is a series of small differences that sit between systems and between teams." />
+      <div class="reveal">
+        <Diagram src="/diagrams/finance-order-to-ledger.svg" alt="Contract, order, invoice, payment, settlement, reconciliation and ledger, with leakage points: usage not billed, expired discounts, failed payments, refunds and disputes, fee variance and unapplied cash" frame="order to ledger · leakage map" illustrative={false} zoom class="hide-sm" />
+        <Diagram src="/diagrams/finance-order-to-ledger-vertical.svg" alt="Order to ledger with six leakage points" frame class="show-sm" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshot + observable -->
+  <section class="section section-alt">
+    <div class="container">
+      <ProductScreen src="/screenshots/finance-close-watch.svg" alt="Fictional close watch: expected $4.80M, billed $4.71M, collected $4.31M, $182k unreconciled; a bridge showing failed payments as the largest driver; payment success by route with one route at 71.4%; cost per transaction rising 18% for refund handling" title="panoptes / finance / close-watch" />
+      <div class="grid grid-3 obs mt-3">
+        <div class="reveal"><p class="kpi-label">Observable</p><h3>Money movement</h3><p class="muted small">Every contract, invoice, payment attempt, settlement and posting, connected to the customer and order it belongs to.</p></div>
+        <div class="reveal"><p class="kpi-label">Observable</p><h3>Variance with a cause</h3><p class="muted small">Differences between expected and actual at each hand-off, attributed to a route, process or change where the evidence supports it.</p></div>
+        <div class="reveal"><p class="kpi-label">Observable</p><h3>Cost where it is created</h3><p class="muted small">Unit cost by process and channel, including the rework and manual touches the ledger cannot see.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Indicators -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Recommended indicators" title="Signals a finance view should carry." lede="A starting set, grouped by the part of the close each one protects." />
+      <div class="table-wrap reveal">
+        <table class="table fin-table">
+          <thead><tr><th>Indicator</th><th>Definition</th><th>Why it matters</th></tr></thead>
+          {groups.map((g) => (
+            <tbody>
+              <tr class="grp"><th colspan="3" scope="colgroup">{g.g}</th></tr>
+              {g.rows.map(([a, b, c]) => <tr><td><strong>{a}</strong></td><td>{b}</td><td class="muted">{c}</td></tr>)}
+            </tbody>
+          ))}
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Decisions -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Decisions it can support" title="Finance decisions, made on operational evidence." />
+      <div class="grid grid-3">
+        {decisions.map((d) => <FeatureCard title={d.t} text={d.d} icon={d.i} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Relevant capabilities" title="What the finance view draws on." />
+      <div class="grid grid-4">
+        <FeatureCard title="Business Graph" text="Connects contracts, customers, orders, payments and ledger entries." href="/platform/business-graph/" icon="graph" />
+        <FeatureCard title="Anomaly Detection" text="Success rates, fees and ageing compared with expected ranges." href="/platform/anomaly-detection/" icon="anomaly" />
+        <FeatureCard title="Root Cause Analysis" text="From a variance to the change that preceded it — with correlation and cause kept apart." href="/platform/root-cause-analysis/" icon="rootcause" />
+        <FeatureCard title="Journey Intelligence" text="Follow a transaction end to end across billing, payments and the ledger." href="/platform/journey-intelligence/" icon="journey" />
+      </div>
+      <div class="split split-top mt-3">
+        <RelatedLinks eyebrow="Related use cases" title="Go deeper" items={[
+          { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Find where earned revenue goes missing', icon: 'revenue' },
+          { label: 'Operational efficiency', href: '/use-cases/operational-efficiency/', desc: 'Cost, effort and rework, in context', icon: 'spark' },
+          { label: 'Business anomalies', href: '/use-cases/business-anomalies/', desc: 'Separate real change from noise', icon: 'anomaly' },
+          { label: 'How business events connect to outcomes', href: '/resources/how-business-events-connect-to-outcomes/', desc: 'From event to ledger', icon: 'book' },
+        ]} />
+        <div>
+          <p class="eyebrow">FAQ</p>
+          <h2 class="faq-title">Questions finance teams ask</h2>
+          <FAQ items={faqs} />
+        </div>
+      </div>
+      <div class="mt-3"><RoleSwitcher current="/solutions/finance/" /></div>
+    </div>
+  </section>
+
+  <CTA title="Close the month without the surprises." text="Bring last month’s largest unexplained variance. We will show how Panoptes would trace it through your operations." />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-gap]');
+  if (root) {
+    const btns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-gap-btn]'));
+    btns.forEach((b) => b.addEventListener('click', () => {
+      btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      root.querySelectorAll<HTMLElement>('[data-gap-panel]').forEach((p) => { p.hidden = p.dataset.gapPanel !== b.dataset.gapBtn; });
+    }));
+  }
+</script>
+
+<style>
+  .late { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(16px, 3vw, 28px); }
+  .late-axis { position: relative; height: 22px; margin-left: calc(38% + 24px); font: 500 .72rem/1 var(--font-mono); color: var(--text-3); }
+  .late-axis span { position: absolute; top: 0; white-space: nowrap; transform: translateX(-2px); }
+  .late-axis .close { color: var(--accent-text); }
+  .late-row { display: grid; grid-template-columns: 38% minmax(0, 1fr); gap: 24px; align-items: center; padding: 18px 0; border-top: 1px solid var(--border); }
+  .late-copy h3 { font-size: 1.1rem; margin-bottom: .3em; }
+  .late-copy p { margin: 0; }
+  .late-track { position: relative; height: 14px; background: var(--bg-2); border-radius: 7px; }
+  .late-close { position: absolute; top: -10px; bottom: -10px; right: 0; background: var(--accent-soft); border-left: 1.5px dashed var(--accent); border-radius: 0 7px 7px 0; }
+  .late-bar { position: absolute; top: 4px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--warn), var(--crit)); }
+  .late-dot { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 3px solid var(--surface); }
+  .late-dot.start { background: var(--warn); }
+  .late-dot.found { background: var(--crit); }
+  .late-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
+  .lg { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-left: 8px; }
+  .lg.s { background: var(--warn); margin-left: 0; } .lg.f { background: var(--crit); }
+  @media (max-width: 760px) {
+    .late-axis { margin-left: 0; }
+    .late-row { grid-template-columns: 1fr; gap: 12px; }
+  }
+
+  .gapbox { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); padding: clamp(18px, 3vw, 32px); box-shadow: var(--shadow); }
+  .bridge { display: grid; gap: 6px; align-content: start; }
+  .br-row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 72px; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 12px; border: 1px solid transparent; background: none; font: inherit; color: var(--text); text-align: left; width: 100%; }
+  button.br-row { cursor: pointer; border-color: var(--border); background: var(--bg); transition: border-color .2s, background .2s; }
+  button.br-row:hover { border-color: var(--accent); }
+  button.br-row[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-soft); }
+  .br-l { font-size: .92rem; font-weight: 600; }
+  .total .br-l { font-family: var(--font-display); }
+  .br-track { position: relative; height: 22px; }
+  .br-bar { position: absolute; top: 0; height: 100%; border-radius: 5px; background: var(--accent); }
+  .br-bar.warn { background: var(--warn); } .br-bar.crit { background: var(--crit); }
+  .br-v { font: 600 .86rem/1 var(--font-mono); text-align: right; }
+  .br-note { margin: 6px 0 0 12px; }
+  .gap-detail h3 { font-size: 1.35rem; }
+  .gap-detail .kpi-label { margin-bottom: .6rem; }
+  .gap-detail [hidden] { display: none; }
+  .gap-detail .dl-grid { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+  @media (max-width: 960px) { .gapbox { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .br-row { grid-template-columns: 1fr 64px; } .br-track { grid-column: 1 / -1; grid-row: 2; } .gap-detail .dl-grid { grid-template-columns: 1fr; gap: .2rem; } .gap-detail .dl-grid dd { margin-bottom: .6rem; } }
+
+  .obs h3 { font-size: 1.15rem; margin-top: .5rem; }
+  .fin-table tr.grp th { background: var(--accent-soft); color: var(--accent-text); font-size: .76rem; }
+  .fin-table tbody + tbody { border-top: 0; }
+  .faq-title { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  :global(.frame-bar .illustrative) { white-space: nowrap; flex: none; }
+</style>

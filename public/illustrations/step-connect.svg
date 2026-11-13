@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>Connect: business systems feed one model</title>
+<g class="d-t" font-size="9" font-weight="600">
+<rect x="10" y="14" width="64" height="24" rx="7" class="d-surface"/><rect x="10" y="14" width="64" height="24" rx="7" class="d-line"/><text x="42" y="29" text-anchor="middle" class="d-text">CRM</text>
+<rect x="10" y="48" width="64" height="24" rx="7" class="d-surface"/><rect x="10" y="48" width="64" height="24" rx="7" class="d-line"/><text x="42" y="63" text-anchor="middle" class="d-text">Payments</text>
+<rect x="10" y="82" width="64" height="24" rx="7" class="d-surface"/><rect x="10" y="82" width="64" height="24" rx="7" class="d-line"/><text x="42" y="97" text-anchor="middle" class="d-text">ERP</text>
+<rect x="10" y="116" width="64" height="24" rx="7" class="d-surface"/><rect x="10" y="116" width="64" height="24" rx="7" class="d-line"/><text x="42" y="131" text-anchor="middle" class="d-text">Events</text>
+</g>
+<g stroke-width="1.5"><path d="M74 26C120 26 120 75 160 75M74 60C120 60 120 75 160 75M74 94C120 94 120 75 160 75M74 128C120 128 120 75 160 75" class="d-accent-2-s d-flow"/></g>
+<circle cx="190" cy="75" r="34" class="d-soft"/><circle cx="190" cy="75" r="34" class="d-accent-s" stroke-width="1.5"/>
+<circle cx="190" cy="75" r="9" class="d-accent"/><circle cx="190" cy="75" r="20" class="d-accent-s" stroke-dasharray="3 4"/>
+</svg>

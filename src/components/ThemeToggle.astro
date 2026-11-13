@@ -1,0 +1,14 @@
+---
+import Icon from './Icon.astro';
+---
+<button type="button" class="theme-toggle icon-btn" data-theme-toggle aria-label="Switch to dark theme" title="Toggle theme">
+  <span class="tt-sun"><Icon name="sun" /></span>
+  <span class="tt-moon"><Icon name="moon" /></span>
+</button>
+<style>
+  .theme-toggle { border-radius: 999px; background: transparent; }
+  .theme-toggle span { display: grid; place-items: center; }
+  .tt-sun { display: none !important; }
+  :global(:root[data-theme='dark']) .tt-sun { display: grid !important; }
+  :global(:root[data-theme='dark']) .tt-moon { display: none !important; }
+</style>

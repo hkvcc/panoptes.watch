@@ -1,0 +1,235 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import AnomalyExplorer from '../../components/platform-b/AnomalyExplorer.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'Anomaly Detection', href: '/platform/anomaly-detection/' }];
+
+const principles = [
+  { n: '01', t: 'Learn what normal looks like', d: 'Every metric gets an expectation that reflects its own rhythm — weekdays and weekends, month-end, seasonal peaks and known events — instead of a single fixed threshold someone guessed two years ago.' },
+  { n: '02', t: 'Compare continuously', d: 'Actual behaviour is compared with that expectation as new business events arrive, overall and inside meaningful segments: payment route, region, customer tier, channel, product.' },
+  { n: '03', t: 'Judge what matters', d: 'A deviation is weighed by what it touches in the business model — revenue in flight, customers affected, commitments at risk — before anyone is interrupted.' },
+];
+
+const patterns = [
+  { k: 'Weekly rhythm', d: 'Fewer card payments complete on Sunday evenings; support queues are longest on Monday mornings. The expected range moves with the day.' },
+  { k: 'Month-end and pay-day', d: 'Invoice collection and payment volume bunch around the dates customers are paid and finance teams close the books.' },
+  { k: 'Seasonal peaks', d: 'Retail order volumes in December, tax-season onboarding, back-to-school demand. Year-on-year shape is part of the baseline.' },
+  { k: 'Known events', d: 'Planned campaigns, price changes and maintenance windows can be annotated so their expected effect is not mistaken for a surprise.' },
+  { k: 'Underlying trend', d: 'A growing business has rising volumes. The baseline follows the trend so growth is not reported as an anomaly every week.' },
+  { k: 'Normal noise', d: 'Some days are just a little better or worse. The width of the expected range reflects how much a metric usually wobbles.' },
+];
+
+const features = [
+  { t: 'Expectation bands', i: 'chart', d: 'Expected ranges for each observed metric, built from its own history and seasonality, and visible on every chart so people can see why something was or was not flagged.' },
+  { t: 'Segment-level detection', i: 'layers', d: 'Changes are looked for inside segments as well as in totals, so a problem in one route, region or tier is not averaged away by healthy ones.' },
+  { t: 'Business significance', i: 'target', d: 'Each anomaly carries its estimated exposure — transactions, revenue or customers affected — drawn from the business graph rather than from the size of the deviation alone.' },
+  { t: 'Sustained-change rules', i: 'clock', d: 'Require a change to persist for a number of readings, or to cross a business threshold, before it raises an alert. Single noisy readings stay in the log.' },
+  { t: 'Drift detection', i: 'signal', d: 'Slow, steady change — onboarding taking a little longer each week — is designed to be caught by comparing trends, not just individual points.' },
+  { t: 'Feedback and tuning', i: 'spark', d: 'Owners can mark alerts as useful, expected or noise. That feedback is designed to tune sensitivity per metric, rather than everyone learning to ignore the channel.' },
+];
+
+const timeline = [
+  { t: '09:10', h: 'A fraud rule is updated', d: 'A new rule version is deployed for card payments on one acquirer route. Nothing breaks technically; servers and APIs stay healthy.' },
+  { t: '09:50', h: 'First reading breaks the band', d: 'Route B completion falls below its expected range for a Tuesday morning. One reading is not enough to interrupt anyone — it is logged.' },
+  { t: '10:20', h: 'The change is sustained', d: 'A second and third reading confirm it. The blended completion rate is only slightly low, but route B is far outside its band.', hl: true },
+  { t: '10:21', h: 'An alert with context', d: 'The Payments owner receives one alert: segment affected, size of the gap, estimated transactions and revenue exposed, and the recent changes on that route.' },
+  { t: '10:35', h: 'Investigation, not guesswork', d: 'The alert opens directly into Root Cause Analysis, where the rule change is examined as a candidate cause alongside other explanations.' },
+];
+
+const schema = { '@type': 'WebPage', name: 'Anomaly Detection — Panoptes', about: 'Business anomaly detection: expected behaviour versus actual, seasonality, segment-level detection and business significance.' };
+---
+<BaseLayout title="Anomaly Detection" description="Panoptes compares actual business behaviour with expected patterns — seasonality, segments and business impact included — to surface meaningful change early without alert fatigue." ogImage="/social/og-platform.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Platform · Anomaly Detection" title="Notice the change that matters, <span class='gradient-text'>not every wobble.</span>" lede="Panoptes learns what normal looks like for each part of your business, compares it with what is actually happening, and raises the deviations that carry real business consequence — early, in context, and routed to the person who owns them." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#explorer">Try the chart explorer</a>
+    </div>
+    <Fragment slot="visual"><Diagram src="/diagrams/anomaly-detection-expected-band.svg" alt="Alert card and chart: card payment completion on acquirer route B falls below its expected band and stays there, while an earlier weekend dip remains inside the band and is not flagged" frame="anomaly · payment completion" zoom /></Fragment>
+  </PageHero>
+
+  <!-- What it does -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="What it does" title="Expected versus actual, for the whole business." lede="Most businesses discover problems in a weekly review or a customer complaint. Anomaly Detection is designed to close that gap by watching business outcomes continuously — completion rates, waiting times, volumes, conversion, collections — against what each should be right now." />
+      <ol class="principles">
+        {principles.map((p) => (
+          <li class="reveal">
+            <span class="pr-n">{p.n}</span>
+            <h3>{p.t}</h3>
+            <p class="muted">{p.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Why it matters -->
+  <section class="section section-alt">
+    <div class="container split split-top sig">
+      <div>
+        <p class="eyebrow">Why it matters</p>
+        <h2>“Statistically unusual” is not the same as “important”.</h2>
+        <p class="lede">A tiny product line that doubles its sign-ups from three to six is statistically remarkable and commercially irrelevant. A four-point fall in card completion on your busiest route may sit only just outside normal variation — and cost real money every hour.</p>
+        <p class="muted">Purely statistical alerting fails in both directions. It pages people for curiosities, so they learn to ignore the channel, and it treats slow, expensive drift as nothing because no single day looks dramatic. The result is alert fatigue at the top of the funnel and late discovery at the bottom.</p>
+        <p class="muted">Panoptes is designed to judge significance through the business model. Because it knows that route B carries a quarter of card volume, that those payments belong to orders, and that orders belong to customers with service commitments, it can estimate what a deviation is <em>exposing</em> — not just how far it is from the mean.</p>
+        <ul class="checklist small mt-2">
+          <li>Fewer, better alerts, each with an owner and an estimated impact</li>
+          <li>Slow drift surfaced as a trend, not ignored for being undramatic</li>
+          <li>Curiosities logged for review instead of interrupting someone</li>
+        </ul>
+      </div>
+      <div class="reveal">
+        <Diagram src="/illustrations/anomaly-detection-significance-matrix.svg" alt="Matrix of statistical unusualness against business impact. High impact and unusual: act now. High impact but gradual: slow drift that matters. Unusual but low impact: statistical curiosity. Neither: normal variation." frame="significance, not just deviation" zoom />
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive explorer -->
+  <section class="section" id="explorer">
+    <div class="container">
+      <SectionHead eyebrow="Interactive" title="See how expectation, sensitivity and segments change what gets flagged." lede="Eight weeks of fictional card payment completion. Switch views, move the sensitivity slider and require changes to be sustained — then watch how many alerts would be real, and how many would be noise." />
+      <div class="reveal"><AnomalyExplorer /></div>
+      <div class="grid grid-3 mt-2 lessons">
+        <div><p class="kpi-label">Lesson 1</p><p class="small"><strong>Without a baseline, nothing is anomalous.</strong> The raw view shows dips every weekend; you cannot tell an incident from a Sunday.</p></div>
+        <div><p class="kpi-label">Lesson 2</p><p class="small"><strong>Sensitivity is a trade-off.</strong> Narrow bands catch more incidents and more noise. Sustained-change rules buy back much of the noise.</p></div>
+        <div><p class="kpi-label">Lesson 3</p><p class="small"><strong>Totals hide problems.</strong> A failing route is diluted by healthy ones. Looking inside segments is often the difference between seeing it today or next week.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Baselines in plain language -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="base-head">
+        <SectionHead eyebrow="Baselines, explained plainly" title="What “expected” takes into account." />
+        <p class="muted reveal">An expectation is not a target. It is Panoptes’ best estimate of where a metric should be at this moment, given everything it has seen before. Business Health holds the targets; Anomaly Detection holds the expectations. Both matter, and they are kept separate on purpose.</p>
+      </div>
+      <dl class="patterns">
+        {patterns.map((p) => (
+          <div class="reveal"><dt>{p.k}</dt><dd>{p.d}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- Scenario -->
+  <section class="section">
+    <div class="container split split-top">
+      <div class="scen-intro">
+        <p class="eyebrow">Scenario</p>
+        <h2>A quiet Tuesday morning at a payments business.</h2>
+        <p class="lede">An illustrative sequence showing how a meaningful change in payment completion would surface — and what the owner would see.</p>
+        <p class="muted">In this fictional example, a merchant takes card payments through two acquirer routes. System monitoring is green throughout: every service responds, error rates are normal. The problem is a business problem — legitimate customers being declined — and it only shows up in business outcomes.</p>
+        <p class="muted">The same pattern applies to non-financial signals. Onboarding time creeping up by a few hours each week, a verification queue whose arrival rate has quietly outgrown its capacity, or a fulfilment cut-off being missed more often on Fridays are all deviations from expectation that Panoptes is designed to observe.</p>
+        <span class="illustrative">Illustrative scenario · fictional data</span>
+      </div>
+      <ol class="tl">
+        {timeline.map((s) => (
+          <li class:list={['reveal', { hl: s.hl }]}>
+            <span class="tl-t mono">{s.t}</span>
+            <div><h3>{s.h}</h3><p class="muted small">{s.d}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Key functionality -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Key functionality" title="Built for business signals, not server metrics." lede="Business data is lumpy, seasonal and segmented. These capabilities are designed around that reality." />
+      <div class="grid grid-3">
+        {features.map((f) => <FeatureCard title={f.t} text={f.d} icon={f.i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform connection -->
+  <section class="section">
+    <div class="container">
+      <div class="connect">
+        <div>
+          <p class="eyebrow">Across the platform</p>
+          <h2>An anomaly is the start of a conversation, not the end.</h2>
+          <p class="muted">Detection is only useful if it leads somewhere. Each anomaly in Panoptes is designed to carry the context the next step needs.</p>
+        </div>
+        <ul class="flow">
+          <li><a href="/platform/business-graph/"><Icon name="graph" /><span><strong>Business Graph</strong> tells it what a metric belongs to and what depends on it, which is how impact is estimated.</span></a></li>
+          <li><a href="/platform/business-health/"><Icon name="health" /><span><strong>Business Health</strong> holds the objectives and commitments an anomaly may put at risk.</span></a></li>
+          <li><a href="/platform/root-cause-analysis/"><Icon name="rootcause" /><span><strong>Root Cause Analysis</strong> picks up the investigation, aligning the change with recent events and dependencies.</span></a></li>
+          <li><a href="/platform/actions-automation/"><Icon name="actions" /><span><strong>Actions &amp; Automation</strong> routes it to an owner and tracks whether the response worked.</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use cases + related -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="grid grid-3 uc">
+        <FeatureCard title="Business anomalies" text="Separate real change from noise across revenue, operations and customer signals." href="/use-cases/business-anomalies/" icon="anomaly" cta="Explore the use case" />
+        <FeatureCard title="Revenue leakage" text="Spot the point between intent to pay and cash collected where money starts going missing." href="/use-cases/revenue-leakage/" icon="revenue" cta="Explore the use case" />
+        <FeatureCard title="SLA monitoring" text="See commitments drifting towards breach while there is still time to intervene." href="/use-cases/sla-monitoring/" icon="target" cta="Explore the use case" />
+      </div>
+      <div class="mt-3">
+        <RelatedLinks eyebrow="Related capabilities" title="Keep exploring the platform" items={[
+          { label: 'Root Cause Analysis', href: '/platform/root-cause-analysis/', desc: 'From symptom to contributing change', icon: 'rootcause' },
+          { label: 'Business Health', href: '/platform/business-health/', desc: 'Objectives, indicators and expectations', icon: 'health' },
+          { label: 'Journey Intelligence', href: '/platform/journey-intelligence/', desc: 'End-to-end journeys across systems', icon: 'journey' },
+          { label: 'Command Center', href: '/platform/command-center/', desc: 'One cockpit for business operations', icon: 'command' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <CTA title="Find out what normal looks like for your business." text="Bring one metric that matters — payment completion, onboarding time, collections — and we will walk through how Panoptes would model its expectations." />
+</BaseLayout>
+
+<style>
+  .principles { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--border); }
+  .principles li { padding: 28px 28px 8px 0; }
+  .principles li + li { padding-left: 28px; border-left: 1px solid var(--border); }
+  .pr-n { display: block; font: 600 2.4rem/1 var(--font-display); color: var(--accent-text); margin-bottom: 1rem; letter-spacing: -.03em; }
+  @media (max-width: 860px) { .principles { grid-template-columns: 1fr; } .principles li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--border); } }
+
+  .sig h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+
+  .lessons > div { border-left: 2px solid var(--accent); padding-left: 16px; }
+  .lessons p { margin-bottom: .4rem; }
+
+  .base-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 5vw, 64px); align-items: end; margin-bottom: clamp(28px, 4vw, 44px); }
+  .base-head :global(.section-head) { margin-bottom: 0; }
+  .patterns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 0; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .patterns > div { background: var(--surface); padding: 24px; }
+  .patterns dt { font: 600 1.05rem/1.3 var(--font-display); margin-bottom: .5rem; }
+  .patterns dd { margin: 0; color: var(--text-2); font-size: .93rem; }
+  @media (max-width: 960px) { .base-head { grid-template-columns: 1fr; } .patterns { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .patterns { grid-template-columns: 1fr; } }
+
+  .scen-intro h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .tl { list-style: none; padding: 0; margin: 0; position: relative; }
+  .tl::before { content: ''; position: absolute; left: 62px; top: 8px; bottom: 8px; width: 2px; background: var(--border-strong); }
+  .tl li { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 32px; padding: 0 0 22px; position: relative; }
+  .tl li::after { content: ''; position: absolute; left: 57px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--accent); }
+  .tl li.hl::after { background: var(--crit); border-color: var(--crit); box-shadow: 0 0 0 5px var(--crit-bg); }
+  .tl-t { font-size: .85rem; color: var(--text-3); padding-top: 2px; }
+  .tl h3 { font-size: 1.1rem; margin-bottom: .25em; }
+  .tl li.hl h3 { color: var(--crit-text); }
+  .tl p { margin: 0; }
+
+  .connect { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
+  .connect h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .flow { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .flow a { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text-2); text-decoration: none; font-size: .94rem; transition: border-color .2s; }
+  .flow a:hover { border-color: var(--accent); }
+  .flow strong { color: var(--text); }
+  .flow :global(svg) { width: 22px; height: 22px; flex: none; color: var(--accent-text); margin-top: 1px; }
+  @media (max-width: 860px) { .connect { grid-template-columns: 1fr; } }
+</style>

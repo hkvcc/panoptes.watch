@@ -1,0 +1,17 @@
+# Canonical host is panoptes.watch; www → apex is best configured as a Cloudflare Bulk Redirect
+# or Redirect Rule (Pages _redirects only applies to paths, not hostnames).
+
+# Friendly aliases
+/about              /company/                         301
+/about/             /company/                         301
+/book-a-demo        /demo/                            301
+/book-a-demo/       /demo/                            301
+/pricing            /demo/                            302
+/pricing/           /demo/                            302
+/security           /integrations/security-governance/ 301
+/security/          /integrations/security-governance/ 301
+/glossary           /resources/business-observability-glossary/ 301
+/glossary/          /resources/business-observability-glossary/ 301
+/blog               /resources/                       301
+/blog/              /resources/                       301
+/sitemap-index.xml  /sitemap.xml                      301

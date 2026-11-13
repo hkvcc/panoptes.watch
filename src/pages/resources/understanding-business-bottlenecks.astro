@@ -1,0 +1,129 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/resources-b/RbDiagram.astro';
+import UtilisationExplorer from '../../components/resources-b/UtilisationExplorer.astro';
+---
+<ArticleLayout
+  title="Understanding business bottlenecks"
+  metaTitle="Understanding Business Bottlenecks: Queues, Utilisation and Constraints"
+  description="Why queues form, why waiting explodes as teams approach full utilisation, how to find the true constraint rather than the loudest symptom, and why bottlenecks move."
+  eyebrow="Bottlenecks"
+  dek="The place where a business feels the most pain is rarely the place that limits it. Finding the real constraint means understanding how queues behave, why busy teams produce long waits, and why fixing one bottleneck usually reveals the next."
+  related={['/resources/business-process-monitoring/', '/resources/business-health-metrics/', '/resources/how-business-events-connect-to-outcomes/']}
+>
+  <p>Every operations leader has lived some version of this week. Customers are complaining. The contact centre is overwhelmed. One team is working weekends and another seems strangely idle. Everyone has a theory, and the theories point in different directions. The instinct is to add people where the noise is loudest. Very often, that is exactly the wrong place.</p>
+  <p>This guide is about the mechanics underneath that week: how queues form, why they grow so fast once a team is busy, how to tell the stage that actually limits the business from the stages that merely suffer the consequences, and what happens after you fix it. None of the ideas are new. Queueing behaviour and the theory of constraints have been understood for decades. What is new is the ability to observe them continuously in business processes, instead of reconstructing them after the fact from spreadsheets.</p>
+
+  <h2>How queues form</h2>
+  <p>A queue forms whenever work arrives faster than it can be handled. That much is obvious. The less obvious part is that queues form even when, <em>on average</em>, there is more than enough capacity.</p>
+  <p>Imagine a team that can complete 100 cases a day and receives, on average, 80. On paper there is 20% headroom. But cases do not arrive at an even 80 a day, and they do not each take the same effort. Monday brings 130 because of the weekend backlog; a batch upload from a partner lands 40 at once; a handful of cases turn out to be tangled and take a whole afternoon each. On the days that exceed capacity, a queue builds. On the quieter days, the team can work it down, but only by the amount of spare capacity it has that day, and spare capacity spent on yesterday's backlog is not available for today's surprises.</p>
+  <p>Two things drive queues, then: how close average demand runs to capacity, and how variable the arrivals and the work are. Reduce either and queues shrink. Increase both and they grow far faster than intuition suggests.</p>
+
+  <h2>Why waiting explodes near full utilisation</h2>
+  <p><a href="/resources/business-observability-glossary/#utilisation">Utilisation</a> is the share of time a stage is busy. Managers are often encouraged to push it as high as possible, on the reasonable-sounding grounds that idle capacity is wasted money. The trouble is that idle time is not waste in a variable system. It is the buffer that absorbs surges. Remove it and every surge turns into a queue that has nowhere to drain.</p>
+  <p>The relationship is strongly non-linear. In a simple model of a single stage with random arrivals and variable work, the average time an item waits before work starts is proportional to utilisation divided by the spare capacity that remains, that is, <em>u ÷ (1 − u)</em>. You do not need the formula to see the shape:</p>
+
+  <Diagram src="/diagrams/bottlenecks-utilisation-curve.svg" alt="Line chart of waiting time as a multiple of work time against utilisation from 0 to 100 per cent. The curve is nearly flat until about 60 per cent, then rises steeply: 1 times at 50 per cent, 4 times at 80 per cent, 9 times at 90 per cent and 19 times at 95 per cent. A dashed curve for steadier arrivals and work sits lower but has the same shape. The region above 85 per cent is shaded as a high-utilisation zone." caption="In a simple queueing model, waiting time is roughly flat until a stage is about two-thirds busy, then climbs steeply. Less variability lowers the curve but does not change its shape." zoom />
+
+  <ul>
+    <li>At 50% busy, an item waits, on average, about as long as it takes to work on it.</li>
+    <li>At 80%, it waits about four times as long.</li>
+    <li>At 90%, about nine times.</li>
+    <li>At 95%, about nineteen times.</li>
+  </ul>
+  <p>Going from 80% to 95% busy looks like a modest efficiency gain on a capacity plan. In waiting time it is a near five-fold deterioration. The precise multiples depend on the model, and real processes are messier, but the shape is robust: a long flat stretch, a knee somewhere between 70% and 85%, and then a wall. A useful approximation from queueing theory multiplies three things together: a utilisation factor shaped like the curve above, a variability factor that grows with how irregular arrivals and work are, and the average work time itself. Every lever for reducing waiting is one of those three.</p>
+
+  <UtilisationExplorer />
+
+  <div class="callout">
+    <strong>The last few percent are the most expensive</strong>
+    A stage running at 95% has almost no ability to recover from a bad day. It does not need to be overwhelmed to produce long waits; it only needs to be slightly too busy for slightly too long. This is why "we are only a little short of capacity" is so often followed by "and the backlog is six weeks".
+  </div>
+
+  <h3>Little's Law: the accounting you can always rely on</h3>
+  <p>Alongside the curve sits a much simpler relationship that holds for any stable system, whatever the distributions involved. <a href="/resources/business-observability-glossary/#littles-law">Little's Law</a> says that the average number of items in a system equals the average rate at which they pass through multiplied by the average time each one spends inside. Rearranged: <em>time in system = work in progress ÷ throughput</em>.</p>
+  <p>It is an accounting identity rather than a model, which makes it extraordinarily practical. If a team has 600 open cases and completes 50 a day, the average case will spend about twelve days with that team. You know that today, from two numbers you already have, without waiting for the cases to finish and report their lead time. When work in progress grows and throughput does not, lead time is going to grow. Little's Law lets you see it coming.</p>
+
+  <h2>The true constraint versus the loudest symptom</h2>
+  <p>In any chain of dependent stages, one stage limits the throughput of the whole. That is the <a href="/resources/business-observability-glossary/#constraint">constraint</a>. Improving any other stage does not increase the output of the chain; it just moves work faster into the queue in front of the constraint, or leaves a downstream team waiting for work that never arrives faster. This is the central insight of the theory of constraints, and it is worth stating plainly: <strong>an hour lost at the constraint is an hour lost for the whole business; an hour saved anywhere else is often a mirage.</strong></p>
+  <p>The difficulty is that constraints are rarely where the pain is felt. Pain shows up where customers make contact, where managers have to explain delays, and where uneven work creates overtime. Those are symptoms. They are real, and they need managing, but adding capacity there does not change the rate at which work flows through the business.</p>
+  <table>
+    <thead><tr><th>Signs of the true constraint</th><th>Signs of a loud symptom</th></tr></thead>
+    <tbody>
+      <tr><td>Work piles up immediately in front of it, and the pile keeps growing</td><td>Complaints, chasing contacts or escalations rising, often far from the queue</td></tr>
+      <tr><td>It is busy almost all the time, including when everyone else is quiet</td><td>Bursts of overtime alternating with idle periods</td></tr>
+      <tr><td>Stages after it are starved or receive work in irregular waves</td><td>A team that looks overloaded only at particular times of day or week</td></tr>
+      <tr><td>Speeding up stages before it makes its queue longer, not end-to-end faster</td><td>Adding capacity there reduces local noise but end-to-end lead time does not move</td></tr>
+      <tr><td>Its output rate closely tracks the output rate of the whole process</td><td>Its own metrics look poor, but its throughput is well above the process's</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked example: claims after a storm</h2>
+  <p>Consider a fictional home insurer. Its claims process has five stages: intake, triage, assessment by a loss adjuster, approval, and payment. In a normal month around 100 claims a day arrive. After a severe storm, that rises to about 140 a day for three weeks. Capacities, measured as sustainable claims per working day, look like this:</p>
+
+  <Diagram src="/diagrams/bottlenecks-symptom-vs-constraint.svg" alt="Bar chart of capacity per claims stage: intake 180, triage 150, assessment 105 highlighted in red, approval 160, payment 200 claims per day. Dashed lines mark normal demand at 100 and storm demand at 140. Assessment is the only stage below storm demand. A row beneath shows items in queue: intake 35, triage 60, assessment 1,450, approval 25, payment 15. A callout notes the loudest symptoms: chase calls tripled at the contact centre and overtime in approval." caption="Assessment is the only stage whose capacity sits below storm demand, and almost all waiting work is queued in front of it. Fictional data." zoom />
+
+  <h3>What the business noticed first</h3>
+  <p>Two things were loud. Calls to the contact centre from customers chasing their claims roughly tripled, and the approval team was working evenings. The first proposals in the operations meeting were to bring in temporary contact-centre staff and to authorise more approval overtime.</p>
+  <h3>What the measurements showed</h3>
+  <ul>
+    <li><strong>Where the work was.</strong> Of roughly 1,600 open claims, about 1,450 were waiting for assessment. Every other stage held a few dozen.</li>
+    <li><strong>How long it would take.</strong> With 1,450 waiting and assessment completing about 105 a day, Little's Law gives an average wait of around fourteen working days for assessment alone, before anything else happens. That figure was available on the first day of the surge, not three weeks later when the first slow claims closed.</li>
+    <li><strong>Why approval was in overtime.</strong> Approval had plenty of capacity: 160 a day against the 105 that assessment could feed it. The overtime came from the shape of the arrivals, not the volume. Adjusters batched their reports at the end of each round of site visits, so approval received almost nothing on some days and three days' worth on others.</li>
+    <li><strong>Why calls tripled.</strong> Customers call when they hear nothing. The calls were a consequence of assessment waiting time, not a capacity problem in the contact centre.</li>
+  </ul>
+  <p>Before the storm, assessment was already running at about 95% utilisation at normal demand. Referring back to the curve, that is a stage on the steep part of the wall, with a standing queue of several hundred claims. The storm did not create the constraint. It exposed one that had been quietly producing long waits for months.</p>
+
+  <h3>What to do about a constraint</h3>
+  <p>The theory of constraints offers a useful order of operations, and it maps well onto business processes:</p>
+  <ol>
+    <li><strong>Exploit it: stop wasting its time.</strong> Measurements showed that about one assessment in five was redone because the claim arrived without photographs or a contents list, and that adjusters were travelling to inspect claims worth less than £2,000 that could be assessed from photographs. Fixing both does not require a single new hire. Together they were estimated to lift effective assessment capacity from 105 to around 150 claims a day.</li>
+    <li><strong>Subordinate everything else to it.</strong> Triage was asked to release only complete claims to assessment, and adjusters were asked to submit reports daily rather than in batches, which smoothed the flow into approval and ended the overtime without any extra approval capacity.</li>
+    <li><strong>Elevate it only then.</strong> Temporary loss adjusters were considered, but deferred until the effect of the first two steps was measured. Buying capacity at the constraint is the right move if it is still needed; buying it before eliminating waste at the constraint is paying to do rework faster.</li>
+    <li><strong>Do not add capacity at the symptoms.</strong> Contact-centre volumes were managed with proactive status messages to customers waiting for assessment, which addressed the cause of the calls rather than their handling.</li>
+  </ol>
+
+  <h2>When the bottleneck moves</h2>
+  <p>Fix a constraint and another stage becomes the constraint. That is not failure; it is the nature of any chain. But it is easy to miss, because the new constraint may be a stage that was perfectly healthy last month.</p>
+  <p>In the claims example, asking triage to check claims for completeness added work to triage. Its effective capacity fell from 150 to about 135 claims a day, below storm demand of 140. Within a week, the queue in front of triage started to grow while the assessment queue shrank. The bottleneck had moved upstream, and it had moved because of the fix.</p>
+  <table>
+    <thead><tr><th>Stage</th><th>Capacity before</th><th>Utilisation at 140/day</th><th>Capacity after rebalancing</th><th>Utilisation at 140/day</th></tr></thead>
+    <tbody>
+      <tr><td>Intake</td><td>180</td><td>78%</td><td>165</td><td>85%</td></tr>
+      <tr><td>Triage</td><td>150 (135 with checks)</td><td>93% (104%)</td><td>160</td><td>88%</td></tr>
+      <tr><td>Assessment</td><td>105</td><td>133%</td><td>150</td><td>93%</td></tr>
+      <tr><td>Approval</td><td>160</td><td>66% (fed only 105/day)</td><td>160</td><td>88%</td></tr>
+      <tr><td>Payment</td><td>200</td><td>53% (fed only 105/day)</td><td>200</td><td>70%</td></tr>
+    </tbody>
+  </table>
+  <p>Moving two people from intake, which had the most slack, to triage brought triage back above demand. The resulting picture is more balanced but still uncomfortable: during the surge, three stages run at close to 90% busy, which the utilisation curve tells us means substantial waits at each. That is the honest outcome. Rebalancing restores flow, but a three-week storm surge is a capacity-planning question, not a process-design one.</p>
+  <p>Notice also that queues drain far more slowly than they build. During the storm, assessment's queue grew by about 35 claims a day. After the fixes, with demand still at 140 and capacity at 150, it drained at only about 10 a day. Clearing 1,450 claims at that pace would take months. Only when storm demand subsides to around 100 a day does the drain rate rise to about 50 a day, which still means roughly six weeks to clear. Backlogs are paid off with spare capacity, and a stage near full utilisation has very little of it.</p>
+  <div class="callout">
+    <strong>Watch the chain, not the last fix</strong>
+    After every intervention at a constraint, look for the stage whose work in progress starts to rise. That is where the constraint has moved. Monitoring WIP and utilisation across every stage continuously makes this visible within days rather than at the next quarterly review.
+  </div>
+
+  <h2>A diagnostic checklist</h2>
+  <p>When a process slows down, these questions, asked in order, usually locate the constraint and separate it from the noise:</p>
+  <ol>
+    <li><strong>Where is the work?</strong> Count open items by stage. The biggest pile, especially one that keeps growing, is the first candidate.</li>
+    <li><strong>What changed in arrivals?</strong> Compare arrival rates by stage and by work type with their expected bands. Surges often originate several stages upstream, in another team's decisions.</li>
+    <li><strong>What changed in the work?</strong> Look at work time per item and at rework rates with reason codes. A stage can lose a fifth of its capacity to rework without anyone noticing.</li>
+    <li><strong>How busy is each stage?</strong> Estimate utilisation as demand divided by sustainable capacity. Anything above about 85% deserves attention; anything above 100% will grow a queue indefinitely.</li>
+    <li><strong>What does Little's Law predict?</strong> Divide WIP by throughput for the candidate stage and compare with commitments. If the predicted wait already breaches a promise, act before lead-time data confirms it.</li>
+    <li><strong>Is the noise downstream of the pile?</strong> Complaints, chasers and bursty overtime that sit after the biggest queue are probably symptoms of it.</li>
+    <li><strong>After acting, where does WIP rise next?</strong> That is the new constraint.</li>
+  </ol>
+  <p>Each of these questions depends on seeing the whole process at once, with consistent stage definitions, not on assembling exports from five systems. That is the practical case for <a href="/resources/business-process-monitoring/">process monitoring built on business events</a>, and for an <a href="/resources/building-a-business-operating-model/">operating model</a> that connects stages to the commitments they serve.</p>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>Queues form from the combination of high utilisation and variability, even when average capacity exceeds average demand.</li>
+    <li>Waiting time rises gently until a stage is around two-thirds to four-fifths busy, then climbs steeply. Running teams at 95% is not efficient; it is fragile.</li>
+    <li>Little's Law (time in system = WIP ÷ throughput) predicts lead time today from numbers you already have.</li>
+    <li>The constraint is where work piles up and where lost time is lost for the whole business. The loudest symptoms are usually elsewhere.</li>
+    <li>Exploit the constraint before buying more of it: remove rework and low-value work from its queue, and make other stages serve its pace.</li>
+    <li>Fixing a constraint moves it. Watch WIP across every stage to see where it goes next.</li>
+  </ul>
+  <p>The <a href="/use-cases/operational-bottlenecks/">operational bottlenecks</a> use case shows how this investigation is designed to run in Panoptes, and <a href="/platform/process-intelligence/">Process Intelligence</a> describes the stage-level measurements behind it.</p>
+</ArticleLayout>

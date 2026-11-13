@@ -1,0 +1,284 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import ProductScreen from '../../components/solutions/ProductScreen.astro';
+import RoleSwitcher from '../../components/solutions/RoleSwitcher.astro';
+
+const crumbs = [{ label: 'Solutions', href: '/solutions/' }, { label: 'Customer Experience', href: '/solutions/customer-experience/' }];
+
+const problems = [
+  { t: 'Friction that crosses channels', says: '“The app wouldn’t take my passport photo, so I emailed it. Then I got an email asking me to upload it in the app.”', sees: 'App: upload failed. Email inbox: attachment received, case created. Two systems, two partial stories, no journey.', d: 'Customers move between web, app, email and phone to get one thing done. Each channel measures itself; the struggle happens in the gaps between them.' },
+  { t: 'Promises nobody is watching', says: '“You said I’d be verified within the hour. It’s been a day.”', sees: 'Verification SLA: 96% within 48 hours. Nothing measures the one-hour promise on the sign-up screen.', d: 'Marketing pages, confirmation emails and agents make promises — delivery by six, refund in five days, a callback this afternoon. Few are measured as promises.' },
+  { t: 'Repeat contacts treated as volume', says: '“This is the third time I’ve called about the same charge.”', sees: 'Three tickets, each resolved within target, each closed.', d: 'Support measures handling time and resolution per ticket. A customer who has to come back is counted as more demand, not as a failure upstream.' },
+  { t: 'Averages that hide the worst experiences', says: '“Twelve days for a refund.”', sees: 'Median refund time: 3.1 days, on target.', d: 'Average satisfaction and median times look stable while a segment — one region, one payment method, one product — has a much worse experience.' },
+];
+
+type P = { n: string; step: string; kept: number; target: number; trend: string };
+const promises: P[] = [
+  { n: 'Identity verified within 1 hour', step: 'Verify identity', kept: 61, target: 90, trend: '−14 pts' },
+  { n: 'Callback at the time promised', step: 'Get help', kept: 74, target: 90, trend: '−6 pts' },
+  { n: 'Refund within 5 working days', step: 'Refunds', kept: 93, target: 95, trend: '−2 pts' },
+  { n: 'Order delivered by 6pm', step: 'Delivery', kept: 92, target: 95, trend: '−1 pt' },
+  { n: 'Support reply within 2 hours', step: 'Get help', kept: 88, target: 90, trend: 'flat' },
+  { n: 'Account ready in 5 minutes', step: 'Sign up', kept: 97, target: 95, trend: 'flat' },
+  { n: 'Card dispatched within 2 working days', step: 'First order', kept: 96, target: 95, trend: '+1 pt' },
+  { n: 'Complaint acknowledged within 24 hours', step: 'Get help', kept: 99, target: 98, trend: 'flat' },
+];
+const status = (p: P) => (p.kept >= p.target ? 'kept' : p.target - p.kept <= 3 ? 'risk' : 'broken');
+const counts = { broken: promises.filter((p) => status(p) === 'broken').length, risk: promises.filter((p) => status(p) === 'risk').length, kept: promises.filter((p) => status(p) === 'kept').length };
+
+const groups = [
+  { i: 'journey', t: 'Journey', items: [['Completion by step', 'Share of customers reaching each step, against expected'], ['Time between steps', 'Median and slowest 10%, by channel'], ['Channel switches', 'Customers who leave one channel to finish in another']] },
+  { i: 'target', t: 'Promises', items: [['Promises kept', 'Per promise, against its own target'], ['Promises at risk', 'Open journeys likely to miss what they were told'], ['Proactive notices sent', 'Customers told about a delay before they asked']] },
+  { i: 'ticket', t: 'Effort', items: [['Repeat contact rate', 'Contacted again about the same issue within 7 days'], ['Contacts per journey', 'Linked to the step that caused them'], ['Worst-segment gap', 'Difference between the average and the worst segment']] },
+];
+
+const decisions = [
+  ['Change the promise or change the process', 'If a promise is kept 61% of the time, either fix the step that breaks it or stop making it — and know which one costs less.'],
+  ['Tell customers before they ask', 'Send a delay notice to everyone whose journey is projected to miss its promise, instead of waiting for the contact.'],
+  ['Fix the step that creates contacts', 'Invest in the upstream fix — a clearer document upload, a rejection reason — where repeat contacts concentrate.'],
+  ['Prioritise by experience, not volume', 'Focus on the segment with the worst experience, not only the one with the most tickets.'],
+  ['Hand the problem to the right team', 'Route a journey problem caused by operations, payments or product to the team that owns that step.'],
+];
+
+const faqs = [
+  { q: 'How is this different from a CX or survey platform?', a: 'Survey and feedback tools tell you how customers felt. Panoptes is designed to observe what actually happened in their journey — every step, channel switch, promise and contact — and connect it to the operational cause.' },
+  { q: 'Does Panoptes track individual customers?', a: 'It models journeys from the business events your systems already hold, such as sign-ups, orders and support contacts. Access is role-based, and data minimisation and clear retention are core design principles. See <a href="/integrations/security-governance/">security &amp; governance</a>.' },
+  { q: 'Can it monitor promises we make in marketing copy?', a: 'Yes, if the promise can be expressed as a measurable expectation on a journey step (“verified within one hour of upload”). It then becomes an objective in <a href="/platform/business-health/">Business Health</a>.' },
+  { q: 'Which systems does it need?', a: 'Usually product or app events, the support platform, order or case systems and communication logs. Specific connectors are confirmed during evaluation. See <a href="/integrations/data-sources/">data sources</a>.' },
+];
+---
+<BaseLayout title="Business observability for customer experience" description="For CX leaders: see journey friction across channels, which promises are kept or broken, and the repeat contacts that point to problems upstream." ogImage="/social/og-solutions.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Solutions · Customer experience" title="Are we keeping the promises we make to customers?" lede="Customers experience one journey. Your organisation sees it as web analytics, app events, an email inbox and a support queue. Panoptes joins them up, so you can see where customers struggle across channels, which promises are being broken and why they keep having to get in touch." breadcrumbs={crumbs} center>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#promises">Check the promise ledger</a>
+    </div>
+  </PageHero>
+
+  <!-- Journey map first -->
+  <section class="section-tight journey-band">
+    <div class="container-wide container">
+      <div class="reveal">
+        <Diagram src="/diagrams/cx-cross-channel-journey.svg" alt="New customer journey across web, app, email and support: at identity verification uploads fail, 38% of customers switch to email and the one-hour promise is kept 61% of the time; delivery and help steps show “where is my order?” contacts and one in five customers contacting twice" frame="journey intelligence · new customer journey" zoom class="hide-sm" />
+        <Diagram src="/diagrams/cx-cross-channel-journey-vertical.svg" alt="New customer journey: identity verification is where customers switch channels and the one-hour promise breaks" frame class="show-sm" />
+      </div>
+      <p class="note mt-1 text-center">Illustrative workflow: one fictional journey, every channel. The verification step is where friction, channel switching and a broken promise coincide.</p>
+    </div>
+  </section>
+
+  <!-- Problems -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="The customer experience gap" title="What customers live through is not what your systems record." lede="Most CX teams have plenty of feedback and plenty of ticket data. What is missing is the connection between the two — and to the operational step that caused the experience." />
+      <div class="voices">
+        {problems.map((p) => (
+          <article class="voice reveal">
+            <h3>{p.t}</h3>
+            <p class="muted">{p.d}</p>
+            <div class="voice-grid">
+              <blockquote><span class="kpi-label">The customer says</span>{p.says}</blockquote>
+              <div class="voice-sys"><span class="kpi-label">Your systems record</span>{p.sees}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="note mt-1">Customer quotes are illustrative composites, not real customers.</p>
+    </div>
+  </section>
+
+  <!-- Promise ledger -->
+  <section class="section section-alt" id="promises">
+    <div class="container">
+      <div class="ledger-head">
+        <SectionHead eyebrow="Interactive · promise ledger" title="Every promise, measured as a promise." lede="Each commitment a customer is given — on a screen, in an email, by an agent — is modelled as an objective on a journey step. Filter the fictional ledger to see which are being kept." />
+      </div>
+      <div class="ledger reveal" data-ledger>
+        <div class="ledger-filters" role="group" aria-label="Filter promises">
+          <button type="button" data-filter="all" aria-pressed="true">All <span>{promises.length}</span></button>
+          <button type="button" data-filter="broken" aria-pressed="false"><i class="st-broken"></i>Broken <span>{counts.broken}</span></button>
+          <button type="button" data-filter="risk" aria-pressed="false"><i class="st-risk"></i>At risk <span>{counts.risk}</span></button>
+          <button type="button" data-filter="kept" aria-pressed="false"><i class="st-kept"></i>Kept <span>{counts.kept}</span></button>
+        </div>
+        <ul class="ledger-list" aria-live="polite">
+          {promises.map((p) => { const s = status(p); return (
+            <li data-status={s}>
+              <span class:list={['l-dot', `st-${s}`]} aria-hidden="true"></span>
+              <span class="l-name"><strong>{p.n}</strong><small>{p.step}</small></span>
+              <span class="l-bar" aria-hidden="true"><i class={`st-${s}`} style={`width:${p.kept}%`}></i><em style={`left:${p.target}%`}></em></span>
+              <span class="l-val"><b>{p.kept}%</b><small>target {p.target}%</small></span>
+              <span class="l-trend">{p.trend}</span>
+              <span class:list={['badge', s === 'kept' ? 'badge-ok' : s === 'risk' ? 'badge-warn' : 'badge-crit']}>{s === 'kept' ? 'Kept' : s === 'risk' ? 'At risk' : 'Broken'}</span>
+            </li>
+          ); })}
+        </ul>
+        <p class="note ledger-note">Share of customers for whom the promise was met over the last 14 days. Thin marker = target.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshot with observable -->
+  <section class="section">
+    <div class="container">
+      <div class="cx-shot">
+        <div class="cx-shot-copy">
+          <p class="eyebrow">What Panoptes makes observable</p>
+          <h2>The journey, the promise and the contact — in one place.</h2>
+          <ul class="checklist">
+            <li>Each step of a journey, across every channel the customer touches</li>
+            <li>Where customers drop out, switch channel or come back</li>
+            <li>Every promise as a measurable objective, with its own target</li>
+            <li>Repeat contacts linked to the journey step that caused them</li>
+            <li>The worst-served segments, not just the average</li>
+          </ul>
+        </div>
+        <ProductScreen src="/screenshots/cx-journey-health.svg" alt="Fictional journey health view: step completion against expected with the largest gap at identity verification, five promises with verification kept 61% against 90%, and repeat contacts by reason linked to journey steps" title="panoptes / journeys / new-customer" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Indicators -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Recommended indicators" title="Measure effort and promises, not just satisfaction." lede="A starting set for a customer experience view. Satisfaction scores still matter; these explain them." />
+      <div class="grid grid-3">
+        {groups.map((g) => (
+          <div class="ig card reveal">
+            <div class="ig-h"><span class="icon-tile"><Icon name={g.i} /></span><h3>{g.t}</h3></div>
+            <dl>{g.items.map(([a, b]) => <div><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Decisions -->
+  <section class="section">
+    <div class="container">
+      <div class="split split-top">
+        <div>
+          <p class="eyebrow">Decisions it can support</p>
+          <h2>From “customers are unhappy” to a change someone owns.</h2>
+          <p class="lede">CX teams often see the symptom and own none of the cause. A shared model makes it possible to hand the problem to the team that owns the step — with the evidence attached.</p>
+        </div>
+        <ol class="cx-dec">
+          {decisions.map(([t, d]) => <li class="reveal"><strong>{t}</strong><span class="muted">{d}</span></li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Relevant capabilities" title="What the customer experience view draws on." />
+      <div class="grid grid-4">
+        <FeatureCard title="Journey Intelligence" text="Follow customers end to end across systems and channels." href="/platform/journey-intelligence/" icon="journey" />
+        <FeatureCard title="Business Health" text="Promises and service expectations defined as objectives." href="/platform/business-health/" icon="health" />
+        <FeatureCard title="Root Cause Analysis" text="From a rise in contacts to the step and change behind it." href="/platform/root-cause-analysis/" icon="rootcause" />
+        <FeatureCard title="Process Intelligence" text="The operational steps beneath the journey, and where they wait." href="/platform/process-intelligence/" icon="process" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split split-top">
+        <RelatedLinks eyebrow="Related use cases" title="Go deeper" items={[
+          { label: 'Customer journey friction', href: '/use-cases/customer-journey-friction/', desc: 'Locate the step where customers stall', icon: 'journey' },
+          { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Watch commitments before they break', icon: 'target' },
+          { label: 'Operational bottlenecks', href: '/use-cases/operational-bottlenecks/', desc: 'The queues behind the delays', icon: 'clock' },
+          { label: 'Why dashboards miss the full picture', href: '/resources/why-dashboards-miss-the-full-picture/', desc: 'Averages, silos and lag', icon: 'book' },
+        ]} />
+        <div>
+          <p class="eyebrow">FAQ</p>
+          <h2 class="faq-title">Questions CX leaders ask</h2>
+          <FAQ items={faqs} />
+        </div>
+      </div>
+      <div class="mt-3"><RoleSwitcher current="/solutions/customer-experience/" /></div>
+    </div>
+  </section>
+
+  <CTA title="Find the promise you are quietly breaking." text="Bring one customer journey and the promises attached to it. We will show how Panoptes would measure them, end to end." />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-ledger]');
+  if (root) {
+    const btns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+    btns.forEach((b) => b.addEventListener('click', () => {
+      const f = b.dataset.filter!;
+      btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      root.querySelectorAll<HTMLElement>('[data-status]').forEach((li) => { li.hidden = f !== 'all' && li.dataset.status !== f; });
+    }));
+  }
+</script>
+
+<style>
+  .journey-band { border-bottom: 1px solid var(--border); }
+  .voices { display: grid; gap: 18px; }
+  .voice { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 12px clamp(20px, 4vw, 48px); padding: clamp(20px, 3vw, 30px) 0; border-top: 1px solid var(--border); }
+  .voice h3 { grid-column: 1; margin: 0; font-size: clamp(1.3rem, 2vw, 1.6rem); }
+  .voice > .muted { grid-column: 1; margin: 0; font-size: .96rem; }
+  .voice-grid { grid-column: 2; grid-row: 1 / span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .voice-grid blockquote, .voice-sys { margin: 0; padding: 18px 20px; border-radius: var(--radius-lg); display: grid; gap: 8px; align-content: start; }
+  .voice-grid blockquote { background: var(--accent-soft); font: 500 1.05rem/1.45 var(--font-display); }
+  .voice-grid blockquote .kpi-label { color: var(--accent-text); }
+  .voice-sys { border: 1px dashed var(--border-strong); background: var(--surface); font: 400 .86rem/1.55 var(--font-mono); color: var(--text-2); }
+  @media (max-width: 960px) { .voice { grid-template-columns: 1fr; } .voice-grid { grid-column: 1; grid-row: auto; } }
+  @media (max-width: 560px) { .voice-grid { grid-template-columns: 1fr; } }
+
+  .ledger { border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); padding: clamp(16px, 3vw, 28px); box-shadow: var(--shadow); }
+  .ledger-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .ledger-filters button { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text-2); font: 600 .9rem/1 var(--font-body); padding: 10px 14px; border-radius: 999px; cursor: pointer; }
+  .ledger-filters button:hover { border-color: var(--accent); }
+  .ledger-filters button[aria-pressed='true'] { background: var(--purple); border-color: var(--purple); color: #fff; }
+  .ledger-filters span { font: 600 .78rem/1 var(--font-mono); opacity: .75; }
+  .ledger-filters i { width: 8px; height: 8px; border-radius: 50%; }
+  .st-broken { background: var(--crit); } .st-risk { background: var(--warn); } .st-kept { background: var(--ok); }
+  .ledger-list { list-style: none; margin: 0; padding: 0; }
+  .ledger-list li { display: grid; grid-template-columns: 12px minmax(0, 1.6fr) minmax(0, 1.2fr) 90px 120px 76px; gap: 16px; align-items: center; padding: 14px 4px; border-top: 1px solid var(--border); }
+  .ledger-list li[hidden] { display: none; }
+  .l-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .l-name { display: grid; gap: 2px; min-width: 0; }
+  .l-name strong { font-size: .96rem; }
+  .l-name small, .l-val small { font-size: .78rem; color: var(--text-3); }
+  .l-bar { position: relative; height: 8px; border-radius: 4px; background: var(--bg-2); }
+  .l-bar i { position: absolute; inset: 0 auto 0 0; border-radius: 4px; }
+  .l-bar em { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--text); border-radius: 1px; }
+  .l-val { display: grid; text-align: right; }
+  .l-val b { font: 600 1rem/1.2 var(--font-mono); }
+  .l-trend { font: 500 .8rem/1.3 var(--font-mono); color: var(--text-2); }
+  .ledger-list .badge { justify-self: end; }
+  .ledger-note { margin: 12px 0 0; }
+  @media (max-width: 860px) {
+    .ledger-list li { grid-template-columns: 12px minmax(0, 1fr) auto; grid-template-areas: 'd n b' '. bar v' '. t t'; row-gap: 8px; }
+    .l-dot { grid-area: d; } .l-name { grid-area: n; } .ledger-list .badge { grid-area: b; } .l-bar { grid-area: bar; } .l-val { grid-area: v; } .l-trend { grid-area: t; }
+  }
+
+  .cx-shot { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.5fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+  .cx-shot-copy h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  @media (max-width: 1080px) { .cx-shot { grid-template-columns: minmax(0, 1fr); } }
+
+  .ig-h { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .ig-h .icon-tile { margin: 0; }
+  .ig-h h3 { margin: 0; }
+  .ig dl { margin: 0; display: grid; gap: .9rem; }
+  .ig dt { font-weight: 600; font-size: .96rem; }
+  .ig dd { margin: 2px 0 0; color: var(--text-2); font-size: .9rem; }
+
+  .cx-dec { margin: 0; padding: 0; list-style: none; counter-reset: x; display: grid; gap: 12px; }
+  .cx-dec li { counter-increment: x; position: relative; padding: 18px 20px 18px 64px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); display: grid; gap: 4px; }
+  .cx-dec li::before { content: counter(x); position: absolute; left: 20px; top: 18px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-text); font: 600 .85rem/1 var(--font-mono); }
+  .cx-dec strong { font: 600 1.05rem/1.35 var(--font-display); }
+  .cx-dec span { font-size: .94rem; }
+  .faq-title { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  :global(.frame-bar .illustrative) { white-space: nowrap; flex: none; }
+</style>

@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+const popular = [
+  { label: 'Platform overview', href: '/platform/', icon: 'layers' },
+  { label: 'What is Business Observability?', href: '/business-observability/', icon: 'book' },
+  { label: 'Use cases', href: '/use-cases/', icon: 'target' },
+  { label: 'Integrations', href: '/integrations/', icon: 'plug' },
+  { label: 'Resources', href: '/resources/', icon: 'list' },
+  { label: 'Book a demo', href: '/demo/', icon: 'calendar' },
+];
+---
+<BaseLayout title="Page not found" description="The page you were looking for could not be found on panoptes.watch." noindex canonicalPath="/404.html">
+  <section class="section nf bg-glow">
+    <div class="container container-narrow text-center">
+      <div class="nf-eye" aria-hidden="true"><span></span><span></span><span></span><i></i></div>
+      <p class="eyebrow">Error 404 · signal lost</p>
+      <h1>This page is outside our field of view.</h1>
+      <p class="lede">The address may have changed, or the link may be mistyped. Here are some places that do exist.</p>
+      <ul class="nf-links">
+        {popular.map((p) => <li><a href={p.href} class="card card-link"><Icon name={p.icon} /> {p.label}</a></li>)}
+      </ul>
+      <div class="btn-row mt-2" style="justify-content:center"><a href="/" class="btn btn-primary">Back to the homepage</a><a href="/contact/" class="btn">Contact us</a></div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .nf { overflow: hidden; }
+  .nf h1 { margin-inline: auto; max-width: 18ch; }
+  .nf .lede { margin-inline: auto; max-width: 52ch; }
+  .nf-eye { position: relative; width: 160px; height: 160px; margin: 0 auto 2rem; display: grid; place-items: center; }
+  .nf-eye span { position: absolute; border: 1px solid var(--accent); border-radius: 50%; opacity: .35; inset: 0; }
+  .nf-eye span:nth-child(2) { inset: 24px; opacity: .55; } .nf-eye span:nth-child(3) { inset: 48px; opacity: .8; border-style: dashed; }
+  .nf-eye i { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); animation: drift 6s ease-in-out infinite; }
+  @keyframes drift { 0%,100% { transform: translate(0,0); } 25% { transform: translate(18px,-10px); } 50% { transform: translate(-14px,12px); } 75% { transform: translate(10px,14px); } }
+  .nf-links { list-style: none; padding: 0; margin: 2.4rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; text-align: left; }
+  .nf-links a { display: flex; align-items: center; gap: 10px; padding: 14px 16px; font-weight: 600; }
+  .nf-links :global(svg) { width: 18px; height: 18px; color: var(--accent-text); }
+</style>

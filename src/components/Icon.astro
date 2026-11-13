@@ -1,0 +1,8 @@
+---
+import { readSvg, svgWithA11y } from '../lib/svg';
+interface Props { name: string; size?: number; class?: string; label?: string }
+const { name, size, class: cls = '', label } = Astro.props;
+let svg = svgWithA11y(readSvg(`/icons/ui/${name}.svg`), label, cls);
+if (size) svg = svg.replace('<svg', `<svg width="${size}" height="${size}"`);
+---
+<Fragment set:html={svg} />

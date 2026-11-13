@@ -1,0 +1,28 @@
+---
+/** Monospace code sample with a title bar, an "Illustrative" tag and a copy button (copy handled by site.ts [data-copy]). */
+interface Props { code: string; title?: string; lang?: string; illustrative?: boolean; class?: string }
+const { code, title, lang, illustrative = true, class: cls } = Astro.props;
+const text = code.replace(/^\n+|\s+$/g, '');
+---
+<figure class:list={['codeblock', cls]}>
+  <figcaption class="cb-bar">
+    {lang && <span class="cb-lang">{lang}</span>}
+    {title && <span class="cb-title">{title}</span>}
+    {illustrative && <em class="illustrative">Illustrative</em>}
+    <button type="button" class="cb-copy" data-copy={text} aria-label={`Copy ${title ?? 'code'} to clipboard`}><span class="ce-label" aria-live="polite">Copy</span></button>
+  </figcaption>
+  <pre tabindex="0"><code>{text}</code></pre>
+</figure>
+<style>
+  .codeblock { margin: 0; border: 1px solid #2A2037; border-radius: var(--radius-lg); background: #0F0B17; overflow: hidden; color: #E9E1F7; box-shadow: var(--shadow); min-width: 0; }
+  .cb-bar { display: flex; align-items: center; gap: 10px; padding: 9px 10px 9px 16px; border-bottom: 1px solid #2A2037; background: #15101F; font: 500 .74rem/1 var(--font-mono); color: #8F82A1; min-width: 0; }
+  .cb-lang { color: #B794FF; text-transform: uppercase; letter-spacing: .08em; flex: none; }
+  .cb-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .cb-bar .illustrative { margin-left: auto; color: #8F82A1; flex: none; }
+  .cb-copy { flex: none; appearance: none; border: 1px solid #382B48; background: #1A1326; color: #B7A9C8; border-radius: 8px; padding: 6px 10px; font: 600 .74rem/1 var(--font-body); cursor: pointer; }
+  .cb-copy:hover { color: #fff; border-color: #9965FF; }
+  pre { margin: 0; padding: 18px 20px; overflow-x: auto; font: 400 .84rem/1.65 var(--font-mono); tab-size: 2; }
+  pre code { font-size: inherit; white-space: pre; }
+  pre:focus-visible { outline-offset: -3px; }
+  @media (max-width: 640px) { pre { font-size: .78rem; padding: 14px 16px; } .cb-bar .illustrative { display: none; } }
+</style>

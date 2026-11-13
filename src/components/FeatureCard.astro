@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+interface Props { title: string; text: string; href?: string; icon?: string; tag?: string; cta?: string; class?: string }
+const { title, text, href, icon, tag, cta = 'Learn more', class: cls } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+<Tag href={href} class:list={['card feature-card reveal', { 'card-link': href }, cls]}>
+  <div class="fc-top">
+    {icon && <span class="icon-tile"><Icon name={icon} /></span>}
+    {tag && <span class="badge badge-outline">{tag}</span>}
+  </div>
+  <h3>{title}</h3>
+  <p class="muted">{text}</p>
+  <slot />
+  {href && <span class="link-arrow fc-cta">{cta}</span>}
+</Tag>
+<style>
+  .feature-card { display: flex; flex-direction: column; height: 100%; }
+  .fc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .fc-cta { margin-top: auto; padding-top: 1rem; font-size: .92rem; }
+</style>

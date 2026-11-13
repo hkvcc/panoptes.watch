@@ -1,0 +1,26 @@
+---
+/**
+ * Fictional product screen (an SVG from /public/screenshots) in window chrome, zoomable, clearly labelled illustrative.
+ * tone="dark" forces the dark product palette (like the homepage Command Center) regardless of site theme.
+ */
+import Diagram from '../Diagram.astro';
+interface Props { src: string; alt: string; title: string; caption?: string; tone?: 'dark' | 'theme'; class?: string }
+const { src, alt, title, caption, tone = 'theme', class: cls } = Astro.props;
+---
+<div class:list={['pscreen', `pscreen-${tone}`, cls]}>
+  <Diagram src={src} alt={alt} frame={title} zoom pad={false} />
+  <p class="pscreen-note"><span class="illustrative">Illustrative product concept</span><span>{caption ?? 'All names and figures are fictional.'} <span class="hide-sm">Select the screen to enlarge it.</span><span class="show-sm-inline">Tap to enlarge.</span></span></p>
+</div>
+<style>
+  .pscreen :global(.frame) { border-radius: 18px; }
+  .pscreen-dark :global(.frame) {
+    --d-bg: #0D0915; --d-surface: #15101F; --d-surface-2: #2A1E40; --d-line: #2C2139; --d-text: #F7F3FF; --d-muted: #A496B6;
+    --d-accent: #9965FF; --d-accent-2: #C4A6FF; --d-soft: #24173A; --d-ok: #34D27B; --d-warn: #F5B53D; --d-crit: #F4566A;
+    --surface-2: #120D1B; --border: #2C2139; --border-strong: #3A2D4C; --text-3: #A496B6;
+    background: #0D0915; border-color: #2C2139;
+    box-shadow: 0 0 0 1px rgba(153, 101, 255, .08), 0 40px 100px -30px rgba(80, 30, 160, .55), 0 20px 50px -20px rgba(0, 0, 0, .5);
+  }
+  .pscreen-note { display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; margin: 1rem 0 0; font-size: .84rem; color: var(--text-3); }
+  .show-sm-inline { display: none; }
+  @media (max-width: 640px) { .show-sm-inline { display: inline; } }
+</style>

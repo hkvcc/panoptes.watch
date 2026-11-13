@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import { CASES, DOMAINS, cap, role } from '../../components/use-cases/data';
+import { SOLUTIONS } from '../../data/site';
+
+const crumbs = [{ label: 'Use Cases', href: '/use-cases/' }];
+
+const pattern = [
+  { n: '01', t: 'Problem', q: 'What is not working?', d: 'Start from a business symptom someone has noticed — flat revenue, slow onboarding, a complaint — stated in business terms, not metric names.' },
+  { n: '02', t: 'Signals', q: 'What is moving?', d: 'Find the measures that departed from what was expected, and when. Signals narrow “something is wrong” to “this changed, here, since then”.' },
+  { n: '03', t: 'Investigation', q: 'Where and for whom?', d: 'Segment and follow relationships: which step, route, customer group or dependency carries the change, and what else changed at the same time.' },
+  { n: '04', t: 'Insight', q: 'What is the likely explanation?', d: 'A testable hypothesis with its evidence, clearly marked as correlation or verified cause — never presented as more certain than it is.' },
+  { n: '05', t: 'Action', q: 'Who does what?', d: 'An owner, a decision and a scope. Containment now, a structural fix later, both recorded against the evidence that prompted them.' },
+  { n: '06', t: 'Outcome', q: 'Did it work?', d: 'The measures that will show whether the intervention changed the outcome — defined before acting, read after.' },
+];
+
+const capCols = ['business-graph', 'process-intelligence', 'journey-intelligence', 'anomaly-detection', 'root-cause-analysis', 'business-health', 'command-center', 'actions-automation'];
+const domainLabel = Object.fromEntries(DOMAINS.map((d) => [d.id, d.label]));
+
+const schema = {
+  '@type': 'CollectionPage',
+  name: 'Panoptes use cases',
+  url: 'https://panoptes.watch/use-cases/',
+  hasPart: CASES.map((c) => ({ '@type': 'WebPage', name: c.label, url: `https://panoptes.watch/use-cases/${c.slug}/` })),
+};
+---
+<BaseLayout title="Use Cases" description="Business observability use cases told as investigations: revenue leakage, bottlenecks, journey friction, anomalies, SLA monitoring and operational efficiency." ogImage="/social/og-use-cases.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Use cases" title="Concrete problems, <span class='gradient-text'>told as investigations.</span>" lede="Each use case starts with a question a business leader actually asks, and follows it the way Panoptes would: from the first signal, through investigation, to an owned action and an outcome you can measure." breadcrumbs={crumbs} center>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#cases">Browse use cases</a>
+      <a class="btn" href="#pattern">The investigative pattern</a>
+    </div>
+  </PageHero>
+
+  <section class="section" id="cases">
+    <div class="container">
+      <div class="cases-head">
+        <SectionHead eyebrow="Six use cases" title="Start from the question you are asking." lede="Filter by the part of the business you are responsible for. Every scenario is fictional and every figure illustrative — they show the reasoning, not a claimed result." />
+        <div class="filter reveal" role="group" aria-label="Filter use cases by business domain" data-uc-filter>
+          <button type="button" class="chip" aria-pressed="true" data-f="all">All</button>
+          {DOMAINS.map((d) => <button type="button" class="chip" aria-pressed="false" data-f={d.id}>{d.label}</button>)}
+        </div>
+      </div>
+      <p class="sr-only" aria-live="polite" data-uc-count></p>
+      <ul class="cases" data-uc-list>
+        {CASES.map((c, i) => (
+          <li data-domains={c.domains.join(' ')}>
+            <a class="case card card-link" href={`/use-cases/${c.slug}/`}>
+              <div class="case-top">
+                <span class="icon-tile"><Icon name={c.icon} /></span>
+                <span class="case-n mono">{String(i + 1).padStart(2, '0')}</span>
+              </div>
+              <p class="case-q">“{c.question}”</p>
+              <h3>{c.label}</h3>
+              <p class="muted small">{c.summary}</p>
+              <dl class="case-meta">
+                <dt>Domain</dt><dd>{c.domains.map((d) => domainLabel[d]).join(' · ')}</dd>
+                <dt>Scenario</dt><dd>{c.scenario}</dd>
+                <dt>For</dt><dd>{c.roles.map((r) => role(r).label).join(', ')}</dd>
+              </dl>
+              <span class="link-arrow">Follow the investigation</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="pattern">
+    <div class="container">
+      <SectionHead eyebrow="The investigative pattern" title="Problem → signals → investigation → insight → action → outcome." lede="Every use case follows the same six steps. The pattern is what turns a dashboard observation into a decision someone owns — and it is the same whether the problem is revenue, flow, customers or cost." />
+      <ol class="pattern">
+        {pattern.map((p) => (
+          <li class="reveal">
+            <span class="p-n mono">{p.n}</span>
+            <h3>{p.t}</h3>
+            <p class="p-q">{p.q}</p>
+            <p class="muted small">{p.d}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="pattern-notes">
+        <div class="pn reveal">
+          <Icon name="rootcause" />
+          <p><strong>Correlation is labelled as correlation.</strong> Step four produces a hypothesis with evidence. Panoptes is designed to keep the distinction between “happened at the same time” and “verified cause” visible until it is tested.</p>
+        </div>
+        <div class="pn reveal">
+          <Icon name="target" />
+          <p><strong>Outcomes are defined before acting.</strong> Step six names the measures in advance, so success is judged by the business outcome — not by whether the action was taken.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Under the hood" title="Which capabilities each use case draws on." lede="All six run on the same model of the business. What changes is which parts of it an investigation leans on most." />
+      <div class="table-wrap reveal matrix">
+        <table class="table">
+          <caption class="sr-only">Panoptes capabilities used by each use case</caption>
+          <thead>
+            <tr>
+              <th scope="col">Use case</th>
+              {capCols.map((s) => <th scope="col"><a href={cap(s).href}>{cap(s).label}</a></th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {CASES.map((c) => (
+              <tr>
+                <th scope="row"><a href={`/use-cases/${c.slug}/`}>{c.label}</a></th>
+                {capCols.map((s) => <td>{c.caps.includes(s) ? <span class="dot" aria-label="Primary capability" role="img"></span> : <span class="sr-only">Not primary</span>}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="note mt-1">Dots mark the capabilities each scenario relies on most. <a href="/platform/ai-intelligence/">AI Intelligence</a> — assisted, plain-language investigation — is part of the product vision and would apply across all six.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <RelatedLinks eyebrow="By role" title="Prefer to start from your seat?" items={SOLUTIONS.map((s) => ({ label: s.label, href: s.href, desc: s.desc, icon: s.icon }))} />
+      <div class="more">
+        <a class="link-arrow" href="/how-it-works/">How Panoptes works</a>
+        <a class="link-arrow" href="/platform/">All platform capabilities</a>
+        <a class="link-arrow" href="/resources/from-dashboards-to-decisions/">From dashboards to decisions</a>
+      </div>
+    </div>
+  </section>
+
+  <CTA title="Bring us your hardest question." text="Tell us which part of the business you cannot see clearly. We will walk through how Panoptes would investigate it." />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-uc-filter]');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-uc-list] > li')];
+  const count = document.querySelector<HTMLElement>('[data-uc-count]');
+  root?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-f]');
+    if (!btn) return;
+    const f = btn.dataset.f!;
+    root.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    let n = 0;
+    items.forEach((li) => { const show = f === 'all' || (li.dataset.domains || '').split(' ').includes(f); li.hidden = !show; if (show) n++; });
+    if (count) count.textContent = `${n} use case${n === 1 ? '' : 's'} shown`;
+  });
+</script>
+
+<style>
+  .cases-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; margin-bottom: clamp(28px, 4vw, 44px); }
+  .cases-head :global(.section-head) { margin-bottom: 0; }
+  .filter { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-2); }
+  .chip { font: 500 .88rem/1 var(--font-body); padding: .65em 1.05em; border-radius: 999px; border: 0; background: transparent; color: var(--text-2); cursor: pointer; min-height: 38px; }
+  .chip:hover { color: var(--text); }
+  .chip[aria-pressed='true'] { background: var(--surface); color: var(--accent-text); box-shadow: 0 1px 0 var(--border-strong), 0 0 0 1px var(--border); }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .cases { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 22px); }
+  .cases li[hidden] { display: none; }
+  .case { display: flex; flex-direction: column; height: 100%; }
+  .case-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .case-n { color: var(--text-3); font-size: .85rem; }
+  .case-q { font: 500 1.08rem/1.4 var(--font-display); color: var(--text); margin: 0 0 1rem; }
+  .case h3 { font-size: .8rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--accent-text); margin-bottom: .5rem; }
+  .case-meta { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .35rem .9rem; margin: .4rem 0 0; padding-top: 1rem; border-top: 1px dashed var(--border-strong); font-size: .84rem; }
+  .case-meta dt { color: var(--text-3); font: 500 .72rem/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }
+  .case-meta dd { margin: 0; color: var(--text-2); }
+  .case .link-arrow { margin-top: auto; padding-top: 1.2rem; font-size: .92rem; }
+  .pattern { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; counter-reset: p; }
+  .pattern li { position: relative; padding: 20px 18px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .pattern li:not(:last-child)::after { content: ''; position: absolute; right: -9px; top: 32px; width: 8px; height: 2px; background: var(--accent); opacity: .6; }
+  .pattern li:last-child { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+  .p-n { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-text); font-size: .82rem; font-weight: 600; margin-bottom: .9rem; }
+  .pattern h3 { font-size: 1.1rem; margin-bottom: .2rem; }
+  .p-q { font-size: .9rem; color: var(--accent-text); margin-bottom: .6rem; }
+  .pattern-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: clamp(24px, 3vw, 36px); }
+  .pn { display: flex; gap: 14px; padding: 18px 20px; border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); }
+  .pn :global(svg) { width: 22px; height: 22px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .pn p { margin: 0; font-size: .94rem; color: var(--text-2); }
+  .pn strong { color: var(--text); }
+  .matrix .table { min-width: 860px; }
+  .matrix thead th { font-size: .7rem; vertical-align: bottom; text-align: center; }
+  .matrix thead th:first-child { text-align: left; }
+  .matrix thead a { color: inherit; text-decoration: none; }
+  .matrix thead a:hover { color: var(--accent-text); }
+  .matrix tbody th { font: 600 .95rem/1.3 var(--font-display); text-transform: none; letter-spacing: 0; background: transparent; white-space: nowrap; }
+  .matrix tbody th a { color: var(--text); text-decoration: none; }
+  .matrix tbody th a:hover { color: var(--accent-text); }
+  .matrix td { text-align: center; vertical-align: middle; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .more { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 2rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 1080px) {
+    .pattern { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pattern li::after { display: none; }
+    .cases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 960px) { .cases-head { grid-template-columns: minmax(0, 1fr); align-items: start; } }
+  @media (max-width: 640px) {
+    .cases, .pattern-notes { grid-template-columns: minmax(0, 1fr); }
+    .pattern { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .filter { border-radius: var(--radius-lg); }
+  }
+  @media (max-width: 420px) { .pattern { grid-template-columns: minmax(0, 1fr); } }
+</style>

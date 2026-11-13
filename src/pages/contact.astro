@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import CopyEmail from '../components/CopyEmail.astro';
+import ContactForm from '../components/forms/ContactForm.astro';
+
+const crumbs = [{ label: 'Contact', href: '/contact/' }];
+
+const next = [
+  { t: 'Your message reaches the team', d: 'Messages sent through this form are delivered to the same inbox as sales@panoptes.watch.' },
+  { t: 'We reply by email', d: 'You will get a direct reply from the address you give us — with an answer, or the right person copied in.' },
+  { t: 'Nothing else is triggered', d: 'Your details are used to respond to this message. You are not added to a newsletter.' },
+];
+---
+<BaseLayout
+  title="Contact"
+  description="Contact Panoptes about sales, partnerships, press or anything else. Send a message through the form or email sales@panoptes.watch directly."
+  ogImage="/social/og-company.png"
+  breadcrumbs={crumbs}
+>
+  <section class="contact bg-glow">
+    <div class="bg-grid-layer bg-grid" aria-hidden="true"></div>
+    <div class="container contact-grid">
+      <div class="contact-intro">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Contact</span></li></ol></nav>
+        <p class="eyebrow">Contact</p>
+        <h1>Send us a message.</h1>
+        <p class="lede">Questions about Panoptes, partnerships, press enquiries or something else — write to us here and a person will reply by email.</p>
+
+        <div class="direct">
+          <p class="kpi-label">Prefer email?</p>
+          <CopyEmail large />
+          <p class="small muted">One address for everything. Mention the topic in the subject line and it will reach the right person.</p>
+        </div>
+      </div>
+
+      <div class="contact-form card card-raised">
+        <h2 class="form-title">Contact form</h2>
+        <ContactForm />
+      </div>
+
+      <aside class="contact-side" aria-labelledby="next-h">
+        <h2 id="next-h" class="side-h">What happens next</h2>
+        <ol class="next">
+          {next.map((n, i) => (
+            <li><span class="next-n">{i + 1}</span><div><strong>{n.t}</strong><p class="muted small">{n.d}</p></div></li>
+          ))}
+        </ol>
+        <div class="side-links">
+          <a href="/demo/" class="side-link"><Icon name="calendar" /><span><strong>Want to see the product?</strong><span class="muted small">Book a demo built around your questions.</span></span></a>
+          <a href="/integrations/security-governance/" class="side-link"><Icon name="shield" /><span><strong>Security review?</strong><span class="muted small">Read our principles, then send your questionnaire.</span></span></a>
+          <a href="/company/contact/" class="side-link"><Icon name="building" /><span><strong>Other ways to reach us</strong><span class="muted small">Contact routes by topic.</span></span></a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact { padding-block: clamp(40px, 6vw, 88px) clamp(56px, 8vw, 104px); position: relative; overflow: hidden; }
+  .contact .bg-grid-layer { position: absolute; inset: 0; z-index: -1; -webkit-mask-image: radial-gradient(ellipse 70% 60% at 20% 0%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 70% 60% at 20% 0%, #000 20%, transparent 75%); }
+  .contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: 'intro form' 'side form'; column-gap: clamp(32px, 5vw, 72px); row-gap: 40px; align-items: start; }
+  .contact-intro { grid-area: intro; }
+  .contact-form { grid-area: form; padding: clamp(20px, 3vw, 36px); }
+  .contact-side { grid-area: side; }
+  .contact-intro h1 { font-size: clamp(2.3rem, 4.6vw, 3.6rem); }
+  .form-title { font-size: 1.5rem; margin-bottom: 1rem; }
+  .direct { display: grid; gap: 10px; justify-items: start; margin-top: 2rem; }
+  .direct p { margin: 0; max-width: 46ch; }
+  .side-h { font-size: 1.05rem; font-family: var(--font-body); font-weight: 700; margin-bottom: 1rem; }
+  .next { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+  .next li { display: flex; gap: 14px; align-items: flex-start; }
+  .next-n { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--accent-soft); color: var(--accent-text); font: 600 .78rem/1 var(--font-mono); }
+  .next p { margin: 2px 0 0; }
+  .side-links { display: grid; gap: 10px; margin-top: 2rem; }
+  .side-link { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); text-decoration: none; transition: border-color .2s; }
+  .side-link:hover { border-color: var(--accent); text-decoration: none; }
+  .side-link > :global(svg) { width: 20px; height: 20px; color: var(--accent-text); flex: none; margin-top: 2px; }
+  .side-link > span { display: grid; gap: 2px; }
+  @media (max-width: 960px) {
+    .contact-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'intro' 'form' 'side'; row-gap: 32px; }
+  }
+</style>

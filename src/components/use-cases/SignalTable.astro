@@ -1,0 +1,31 @@
+---
+/** Table of example signals for a use case: what is watched, what it tells you, where it typically comes from. */
+interface Props { rows: { signal: string; tells: string; source?: string }[]; caption?: string }
+const { rows, caption } = Astro.props;
+const hasSource = rows.some((r) => r.source);
+---
+<div class="table-wrap reveal sig-table">
+  <table class="table">
+    {caption && <caption class="sr-only">{caption}</caption>}
+    <thead><tr><th scope="col">Signal</th><th scope="col">What it tells you</th>{hasSource && <th scope="col">Typical source</th>}</tr></thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr><th scope="row">{r.signal}</th><td>{r.tells}</td>{hasSource && <td class="src">{r.source}</td>}</tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+<style>
+  .sig-table tbody th { font: 600 .95rem/1.4 var(--font-display); text-transform: none; letter-spacing: 0; color: var(--text); background: transparent; width: 30%; }
+  .sig-table td { color: var(--text-2); }
+  .sig-table .src { font: 500 .8rem/1.5 var(--font-mono); color: var(--text-3); white-space: nowrap; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 640px) {
+    .sig-table :global(.table) { min-width: 0; }
+    .sig-table thead { display: none; }
+    .sig-table tr { display: grid; padding: .9rem 1rem; border-bottom: 1px solid var(--border); gap: .3rem; }
+    .sig-table tr:last-child { border-bottom: 0; }
+    .sig-table tbody th, .sig-table td { display: block; padding: 0; border: 0; width: auto; }
+    .sig-table .src { white-space: normal; }
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+/**
+ * Interactive business graph: six business domains and the dependencies between them.
+ * Nodes are real buttons (keyboard + screen-reader accessible) positioned over an SVG edge layer.
+ * Conceptual illustration — not a live connection to any business.
+ */
+import Icon from './Icon.astro';
+
+const W = 640, H = 440;
+const NODES = [
+  { id: 'customers', label: 'Customers', icon: 'customers', x: 120, y: 92,
+    summary: 'Accounts, segments and lifecycle stages — who the business serves and where each relationship currently stands.',
+    entities: ['Account', 'Contact', 'Segment', 'Lifecycle stage'],
+    signals: ['Activation rate by cohort', 'Time from sign-up to first value', 'Churn-risk indicators'] },
+  { id: 'revenue', label: 'Revenue', icon: 'revenue', x: 520, y: 92,
+    summary: 'Orders, subscriptions, invoices and payments — how value is earned, billed and actually collected.',
+    entities: ['Order', 'Subscription', 'Invoice', 'Payment'],
+    signals: ['Payment completion rate', 'Expected vs collected revenue', 'Refund and dispute rates'] },
+  { id: 'workflows', label: 'Workflows', icon: 'workflow', x: 320, y: 40,
+    summary: 'The multi-step processes that move work through the business, with stages, owners and service expectations.',
+    entities: ['Process', 'Stage', 'Case', 'Hand-off'],
+    signals: ['Stage wait times', 'Rework loops', 'Cases breaching targets'] },
+  { id: 'operations', label: 'Operations', icon: 'operations', x: 100, y: 320,
+    summary: 'Teams, queues and capacity — the resources that do the work and the constraints they operate under.',
+    entities: ['Team', 'Queue', 'Shift', 'Capacity'],
+    signals: ['Backlog growth', 'Utilisation vs capacity', 'Throughput per team'] },
+  { id: 'delivery', label: 'Delivery', icon: 'delivery', x: 540, y: 320,
+    summary: 'Fulfilment, provisioning and service delivery — whether the business keeps the promises it makes.',
+    entities: ['Shipment', 'Provisioning task', 'Service commitment', 'SLA'],
+    signals: ['On-time delivery rate', 'SLA attainment', 'Delivery exceptions'] },
+  { id: 'finance', label: 'Finance', icon: 'finance', x: 320, y: 400,
+    summary: 'Costs, margins and cash — the financial consequences of how the rest of the business performs.',
+    entities: ['Cost centre', 'Ledger entry', 'Margin', 'Cash position'],
+    signals: ['Cost per transaction', 'Unreconciled payments', 'Margin by product line'] },
+];
+const EDGES: [string, string, string][] = [
+  ['customers', 'revenue', 'Customers place orders and subscribe'],
+  ['customers', 'workflows', 'Onboarding and support journeys'],
+  ['workflows', 'revenue', 'Approvals gate billable activity'],
+  ['workflows', 'operations', 'Work is assigned to teams and queues'],
+  ['operations', 'delivery', 'Capacity determines fulfilment speed'],
+  ['delivery', 'revenue', 'Delivery triggers revenue recognition'],
+  ['revenue', 'finance', 'Collected revenue reaches the ledger'],
+  ['operations', 'finance', 'Effort and rework drive cost'],
+  ['delivery', 'customers', 'Kept promises shape retention'],
+  ['finance', 'customers', 'Credit and billing terms affect accounts'],
+];
+const pos = Object.fromEntries(NODES.map((n) => [n.id, n]));
+const connections = (id: string) => EDGES.filter(([a, b]) => a === id || b === id).map(([a, b, l]) => ({ other: a === id ? b : a, label: l }));
+const first = NODES[1];
+---
+<div class="bg" data-bgraph>
+  <div class="bg-canvas">
+    <svg viewBox={`0 0 ${W} ${H}`} class="bg-edges" aria-hidden="true">
+      <defs>
+        <radialGradient id="bg-core"><stop offset="0" stop-color="#9965FF" stop-opacity=".55" /><stop offset="1" stop-color="#9965FF" stop-opacity="0" /></radialGradient>
+      </defs>
+      <circle cx={W / 2} cy={H / 2} r="150" class="orbit" />
+      <circle cx={W / 2} cy={H / 2} r="92" class="orbit" />
+      {EDGES.map(([a, b]) => {
+        const A = pos[a], B = pos[b];
+        const mx = (A.x + B.x) / 2 + (W / 2 - (A.x + B.x) / 2) * 0.35, my = (A.y + B.y) / 2 + (H / 2 - (A.y + B.y) / 2) * 0.35;
+        return <path d={`M${A.x} ${A.y} Q${mx} ${my} ${B.x} ${B.y}`} class="edge" data-edge={`${a} ${b}`} />;
+      })}
+      <circle cx={W / 2} cy={H / 2} r="70" fill="url(#bg-core)" />
+      <circle cx={W / 2} cy={H / 2} r="26" class="core" />
+      <circle cx={W / 2} cy={H / 2} r="8" class="core-dot" />
+    </svg>
+    <span class="core-label" style={`left:${50}%;top:${(H / 2 + 44) / H * 100}%`}>Business model</span>
+    {NODES.map((n) => (
+      <button type="button" class="node" data-node={n.id} aria-pressed={n.id === first.id ? 'true' : 'false'}
+        style={`left:${(n.x / W) * 100}%;top:${(n.y / H) * 100}%`} aria-controls="bgraph-panel">
+        <span class="node-ico"><Icon name={n.icon} /></span><span class="node-label">{n.label}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="bg-panel" id="bgraph-panel" aria-live="polite">
+    {NODES.map((n) => (
+      <article class="bp" data-panel={n.id} hidden={n.id !== first.id}>
+        <p class="bp-eyebrow">Business domain</p>
+        <h3>{n.label}</h3>
+        <p class="bp-sum">{n.summary}</p>
+        <p class="bp-k">Example entities</p>
+        <ul class="bp-chips">{n.entities.map((e) => <li>{e}</li>)}</ul>
+        <p class="bp-k">Signals worth observing</p>
+        <ul class="bp-list">{n.signals.map((s) => <li>{s}</li>)}</ul>
+        <p class="bp-k">Depends on &amp; affects</p>
+        <ul class="bp-conn">{connections(n.id).map((c) => <li><b>{pos[c.other].label}</b><span>{c.label}</span></li>)}</ul>
+      </article>
+    ))}
+    <p class="bp-note">Conceptual model. Select a domain to explore its relationships.</p>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-bgraph]').forEach((root) => {
+    const nodes = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-node]'));
+    const edges = Array.from(root.querySelectorAll<SVGPathElement>('[data-edge]'));
+    const highlight = (id: string | null) => {
+      edges.forEach((e) => { const on = !!id && e.dataset.edge!.split(' ').includes(id); e.classList.toggle('on', on); });
+      nodes.forEach((n) => {
+        const linked = !!id && edges.some((e) => e.classList.contains('on') && e.dataset.edge!.split(' ').includes(n.dataset.node!));
+        n.classList.toggle('linked', linked && n.dataset.node !== id);
+        n.classList.toggle('dim', !!id && !linked && n.dataset.node !== id);
+      });
+    };
+    let selected = nodes.find((n) => n.getAttribute('aria-pressed') === 'true')?.dataset.node ?? null;
+    const select = (id: string) => {
+      selected = id;
+      nodes.forEach((n) => n.setAttribute('aria-pressed', String(n.dataset.node === id)));
+      root.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== id));
+      highlight(id);
+    };
+    nodes.forEach((n) => {
+      n.addEventListener('click', () => select(n.dataset.node!));
+      n.addEventListener('mouseenter', () => highlight(n.dataset.node!));
+      n.addEventListener('mouseleave', () => highlight(selected));
+      n.addEventListener('focus', () => highlight(n.dataset.node!));
+      n.addEventListener('blur', () => highlight(selected));
+    });
+    if (selected) highlight(selected);
+  });
+</script>
+
+<style>
+  .bg { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr); gap: 20px; align-items: stretch; }
+  .bg-canvas { position: relative; width: 100%; align-self: center; aspect-ratio: 640 / 440; border: 1px solid var(--border); border-radius: var(--radius-lg); background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 8%, var(--surface)), var(--surface) 70%); }
+  .bg-edges { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .orbit { fill: none; stroke: var(--border); stroke-dasharray: 2 6; }
+  .edge { fill: none; stroke: var(--border-strong); stroke-width: 1.5; transition: stroke .25s, stroke-width .25s, opacity .25s; }
+  .edge.on { stroke: var(--accent); stroke-width: 2.4; stroke-dasharray: 5 6; animation: d-dash 1.2s linear infinite; }
+  .core { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
+  .core-dot { fill: var(--accent); }
+  .core-label { position: absolute; transform: translate(-50%, 0); font: 500 .68rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); white-space: nowrap; pointer-events: none; }
+  .node { position: absolute; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 7px; border-radius: 999px; border: 1px solid var(--border-strong); background: var(--elevated); color: var(--text); font: 600 .88rem/1 var(--font-body); cursor: pointer; box-shadow: var(--shadow); transition: border-color .2s, opacity .2s, transform .2s var(--ease), box-shadow .2s; white-space: nowrap; }
+  .node:hover { transform: translate(-50%, -50%) scale(1.04); }
+  .node[aria-pressed='true'] { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft), var(--shadow); }
+  .node.linked { border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); }
+  .node.dim { opacity: .55; }
+  .node-ico { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-text); }
+  .node-ico :global(svg) { width: 15px; height: 15px; }
+  .node[aria-pressed='true'] .node-ico { background: var(--purple); color: #fff; }
+
+  .bg-panel { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: 22px 24px; display: flex; flex-direction: column; }
+  .bp h3 { font-size: 1.5rem; margin-bottom: .3em; }
+  .bp-eyebrow, .bp-k { font: 500 .7rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); margin: 0 0 .6rem; }
+  .bp-k { margin-top: 1.2rem; }
+  .bp-sum { color: var(--text-2); font-size: .95rem; margin-bottom: 0; }
+  .bp-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .bp-chips li { font: 500 .78rem/1 var(--font-mono); padding: 6px 9px; border-radius: 6px; background: var(--accent-soft); color: var(--accent-text); }
+  .bp-list { margin: 0; padding-left: 1.1em; font-size: .92rem; display: grid; gap: 4px; }
+  .bp-list li::marker { color: var(--accent); }
+  .bp-conn { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: .86rem; }
+  .bp-conn li { display: grid; grid-template-columns: 92px 1fr; gap: 8px; }
+  .bp-conn span { color: var(--text-2); }
+  .bp-note { margin: auto 0 0; padding-top: 1.2rem; font-size: .8rem; color: var(--text-3); }
+  @media (max-width: 960px) { .bg { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 600px) {
+    .node { padding: 5px; gap: 0; } .node-label { position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%); font-size: .7rem; background: var(--elevated); padding: 2px 6px; border-radius: 4px; }
+    .core-label { display: none; }
+    .bg-canvas { margin-bottom: 18px; }
+  }
+</style>

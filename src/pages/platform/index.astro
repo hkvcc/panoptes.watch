@@ -1,0 +1,279 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import { PLATFORM } from '../../data/site';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }];
+const cap = Object.fromEntries(PLATFORM.map((p) => [p.label, p]));
+
+const groups = [
+  {
+    stage: 'Model', n: '02', blurb: 'The foundation. Everything else reads from it.',
+    items: [
+      { name: 'Business Graph', q: 'What depends on what?', d: 'Customers, orders, payments, fulfilment, teams, processes and objectives held as connected entities, so a change in one place can be followed to its consequences elsewhere.' },
+    ],
+  },
+  {
+    stage: 'Observe', n: '03', blurb: 'Continuous comparison of what is happening with what should be happening.',
+    items: [
+      { name: 'Business Health', q: 'Is this part of the business working?', d: 'Objectives broken into indicators with expected bands and business-level service expectations, rolled up into scores that can always be explained.' },
+      { name: 'Process Intelligence', q: 'Where is work waiting?', d: 'Stages, throughput, waiting time, completion and rework in real workflows, and the stage that is actually limiting flow.' },
+      { name: 'Journey Intelligence', q: 'Where do customers stall?', d: 'End-to-end paths across systems for customers and transactions, showing where they slow down, loop back or drop out.' },
+      { name: 'Anomaly Detection', q: 'Is this change meaningful?', d: 'Actual behaviour compared with seasonal, time-of-day and segment-aware expectations, so real shifts surface early and noise does not.' },
+    ],
+  },
+  {
+    stage: 'Understand', n: '04', blurb: 'From “something moved” to “this is the most likely reason, and here is the evidence”.',
+    items: [
+      { name: 'Root Cause Analysis', q: 'What changed first?', d: 'Traces a symptom back through dependencies and recent changes, ranking candidate explanations and keeping correlation distinct from verified cause.' },
+      { name: 'AI Intelligence', q: 'Can I just ask?', d: 'Plain-language questions answered with investigations that show their working. This is part of the product vision rather than a shipped capability.', vision: true },
+    ],
+  },
+  {
+    stage: 'Act', n: '05', blurb: 'Where findings become owned work with a measurable effect.',
+    items: [
+      { name: 'Command Center', q: 'What needs attention first?', d: 'One operating view that ranks health, exceptions and open investigations by business consequence rather than by alert count.' },
+      { name: 'Actions & Automation', q: 'Who owns it, and did it work?', d: 'Routes findings to owners, coordinates the response and measures the outcome against the same expectation that raised the issue.' },
+    ],
+  },
+];
+
+const journey = [
+  { c: 'Anomaly Detection', t: 'Collected revenue falls below its expected band for Tuesday morning, adjusted for the usual weekly pattern.' },
+  { c: 'Business Health', t: 'The “orders are paid for as promised” objective drops, and its payment-completion indicator is the one outside its band.' },
+  { c: 'Business Graph', t: 'The affected payments share one route. The graph shows which processes, commitments and revenue lines sit on that route.' },
+  { c: 'Root Cause Analysis', t: 'A routing rule changed twenty minutes before the drop and only affects that route. Strong correlation, flagged as unverified.' },
+  { c: 'Command Center', t: 'The issue ranks first: high revenue impact and a breach risk today. Six related latency alerts are grouped beneath it as context.' },
+  { c: 'Actions & Automation', t: 'Payments operations owns it, reverts the rule and the outcome is measured against the same band that raised the issue.' },
+];
+
+const compare = [
+  ['Primary question', 'Is the technology up and fast?', 'What happened last period?', 'Is the business working right now, why, and what next?'],
+  ['Unit of observation', 'Hosts, services, requests, traces', 'Tables, aggregates, reports', 'Customers, orders, cases, processes, commitments'],
+  ['Time orientation', 'Real time, technical', 'Historical, periodic', 'Continuous, business time (cut-offs, terms, SLAs)'],
+  ['Notion of “normal”', 'Error and latency thresholds', 'Targets compared at period end', 'Expected bands per objective, segment and time of day'],
+  ['What it connects', 'Services to services', 'Metrics to dimensions', 'Business entities to processes, outcomes and owners'],
+  ['After the finding', 'Incident for engineering', 'A meeting, often after the fact', 'Owned action, measured against the same expectation'],
+];
+
+const notList = [
+  { t: 'Not a BI dashboard tool', d: 'BI remains the right place for reporting. Panoptes watches the business continuously and explains change.' },
+  { t: 'Not server monitoring', d: 'APM and logs tell you whether systems are healthy. Panoptes asks whether the outcomes those systems serve are.' },
+  { t: 'Not an ERP or system of record', d: 'Panoptes reads from the systems you run the business on. It does not replace them or become the ledger.' },
+  { t: 'Not project management', d: 'Actions link to owners and outcomes. Your existing ticketing and work tools stay where they are.' },
+  { t: 'Not a generic AI chatbot', d: 'Any assisted investigation is grounded in the business model and shows its evidence. That part is vision.' },
+];
+---
+<BaseLayout title="Platform overview" description="How the nine Panoptes capabilities work on one shared business model: connect, model, observe, understand and act on how your business actually operates." ogImage="/social/og-platform.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="The Panoptes platform" title="One model of your business. <span class='gradient-text'>Nine ways to see it working.</span>" lede="Panoptes is built around a single, continuously updated model of how your business operates. Every capability (health, process flow, journeys, anomalies, root cause, priorities and actions) reads from that same model, so their answers agree with each other." breadcrumbs={crumbs} center>
+    <div class="btn-row hero-btns">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/how-it-works/">See how it works</a>
+    </div>
+  </PageHero>
+
+  <!-- Architecture -->
+  <section class="section">
+    <div class="container">
+      <div class="arch-head">
+        <SectionHead eyebrow="Architecture" title="The model sits at the core. Capabilities are built around it." lede="Data arrives from the systems you already run. It becomes a business model: entities, relationships, processes and objectives. Observation, understanding and action are layers over that shared model, not separate products with separate copies of the truth." />
+      </div>
+      <div class="reveal">
+        <Diagram src="/diagrams/platform-architecture.svg" alt="Layered platform architecture. Connect at the bottom feeds the Business Graph, the shared business model. Above it, Observe (Business Health, Process Intelligence, Journey Intelligence, Anomaly Detection), Understand (Root Cause Analysis, AI Intelligence as vision) and Act (Command Center, Actions and Automation)." frame="platform architecture" illustrative={false} zoom class="hide-sm" />
+        <Diagram src="/diagrams/platform-architecture-vertical.svg" alt="Layered platform architecture: Connect, the shared Business Graph model, then Observe, Understand and Act capabilities." frame class="show-sm" />
+      </div>
+      <div class="principles">
+        <div class="pr reveal">
+          <span class="pr-k">01</span>
+          <h3>One shared definition of everything</h3>
+          <p class="muted">“Active customer”, “completed payment” and “on time” are defined once in the model and reused everywhere. When two teams look at the same number, it is literally the same number.</p>
+        </div>
+        <div class="pr reveal">
+          <span class="pr-k">02</span>
+          <h3>Capabilities, not modules</h3>
+          <p class="muted">Health, process and journey views are different lenses on the same entities. An anomaly can be opened as a journey, traced through the graph and assigned as an action without exporting anything.</p>
+        </div>
+        <div class="pr reveal">
+          <span class="pr-k">03</span>
+          <h3>A loop, not a report</h3>
+          <p class="muted">The platform is designed around Connect → Model → Observe → Understand → Act. An action is measured against the expectation that raised it, so the loop closes on evidence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities by stage -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Capabilities" title="Nine capabilities, grouped by the job they do." lede="Each capability answers one kind of question. Together they cover the path from a raw business signal to a measured intervention." />
+      <div class="stages">
+        {groups.map((g) => (
+          <div class="stage-row reveal">
+            <div class="stage-label">
+              <span class="stage-n">{g.n}</span>
+              <h3>{g.stage}</h3>
+              <p class="muted small">{g.blurb}</p>
+            </div>
+            <div class:list={['stage-cards', `n${g.items.length}`]}>
+              {g.items.map((it) => (
+                <a href={cap[it.name].href} class="card card-link capc">
+                  <div class="capc-top">
+                    <span class="icon-tile"><Icon name={cap[it.name].icon!} /></span>
+                    {it.vision && <span class="badge badge-outline">Vision</span>}
+                  </div>
+                  <h4>{it.name}</h4>
+                  <p class="capc-q">“{it.q}”</p>
+                  <p class="muted small">{it.d}</p>
+                  <span class="link-arrow small">Explore {it.name}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p class="note mt-2 conn-note"><Icon name="plug" /> <span>Stage 01, Connect, is covered by <a href="/integrations/">integrations</a>: connectors, event streams, warehouse sync and the <a href="/integrations/api/">events API</a>.</span></p>
+    </div>
+  </section>
+
+  <!-- One question through the platform -->
+  <section class="section">
+    <div class="container">
+      <div class="split split-top q-split">
+        <div class="q-intro">
+          <p class="eyebrow">In practice</p>
+          <h2>One question, handed between capabilities.</h2>
+          <p class="lede">“Why did collected revenue fall short this morning?” No single tool answers that. Here is how the question would move through the platform, step by step, without anyone rebuilding context.</p>
+          <p class="muted">Each hand-off works because every capability is looking at the same customers, orders, payments and objectives. The anomaly already knows which segment it is in; root cause analysis already knows which route those payments took; the action already knows which objective it is meant to restore.</p>
+          <p class="illustrative">Illustrative scenario</p>
+        </div>
+        <ol class="handoff">
+          {journey.map((j, i) => (
+            <li class="reveal">
+              <span class="ho-n">{i + 1}</span>
+              <div>
+                <a href={cap[j.c].href} class="ho-cap"><Icon name={cap[j.c].icon!} />{j.c}</a>
+                <p>{j.t}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Differentiation -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Where it fits" title="Different from BI. Different from APM. Built to sit between them." lede="System observability tells you whether technology is working. Business intelligence tells you what happened. Panoptes is designed to tell you whether the business is working now, and why. Most organisations will keep all three." />
+      <div class="table-wrap reveal">
+        <table class="table cmp-table">
+          <thead><tr><th scope="col"><span class="sr-only">Dimension</span></th><th scope="col">System observability (APM)</th><th scope="col">Business intelligence</th><th scope="col" class="hl">Business observability</th></tr></thead>
+          <tbody>
+            {compare.map(([k, a, b, c]) => <tr><th scope="row">{k}</th><td>{a}</td><td>{b}</td><td class="hl">{c}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-2 small muted">Longer comparisons: <a href="/resources/business-observability-vs-bi/">Business Observability vs BI</a> · <a href="/resources/business-observability-vs-system-observability/">vs system observability</a> · <a href="/business-observability/">What is Business Observability?</a></p>
+    </div>
+  </section>
+
+  <!-- What it is not -->
+  <section class="section">
+    <div class="container">
+      <div class="not-wrap">
+        <div>
+          <p class="eyebrow">Clear boundaries</p>
+          <h2>What Panoptes is not.</h2>
+          <p class="muted">A new category is easiest to understand by what it leaves alone. Panoptes is designed to work alongside the tools you already depend on, not to absorb them.</p>
+        </div>
+        <ul class="not-list">
+          {notList.map((n) => <li class="reveal"><span class="x" aria-hidden="true"></span><div><strong>{n.t}</strong><span>{n.d}</span></div></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight section-alt">
+    <div class="container">
+      <RelatedLinks eyebrow="Keep exploring" title="Where to go next" items={[
+        { label: 'How it works', href: '/how-it-works/', desc: 'The five stages in depth, with a worked example', icon: 'flow' },
+        { label: 'What is Business Observability?', href: '/business-observability/', desc: 'The category in one page', icon: 'eye' },
+        { label: 'Use cases', href: '/use-cases/', desc: 'Revenue leakage, bottlenecks, SLAs and more', icon: 'target' },
+        { label: 'Integrations', href: '/integrations/', desc: 'How data gets into the model', icon: 'plug' },
+        { label: 'Solutions by role', href: '/solutions/', desc: 'Executives, operations, finance, revenue, CX', icon: 'users' },
+        { label: 'Security & governance', href: '/integrations/security-governance/', desc: 'Access, ownership and auditability', icon: 'shield' },
+      ]} />
+    </div>
+  </section>
+
+  <CTA title="See the whole platform on your own business." text="Bring one question your current tools cannot answer. We will show how Panoptes would model it, observe it and explain it." secondary={{ label: 'How it works', href: '/how-it-works/' }} />
+</BaseLayout>
+
+<style>
+  .hero-btns { justify-content: center; }
+  .arch-head { max-width: 860px; }
+  .principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin-top: clamp(32px, 4vw, 56px); }
+  .pr { border-top: 2px solid var(--accent); padding-top: 1.2rem; }
+  .pr-k { font: 600 .78rem/1 var(--font-mono); color: var(--accent-text); display: block; margin-bottom: .8rem; }
+  .pr h3 { font-size: 1.2rem; }
+  @media (max-width: 860px) { .principles { grid-template-columns: 1fr; } }
+
+  .stages { display: grid; gap: 14px; }
+  .stage-row { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: clamp(16px, 3vw, 36px); padding: clamp(18px, 2.4vw, 28px); border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); }
+  .stage-n { font: 600 .78rem/1 var(--font-mono); color: var(--accent-text); }
+  .stage-label h3 { font-size: 1.6rem; margin: .5rem 0 .4rem; }
+  .stage-cards { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stage-cards.n1 { grid-template-columns: minmax(0, 1fr); }
+  .stage-cards.n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .capc { display: flex; flex-direction: column; background: var(--bg-2); padding: 20px; }
+  .capc-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .capc h4 { font-size: 1.1rem; margin: .9rem 0 .3rem; }
+  .capc-q { font-family: var(--font-display); font-weight: 500; color: var(--accent-text); margin: 0 0 .5rem; font-size: .98rem; }
+  .capc .link-arrow { margin-top: auto; padding-top: .8rem; }
+  .stage-cards.n1 .capc { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 20px; align-items: center; }
+  .stage-cards.n1 .capc h4 { margin: 0 0 .2rem; }
+  .stage-cards.n1 .capc-top { grid-row: span 3; }
+  .stage-cards.n1 .capc .link-arrow { grid-column: 3; grid-row: 1 / span 3; padding: 0; margin: 0; }
+  .stage-cards.n1 .capc-q, .stage-cards.n1 .capc p, .stage-cards.n1 .capc h4 { grid-column: 2; }
+  @media (max-width: 1080px) { .stage-cards.n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 860px) { .stage-row { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) {
+    .stage-cards, .stage-cards.n4 { grid-template-columns: 1fr; }
+    .stage-cards.n1 .capc { display: flex; }
+    .stage-cards.n1 .capc .link-arrow { padding-top: .8rem; }
+  }
+  .conn-note { display: flex; gap: 10px; align-items: center; }
+  .conn-note :global(svg) { width: 18px; height: 18px; color: var(--accent-text); flex: none; }
+
+  .q-split { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+  @media (max-width: 960px) { .q-split { grid-template-columns: minmax(0, 1fr); } }
+  .handoff { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; position: relative; }
+  .handoff li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px; padding: 0 0 22px; position: relative; }
+  .handoff li:not(:last-child)::before { content: ''; position: absolute; left: 19px; top: 40px; bottom: 0; width: 2px; background: var(--border-strong); }
+  .ho-n { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-text); font: 600 .9rem/1 var(--font-mono); }
+  .handoff li:last-child .ho-n { background: var(--purple); color: #fff; }
+  .ho-cap { display: inline-flex; align-items: center; gap: 8px; font: 600 .95rem/1.2 var(--font-display); color: var(--text); text-decoration: none; padding-top: 9px; }
+  .ho-cap:hover { color: var(--accent-text); }
+  .ho-cap :global(svg) { width: 16px; height: 16px; color: var(--accent-text); }
+  .handoff p { margin: .35rem 0 0; color: var(--text-2); font-size: .95rem; }
+
+  .cmp-table th[scope='row'] { font: 600 .9rem/1.3 var(--font-display); color: var(--text); text-transform: none; letter-spacing: 0; background: transparent; white-space: nowrap; }
+  @media (max-width: 640px) { .cmp-table th[scope='row'] { white-space: normal; min-width: 120px; } }
+  .cmp-table td.hl, .cmp-table th.hl { background: color-mix(in srgb, var(--accent) 8%, var(--surface)); color: var(--text); }
+  .cmp-table th.hl { color: var(--accent-text); }
+
+  .not-wrap { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  @media (max-width: 860px) { .not-wrap { grid-template-columns: 1fr; } }
+  .not-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .not-list li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  .not-list strong { display: block; font-family: var(--font-display); font-weight: 600; margin-bottom: 2px; }
+  .not-list span:not(.x) { color: var(--text-2); font-size: .92rem; }
+  .x { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border-strong); position: relative; margin-top: 2px; }
+  .x::before, .x::after { content: ''; position: absolute; left: 50%; top: 50%; width: 10px; height: 1.6px; background: var(--text-3); transform: translate(-50%, -50%) rotate(45deg); }
+  .x::after { transform: translate(-50%, -50%) rotate(-45deg); }
+</style>

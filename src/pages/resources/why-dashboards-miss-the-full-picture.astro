@@ -1,0 +1,109 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/Diagram.astro';
+---
+<ArticleLayout
+  title="Why dashboards do not show the full business picture"
+  metaTitle="Why Dashboards Miss the Full Business Picture"
+  description="Six ways dashboards mislead — aggregation hiding segments, lagging indicators, siloed definitions, missing relationships, Goodhart effects and watermelon metrics — with worked examples."
+  eyebrow="Practice"
+  dek="Dashboards are not wrong so much as incomplete in predictable ways. Here are six of those ways, each with a worked example and a practical alternative — and a short field guide for interrogating any dashboard you rely on."
+  related={['/resources/from-dashboards-to-decisions/', '/resources/business-observability-vs-bi/', '/resources/business-health-metrics/']}
+>
+  <p>A good dashboard is a remarkable thing. It compresses a sprawling business into a screen of numbers, and most of the time those numbers are accurate. The trouble is that accuracy and completeness are different properties. A dashboard can be correct in every figure and still lead a capable team to the wrong conclusion — or, more often, to no conclusion at all while a problem grows underneath it.</p>
+  <p>The ways this happens are not random. They follow from how dashboards are built: summaries over periods, one metric per tile, one team per view. Below are six recurring patterns. For each there is a worked example, using invented figures for hypothetical businesses, and a note on what a fuller picture would need.</p>
+
+  <h2>1. Aggregates hide segments</h2>
+  <p>Every dashboard tile is an aggregate, and aggregates are weighted averages of their segments. When the mix of segments changes, the aggregate can move in a direction none of the segments moved — or stay still while every segment deteriorates.</p>
+  <h3>Worked example: conversion goes up, everything gets worse</h3>
+  <p>A hypothetical subscription business tracks blended checkout conversion. Month A: 10,000 web visits converting at 4.0% (400 sign-ups) and 2,000 app visits converting at 10.0% (200 sign-ups) — 600 from 12,000, or 5.0%. Month B: a marketing push moves traffic to the app. Web drops to 4,000 visits at 3.5% (140), the app rises to 6,000 visits at 9.0% (540) — 680 from 10,000, or 6.8%.</p>
+  <Diagram src="/diagrams/dashboards-full-picture-mix-shift.svg" alt="Blended conversion rises from 5.0% to 6.8% while web conversion falls from 4.0% to 3.5% and app conversion from 10.0% to 9.0%, because the traffic mix shifted from 83% web to 60% app" caption="Blended conversion rose 1.8 points. Conversion fell in both segments. The mix did all the work." zoom />
+  <p>The dashboard reports a 1.8-point improvement, and the quarterly review celebrates. But conversion fell in <em>both</em> channels. The improvement came entirely from traffic mix; the experience itself got worse. If the marketing push ends and the mix reverts, conversion will fall below where it started, and nobody will know why. This is a version of what statisticians call Simpson's paradox, and in a business with many segments it is common rather than exotic.</p>
+  <p><strong>What a fuller picture needs:</strong> expectations set per segment, not just for the total; a habit of decomposing any movement into "rate change within segments" and "mix change between segments"; and the ability to slice by any meaningful dimension quickly, rather than only those someone pre-built into the view.</p>
+
+  <h2>2. Lagging indicators arrive after the decision window</h2>
+  <p>The metrics that dominate executive dashboards — revenue, margin, churn, net retention — are outcomes. They are the right things to care about, and they are almost always <em>lagging</em>: by the time they move, the causes are weeks or months old, and the cheapest moment to intervene has passed.</p>
+  <h3>Worked example: an onboarding delay becomes a revenue miss</h3>
+  <p>A hypothetical B2B software company adds a manual security review to onboarding for larger accounts. Median wait time rises from two days to six. In week three, new accounts start reaching first use later. In week five, first invoices — which are triggered by activation — go out late. Around month three, early churn among the affected cohort is noticeably higher, because customers who wait longest to get value are the least committed. At quarter end, revenue is below plan.</p>
+  <Diagram src="/diagrams/dashboards-full-picture-leading-lagging.svg" alt="Timeline from leading to lagging: wait time rises in week 1, activation slips in week 3, first invoices are late in week 5, early churn rises in month 3, revenue misses at quarter end; the cheap window to act is in the first weeks, while reports look at the end" caption="The chain from leading to lagging. Reports look at the right-hand end; the cheap decisions sit at the left." zoom class="hide-sm" />
+  <Diagram src="/diagrams/dashboards-full-picture-leading-lagging-vertical.svg" alt="Timeline from leading to lagging: wait time rises in week 1, activation slips in week 3, first invoices are late in week 5, early churn rises in month 3, revenue misses at quarter end; the cheap window to act is in the first weeks, while reports look at the end" caption="The chain from leading to lagging. Reports look at the right-hand end; the cheap decisions sit at the left." class="show-sm" />
+  <p>The revenue dashboard was correct throughout. It simply described the end of a chain that had begun three months earlier, in a process the revenue dashboard does not show. Each earlier link was visible somewhere — in an onboarding queue, a product analytics tool, a billing system — but nobody was watching them together, and none of them was compared against an expectation.</p>
+  <p><strong>What a fuller picture needs:</strong> an explicit map from each lagging outcome to the leading indicators that drive it, with those leading indicators observed continuously and owned by the people who can change them. The guide to <a href="/resources/how-business-events-connect-to-outcomes/">how business events connect to outcomes</a> goes into building those chains.</p>
+
+  <h2>3. Definitions differ by silo</h2>
+  <p>Every dashboard embeds definitions, and different teams build different dashboards. The same words therefore mean different things in different rooms, and meetings stall while people reconcile numbers rather than decide what to do.</p>
+  <h3>Worked example: three counts of "active customers"</h3>
+  <table>
+    <thead><tr><th>Team</th><th>Definition of "active customer"</th><th>Count (hypothetical)</th></tr></thead>
+    <tbody>
+      <tr><td>Product</td><td>At least one user logged in during the last 30 days</td><td>12,400</td></tr>
+      <tr><td>Sales</td><td>Has a live contract in the CRM</td><td>9,800</td></tr>
+      <tr><td>Finance</td><td>Invoiced in the last billing month</td><td>8,950</td></tr>
+    </tbody>
+  </table>
+  <p>None of these is wrong. Each answers a legitimate question. But when the leadership team asks "how many active customers did we lose last quarter?", they receive three different answers with three different trends. The product count includes customers whose contracts have lapsed but whose users still log in. The sales count includes contracts that have not been invoiced because onboarding stalled. The gaps between the definitions are not noise — they are some of the most informative numbers in the business, describing customers who are using without paying and paying without using.</p>
+  <p><strong>What a fuller picture needs:</strong> definitions that are explicit, named, versioned and owned — "active (product)", "active (contracted)", "active (billed)" — and a model in which the same customer can be seen in all three states at once, so the gaps become visible signals rather than sources of argument.</p>
+
+  <h2>4. Relationships are missing</h2>
+  <p>A dashboard is a collection of tiles. The business is a network of relationships: customers own contracts, contracts generate invoices, invoices create support contacts, suppliers serve many customers. Tiles can show the nodes. They cannot show the edges — and most interesting problems travel along edges.</p>
+  <h3>Worked example: a support spike with a billing cause</h3>
+  <p>A hypothetical subscription business sees support contact volume rise by around a fifth in a week. The support dashboard shows the rise by queue and channel; the billing dashboard shows invoice volume and value exactly on plan. Two teams, two healthy-looking views, and a support lead who is adding temporary staff.</p>
+  <p>Following the relationships tells a different story. Almost all the extra contacts come from customers on annual plans. Almost all of those customers received two invoices that week — a migration to a new billing configuration had re-issued invoices that were already paid. The billing dashboard counted invoices and value correctly; it had no reason to show that some customers received two. The support dashboard counted contacts correctly; it had no reason to show what customers were contacting about in relation to billing. The cause sat on the edge between the two.</p>
+  <p><strong>What a fuller picture needs:</strong> a connected model of entities and relationships — a <a href="/platform/business-graph/">business graph</a> — so that an investigation can start from a symptom in one domain and follow the connections into another. It is the difference between "support is busy" and "these customers are contacting us because of this invoice event".</p>
+
+  <h2>5. Measures become targets</h2>
+  <p>Goodhart's law is usually summarised as: when a measure becomes a target, it ceases to be a good measure. Dashboards make measures highly visible, and visible measures tend to become targets — formally or informally. People then find ways to move the measure that do not move the outcome it was supposed to represent.</p>
+  <h3>Worked example: faster first responses, unchanged resolution</h3>
+  <p>A hypothetical support team is given a target for median time to first response, displayed prominently on the operations dashboard. Within a month, the median falls from around three hours to under forty minutes. The team introduces a templated acknowledgement that is sent as soon as a ticket is triaged. Nothing about it is dishonest; it is a reasonable response to the target.</p>
+  <p>Meanwhile, median time to resolution is unchanged, and the share of tickets reopened after resolution has edged up because agents are juggling more open conversations. Customers now receive a faster reply that does not help them, and the dashboard shows a clear improvement.</p>
+  <p><strong>What a fuller picture needs:</strong> metrics that come in pairs — a speed measure alongside a quality measure, a volume measure alongside an outcome measure — so improving one at the expense of the other is visible. Better still, anchor objectives in the customer-facing outcome ("resolved within one business day without reopening") rather than in an intermediate step that is easy to optimise in isolation. See <a href="/resources/business-health-metrics/">business health metrics</a> for more on designing balanced indicators.</p>
+  <div class="callout">
+    <strong>This is not about bad behaviour</strong>
+    Goodhart effects usually come from people doing exactly what they were asked to do. The fix is in the design of the measures, not in closer scrutiny of individuals.
+  </div>
+
+  <h2>6. The watermelon metric</h2>
+  <p>A watermelon metric is green on the outside and red on the inside. It reports success at the level it is summarised, while the experience it is meant to represent is failing in a concentrated, repeated way underneath. Service level reports are the classic case, but the pattern appears anywhere a ratio is averaged over a long period.</p>
+  <h3>Worked example: a green SLA with a red Monday</h3>
+  <p>A hypothetical business support function commits to resolving 95% of cases within its service level. The monthly report shows 96.2%: green, and comfortably above target for the quarter.</p>
+  <Diagram src="/diagrams/dashboards-full-picture-watermelon.svg" alt="Monthly SLA attainment of 96.2% shown green, alongside a calendar grid of daily attainment in which every Monday falls between 86% and 90% and Tuesdays sit around 93%, while other days are 98–99%" caption="96.2% for the month. Every Monday, roughly one case in eight breaches." zoom />
+  <p>Breaking the same month down by day tells another story. Mondays run between 86% and 90%; Tuesdays hover around 93%; the rest of the week is 98–99%. Cases logged over the weekend all land in Monday's queue, and staffing does not reflect it. For a customer who raises a case on a Saturday, the service level is not 96% — it is closer to 88%, every week. If those customers are disproportionately the larger accounts who operate at weekends, the commercial risk is concentrated exactly where the report is least able to show it.</p>
+  <p><strong>What a fuller picture needs:</strong> attainment viewed at the grain where customers experience it (by day, by tier, by channel), and — more importantly — <em>projected</em> attainment on open cases, so that cases approaching breach can be acted on before they breach. The <a href="/use-cases/sla-monitoring/">SLA monitoring use case</a> shows that approach in detail.</p>
+
+  <h2>A field guide: questions to ask of any dashboard</h2>
+  <p>None of this means dashboards should be abandoned. It means each one should be read with its blind spots in mind. These questions are a quick way to find them.</p>
+  <table>
+    <thead><tr><th>Ask</th><th>Blind spot it exposes</th></tr></thead>
+    <tbody>
+      <tr><td>If this number moved, could it be mix rather than rate?</td><td>Aggregation hiding segments</td></tr>
+      <tr><td>What would have to happen for this number to move — and how long ago would that have been?</td><td>Lagging indicators</td></tr>
+      <tr><td>Whose definition is this, and do other teams use the same one?</td><td>Siloed definitions</td></tr>
+      <tr><td>What other parts of the business does this depend on, or affect?</td><td>Missing relationships</td></tr>
+      <tr><td>Is anyone targeted on this number, and what is its paired quality measure?</td><td>Goodhart effects</td></tr>
+      <tr><td>What does the worst day, segment or customer look like underneath the average?</td><td>Watermelon metrics</td></tr>
+      <tr><td>What should this number be right now, and who acts if it is not?</td><td>Missing expectations and ownership</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What a fuller picture looks like</h2>
+  <p>Taken together, the six patterns point to the same handful of missing ingredients. Not more tiles, but a different kind of foundation:</p>
+  <ul>
+    <li><strong>Segment-level expectations,</strong> so that a change in mix is distinguished from a change in performance.</li>
+    <li><strong>Explicit chains from leading to lagging indicators,</strong> observed continuously at the leading end.</li>
+    <li><strong>Named, owned definitions,</strong> with the gaps between them treated as signals.</li>
+    <li><strong>A connected model of entities and relationships,</strong> so investigations can cross team boundaries.</li>
+    <li><strong>Balanced, outcome-anchored objectives,</strong> resistant to optimising one number at the expense of another.</li>
+    <li><strong>Attainment at the grain customers experience,</strong> and projection on open work rather than only reporting on closed work.</li>
+  </ul>
+  <p>Those ingredients are, in effect, a description of <a href="/resources/what-is-business-observability/">business observability</a>. Dashboards remain a useful way to look at the result; they are just not a substitute for the model underneath. And seeing the full picture is only half the job — the other half is acting on it, which is the subject of <a href="/resources/from-dashboards-to-decisions/">from business monitoring to business decisions</a>.</p>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>Dashboards are usually accurate but predictably incomplete, because they summarise over periods, one metric and one team at a time.</li>
+    <li>Mix shifts can make an aggregate improve while every segment gets worse. Always separate rate from mix.</li>
+    <li>Outcome metrics lag their causes by weeks or months; observe the leading end of the chain.</li>
+    <li>Different definitions of the same word are not noise — the gaps between them are often the most useful signal.</li>
+    <li>Problems travel along relationships that tiles cannot show; a connected model makes them traversable.</li>
+    <li>Pair measures to resist Goodhart effects, and look beneath green averages for concentrated red.</li>
+  </ul>
+</ArticleLayout>

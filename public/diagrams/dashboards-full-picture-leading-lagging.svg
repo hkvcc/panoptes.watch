@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 270" fill="none">
+<!--STYLE-->
+<title>A chain from leading to lagging indicators: onboarding wait time rises in week one, activation slips, invoices are late, early churn rises, and revenue misses at quarter end — long after the cheapest window to act</title>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-line-f"/></marker></defs>
+<g class="d-t">
+<rect x="30" y="40" width="258" height="170" rx="12" class="d-soft" opacity=".7"/>
+<text x="44" y="64" font-size="13" font-weight="600" class="d-td d-accent">Window to act cheaply</text>
+<rect x="540" y="40" width="160" height="170" rx="12" class="d-warn-s" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="554" y="64" font-size="12" font-weight="600" class="d-text">Where reports look</text>
+<path d="M40 130H690" class="d-line" stroke-width="2"/>
+<path d="M90 130H610" class="d-accent-2-s d-flow" stroke-width="2"/>
+<circle cx="90" cy="130" r="8" class="d-accent"/><circle cx="220" cy="130" r="8" class="d-accent"/><circle cx="350" cy="130" r="8" class="d-accent-2"/><circle cx="480" cy="130" r="8" class="d-accent-2"/><circle cx="620" cy="130" r="8" class="d-warn"/>
+<g font-size="12" font-weight="600" class="d-text" text-anchor="middle"><text x="90" y="162">Wait time rises</text><text x="220" y="162">Activation slips</text><text x="350" y="162">First invoices late</text><text x="480" y="162">Early churn rises</text><text x="620" y="162">Revenue misses</text></g>
+<g font-size="10" class="d-tm d-muted" text-anchor="middle"><text x="90" y="180">WEEK 1</text><text x="220" y="180">WEEK 3</text><text x="350" y="180">WEEK 5</text><text x="480" y="180">MONTH 3</text><text x="620" y="180">QUARTER END</text></g>
+<g font-size="10" class="d-muted" text-anchor="middle"><text x="90" y="110">onboarding</text><text x="220" y="110">customers</text><text x="350" y="110">billing</text><text x="480" y="110">retention</text><text x="620" y="110">finance</text></g>
+<path d="M110 244H600" class="d-line" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="40" y="248" font-size="11" class="d-text" font-weight="600">Leading</text><text x="690" y="248" font-size="11" text-anchor="end" class="d-text" font-weight="600">Lagging</text>
+</g>
+</svg>

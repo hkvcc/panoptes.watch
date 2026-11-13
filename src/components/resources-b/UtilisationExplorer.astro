@@ -1,0 +1,74 @@
+---
+/**
+ * Small interactive explorer for the bottlenecks article: arrival rate vs capacity →
+ * utilisation and the relative waiting multiple (illustrative single-queue model).
+ */
+---
+<div class="ux card" data-ux>
+  <p class="ux-eyebrow">Try it · illustrative model</p>
+  <div class="ux-controls">
+    <div class="ux-field">
+      <label for="ux-arrivals">Work arriving <span class="ux-val" data-ux-out="arrivals">100</span> claims/day</label>
+      <input id="ux-arrivals" type="range" min="40" max="150" step="1" value="100" data-ux-in="arrivals" />
+    </div>
+    <div class="ux-field">
+      <label for="ux-capacity">Stage capacity <span class="ux-val" data-ux-out="capacity">105</span> claims/day</label>
+      <input id="ux-capacity" type="range" min="80" max="180" step="1" value="105" data-ux-in="capacity" />
+    </div>
+  </div>
+  <div class="ux-meter" aria-hidden="true"><span data-ux-bar></span></div>
+  <dl class="ux-results">
+    <div><dt>Utilisation</dt><dd data-ux-out="util">95%</dd></div>
+    <div><dt>Waiting ÷ work time</dt><dd data-ux-out="mult">≈ 19×</dd></div>
+  </dl>
+  <p class="ux-note" aria-live="polite" data-ux-out="note">At 95% busy, a stage with variable work keeps a long, unstable queue.</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ux]').forEach((root) => {
+    const q = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const a = root.querySelector<HTMLInputElement>('[data-ux-in="arrivals"]')!;
+    const c = root.querySelector<HTMLInputElement>('[data-ux-in="capacity"]')!;
+    const bar = q('[data-ux-bar]');
+    const update = () => {
+      const lam = +a.value, mu = +c.value, rho = lam / mu;
+      q('[data-ux-out="arrivals"]').textContent = String(lam);
+      q('[data-ux-out="capacity"]').textContent = String(mu);
+      q('[data-ux-out="util"]').textContent = `${Math.round(rho * 100)}%`;
+      bar.style.width = `${Math.min(100, rho * 100)}%`;
+      root.dataset.zone = rho >= 1 ? 'crit' : rho >= 0.85 ? 'warn' : 'ok';
+      let note: string;
+      if (rho >= 1) {
+        q('[data-ux-out="mult"]').textContent = 'unbounded';
+        note = `More work arrives than the stage can finish: the queue grows by about ${lam - mu} claims every day until something changes.`;
+      } else {
+        const m = rho / (1 - rho);
+        q('[data-ux-out="mult"]').textContent = `≈ ${m < 10 ? m.toFixed(1) : Math.round(m)}×`;
+        note = rho >= 0.85
+          ? `At ${Math.round(rho * 100)}% busy, small surges create long queues, and they take a long time to clear.`
+          : rho >= 0.7
+            ? `At ${Math.round(rho * 100)}% busy, waiting is noticeable but recoverable after a surge.`
+            : `At ${Math.round(rho * 100)}% busy, work rarely waits long; there is slack to absorb variation.`;
+      }
+      q('[data-ux-out="note"]').textContent = note;
+    };
+    a.addEventListener('input', update); c.addEventListener('input', update); update();
+  });
+</script>
+
+<style>
+  .ux { margin: 2em 0; padding: clamp(18px, 3vw, 28px); background: var(--surface); }
+  .ux-eyebrow { font: 500 .72rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 1rem; }
+  .ux-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem 1.6rem; }
+  .ux-field label { display: block; font-size: .92rem; color: var(--text-2); margin-bottom: .4rem; }
+  .ux-val { font: 600 1rem/1 var(--font-mono); color: var(--text); }
+  .ux-field input { width: 100%; accent-color: var(--accent); }
+  .ux-meter { height: 10px; border-radius: 99px; background: var(--surface-2); border: 1px solid var(--border); margin: 1.2rem 0 1rem; overflow: hidden; }
+  .ux-meter span { display: block; height: 100%; background: var(--ok); transition: width .15s, background-color .15s; }
+  .ux[data-zone='warn'] .ux-meter span { background: var(--warn); }
+  .ux[data-zone='crit'] .ux-meter span { background: var(--crit); }
+  .ux-results { display: flex; flex-wrap: wrap; gap: .6rem 2.4rem; margin: 0; }
+  .ux-results dt { font: 500 .72rem/1.2 var(--font-mono) !important; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin: 0 !important; }
+  .ux-results dd { font: 600 1.6rem/1.2 var(--font-display); color: var(--text) !important; margin: .2rem 0 0 !important; }
+  .ux-note { margin: 1rem 0 0 !important; font-size: .95rem; color: var(--text-2); }
+</style>

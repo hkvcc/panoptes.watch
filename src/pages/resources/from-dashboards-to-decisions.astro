@@ -1,0 +1,133 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/Diagram.astro';
+---
+<ArticleLayout
+  title="From business monitoring to business decisions"
+  metaTitle="From Dashboards to Decisions: Turning Signals into Action"
+  description="Why more dashboards rarely produce better decisions, and how to build a decision loop: ownership, turning signals into accountable actions, and measuring interventions honestly."
+  eyebrow="Practice"
+  dek="Most organisations are not short of numbers. They are short of a reliable path from a number moving to someone deciding, acting and finding out whether it worked. This is a guide to building that path."
+  related={['/resources/why-dashboards-miss-the-full-picture/', '/resources/business-health-metrics/', '/resources/building-a-business-operating-model/']}
+>
+  <p>Count the dashboards in your organisation and then count the decisions you can trace back to one. For most businesses the ratio is uncomfortable. Dashboards accumulate because building one feels like progress: a question was asked, a chart now answers it. But a chart that answers a question nobody is responsible for acting on is closer to decoration than to management.</p>
+  <p>This article is about the gap between monitoring and deciding. It looks at why more dashboards rarely produce better decisions, sets out a simple decision loop, and then goes into the two parts most organisations skip: ownership, and measuring whether an intervention actually worked.</p>
+
+  <h2>Why more dashboards rarely mean better decisions</h2>
+  <p>The intuition behind dashboard proliferation is reasonable: if people can see more, they will notice more and act sooner. In practice, five things get in the way.</p>
+  <ol>
+    <li><strong>Attention does not scale.</strong> Each new dashboard competes for the same fixed supply of attention. Past a certain point, adding views reduces the chance that any particular deviation is noticed, because nobody can look at all of them.</li>
+    <li><strong>Numbers without expectations do not prompt action.</strong> A chart showing 4,312 orders this week does not say whether that is good. Unless every reader carries a mental model of what the number should be — for this week, this season, this segment — they cannot tell a problem from noise. Most do not, so most do nothing.</li>
+    <li><strong>A dashboard has viewers, not owners.</strong> When a metric drifts, everyone who sees it can reasonably assume someone else is dealing with it. The more widely shared the dashboard, the stronger the effect.</li>
+    <li><strong>Symptoms are visible; causes are not.</strong> A dashboard typically shows an outcome — revenue, conversion, backlog. The cause usually lives in a process, a segment or a dependency that the chart does not show. Moving from "this is down" to "this is why" requires an investigation the dashboard cannot start.</li>
+    <li><strong>Nothing records what happened next.</strong> Even when someone does act, the dashboard does not remember. Next quarter, nobody can say whether the change helped, so the organisation does not learn which interventions work.</li>
+  </ol>
+  <p>None of these is a problem with dashboards as such. They are a problem with treating visibility as the goal rather than as the first step of something else. The sister article, <a href="/resources/why-dashboards-miss-the-full-picture/">why dashboards miss the full picture</a>, covers what dashboards fail to <em>show</em>. This one is about what happens — or fails to happen — <em>after</em> something is shown.</p>
+
+  <h2>The decision loop</h2>
+  <p>A useful way to frame the alternative is as a loop with six steps. Each step has a clear output, and the loop only works if every step has an owner and a clock.</p>
+  <Diagram src="/diagrams/dashboards-to-decisions-loop.svg" alt="Left: the typical dashboard path fades from metric moves, to seen in a review, to discussed, to someone should look, to no owner, to resurfacing next quarter. Right: a decision loop of signal, triage, diagnose, decide, act and measure" caption="The dashboard path decays. The decision loop closes — because every step has an owner, an output and a deadline." zoom class="hide-sm" />
+  <Diagram src="/diagrams/dashboards-to-decisions-loop-vertical.svg" alt="Left: the typical dashboard path fades from metric moves, to seen in a review, to discussed, to someone should look, to no owner, to resurfacing next quarter. Right: a decision loop of signal, triage, diagnose, decide, act and measure" caption="The dashboard path decays. The decision loop closes — because every step has an owner, an output and a deadline." class="show-sm" />
+  <table>
+    <thead><tr><th>Step</th><th>Question</th><th>Output</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Signal</strong></td><td>Is something deviating from what we expected?</td><td>A deviation, sized and located (which process, segment, commitment)</td></tr>
+      <tr><td><strong>2. Triage</strong></td><td>Is it real, does it matter, and whose is it?</td><td>Dismissed with a reason, or assigned to a named owner with a priority</td></tr>
+      <tr><td><strong>3. Diagnose</strong></td><td>What changed, where, and what else is affected?</td><td>A short list of candidate causes, with evidence for and against</td></tr>
+      <tr><td><strong>4. Decide</strong></td><td>What will we do, who will do it, by when?</td><td>A recorded decision: action, owner, date, expected effect</td></tr>
+      <tr><td><strong>5. Act</strong></td><td>Has the change actually happened?</td><td>Intervention in place, timestamped on the change log</td></tr>
+      <tr><td><strong>6. Measure</strong></td><td>Did it work, compared with what would have happened anyway?</td><td>An estimated effect, and a decision to keep, adjust or reverse</td></tr>
+    </tbody>
+  </table>
+  <p>Notice that the loop starts with a <em>deviation from expectation</em>, not with a metric. That one change filters out most of the noise dashboards generate: a number moving within its normal range is not a signal. The <a href="/resources/business-health-metrics/">business health metrics</a> guide covers how to set those expectations.</p>
+  <p>Notice also that it ends with measurement, which feeds the next signal. A loop that stops at "act" is an open loop: it produces activity, not learning.</p>
+
+  <h2>Ownership: every signal needs an address</h2>
+  <p>If one thing separates organisations that act on signals from those that admire them, it is ownership. Not ownership of dashboards — ownership of <em>outcomes</em>.</p>
+  <p>Practically, this means three kinds of owner:</p>
+  <dl>
+    <dt>Objective owners</dt>
+    <dd>One person accountable for each business objective — "first orders delivered within the promise", "invoices paid within terms". They receive deviations, decide whether to act, and answer for the outcome in reviews. Accountability for an objective should not be split between teams, even when the work is.</dd>
+    <dt>Process owners</dt>
+    <dd>One person accountable for each important process or stage — onboarding verification, dunning, returns inspection. When a diagnosis points to their stage, they own the change.</dd>
+    <dt>Definition owners</dt>
+    <dd>One person accountable for each important definition — what counts as an "active customer" or a "late payment". When definitions drift silently, every downstream signal becomes suspect.</dd>
+  </dl>
+  <p>Two rules make ownership real rather than nominal. First, <strong>routing should be automatic</strong>: a deviation in a given objective or process should reach its owner without anyone having to forward it. Second, <strong>unowned signals should be visible as a problem in themselves</strong>. If a material deviation has no owner, that gap — not the deviation — is the first thing to fix.</p>
+  <div class="callout">
+    <strong>Observe work, not workers</strong>
+    Ownership is about accountability for outcomes and processes, not about monitoring individuals. A decision loop that turns into scrutiny of personal productivity will quickly teach people to hide problems rather than surface them.
+  </div>
+
+  <h2>Turning signals into accountable actions</h2>
+  <p>The weak point in most organisations is the step from "we discussed it" to "someone is doing something specific by a specific date". A lightweight, consistent <strong>action record</strong> closes that gap. It does not need special software — but it does need to exist for every material deviation, and it needs to be linked to the signal that prompted it.</p>
+  <table>
+    <thead><tr><th>Field</th><th>Purpose</th><th>Example (hypothetical)</th></tr></thead>
+    <tbody>
+      <tr><td>Signal</td><td>What deviated, and by how much</td><td>Invoices paid within terms: 79% vs expected 84–88%</td></tr>
+      <tr><td>Scope</td><td>Where the deviation is concentrated</td><td>Mid-sized accounts, invoices sent by email only</td></tr>
+      <tr><td>Hypothesis</td><td>The leading candidate cause, stated so it can be wrong</td><td>Reminder emails are landing after the due date since the billing run moved</td></tr>
+      <tr><td>Decision</td><td>What will change</td><td>Send first reminder five days before due date, not on it</td></tr>
+      <tr><td>Owner</td><td>One named person</td><td>Head of credit control</td></tr>
+      <tr><td>Due</td><td>When the change will be in place</td><td>Live for the next billing run</td></tr>
+      <tr><td>Expected effect</td><td>What should move, how far, how soon</td><td>Paid-within-terms back above 84% within six weeks</td></tr>
+      <tr><td>Measurement</td><td>How we will know</td><td>Compare against accounts on the unchanged sequence</td></tr>
+      <tr><td>Review date</td><td>When we decide to keep, adjust or reverse</td><td>Eight weeks after go-live</td></tr>
+    </tbody>
+  </table>
+  <p>The two fields people most often leave out are <strong>hypothesis</strong> and <strong>expected effect</strong>. Both are uncomfortable, because they can turn out to be wrong. That is exactly why they matter: an action with no stated expectation cannot fail, and so cannot teach anyone anything. <a href="/platform/actions-automation/">Actions &amp; Automation</a> describes how records like this are designed to be created and tracked alongside the signals that prompt them.</p>
+
+  <h2>A worked example: invoice collection drifting</h2>
+  <p>A hypothetical wholesale distributor sells to around 3,000 trade accounts on 30-day terms. All figures below are invented.</p>
+  <h3>Weeks 0–6: the dashboard path</h3>
+  <p>The share of invoices paid within terms slides gradually, from 86% to about 80%, over six weeks. It appears on the finance dashboard, which is reviewed monthly. The first monthly review notes a "softening" and attributes it to the time of year. The second review notes it again; someone suggests a closer look. Nobody is named. Cash is tighter than forecast, and the treasury team draws more on a facility than planned.</p>
+  <h3>Week 7: a signal</h3>
+  <p>The distributor sets an explicit objective — 85% of invoices paid within terms, with an expected range by account size and season — and assigns it to the head of credit control. In week 7 the figure is outside its expected range for the third consecutive week, which raises a signal routed directly to that owner.</p>
+  <h3>Week 7: triage and diagnosis</h3>
+  <p>Segmenting shows the slide is concentrated in mid-sized accounts that receive invoices by email; accounts using the customer portal are unaffected. The change log shows that eight weeks earlier the billing run was moved two days later in the month to align with a new warehouse cut-off. Reminder emails are scheduled relative to the invoice date, so a growing share now arrive after the due date has passed. That is a strong hypothesis, not a proof: seasonality could still contribute.</p>
+  <h3>Week 8: decision and action</h3>
+  <p>The owner decides to move the first reminder to five days before the due date for email-invoiced accounts. To make the effect measurable, the change is rolled out to two of the three regional ledgers first; the third continues on the old schedule for six weeks. The action record above is created and linked to the signal.</p>
+  <h3>Weeks 8–16: measurement</h3>
+  <p>By week 16, paid-within-terms on the changed ledgers has recovered to 85%. A naive before-and-after comparison would credit the change with six points. But the unchanged ledger also recovered, to 82%, as the seasonal dip unwound. The better estimate of the change's effect is therefore around three points — still worth keeping, but half what the simple comparison suggests.</p>
+
+  <h2>Measuring interventions honestly</h2>
+  <p>The final step of the loop is where good intentions most often turn into self-congratulation. Almost any metric that has drifted away from normal will drift partly back on its own, so "it improved after we acted" is weak evidence that the action caused the improvement.</p>
+  <Diagram src="/diagrams/dashboards-to-decisions-intervention.svg" alt="Chart of invoices paid within terms falling from 86% to 79% over eight weeks, then rising to 85% after a reminder change, while a comparison group rises to 82%; estimated effect about 3 points versus a naive 6 points" caption="The naive before-and-after would claim six points. Against a comparison group, the estimated effect is about three." zoom />
+  <p>Four common traps, and what to do about each:</p>
+  <ul>
+    <li><strong>Regression to the mean.</strong> You act when a metric is at its worst, and extreme values tend to be followed by less extreme ones. <em>Remedy:</em> compare against what the metric would have done anyway — a comparison group, or a forecast made before the intervention.</li>
+    <li><strong>Seasonality and mix.</strong> The improvement coincides with a seasonal upswing or a change in the mix of customers. <em>Remedy:</em> compare like with like — same weeks last year, same segments, same channels.</li>
+    <li><strong>Simultaneous changes.</strong> Three teams changed something in the same fortnight, and each claims the improvement. <em>Remedy:</em> a shared change log, and where possible staggered rollouts so effects can be separated.</li>
+    <li><strong>Moving the goalposts.</strong> The expected effect is decided after the result is known. <em>Remedy:</em> write the expected effect into the action record before acting.</li>
+  </ul>
+  <p>You do not need a formal experiment for every intervention. But for any change that is costly, permanent or likely to be copied elsewhere, a staggered rollout or held-out comparison is usually cheap to arrange and makes the result far more trustworthy. For smaller changes, a pre-registered expected effect and an honest look at a comparison segment is often enough.</p>
+
+  <h2>A review cadence that keeps the loop turning</h2>
+  <p>Loops decay without a rhythm. A short, regular review — weekly for fast-moving processes, fortnightly for slower ones — keeps them turning. A workable agenda has three parts and fits in thirty minutes:</p>
+  <ol>
+    <li><strong>What drifted?</strong> New signals since last time, already triaged, with owners. Not a tour of every chart.</li>
+    <li><strong>What did we decide?</strong> Open action records: on track, late, or blocked. Blocked actions are escalated here.</li>
+    <li><strong>What did we learn?</strong> Interventions that reached their review date: estimated effect against expected effect, and the decision to keep, adjust or reverse.</li>
+  </ol>
+  <p>The third part is the one most often cut for time, and the most valuable. An organisation that regularly reviews whether its interventions worked accumulates a record of what actually moves its outcomes. One that does not keeps rediscovering the same problems. The <a href="/platform/command-center/">Command Center</a> is designed as the shared surface for this kind of review.</p>
+
+  <h2>Signs the loop is working</h2>
+  <ul class="checklist">
+    <li>Material deviations reach a named owner within hours, not at the next monthly review.</li>
+    <li>The number of signals without an owner is visible, and trending towards zero.</li>
+    <li>Action records state a hypothesis and an expected effect before the action is taken.</li>
+    <li>Interventions are compared against a counterfactual, not just against the week before.</li>
+    <li>Some interventions are recorded as not having worked — and are reversed.</li>
+    <li>The number of dashboards is stable or falling, while the number of recorded decisions rises.</li>
+  </ul>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>More dashboards compete for fixed attention, rarely carry expectations, have viewers rather than owners, show symptoms rather than causes, and do not remember what happened next.</li>
+    <li>A decision loop — signal, triage, diagnose, decide, act, measure — gives every deviation a path to an outcome. It starts with deviation from expectation, not with a metric.</li>
+    <li>Ownership of objectives, processes and definitions is the single biggest difference between organisations that act on signals and those that admire them.</li>
+    <li>A short action record with a hypothesis and an expected effect turns discussion into accountable action.</li>
+    <li>Measure interventions against what would have happened anyway. Naive before-and-after comparisons routinely overstate effects.</li>
+  </ul>
+  <p>To see the loop applied to concrete problems, browse the <a href="/use-cases/">use cases</a>, starting with <a href="/use-cases/revenue-leakage/">revenue leakage</a>. For the role-specific view, see <a href="/solutions/executives/">business observability for executives</a>.</p>
+</ArticleLayout>

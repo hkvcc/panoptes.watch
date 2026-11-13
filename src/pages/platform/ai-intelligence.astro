@@ -1,0 +1,344 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import Tabs from '../../components/Tabs.astro';
+import TabPanel from '../../components/TabPanel.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'AI Intelligence', href: '/platform/ai-intelligence/' }];
+
+type Answer = {
+  id: string; q: string; summary: string;
+  facts: { t: string; c: string }[];
+  inferences: { t: string; conf: 'High' | 'Medium' | 'Low' }[];
+  gaps: string[];
+  steps: string[];
+  working: string[];
+  sources: string[];
+};
+const convos: Answer[] = [
+  {
+    id: 'onb', q: 'Why did onboarding slow down last week?',
+    summary: 'Median time to activation rose from 2.1 to 3.4 days. Almost all of the increase is in one stage — identity verification — and only for Business-tier sign-ups.',
+    facts: [
+      { t: 'Verification wait for Business tier rose from 0.6 to 2.0 days; other tiers unchanged.', c: '1' },
+      { t: 'Verification arrivals were in their expected range; completed checks per day fell by about a third.', c: '2' },
+      { t: 'A new document check for Business tier went live on Monday 09:00.', c: '3' },
+    ],
+    inferences: [
+      { t: 'The new document check is the most likely contributor: it precedes the change, applies only to the affected tier, and sits on the verification path.', conf: 'Medium' },
+      { t: 'Staffing is an unlikely explanation: verification team capacity was unchanged.', conf: 'High' },
+    ],
+    gaps: ['Not confirmed by any intervention yet — this is correlation, not established cause.', 'No data on how long each document check takes per case.'],
+    steps: ['Ask the Onboarding owner whether the new check adds manual review time.', 'Propose a comparison: route a sample of Business-tier cases through the previous check, with owner approval.'],
+    working: ['Located the stage with the largest change in waiting time (Journey Intelligence).', 'Compared tiers, channels and regions; change concentrated in Business tier.', 'Checked arrivals against capacity to separate demand from throughput.', 'Aligned the onset with the change log on the verification path.'],
+    sources: ['metric:onboarding.time_to_activation', 'stage:verification.wait', 'change:doc-check-business-v2', 'team:verification.capacity'],
+  },
+  {
+    id: 'exp', q: 'Which customers are exposed to the route B payment issue?',
+    summary: 'Customers who pay by card through acquirer route B since 09:50 on Tuesday. The exposure is concentrated in two regions and in subscription renewals.',
+    facts: [
+      { t: 'Route B carries about a quarter of card payment volume.', c: '1' },
+      { t: 'Declined payments on route B since onset: 1,940 attempts from 1,310 customers.', c: '2' },
+      { t: '62% of affected attempts are subscription renewals; 38% are first purchases.', c: '3' },
+    ],
+    inferences: [
+      { t: 'Renewal customers are at higher risk of involuntary churn if retries also fail.', conf: 'Medium' },
+      { t: 'First-purchase customers may have abandoned rather than retried.', conf: 'Low' },
+    ],
+    gaps: ['Retry outcomes after 24 hours are not yet available.', 'Customer contact data for support follow-up is outside this workspace’s permissions.'],
+    steps: ['Share the affected-customer list with the Payments owner.', 'Suggest the retry schedule be reviewed for renewals — a change that requires owner approval.'],
+    working: ['Started from the open anomaly on route B card completion.', 'Followed Payment → Order → Customer relationships in the business graph.', 'Segmented affected attempts by payment purpose and region.', 'Excluded customers whose payment later succeeded on another route.'],
+    sources: ['anomaly:card-completion-route-b', 'entity:payment', 'entity:customer', 'segment:renewal|first-purchase'],
+  },
+  {
+    id: 'inv', q: 'What should we do about overdue invoices this month?',
+    summary: 'Overdue invoices are above their expected level, driven mainly by disputes over missing purchase-order references with three enterprise customers.',
+    facts: [
+      { t: 'Overdue invoice value is above its expected range for this point in the month.', c: '1' },
+      { t: 'Most overdue value is in invoices marked “disputed — PO reference missing”.', c: '2' },
+      { t: 'PO references are present at order time in the commerce system for those orders.', c: '3' },
+    ],
+    inferences: [
+      { t: 'The reference is being dropped between order and invoice, not missing at source.', conf: 'Medium' },
+    ],
+    gaps: ['The integration mapping between commerce and billing has not been inspected.', 'Recommendations are options to consider, not decisions.'],
+    steps: ['Option A: reissue the affected invoices with references — Finance owner to approve.', 'Option B: investigate the order-to-billing field mapping — assign to Billing operations.', 'Track days-to-payment for reissued invoices against those not yet reissued.'],
+    working: ['Compared overdue value with its expected monthly pattern.', 'Grouped overdue invoices by status and reason code.', 'Traced affected invoices back to their orders.', 'Checked whether the missing field existed upstream.'],
+    sources: ['metric:ar.overdue_value', 'entity:invoice', 'entity:order', 'process:order-to-cash'],
+  },
+];
+
+const principles = [
+  { i: 'link', t: 'Cites the business model and evidence', d: 'Every statement points to the metrics, entities, events and changes it came from. If something cannot be cited, it is not stated as fact.' },
+  { i: 'list', t: 'Shows its working', d: 'The steps of an investigation — what was compared, filtered and ruled out — are visible and can be re-run or challenged by anyone.' },
+  { i: 'layers', t: 'Separates fact from inference', d: 'Observations, inferences with a stated confidence, and known gaps are presented separately. Correlation is never presented as cause.' },
+  { i: 'users', t: 'Humans decide', d: 'Suggestions are options with owners and trade-offs. Any action that changes something in the business requires a person to approve it.' },
+];
+
+const nots = [
+  { t: 'Invent numbers', d: 'If a value is not in the evidence, the answer says so rather than estimating it silently.' },
+  { t: 'Present correlation as cause', d: 'Hypotheses carry their place on the evidence ladder used in Root Cause Analysis.' },
+  { t: 'Act without approval', d: 'It can draft an action; it does not execute one on its own authority.' },
+  { t: 'Evaluate individual employees', d: 'Panoptes observes processes and outcomes, not people. AI Intelligence inherits that boundary.' },
+  { t: 'Answer beyond permissions', d: 'Answers are limited to the data and parts of the model the person asking is allowed to see.' },
+  { t: 'Hide uncertainty', d: 'Confidence and known gaps are part of every answer, not a footnote.' },
+];
+
+const faqs = [
+  { q: 'Is AI Intelligence available today?', a: 'AI Intelligence describes the direction of the Panoptes product. We describe it openly so you can judge the approach. What is available, and when, is discussed directly during an evaluation — please contact <a href="mailto:sales@panoptes.watch">sales@panoptes.watch</a>.' },
+  { q: 'Is this a general-purpose chatbot?', a: 'No. The vision is an assistant that works only through the business model and evidence in Panoptes, follows the same investigation methods as the rest of the platform, and shows every step. It is not designed to answer general questions or to generate content.' },
+  { q: 'Would our data be used to train models?', a: 'Data ownership is a core design principle: your business data remains yours. How any model is hosted and what data it may process would be set out explicitly and agreed during evaluation, alongside the controls described on our <a href="/integrations/security-governance/">security and governance</a> page.' },
+  { q: 'What happens when the AI is wrong?', a: 'Because answers cite sources and show their working, mistakes are meant to be visible and checkable. People can challenge a step, mark an answer as incorrect and continue the investigation manually. Decisions remain with people.' },
+];
+
+const schema = { '@type': 'WebPage', name: 'AI Intelligence — Panoptes (product vision)', about: 'Product vision for AI-supported business investigation: grounded, evidence-linked answers that show their working, separate fact from inference and leave decisions to people.' };
+---
+<BaseLayout title="AI Intelligence (Product Vision)" description="Product vision: ask questions of your business in plain language and get grounded, evidence-linked investigations that show their working — with people making the decisions." ogImage="/social/og-platform.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Platform · AI Intelligence" title="Ask your business. <span class='gradient-text'>Get the evidence.</span>" lede="The vision for AI Intelligence is an investigation partner that works through your business model: it finds what changed, explains how it knows, separates what is observed from what is inferred, and leaves the decision with the people accountable for it." breadcrumbs={crumbs} split>
+    <p class="vision-tag"><span class="badge">Vision</span><span class="small muted">This page describes product direction, not a shipped feature.</span></p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Discuss the roadmap<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#mock">See a mock conversation</a>
+    </div>
+    <Fragment slot="visual"><Diagram src="/diagrams/ai-intelligence-grounded-investigation.svg" alt="Product vision diagram: a plain-language question is answered using the business model and evidence, through four visible investigation steps, producing observed facts, labelled inferences and suggestions, after which a person decides to act, dig deeper or dismiss" frame="product vision · grounded investigation" illustrative={false} zoom /></Fragment>
+  </PageHero>
+
+  <!-- What it is designed to do -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="What it is designed to do" title="Four jobs, one rule: everything is grounded." lede="AI Intelligence is not a separate product bolted onto dashboards. In the product vision it is a way of using the rest of Panoptes — the Business Graph, Anomaly Detection, Root Cause Analysis and Actions — through plain language." />
+      <div class="jobs">
+        <article class="job reveal">
+          <span class="icon-tile"><Icon name="search" /></span>
+          <h3>Investigation</h3>
+          <p class="muted">Run the routine parts of an investigation — decomposing a metric, comparing segments, aligning changes — and present the result for a person to review.</p>
+          <p class="job-ex mono">“Why did collections fall short this week?”</p>
+        </article>
+        <article class="job reveal">
+          <span class="icon-tile"><Icon name="eye" /></span>
+          <h3>Interpretation</h3>
+          <p class="muted">Explain what an anomaly, a health score or a journey change means in business terms: who is affected, what is exposed, how unusual it is.</p>
+          <p class="job-ex mono">“What does this alert mean for renewals?”</p>
+        </article>
+        <article class="job reveal">
+          <span class="icon-tile"><Icon name="compass" /></span>
+          <h3>Recommendations</h3>
+          <p class="muted">Suggest next steps drawn from playbooks and past interventions, with owners and trade-offs — as options for a person, never as instructions.</p>
+          <p class="job-ex mono">“What have we tried before when this queue grew?”</p>
+        </article>
+        <article class="job reveal">
+          <span class="icon-tile"><Icon name="ai" /></span>
+          <h3>Natural-language exploration</h3>
+          <p class="muted">Let anyone ask questions of the business model without knowing where the data lives or how a metric is defined — and see the definition used.</p>
+          <p class="job-ex mono">“Which commitments depend on supplier X?”</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mock conversation -->
+  <section class="section section-alt" id="mock">
+    <div class="container">
+      <SectionHead eyebrow="Mock conversation" title="What a grounded answer could look like." lede="Choose a question. Each answer follows the same structure: a short summary, cited observations, labelled inferences, known gaps, suggested next steps — and the working behind it." />
+      <Tabs uid="ai" label="Example questions" tabs={convos.map((c) => ({ id: c.id, label: c.q }))} class="ask reveal">
+        {convos.map((c, ci) => (
+          <TabPanel uid="ai" id={c.id} first={ci === 0}>
+            <div class="chat">
+              <div class="chat-bar"><span class="mono">panoptes · ask</span><span class="illustrative">Illustrative mock-up · product vision · fictional data</span></div>
+              <div class="chat-body">
+                <div class="msg-q"><p>{c.q}</p></div>
+                <div class="msg-a">
+                  <span class="a-avatar" aria-hidden="true"><Icon name="spark" /></span>
+                  <div class="a-body">
+                    <p class="a-sum">{c.summary}</p>
+                    <div class="a-block a-fact">
+                      <p class="a-h"><i></i>Observed</p>
+                      <ul>{c.facts.map((f) => <li>{f.t} <sup class="cite">[{f.c}]</sup></li>)}</ul>
+                    </div>
+                    <div class="a-block a-inf">
+                      <p class="a-h"><i></i>Inferred</p>
+                      <ul>{c.inferences.map((f) => <li>{f.t} <span class="conf">{f.conf} confidence</span></li>)}</ul>
+                    </div>
+                    <div class="a-block a-gap">
+                      <p class="a-h"><i></i>Not known</p>
+                      <ul>{c.gaps.map((g) => <li>{g}</li>)}</ul>
+                    </div>
+                    <div class="a-block a-next">
+                      <p class="a-h"><i></i>Suggested next steps</p>
+                      <ul>{c.steps.map((s) => <li>{s}</li>)}</ul>
+                    </div>
+                    <details class="a-work">
+                      <summary>Show working ({c.working.length} steps)</summary>
+                      <ol>{c.working.map((w) => <li>{w}</li>)}</ol>
+                    </details>
+                    <p class="a-src mono">{c.sources.map((s, i) => <span>[{i + 1}] {s}</span>)}</p>
+                    <div class="a-actions" aria-hidden="true"><span>Open investigation</span><span>Assign to owner</span><span>Mark as incorrect</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabPanel>
+        ))}
+      </Tabs>
+    </div>
+  </section>
+
+  <!-- Grounding principles -->
+  <section class="section">
+    <div class="container">
+      <div class="gp">
+        <div class="gp-intro">
+          <p class="eyebrow">Grounding principles</p>
+          <h2>Why trust an answer? Because you can check it.</h2>
+          <p class="muted">Business decisions carry consequences for customers, teams and money. A fluent answer that cannot be traced is worse than no answer, because it sounds certain. These principles define how AI Intelligence is meant to behave, and they apply to every answer, recommendation and summary it produces.</p>
+          <p class="muted">They also match how good analysts already work: start from definitions everyone agrees on, write down what you compared, be clear about what is known and what is a judgement, and hand the decision to the person who owns it.</p>
+        </div>
+        <ol class="gp-list">
+          {principles.map((p, i) => (
+            <li class="reveal">
+              <span class="gp-n mono">0{i + 1}</span>
+              <div><h3><Icon name={p.i} />{p.t}</h3><p class="muted small">{p.d}</p></div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- What it should not do -->
+  <section class="section section-dark nots">
+    <div class="container">
+      <SectionHead eyebrow="Boundaries" title="What AI in Panoptes should not do." lede="Being explicit about limits is part of the design, not a disclaimer." />
+      <ul class="not-grid">
+        {nots.map((n) => (
+          <li class="reveal"><span class="x" aria-hidden="true">✕</span><div><h3>{n.t}</h3><p>{n.d}</p></div></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Platform connection -->
+  <section class="section">
+    <div class="container split split-top">
+      <div>
+        <p class="eyebrow">Across the platform</p>
+        <h2>An interface to everything else — not a replacement for it.</h2>
+        <p class="muted">The quality of an AI answer depends entirely on what it can see. In Panoptes, that is a governed model of the business: defined metrics, related entities, expected behaviour, investigation history and owners. AI Intelligence is designed to use those capabilities, so its answers inherit their definitions and their permissions.</p>
+        <p class="muted">That is also why the same question asked by two people should produce consistent answers: both are grounded in the same model, not in whichever spreadsheet each happened to open.</p>
+      </div>
+      <ul class="uses">
+        <li><a href="/platform/business-graph/"><Icon name="graph" /><span><strong>Business Graph</strong>Definitions, relationships and permissions.</span></a></li>
+        <li><a href="/platform/anomaly-detection/"><Icon name="anomaly" /><span><strong>Anomaly Detection</strong>What changed and how unusual it is.</span></a></li>
+        <li><a href="/platform/root-cause-analysis/"><Icon name="rootcause" /><span><strong>Root Cause Analysis</strong>Investigation trees and the evidence ladder.</span></a></li>
+        <li><a href="/platform/actions-automation/"><Icon name="actions" /><span><strong>Actions &amp; Automation</strong>Owners, approvals and measured interventions.</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ + related -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="faq-grid">
+        <div>
+          <p class="eyebrow">Questions</p>
+          <h2>About the vision.</h2>
+        </div>
+        <FAQ items={faqs} />
+      </div>
+      <div class="mt-3">
+        <RelatedLinks eyebrow="Related" title="Explore further" items={[
+          { label: 'Root Cause Analysis', href: '/platform/root-cause-analysis/', desc: 'The evidence ladder AI answers follow', icon: 'rootcause' },
+          { label: 'Command Center', href: '/platform/command-center/', desc: 'One cockpit for business operations', icon: 'command' },
+          { label: 'From dashboards to decisions', href: '/resources/from-dashboards-to-decisions/', desc: 'Why more charts rarely mean better choices', icon: 'target' },
+          { label: 'Executives', href: '/solutions/executives/', desc: 'One honest picture of the whole business', icon: 'compass' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <CTA title="Help shape how AI works on your business." text="We are building AI Intelligence with the people who will rely on it. Tell us which questions you most want answered — and how you would want to check the answers." primary={{ label: 'Talk to us', href: '/contact/' }} />
+</BaseLayout>
+
+<style>
+  .vision-tag { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0; }
+
+  .jobs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .job { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); display: flex; flex-direction: column; }
+  .job h3 { margin-top: 1rem; }
+  .job-ex { margin: auto 0 0; padding: 10px 14px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-text); font-size: .82rem; }
+  @media (max-width: 760px) { .jobs { grid-template-columns: 1fr; } }
+
+  :global(.ask) { display: grid; grid-template-columns: minmax(240px, 320px) minmax(0, 1fr); gap: 24px; align-items: start; }
+  :global(.ask) > :global([role='tablist']) { flex-direction: column; width: 100%; border-radius: var(--radius-lg); padding: 6px; gap: 4px; }
+  :global(.ask) :global([role='tab']) { text-align: left; white-space: normal; border-radius: 12px; padding: 14px 16px; line-height: 1.35; font-size: .93rem; }
+  :global(.ask) :global([role='tab'])::before { content: '“'; color: var(--accent-text); margin-right: 2px; }
+  :global(.ask) :global([role='tab'])::after { content: '”'; color: var(--accent-text); }
+  :global(.ask) :global([role='tabpanel']) { margin-top: 0; }
+  :global(.ask) :global(.tab-panels) { min-width: 0; }
+  @media (max-width: 960px) { :global(.ask) { grid-template-columns: 1fr; } }
+
+  .chat { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow); overflow: hidden; }
+  .chat-bar { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 10px 16px; background: var(--surface-2); border-bottom: 1px solid var(--border); font-size: .72rem; color: var(--text-3); }
+  .chat-body { padding: clamp(16px, 3vw, 28px); display: grid; gap: 20px; }
+  .msg-q { justify-self: end; max-width: 80%; }
+  .msg-q p { margin: 0; padding: 12px 18px; border-radius: 18px 18px 4px 18px; background: var(--purple); color: #fff; font-weight: 500; }
+  .msg-a { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+  .a-avatar { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-text); }
+  .a-avatar :global(svg) { width: 20px; height: 20px; }
+  .a-body { display: grid; gap: 14px; min-width: 0; }
+  .a-sum { margin: 0; font-weight: 600; font-size: 1.02rem; line-height: 1.5; }
+  .a-block { padding: 14px 16px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-2); }
+  .a-block ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: .92rem; color: var(--text-2); }
+  .a-h { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font: 600 .74rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text); }
+  .a-h i { width: 8px; height: 8px; border-radius: 50%; }
+  .a-fact .a-h i { background: var(--ok); }
+  .a-inf .a-h i { background: var(--warn); }
+  .a-gap .a-h i { background: var(--text-3); }
+  .a-next .a-h i { background: var(--accent); }
+  .a-next { background: var(--accent-soft); border-color: transparent; }
+  .cite { color: var(--accent-text); font: 600 .72rem var(--font-mono); }
+  .conf { display: inline-block; margin-left: 4px; padding: 1px 8px; border-radius: 999px; background: var(--warn-bg); color: var(--warn-text); font: 500 .7rem/1.6 var(--font-mono); white-space: nowrap; }
+  .a-work summary { cursor: pointer; font-weight: 600; font-size: .9rem; color: var(--accent-text); }
+  .a-work ol { margin: .6rem 0 0; font-size: .9rem; color: var(--text-2); display: grid; gap: 4px; }
+  .a-src { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; font-size: .72rem; color: var(--text-3); }
+  .a-src span { overflow-wrap: anywhere; }
+  .a-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .a-actions span { padding: 6px 12px; border: 1px solid var(--border-strong); border-radius: 999px; font-size: .8rem; color: var(--text-2); }
+  @media (max-width: 520px) { .msg-a { grid-template-columns: 1fr; } .a-avatar { display: none; } .msg-q { max-width: 95%; } }
+
+  .gp { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 5vw, 72px); align-items: start; }
+  .gp-intro h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .gp-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; border-top: 1px solid var(--border); }
+  .gp-list li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; padding: 22px 0; border-bottom: 1px solid var(--border); }
+  .gp-n { color: var(--accent-text); font-size: .9rem; padding-top: 3px; }
+  .gp-list h3 { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; }
+  .gp-list h3 :global(svg) { width: 20px; height: 20px; color: var(--accent-text); flex: none; }
+  .gp-list p { margin: 0; }
+  @media (max-width: 900px) { .gp { grid-template-columns: 1fr; } }
+
+  .nots { background: radial-gradient(ellipse 50% 70% at 100% 0%, rgba(224, 54, 74, .16), transparent 70%), #0A0710; }
+  .nots :global(h2) { color: #fff; }
+  .not-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .not-grid li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 22px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .x { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: rgba(244, 86, 106, .16); color: #FB7185; font-weight: 700; font-size: .85rem; }
+  .not-grid h3 { color: #fff; font-size: 1.08rem; margin-bottom: .3em; }
+  .not-grid p { margin: 0; color: var(--text-2); font-size: .9rem; }
+  @media (max-width: 960px) { .not-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .not-grid { grid-template-columns: 1fr; } }
+
+  .uses { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .uses a { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); text-decoration: none; color: var(--text-2); font-size: .9rem; transition: border-color .2s; }
+  .uses a:hover { border-color: var(--accent); }
+  .uses strong { display: block; color: var(--text); font-size: 1rem; margin-bottom: 2px; }
+  .uses :global(svg) { width: 24px; height: 24px; color: var(--accent-text); }
+  @media (max-width: 480px) { .uses { grid-template-columns: 1fr; } }
+
+  .faq-grid { display: grid; grid-template-columns: 1fr 2fr; gap: clamp(24px, 5vw, 64px); }
+  @media (max-width: 860px) { .faq-grid { grid-template-columns: 1fr; } }
+</style>

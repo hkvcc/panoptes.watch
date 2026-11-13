@@ -1,0 +1,288 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import DemoDashboard from '../../components/DemoDashboard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'Command Center', href: '/platform/command-center/' }];
+
+// Fictional items for the ranking comparison. vol = alert count, rank = consequence rank.
+const items = [
+  { id: 'lat', t: 'Checkout API latency above threshold', vol: 14, ago: '2 min ago', rank: 5, why: 'No measurable effect on completion; grouped as context for the EU card issue', lvl: 'low' },
+  { id: 'cpu', t: 'High CPU on a batch worker', vol: 9, ago: '6 min ago', rank: 6, why: 'No business flow depends on it this morning', lvl: 'low' },
+  { id: 'pay', t: 'EU card payments below expected band', vol: 3, ago: '18 min ago', rank: 1, why: 'New-order revenue at risk; orders may miss today’s cut-off', lvl: 'high' },
+  { id: 'ref', t: 'Refund rate drifting upward', vol: 2, ago: '1 h ago', rank: 4, why: 'Small and slow; watch for another day before acting', lvl: 'low' },
+  { id: 'kyc', t: 'Verification queue growing faster than capacity', vol: 1, ago: '40 min ago', rank: 2, why: 'Onboarding SLA projected to breach tomorrow morning', lvl: 'med' },
+  { id: 'inv', t: 'Invoice collection run finished late', vol: 1, ago: '3 h ago', rank: 3, why: 'Cash timing shifts before month end; finance should know', lvl: 'med' },
+];
+const byVol = [...items].sort((a, b) => b.vol - a.vol);
+
+const morning = [
+  { t: '08:30', h: 'Is the business inside its expectations?', d: 'Overall and domain health, and which objectives moved overnight. Two minutes, not twenty dashboards.' },
+  { t: '08:35', h: 'What needs attention first?', d: 'The ranked list: a handful of priorities with the reason each one is there and what it puts at risk.' },
+  { t: '08:45', h: 'Where are open investigations?', d: 'What is known, what has been ruled out, what is still a correlation, and who is looking into it.' },
+  { t: '08:55', h: 'Who owns what today?', d: 'Confirm or reassign owners. Dismiss with a reason when something is understood and acceptable.' },
+  { t: '09:00', h: 'What is due today?', d: 'Commitments with a deadline today (cut-offs, SLAs, collection runs) and their projected status.' },
+];
+
+const funcs = [
+  { i: 'health', t: 'Health at a glance', d: 'Overall and per-domain health from Business Health, each score one click away from the indicators behind it.' },
+  { i: 'list', t: 'Ranked priorities', d: 'Issues ordered by business consequence, with impact, urgency, breadth and confidence shown, not hidden.' },
+  { i: 'alert', t: 'Exceptions in context', d: 'Related signals grouped under the business flow they affect, so twelve alerts become one issue with context.' },
+  { i: 'search', t: 'Open investigations', d: 'Status, evidence and confidence for every live investigation, including what has been ruled out.' },
+  { i: 'target', t: 'Commitments due', d: 'Cut-offs, SLAs and scheduled runs coming up, with projected rather than reported attainment.' },
+  { i: 'users', t: 'Ownership', d: 'Every priority has an owner derived from the objective it affects, so nothing waits for someone to notice it.' },
+];
+---
+<BaseLayout title="Command Center" description="One operating view for the whole business: health, exceptions, ranked priorities and open investigations, ordered by business consequence rather than alert volume." ogImage="/social/og-platform.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Platform · Command Center" title="The operating view for <span class='gradient-text'>the whole business.</span>" lede="Command Center brings business health, exceptions, priorities and open investigations into one place, and puts them in the order that matters: by what they put at risk, not by how loudly they alert." breadcrumbs={crumbs} center>
+    <div class="btn-row cc-btns">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#ranking">Why ranking matters</a>
+    </div>
+  </PageHero>
+
+  <section class="section cc-demo">
+    <div class="container container-wide">
+      <DemoDashboard />
+      <p class="note text-center mt-1">Interactive concept of the Command Center. Switch the time range or select a signal to open its investigation. All data is fictional.</p>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="prob">
+        <div>
+          <p class="eyebrow">The problem</p>
+          <h2>Forty dashboards, three alert channels, and still no answer to “what first?”</h2>
+        </div>
+        <div class="prob-body">
+          <p class="lede">Most organisations do not lack information about how they are running. They have too much of it, spread across tools that each rank by their own logic: newest first, loudest first, or not at all.</p>
+          <p class="muted">An operations lead starting the day has to assemble the picture by hand: open the BI dashboard, scan the alert channel, check the support queue, ask finance about the collection run. The things that matter most are often the quietest. A payment route degrading by a few points raises three alerts; a busy server raises fourteen.</p>
+          <p class="muted">Command Center is designed to replace that assembly work with a single view built on the shared business model, where every item already knows which customers, orders, commitments and revenue it affects.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ranking explanation + interactive -->
+  <section id="ranking" class="section">
+    <div class="container">
+      <SectionHead eyebrow="What gets surfaced first, and why" title="Ranked by consequence, not by count." lede="Signals are grouped by the business flow they affect, then scored on four questions. The result is a short list with its reasoning visible." />
+      <div class="reveal">
+        <Diagram src="/diagrams/command-center-priority-ranking.svg" alt="Nine raw signals are grouped and scored on business impact, urgency, breadth and confidence. The output is three ranked priorities (EU card payments below band, verification queue growing, refund rate drifting) and a group of six technical alerts kept as context." frame="priority ranking" zoom class="hide-sm" />
+        <Diagram src="/diagrams/command-center-priority-ranking-vertical.svg" alt="Raw signals are grouped and scored on business impact, urgency, breadth and confidence, producing ranked priorities." frame="priority ranking" class="show-sm" />
+      </div>
+      <div class="factors">
+        <div><h3>Business impact</h3><p class="muted small">How much revenue, how many customers and which commitments sit downstream, read from the Business Graph.</p></div>
+        <div><h3>Urgency</h3><p class="muted small">Time until something breaks: a cut-off, an SLA, a collection run. A smaller issue due in an hour can outrank a larger one due next week.</p></div>
+        <div><h3>Breadth</h3><p class="muted small">Whether the issue is confined to one segment or spreading across regions, products or flows.</p></div>
+        <div><h3>Confidence</h3><p class="muted small">How strong the evidence is. Uncertain items are shown as uncertain, not promoted or buried.</p></div>
+      </div>
+
+      <div class="rank" data-rank>
+        <div class="rank-head">
+          <div>
+            <h3>Same six items, two orderings</h3>
+            <p class="muted small">Switch between how an alert channel would order them and how Command Center is designed to.</p>
+          </div>
+          <div class="rank-toggle" role="group" aria-label="Order items by">
+            <button type="button" data-mode="vol" aria-pressed="true">Alert volume</button>
+            <button type="button" data-mode="biz" aria-pressed="false">Business consequence</button>
+          </div>
+        </div>
+        <ol class="rank-list" data-list>
+          {byVol.map((it, i) => (
+            <li class:list={['ri', `lvl-${it.lvl}`]} data-id={it.id} data-rank={it.rank} data-vol={it.vol}>
+              <span class="ri-n" data-n>{i + 1}</span>
+              <div class="ri-body">
+                <strong>{it.t}</strong>
+                <span class="ri-meta ri-vol">{it.vol} alert{it.vol > 1 ? 's' : ''} · last {it.ago}</span>
+                <span class="ri-meta ri-biz">{it.why}</span>
+              </div>
+              <span class="ri-lvl"><i></i><span>{it.lvl === 'high' ? 'High' : it.lvl === 'med' ? 'Medium' : 'Low'} impact</span></span>
+            </li>
+          ))}
+        </ol>
+        <p class="rank-live small" aria-live="polite" data-live>Ordered by alert volume: the two noisiest items are infrastructure alerts with no measurable business effect.</p>
+        <p class="illustrative">Illustrative data</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Morning review -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Scenario" title="A thirty-minute morning review." lede="How a head of operations might use Command Center to start the day. The same view supports a weekly leadership review or an incident call; only the time range changes." />
+      <ol class="morning">
+        {morning.map((m) => (
+          <li class="reveal">
+            <span class="m-t">{m.t}</span>
+            <h3>{m.h}</h3>
+            <p class="muted small">{m.d}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="note mt-1">Illustrative workflow. Timings are an example, not a measured result.</p>
+    </div>
+  </section>
+
+  <!-- Key functionality -->
+  <section class="section">
+    <div class="container">
+      <div class="func-wrap">
+        <div class="func-intro">
+          <p class="eyebrow">Key functionality</p>
+          <h2>What is on the screen, and where it comes from.</h2>
+          <p class="muted">Command Center owns very little data of its own. It is a view over the other capabilities, which is why it can be trusted: every number links back to the model, indicator or investigation it came from.</p>
+          <p class="muted small">Command Center shows business processes and outcomes. It is not designed to rank or monitor individual people.</p>
+        </div>
+        <div class="func-grid">
+          {funcs.map((f) => (
+            <div class="fn reveal"><span class="icon-tile"><Icon name={f.i} /></span><div><h3>{f.t}</h3><p class="muted small">{f.d}</p></div></div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Connects -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="How it connects" title="A view over the whole platform." center />
+      <div class="feeds">
+        {[
+          { h: '/platform/business-health/', i: 'health', t: 'Business Health', d: 'supplies the scores and the indicators behind them' },
+          { h: '/platform/anomaly-detection/', i: 'anomaly', t: 'Anomaly Detection', d: 'supplies meaningful deviations, already filtered from noise' },
+          { h: '/platform/business-graph/', i: 'graph', t: 'Business Graph', d: 'supplies what is exposed downstream of each issue' },
+          { h: '/platform/root-cause-analysis/', i: 'rootcause', t: 'Root Cause Analysis', d: 'supplies the evidence in open investigations' },
+          { h: '/platform/actions-automation/', i: 'actions', t: 'Actions & Automation', d: 'takes priorities to owners and records the outcome' },
+        ].map((f) => <a href={f.h} class="feed"><Icon name={f.i} /><strong>{f.t}</strong><span>{f.d}</span></a>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <RelatedLinks eyebrow="Use cases" title="Command Center in practice" items={[
+        { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Projected attainment, before the breach', icon: 'target' },
+        { label: 'Business anomalies', href: '/use-cases/business-anomalies/', desc: 'Real change separated from noise', icon: 'anomaly' },
+        { label: 'For executives', href: '/solutions/executives/', desc: 'One honest picture of the whole business', icon: 'compass' },
+        { label: 'For operations', href: '/solutions/operations/', desc: 'Flow, capacity and service commitments', icon: 'process' },
+      ]} />
+      <div class="mt-3">
+        <RelatedLinks eyebrow="Related capabilities" title="Explore further" items={[
+          { label: 'Business Health', href: '/platform/business-health/', desc: 'Objectives, indicators and bands', icon: 'health' },
+          { label: 'Actions & Automation', href: '/platform/actions-automation/', desc: 'Ownership, routing and follow-through', icon: 'actions' },
+          { label: 'From dashboards to decisions', href: '/resources/from-dashboards-to-decisions/', desc: 'Guide: why more dashboards rarely help', icon: 'book' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <CTA title="Start the day with the right question." text="See how Command Center would rank what is happening in your business this morning." />
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rank]').forEach((root) => {
+    const list = root.querySelector<HTMLOListElement>('[data-list]')!;
+    const live = root.querySelector<HTMLElement>('[data-live]')!;
+    const btns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-mode]'));
+    const msg: Record<string, string> = {
+      vol: 'Ordered by alert volume: the two noisiest items are infrastructure alerts with no measurable business effect.',
+      biz: 'Ordered by business consequence: EU card payments first, then the verification queue and the late collection run. The noisy infrastructure alerts drop to the bottom as context.',
+    };
+    const apply = (mode: string) => {
+      root.dataset.mode = mode;
+      btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+      const lis = Array.from(list.children) as HTMLElement[];
+      const first = new Map(lis.map((li) => [li, li.getBoundingClientRect().top]));
+      lis.sort((a, b) => (mode === 'vol' ? +b.dataset.vol! - +a.dataset.vol! : +a.dataset.rank! - +b.dataset.rank!));
+      lis.forEach((li, i) => { list.appendChild(li); li.querySelector('[data-n]')!.textContent = String(i + 1); });
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        lis.forEach((li) => {
+          const dy = first.get(li)! - li.getBoundingClientRect().top;
+          if (dy) li.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
+        });
+      }
+      live.textContent = msg[mode];
+    };
+    btns.forEach((b) => b.addEventListener('click', () => apply(b.dataset.mode!)));
+    root.dataset.mode = 'vol';
+  });
+</script>
+
+<style>
+  .cc-btns { justify-content: center; }
+  .cc-demo { padding-top: clamp(40px, 5vw, 64px); }
+
+  .prob { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  @media (max-width: 860px) { .prob { grid-template-columns: 1fr; } }
+
+  .factors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: clamp(24px, 3vw, 40px) 0 clamp(40px, 5vw, 64px); }
+  .factors > div { padding: 18px 0 0; border-top: 1px solid var(--border-strong); }
+  .factors h3 { font-size: 1.08rem; }
+  @media (max-width: 960px) { .factors { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .factors { grid-template-columns: 1fr; } }
+
+  .rank { border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); padding: clamp(18px, 3vw, 32px); box-shadow: var(--shadow); }
+  .rank-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 1.2rem; }
+  .rank-head h3 { font-size: 1.3rem; margin-bottom: .2rem; }
+  .rank-head p { margin: 0; }
+  .rank-toggle { display: inline-flex; padding: 4px; gap: 4px; border: 1px solid var(--border); background: var(--bg-2); border-radius: 999px; }
+  .rank-toggle button { appearance: none; border: 0; background: transparent; color: var(--text-2); font: 600 .88rem/1 var(--font-body); padding: .65rem 1rem; border-radius: 999px; cursor: pointer; }
+  .rank-toggle button { white-space: nowrap; }
+  @media (max-width: 560px) { .rank-toggle { width: 100%; } .rank-toggle button { flex: 1; padding: .65rem .5rem; font-size: .82rem; } }
+  .rank-toggle button[aria-pressed='true'] { background: var(--purple); color: #fff; }
+  .rank-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .ri { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-2); }
+  .ri-n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 600 .85rem/1 var(--font-mono); background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border-strong); }
+  .ri-body { display: grid; gap: 2px; min-width: 0; }
+  .ri-body strong { font-weight: 600; font-size: .96rem; }
+  .ri-meta { font-size: .85rem; color: var(--text-2); }
+  .ri-biz { display: none; }
+  [data-mode='biz'] .ri-vol { display: none; }
+  [data-mode='biz'] .ri-biz { display: block; }
+  .ri-lvl { display: inline-flex; align-items: center; gap: 6px; font: 500 .72rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); white-space: nowrap; }
+  .ri-lvl i { width: 8px; height: 8px; border-radius: 50%; background: var(--border-strong); }
+  .lvl-high .ri-lvl i { background: var(--crit); } .lvl-med .ri-lvl i { background: var(--warn); }
+  [data-mode='biz'] .lvl-high { border-color: color-mix(in srgb, var(--crit) 50%, var(--border)); }
+  [data-mode='biz'] .lvl-high .ri-n { background: var(--purple); color: #fff; border-color: transparent; }
+  [data-mode='biz'] .lvl-low { opacity: .7; }
+  .rank-live { margin: 1rem 0 .4rem; color: var(--text-2); }
+  @media (max-width: 560px) { .ri { grid-template-columns: 30px minmax(0, 1fr); } .ri-lvl { grid-column: 2; } }
+
+  .morning { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; position: relative; }
+  .morning::before { content: ''; position: absolute; left: 0; right: 0; top: 15px; height: 2px; background: linear-gradient(90deg, var(--accent), var(--border)); opacity: .5; }
+  .morning li { position: relative; padding-top: 44px; }
+  .m-t { position: absolute; top: 0; left: 0; font: 600 .8rem/1 var(--font-mono); color: var(--accent-text); background: var(--bg-2); border: 1px solid var(--border-strong); padding: 8px 10px; border-radius: 999px; }
+  .morning h3 { font-size: 1.08rem; }
+  @media (max-width: 960px) {
+    .morning { grid-template-columns: 1fr; gap: 0; }
+    .morning::before { left: 36px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; background: linear-gradient(var(--accent), var(--border)); }
+    .morning li { padding: 0 0 24px 92px; min-height: 60px; }
+    .morning li:last-child { padding-bottom: 0; }
+    .morning::before { bottom: 40px; }
+  }
+
+  .func-wrap { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  @media (max-width: 960px) { .func-wrap { grid-template-columns: 1fr; } }
+  .func-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; }
+  @media (max-width: 560px) { .func-grid { grid-template-columns: 1fr; } }
+  .fn { display: flex; gap: 14px; align-items: flex-start; }
+  .fn .icon-tile { margin: 0; flex: none; }
+  .fn h3 { font-size: 1.05rem; margin-bottom: .25rem; }
+
+  .feeds { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .feed { display: flex; flex-direction: column; gap: 6px; padding: 18px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); text-decoration: none; color: var(--text-2); font-size: .88rem; transition: border-color .2s, transform .2s var(--ease); }
+  .feed:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .feed strong { color: var(--text); font-family: var(--font-display); font-size: 1rem; }
+  .feed :global(svg) { width: 22px; height: 22px; color: var(--accent-text); margin-bottom: 4px; }
+  @media (max-width: 1080px) { .feeds { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .feeds { grid-template-columns: 1fr; } }
+</style>

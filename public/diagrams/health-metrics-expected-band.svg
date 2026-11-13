@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 310" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>A static threshold fires false alarms every Sunday and misses a real Thursday drop that an expected band catches</title>
+<g class="d-t">
+<text x="24" y="26" font-size="15" font-weight="600" class="d-td d-text">Expected bands versus a static threshold</text>
+<text x="24" y="44" font-size="12" class="d-muted">Daily completed orders, four weeks, indexed (fictional example)</text>
+<g transform="translate(0 46)">
+<g class="d-line" stroke-width="1"><path d="M70 160H690M70 120H690M70 80H690M70 40H690"/></g>
+<g font-size="10.5" class="d-tm d-muted" text-anchor="end"><text x="62" y="164">60</text><text x="62" y="124">80</text><text x="62" y="84">100</text><text x="62" y="44">120</text></g>
+<path d="M70.0 60.0L93.0 50.3L115.9 51.6L138.9 55.1L161.9 65.4L184.8 140.9L207.8 156.1L230.7 53.8L253.7 43.9L276.7 45.2L299.6 48.9L322.6 59.5L345.6 137.1L368.5 152.7L391.5 47.7L414.4 37.5L437.4 38.9L460.4 42.7L483.3 53.6L506.3 133.2L529.3 149.3L552.2 41.5L575.2 31.1L598.1 32.6L621.1 36.5L644.1 47.7L667.0 129.4L690.0 145.9L690.0 170.3L667.0 156.8L644.1 89.9L621.1 80.7L598.1 77.5L575.2 76.3L552.2 84.9L529.3 173.1L506.3 159.9L483.3 94.8L460.4 85.8L437.4 82.7L414.4 81.6L391.5 89.9L368.5 175.9L345.6 163.0L322.6 99.6L299.6 90.9L276.7 87.9L253.7 86.8L230.7 95.0L207.8 178.6L184.8 166.2L161.9 104.4L138.9 96.0L115.9 93.1L93.0 92.1L70.0 100.0Z" class="d-soft" opacity=".9"/>
+<path d="M70 150H690" class="d-warn-s" stroke-width="2" stroke-dasharray="8 5"/>
+<path d="M70.0 80.0L93.0 60.8L115.9 75.0L138.9 85.0L161.9 80.1L184.8 148.5L207.8 171.3L230.7 80.8L253.7 56.1L276.7 62.4L299.6 80.0L322.6 81.0L345.6 143.6L368.5 164.9L391.5 79.1L414.4 55.6L437.4 51.2L460.4 129.0L483.3 135.9L506.3 141.4L529.3 158.1L552.2 73.1L575.2 57.0L598.1 44.0L621.1 58.2L644.1 79.3L667.0 141.6L690.0 152.4" class="d-accent-s" stroke-width="2.5" stroke-linejoin="round"/>
+<g class="d-warn"><circle cx="207.8" cy="171.3" r="5"/><circle cx="368.5" cy="164.9" r="5"/><circle cx="529.3" cy="158.1" r="5"/><circle cx="690" cy="152.4" r="5"/></g>
+<g class="d-crit"><circle cx="460.4" cy="129" r="6"/><circle cx="483.3" cy="135.9" r="6"/></g>
+<path d="M471 120V10" class="d-crit-s" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="477" y="12" font-size="11.5" font-weight="600" class="d-text">Thu–Fri drop: outside the band,</text>
+<text x="477" y="26" font-size="11.5" font-weight="600" class="d-text">above the static limit → missed</text>
+<text x="368" y="194" text-anchor="middle" font-size="11" class="d-muted">every Sunday: static alert fires</text>
+<g font-size="10.5" class="d-tm d-muted"><text x="70" y="218">Week 1</text><text x="231" y="218">Week 2</text><text x="391" y="218">Week 3</text><text x="552" y="218">Week 4</text></g>
+</g>
+<g font-size="11.5" class="d-text">
+<rect x="70" y="286" width="18" height="10" rx="2" class="d-soft"/><text x="94" y="295">Expected band</text>
+<path d="M200 291H224" class="d-accent-s" stroke-width="2.5"/><text x="230" y="295">Actual</text>
+<path d="M300 291H324" class="d-warn-s" stroke-width="2" stroke-dasharray="8 5"/><text x="330" y="295">Static threshold</text>
+<circle cx="462" cy="291" r="5" class="d-warn"/><text x="472" y="295">False alarm</text>
+<circle cx="562" cy="291" r="5" class="d-crit"/><text x="572" y="295">Real deviation</text>
+</g>
+</g>
+</svg>

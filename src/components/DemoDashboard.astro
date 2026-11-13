@@ -1,0 +1,270 @@
+---
+/**
+ * Interactive, fully local Command Center demo (illustrative data only).
+ * Server-renders the initial state; the client script swaps time ranges and investigations.
+ */
+import { RANGES, SIGNALS, linePath, areaPath } from '../data/demo';
+const r = RANGES[0];
+const s = SIGNALS[0];
+const CH = { w: 320, h: 110 };
+const ringC = 2 * Math.PI * 34;
+const impacted: Record<string, number> = { pay: 2, onb: 1, ref: 3, sla: 2 };
+---
+<div class="dash" data-dash>
+  <div class="dash-bar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="dash-path"><b>panoptes</b> / command-center</span>
+    <div class="dash-range" role="group" aria-label="Time range">
+      {RANGES.map((x, i) => <button type="button" data-range={x.id} aria-pressed={i === 0 ? 'true' : 'false'}>{x.label}</button>)}
+    </div>
+    <span class="dash-tag">Illustrative data</span>
+  </div>
+
+  <div class="dash-grid">
+    <section class="tile t-health" aria-label="Overall business health">
+      <header class="tile-h"><span>Business health</span><span class="live"><i></i>Live model</span></header>
+      <div class="health-wrap">
+        <svg viewBox="0 0 80 80" class="ring" aria-hidden="true">
+          <circle cx="40" cy="40" r="34" class="ring-bg" />
+          <circle cx="40" cy="40" r="34" class="ring-fg" data-ring stroke-dasharray={`${(r.health / 100) * ringC} ${ringC}`} />
+        </svg>
+        <div class="health-num"><b data-health>{r.health}</b><small>/100</small></div>
+      </div>
+      <p class="health-delta" data-health-delta>{r.healthDelta}</p>
+      <ul class="domains" data-domains>
+        {r.domains.map((d) => (
+          <li><span>{d.name}</span><span class="bar"><i class={`st-${d.status}`} style={`width:${d.score}%`}></i></span><b>{d.score}</b></li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="tile t-rev" aria-label="Revenue flow versus expected">
+      <header class="tile-h"><span>Revenue flow</span><span class="legend"><i class="lg-a"></i>Actual <i class="lg-e"></i>Expected</span></header>
+      <div class="rev-kpi"><b data-rev-total>{r.revenue.total}</b><span class="chip chip-warn" data-rev-vs>{r.revenue.vsExpected}</span></div>
+      <svg viewBox={`0 0 ${CH.w} ${CH.h}`} class="rev-chart" preserveAspectRatio="none" aria-hidden="true">
+        <defs><linearGradient id="dash-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#9965FF" stop-opacity=".38" /><stop offset="1" stop-color="#9965FF" stop-opacity="0" /></linearGradient></defs>
+        {[0.25, 0.5, 0.75].map((y) => <line x1="0" x2={CH.w} y1={CH.h * y} y2={CH.h * y} class="gridline" />)}
+        <path d={areaPath(r.revenue.actual, CH.w, CH.h)} fill="url(#dash-area)" data-rev-area />
+        <path d={linePath(r.revenue.expected, CH.w, CH.h)} class="line-exp" data-rev-exp />
+        <path d={linePath(r.revenue.actual, CH.w, CH.h)} class="line-act" data-rev-act />
+      </svg>
+      <div class="rev-axis" aria-hidden="true"><span>Start</span><span>Mid</span><span>Now</span></div>
+    </section>
+
+    <aside class="tile t-side" aria-label="Active business signals and investigation">
+      <header class="tile-h"><span>Active signals</span><span class="count" data-signals>{r.signals}</span></header>
+      <ul class="signals">
+        {SIGNALS.map((x, i) => (
+          <li>
+            <button type="button" class="sig" data-signal={x.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+              <span class:list={['sev', `sev-${x.severity}`]} aria-label={x.severity === 'crit' ? 'Critical' : 'Warning'}></span>
+              <span class="sig-body"><b>{x.title}</b><small>{x.scope}</small></span>
+              <span class="sig-metric">{x.metric}<small>{x.age}</small></span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      <div class="invest" aria-live="polite" data-invest>
+        <p class="inv-h">Investigation <span class="inv-status" data-inv-status>{s.status}</span></p>
+        <ol class="chain" data-inv-chain>
+          {s.chain.map((c, i) => <li class:list={{ hit: i === impacted[s.id], down: i > impacted[s.id] }}>{c}</li>)}
+        </ol>
+        <ol class="timeline" data-inv-timeline>
+          {s.timeline.map((e) => <li class={`k-${e.kind}`}><time>{e.t}</time><span>{e.text}</span></li>)}
+        </ol>
+        <p class="finding"><span class="corr">Correlation · not yet verified</span><span data-inv-finding>{s.finding}</span></p>
+        <p class="owner">Owner: <b data-inv-owner>{s.owner}</b></p>
+      </div>
+    </aside>
+
+    <section class="tile t-tp" aria-label="Operational throughput">
+      <header class="tile-h"><span>Operational throughput</span></header>
+      <div class="kpi-row"><b data-tp>{r.throughput.value}</b><span class="chip chip-ok" data-tp-d>{r.throughput.delta}</span></div>
+      <svg viewBox="0 0 120 32" class="spark" preserveAspectRatio="none" aria-hidden="true"><path d={linePath(r.throughput.spark, 120, 32, 25, 50)} data-tp-s /></svg>
+      <small class="sub">Orders completed end-to-end</small>
+    </section>
+
+    <section class="tile t-jr" aria-label="Customer journey completion">
+      <header class="tile-h"><span>Journey completion</span></header>
+      <div class="kpi-row"><b data-jr>{r.journey.value}</b><span class="chip chip-warn" data-jr-d>{r.journey.delta}</span></div>
+      <svg viewBox="0 0 120 32" class="spark" preserveAspectRatio="none" aria-hidden="true"><path d={linePath(r.journey.spark, 120, 32, 68, 79)} data-jr-s /></svg>
+      <small class="sub">Sign-up → first value</small>
+    </section>
+
+    <section class="tile t-st" aria-label="Process bottlenecks in onboarding">
+      <header class="tile-h"><span>Onboarding stages · median wait</span></header>
+      <ul class="stages" data-stages>
+        {r.stages.map((x) => (
+          <li class:list={{ over: x.wait > x.target }}>
+            <span>{x.name}</span>
+            <span class="sbar"><i style={`width:${Math.min(100, (x.wait / 8) * 100)}%`}></i><em style={`left:${(x.target / 8) * 100}%`} title="Target"></em></span>
+            <b>{x.wait.toFixed(1)}h</b>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</div>
+
+<script>
+  import { RANGES, SIGNALS, linePath, areaPath } from '../data/demo';
+  const IMPACTED: Record<string, number> = { pay: 2, onb: 1, ref: 3, sla: 2 };
+  const root = document.querySelector<HTMLElement>('[data-dash]');
+  if (root) {
+    const q = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const ringC = 2 * Math.PI * 34;
+    const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+    root.querySelectorAll<HTMLButtonElement>('[data-range]').forEach((btn) => btn.addEventListener('click', () => {
+      const r = RANGES.find((x) => x.id === btn.dataset.range)!;
+      root.querySelectorAll('[data-range]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      q('[data-health]').textContent = String(r.health);
+      q('[data-health-delta]').textContent = r.healthDelta;
+      q('[data-ring]').setAttribute('stroke-dasharray', `${(r.health / 100) * ringC} ${ringC}`);
+      q('[data-domains]').innerHTML = r.domains.map((d) => `<li><span>${d.name}</span><span class="bar"><i class="st-${d.status}" style="width:${d.score}%"></i></span><b>${d.score}</b></li>`).join('');
+      q('[data-rev-total]').textContent = r.revenue.total;
+      q('[data-rev-vs]').textContent = r.revenue.vsExpected;
+      q('[data-rev-area]').setAttribute('d', areaPath(r.revenue.actual, 320, 110));
+      q('[data-rev-exp]').setAttribute('d', linePath(r.revenue.expected, 320, 110));
+      q('[data-rev-act]').setAttribute('d', linePath(r.revenue.actual, 320, 110));
+      q('[data-signals]').textContent = String(r.signals);
+      q('[data-tp]').textContent = r.throughput.value; q('[data-tp-d]').textContent = r.throughput.delta;
+      q('[data-tp-s]').setAttribute('d', linePath(r.throughput.spark, 120, 32, 25, 50));
+      q('[data-jr]').textContent = r.journey.value; q('[data-jr-d]').textContent = r.journey.delta;
+      q('[data-jr-d]').className = `chip ${r.journey.delta.startsWith('+') ? 'chip-ok' : 'chip-warn'}`;
+      q('[data-jr-s]').setAttribute('d', linePath(r.journey.spark, 120, 32, 68, 79));
+      q('[data-stages]').innerHTML = r.stages.map((x) => `<li class="${x.wait > x.target ? 'over' : ''}"><span>${x.name}</span><span class="sbar"><i style="width:${Math.min(100, (x.wait / 8) * 100)}%"></i><em style="left:${(x.target / 8) * 100}%" title="Target"></em></span><b>${x.wait.toFixed(1)}h</b></li>`).join('');
+    }));
+
+    root.querySelectorAll<HTMLButtonElement>('[data-signal]').forEach((btn) => btn.addEventListener('click', () => {
+      const s = SIGNALS.find((x) => x.id === btn.dataset.signal)!;
+      const hit = IMPACTED[s.id];
+      root.querySelectorAll('[data-signal]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      q('[data-inv-status]').textContent = s.status;
+      q('[data-inv-chain]').innerHTML = s.chain.map((c, i) => `<li class="${i === hit ? 'hit' : i > hit ? 'down' : ''}">${esc(c)}</li>`).join('');
+      q('[data-inv-timeline]').innerHTML = s.timeline.map((e) => `<li class="k-${e.kind}"><time>${e.t}</time><span>${esc(e.text)}</span></li>`).join('');
+      q('[data-inv-finding]').textContent = s.finding;
+      q('[data-inv-owner]').textContent = s.owner;
+      const inv = q('[data-invest]'); inv.classList.remove('flash'); void inv.offsetWidth; inv.classList.add('flash');
+    }));
+  }
+</script>
+
+<style>
+  .dash {
+    --bg0: #0D0915; --bg1: #15101F; --bg2: #1C1529; --ln: #2C2139; --tx: #F7F3FF; --mt: #A496B6; --ac: #9965FF; --ac2: #C4A6FF;
+    --okc: #34D27B; --wnc: #F5B53D; --crc: #F4566A;
+    background: var(--bg0); color: var(--tx); border: 1px solid #2C2139; border-radius: 20px; overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(153, 101, 255, .08), 0 40px 100px -30px rgba(80, 30, 160, .55), 0 20px 50px -20px rgba(0, 0, 0, .6);
+    font-size: 13px; line-height: 1.4; text-align: left;
+  }
+  .dash-bar { display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-bottom: 1px solid var(--ln); background: #120D1B; }
+  .dots { display: flex; gap: 6px; } .dots i { width: 9px; height: 9px; border-radius: 50%; background: #3A2D4C; }
+  .dash-path { font: 500 12px/1 var(--font-mono); color: var(--mt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dash-path b { color: var(--tx); font-weight: 600; }
+  .dash-range { display: flex; gap: 2px; padding: 3px; background: var(--bg1); border: 1px solid var(--ln); border-radius: 8px; margin-left: auto; }
+  .dash-range button { border: 0; background: none; color: var(--mt); font: 600 11px/1 var(--font-mono); padding: 6px 9px; border-radius: 5px; cursor: pointer; }
+  .dash-range button[aria-pressed='true'] { background: #2A1E40; color: var(--tx); }
+  .dash-range button:focus-visible { outline: 2px solid var(--ac); outline-offset: 1px; }
+  .dash-tag { font: 500 10px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--mt); border: 1px dashed #4A3B5E; padding: 5px 8px; border-radius: 6px; white-space: nowrap; }
+
+  .dash-grid { display: grid; gap: 10px; padding: 10px; grid-template-columns: 1fr 1fr 1.1fr 1.35fr;
+    grid-template-areas: 'health rev rev side' 'tp jr st side'; }
+  .tile { background: var(--bg1); border: 1px solid var(--ln); border-radius: 12px; padding: 12px 14px; min-width: 0; }
+  .tile-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 500 10.5px/1.2 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--mt); margin-bottom: 10px; }
+  .t-health { grid-area: health; } .t-rev { grid-area: rev; } .t-side { grid-area: side; display: flex; flex-direction: column; }
+  .t-tp { grid-area: tp; } .t-jr { grid-area: jr; } .t-st { grid-area: st; }
+
+  .live { display: inline-flex; align-items: center; gap: 5px; color: var(--okc); text-transform: none; letter-spacing: 0; }
+  .live i { width: 6px; height: 6px; border-radius: 50%; background: var(--okc); animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .3; } }
+  .health-wrap { position: relative; width: 92px; height: 92px; margin: 2px auto 4px; }
+  .ring { width: 92px; height: 92px; transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: #2A1E40; stroke-width: 7; }
+  .ring-fg { fill: none; stroke: var(--ac); stroke-width: 7; stroke-linecap: round; transition: stroke-dasharray .8s var(--ease); filter: drop-shadow(0 0 6px rgba(153, 101, 255, .5)); }
+  .health-num { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+  .health-num b { font: 600 28px/1 var(--font-display); letter-spacing: -.02em; }
+  .health-num small { color: var(--mt); font-size: 10px; }
+  .health-delta { text-align: center; color: var(--mt); font-size: 11px; margin: 0 0 10px; }
+  .domains { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+  .domains li { display: grid; grid-template-columns: 64px 1fr 22px; align-items: center; gap: 8px; font-size: 11.5px; color: var(--mt); }
+  .domains b { color: var(--tx); font-weight: 600; text-align: right; font-size: 11px; }
+  .bar { height: 5px; border-radius: 3px; background: #2A1E40; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 3px; transition: width .6s var(--ease); }
+  .st-ok { background: var(--okc); } .st-warn { background: var(--wnc); } .st-crit { background: var(--crc); }
+
+  .legend { display: inline-flex; align-items: center; gap: 6px; text-transform: none; letter-spacing: 0; }
+  .legend i { width: 12px; height: 2px; display: inline-block; }
+  .lg-a { background: var(--ac); } .lg-e { background: repeating-linear-gradient(90deg, var(--mt) 0 3px, transparent 3px 5px); margin-left: 6px; }
+  .rev-kpi, .kpi-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .rev-kpi b, .kpi-row b { font: 600 22px/1 var(--font-display); letter-spacing: -.02em; }
+  .chip { font: 600 10.5px/1 var(--font-mono); padding: 4px 6px; border-radius: 5px; }
+  .chip-warn { background: rgba(245, 181, 61, .14); color: var(--wnc); }
+  .chip-ok { background: rgba(52, 210, 123, .14); color: var(--okc); }
+  .rev-chart { width: 100%; height: 118px; margin-top: 10px; overflow: visible; }
+  .gridline { stroke: #261C33; stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .line-exp { fill: none; stroke: var(--mt); stroke-width: 1.5; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; opacity: .8; }
+  .line-act { fill: none; stroke: var(--ac); stroke-width: 2.2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+  .rev-chart { clip-path: inset(0 0 0 0); animation: reveal-x 1.4s var(--ease) both; }
+  @keyframes reveal-x { from { clip-path: inset(0 100% 0 0); } }
+  .rev-axis { display: flex; justify-content: space-between; font: 500 9.5px/1 var(--font-mono); color: #6E6280; margin-top: 6px; }
+
+  .spark { width: 100%; height: 32px; margin: 10px 0 6px; }
+  .spark path { fill: none; stroke: var(--ac2); stroke-width: 1.8; vector-effect: non-scaling-stroke; }
+  .sub { color: var(--mt); font-size: 11px; }
+
+  .stages { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; }
+  .stages li { display: grid; grid-template-columns: 74px 1fr 34px; gap: 8px; align-items: center; font-size: 11.5px; color: var(--mt); }
+  .stages b { color: var(--tx); font: 600 11px/1 var(--font-mono); text-align: right; }
+  .sbar { position: relative; height: 7px; border-radius: 4px; background: #2A1E40; }
+  .sbar i { display: block; height: 100%; border-radius: 4px; background: var(--ac); transition: width .6s var(--ease); }
+  .sbar em { position: absolute; top: -3px; width: 2px; height: 13px; background: var(--tx); opacity: .55; border-radius: 1px; }
+  .stages li.over .sbar i { background: linear-gradient(90deg, var(--ac), var(--crc)); }
+  .stages li.over span:first-child { color: var(--tx); }
+
+  .count { font: 600 11px/1 var(--font-mono); background: #2A1E40; color: var(--ac2); padding: 3px 7px; border-radius: 10px; }
+  .signals { list-style: none; padding: 0; margin: 0 0 10px; display: grid; gap: 4px; }
+  .sig { width: 100%; display: grid; grid-template-columns: 10px 1fr auto; gap: 10px; align-items: center; text-align: left; background: transparent; border: 1px solid transparent; border-radius: 9px; padding: 7px 8px; color: var(--tx); cursor: pointer; font: inherit; }
+  .sig:hover { background: var(--bg2); }
+  .sig[aria-pressed='true'] { background: #221833; border-color: #3F2E5C; }
+  .sig:focus-visible { outline: 2px solid var(--ac); outline-offset: 1px; }
+  .sev { width: 8px; height: 8px; border-radius: 50%; }
+  .sev-crit { background: var(--crc); box-shadow: 0 0 0 3px rgba(244, 86, 106, .2); animation: blink 1.6s ease-in-out infinite; }
+  .sev-warn { background: var(--wnc); }
+  .sig-body { min-width: 0; } .sig-body b { display: block; font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sig-body small { display: block; color: var(--mt); font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sig-metric { font: 600 11px/1.2 var(--font-mono); text-align: right; color: var(--tx); white-space: nowrap; }
+  .sig-metric small { display: block; color: var(--mt); font-weight: 500; font-size: 9.5px; }
+
+  .invest { border-top: 1px solid var(--ln); padding-top: 10px; flex: 1; }
+  .invest.flash { animation: flash .5s var(--ease); }
+  @keyframes flash { from { opacity: .35; transform: translateY(4px); } }
+  .inv-h { display: flex; justify-content: space-between; align-items: center; margin: 0 0 9px; font: 500 10.5px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--mt); }
+  .inv-status { text-transform: none; letter-spacing: 0; color: var(--ac2); background: #2A1E40; padding: 3px 7px; border-radius: 5px; }
+  .chain { list-style: none; padding: 0; margin: 0 0 10px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .chain li { font: 500 10.5px/1 var(--font-mono); padding: 5px 7px; border-radius: 5px; background: var(--bg2); border: 1px solid var(--ln); color: var(--mt); }
+  .chain li:not(:last-child)::after { content: '→'; margin-left: 6px; color: #5A4A70; }
+  .chain li.hit { background: rgba(244, 86, 106, .14); color: #FF9AA8; border-color: rgba(244, 86, 106, .4); }
+  .chain li.down { color: #E7C98D; border-color: rgba(245, 181, 61, .3); }
+  .timeline { list-style: none; padding: 0 0 0 12px; margin: 0 0 10px; border-left: 1px solid var(--ln); display: grid; gap: 7px; }
+  .timeline li { position: relative; display: grid; grid-template-columns: 38px 1fr; gap: 6px; font-size: 11.5px; color: #D8CDE6; }
+  .timeline li::before { content: ''; position: absolute; left: -16px; top: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--mt); }
+  .timeline li.k-change::before { background: var(--ac); }
+  .timeline li.k-signal::before { background: var(--wnc); }
+  .timeline time { font: 500 10px/1.5 var(--font-mono); color: var(--mt); }
+  .finding { margin: 0 0 8px; font-size: 11.5px; color: #E4DAF1; background: var(--bg2); border: 1px solid var(--ln); border-radius: 8px; padding: 8px 10px; }
+  .corr { display: block; font: 500 9.5px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--wnc); margin-bottom: 5px; }
+  .owner { margin: 0; font-size: 11px; color: var(--mt); } .owner b { color: var(--tx); font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .dash-grid { grid-template-columns: 1fr 1fr 1fr; grid-template-areas: 'health rev rev' 'tp jr st' 'side side side'; }
+  }
+  @media (max-width: 720px) {
+    .dash-grid { grid-template-columns: 1fr 1fr; grid-template-areas: 'health health' 'rev rev' 'side side' 'tp jr' 'st st'; }
+    .dash-tag, .dash-path { display: none; }
+  }
+  @media (max-width: 420px) {
+    .dash-grid { grid-template-columns: 1fr; grid-template-areas: 'health' 'rev' 'side' 'tp' 'jr' 'st'; }
+  }
+  @media (prefers-reduced-motion: reduce) { .rev-chart { animation: none; } }
+</style>

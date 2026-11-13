@@ -1,0 +1,184 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import StoryFlow from '../../components/StoryFlow.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import SignalTable from '../../components/use-cases/SignalTable.astro';
+import ReportVsObserve from '../../components/use-cases/ReportVsObserve.astro';
+import ScenarioCard from '../../components/use-cases/ScenarioCard.astro';
+import UseCaseLinks from '../../components/use-cases/UseCaseLinks.astro';
+import { cap } from '../../components/use-cases/data';
+
+const crumbs = [{ label: 'Use Cases', href: '/use-cases/' }, { label: 'Business Anomalies', href: '/use-cases/business-anomalies/' }];
+
+const kinds = [
+  { b: 'badge-outline', k: 'Expected variation', d: 'Weekly and seasonal rhythm. Mondays are busier; December is different. Not news.' },
+  { b: 'badge-outline', k: 'Noise', d: 'Short, small departures that resolve on their own. Worth recording, not worth a meeting.' },
+  { b: 'badge-warn', k: 'Known event', d: 'A promotion ends, a price changes, a holiday falls. Real change, already explained — annotate it.' },
+  { b: 'badge-crit', k: 'Meaningful anomaly', d: 'Sustained, unexplained and connected to something the business has committed to. Investigate.' },
+];
+
+const signals = [
+  { signal: 'Actual vs expected range', tells: 'Whether a value is outside what its own history, weekly rhythm and trend would predict — not just above a fixed threshold.' },
+  { signal: 'Duration of the deviation', tells: 'A one-day spike and a seven-day drift are different problems. Persistence is often more important than size.' },
+  { signal: 'Calendar and change events', tells: 'Promotions, pricing updates, releases, holidays and supplier changes that might already explain the movement.' },
+  { signal: 'Breadth across segments', tells: 'Whether the change is everywhere (a market or calendar effect) or concentrated in one product, region or channel.' },
+  { signal: 'Linked objectives', tells: 'Which revenue, margin or service commitments depend on the metric, so priority reflects impact rather than volatility.' },
+  { signal: 'Co-moving metrics', tells: 'Related measures that moved at the same time — useful leads for investigation, not proof of cause.' },
+];
+---
+<BaseLayout title="Business Anomalies" description="Detect business anomalies that matter: compare actual behaviour with expected ranges, separate known events and noise from real change, and route what matters to an owner." ogImage="/social/og-use-cases.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Use case · Business anomalies" title="Separate real change <span class='gradient-text'>from noise.</span>" lede="Business metrics move every day. Most of that movement is rhythm, noise or something you already know about. The skill is spotting the small number of changes that are new, sustained and connected to something that matters — early enough to respond." breadcrumbs={crumbs}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/platform/anomaly-detection/">Anomaly Detection</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/diagrams/uc-anomaly-expected-band.svg" alt="Daily refund requests against an expected weekly range: a one-day spike after a sale is annotated as a known event, a small blip is noise, and a seven-day rise above the range is flagged. Illustrative data." frame="refund requests · expected vs actual" zoom />
+    </Fragment>
+  </PageHero>
+
+  <section class="section-tight">
+    <div class="container">
+      <ul class="kinds">
+        {kinds.map((k) => (
+          <li class="reveal"><span class:list={['badge', k.b]}>{k.k}</span><p class="muted small">{k.d}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container uc-layout">
+      <div class="uc-side">
+        <ScenarioCard sticky company="An online homeware retailer" question="Refund requests are up again. Is this the usual post-sale bump, or something new?" facts={[
+          { k: 'Metric', v: 'Daily refund requests' },
+          { k: 'Expected', v: 'Weekly rhythm plus slow growth' },
+          { k: 'Known events', v: 'Seasonal sale ended day 12' },
+          { k: 'Flag', v: '7 days above range from day 29' },
+          { k: 'Linked to', v: 'Margin and customer satisfaction targets' },
+        ]} caps={['anomaly-detection', 'business-health', 'root-cause-analysis', 'command-center'].map(cap)} />
+      </div>
+      <div class="uc-main">
+        <SectionHead eyebrow="The investigation" title="Two spikes in one month. Only one deserves attention." lede="A fictional retailer, fictional numbers. The pattern of reasoning is the point." />
+        <StoryFlow>
+          <Fragment slot="problem">
+            <h3>Too many alerts, too little confidence.</h3>
+            <p>The retailer's operations team already has threshold alerts on refunds. They fire after every sale, every bank holiday and most Mondays. People have learned to ignore them. When refunds genuinely start rising for a different reason, the alert looks exactly like all the others.</p>
+          </Fragment>
+          <Fragment slot="signals">
+            <h3>Two departures from the expected range.</h3>
+            <p>Against an expected range built from each day's normal weekly pattern and trend, two moments stand out. Around day 12, a sharp one-day spike. From day 29, a smaller but persistent rise that does not come back down. A fixed threshold treats the first as the bigger problem. It is not.</p>
+          </Fragment>
+          <Fragment slot="investigation">
+            <h3>Triage before you investigate.</h3>
+            <p>The first spike lines up with the end of the seasonal sale — a known event, already annotated on the timeline. It is recorded, not escalated. The later rise has no matching event. It has lasted seven days, which exceeds its tolerance. And refunds are linked in the model to two objectives in <a href={cap('business-health').href}>Business Health</a>: gross margin and customer satisfaction.</p>
+            <p>Broken down by category, the rise is concentrated in one product line — outdoor furniture — and within that, in orders fulfilled from one warehouse.</p>
+          </Fragment>
+          <Fragment slot="insight">
+            <h3>A real, concentrated change with a lead to follow.</h3>
+            <p>The deviation is sustained, unexplained by any known event and tied to objectives the business cares about. The concentration by product line and warehouse gives investigation a starting point: damage in transit, a packaging change, or a supplier batch are all candidates.</p>
+            <p class="uc-caveat"><Icon name="rootcause" /> <span>Detecting an anomaly says <em>that</em> something changed, not <em>why</em>. <a href={cap('root-cause-analysis').href}>Root Cause Analysis</a> treats the warehouse link as a lead to verify, not a conclusion.</span></p>
+          </Fragment>
+          <Fragment slot="action">
+            <h3>Route it to someone who can act.</h3>
+            <p>The anomaly appears in the <a href={cap('command-center').href}>Command Center</a> ranked by its link to margin, with the evidence attached: the expected range, the duration, the concentration and the absence of a known event. An owner in fulfilment checks recent returns from that warehouse and the packaging used. The earlier sale spike stays annotated, so nobody re-investigates it next year.</p>
+          </Fragment>
+          <Fragment slot="outcome">
+            <h3>Fewer, better alerts — and a measurable fix.</h3>
+            <ul class="checklist">
+              <li>Refund requests for the affected line back inside the expected range</li>
+              <li>Refund cost as a share of revenue for the category</li>
+              <li>Share of alerts that led to an action, rather than being dismissed</li>
+              <li>Time from first deviation to an owner being assigned</li>
+            </ul>
+          </Fragment>
+        </StoryFlow>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split triage">
+        <div>
+          <p class="eyebrow">Triage</p>
+          <h2>Not every change deserves an investigation.</h2>
+          <p class="lede">An anomaly is worth someone's time when it is sustained, unexplained and connected to an objective. Asking those three questions in order turns a noisy alert stream into a short list.</p>
+          <p class="muted">Each branch leaves a record. Annotated events teach the expected range what normal looks like next time; low-priority changes stay visible in case they grow.</p>
+          <a class="link-arrow" href="/platform/anomaly-detection/">How Anomaly Detection works</a>
+        </div>
+        <div class="reveal">
+          <Diagram src="/diagrams/uc-anomaly-triage.svg" alt="Triage flow: a detected change is checked for duration, then for a known explanation, then for impact on an objective, before an investigation is opened with an owner." frame="anomaly triage" illustrative={false} zoom />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Example signals" title="What turns a moving number into a meaningful signal." />
+      <SignalTable rows={signals} caption="Example business anomaly signals" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Reporting vs observability" title="A threshold says “high”. Observability says “unusual, and why it matters”." />
+      <ReportVsObserve
+        report={[
+          'A metric crossed a fixed threshold',
+          'Week-on-week change, without seasonality',
+          'Alerts that fire after every promotion',
+          'No record of which spikes were already explained',
+        ]}
+        observe={[
+          'Deviation from an expected range that knows the weekly rhythm',
+          'Known events annotated, so they inform rather than alarm',
+          'Priority set by the objectives a metric is connected to',
+          'Concentration by segment, as a lead for investigation',
+        ]} />
+    </div>
+  </section>
+
+  <UseCaseLinks
+    caps={[
+      { slug: 'anomaly-detection', why: 'Expected ranges that account for rhythm, trend and known events.' },
+      { slug: 'business-health', why: 'Connect metrics to the objectives that decide whether a change matters.' },
+      { slug: 'root-cause-analysis', why: 'Follow concentration and co-moving metrics without overclaiming cause.' },
+      { slug: 'command-center', why: 'One ranked view of what needs attention, with evidence attached.' },
+    ]}
+    roles={[
+      { slug: 'executives', why: 'Early warning on what is actually changing' },
+      { slug: 'operations', why: 'Fewer false alarms, faster ownership' },
+      { slug: 'finance', why: 'Cost and margin movements, explained sooner' },
+    ]}
+    related={[
+      { slug: 'revenue-leakage', why: 'When the anomaly is in collected revenue' },
+      { slug: 'customer-journey-friction', why: 'When it is in a journey step' },
+      { slug: 'sla-monitoring', why: 'When it threatens a commitment' },
+    ]} />
+
+  <CTA title="Know which changes matter." text="Show us the alerts your teams have learned to ignore. We will show how Panoptes would separate signal from noise." />
+</BaseLayout>
+
+<style>
+  .kinds { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .kinds li { padding: 18px 20px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .kinds p { margin: .7rem 0 0; }
+  .uc-layout { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .uc-side { height: 100%; padding-top: 8px; }
+  .uc-main :global(.checklist) { margin: 1rem 0; color: var(--text-2); }
+  .uc-caveat { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); font-size: .95rem; }
+  .uc-caveat :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .triage h2 { font-size: clamp(1.8rem, 3.2vw, 2.6rem); }
+  @media (max-width: 960px) {
+    .kinds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .uc-layout { grid-template-columns: minmax(0, 1fr); }
+    .uc-side { height: auto; }
+  }
+  @media (max-width: 560px) { .kinds { grid-template-columns: minmax(0, 1fr); } }
+</style>

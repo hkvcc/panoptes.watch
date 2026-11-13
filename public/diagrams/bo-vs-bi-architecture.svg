@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" fill="none">
+<!--STYLE-->
+<title>BI and business observability share sources and definitions: a warehouse feeds reports and analysis, while a business model feeds continuous observation and action, with definitions, baselines and interventions flowing between them</title>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-line-f"/></marker></defs>
+<g class="d-t">
+<g font-size="10" class="d-tm d-muted"><text x="20" y="24">SOURCES</text><text x="210" y="24">FOUNDATION</text><text x="480" y="24">USE</text></g>
+<g class="d-surface"><rect x="20" y="38" width="130" height="44" rx="10"/><rect x="20" y="94" width="130" height="44" rx="10"/><rect x="20" y="150" width="130" height="44" rx="10"/><rect x="20" y="206" width="130" height="44" rx="10"/><rect x="20" y="262" width="130" height="44" rx="10"/></g>
+<g class="d-line"><rect x="20" y="38" width="130" height="44" rx="10"/><rect x="20" y="94" width="130" height="44" rx="10"/><rect x="20" y="150" width="130" height="44" rx="10"/><rect x="20" y="206" width="130" height="44" rx="10"/><rect x="20" y="262" width="130" height="44" rx="10"/></g>
+<g font-size="12" class="d-text" text-anchor="middle"><text x="85" y="64">CRM</text><text x="85" y="120">Billing</text><text x="85" y="176">Payments</text><text x="85" y="232">Support</text><text x="85" y="288">Product events</text></g>
+<path d="M150 60H180M150 116H180M150 172H180M150 228H180M150 284H180M180 60V284" class="d-line" stroke-width="1.5"/>
+<path d="M180 85H206M180 265H206" class="d-line" stroke-width="1.5" marker-end="url(#ah)"/>
+
+<rect x="210" y="50" width="200" height="70" rx="12" class="d-surface"/><rect x="210" y="50" width="200" height="70" rx="12" class="d-line"/>
+<text x="226" y="80" font-size="14" font-weight="600" class="d-td d-text">Warehouse</text><text x="226" y="100" font-size="11" class="d-muted">Semantic layer · history</text>
+<rect x="480" y="50" width="220" height="70" rx="12" class="d-surface"/><rect x="480" y="50" width="220" height="70" rx="12" class="d-line"/>
+<text x="496" y="80" font-size="14" font-weight="600" class="d-td d-text">BI &amp; analysis</text><text x="496" y="100" font-size="11" class="d-muted">Reports · analysis · planning</text>
+
+<rect x="210" y="230" width="200" height="70" rx="12" class="d-surface-2"/><rect x="210" y="230" width="200" height="70" rx="12" class="d-accent-s"/>
+<text x="226" y="260" font-size="14" font-weight="600" class="d-td d-text">Business model</text><text x="226" y="280" font-size="11" class="d-muted">Entities · flows · objectives</text>
+<rect x="480" y="230" width="220" height="70" rx="12" class="d-accent"/>
+<text x="496" y="260" font-size="14" font-weight="600" class="d-td" fill="#fff">Observe · understand · act</text><text x="496" y="280" font-size="11" fill="#fff" opacity=".9">Live state · ownership · follow-up</text>
+
+<path d="M412 85H476M412 265H476" class="d-line" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M310 124V226" class="d-accent-2-s" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#ah)" marker-start="url(#ah)"/>
+<path d="M590 124V226" class="d-accent-2-s" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#ah)" marker-start="url(#ah)"/>
+<text x="322" y="170" font-size="11" class="d-text">Shared definitions</text><text x="322" y="186" font-size="11" class="d-muted">History for baselines</text>
+<text x="602" y="170" font-size="11" class="d-text">Interventions</text><text x="602" y="186" font-size="11" class="d-muted">annotate reports</text>
+<text x="20" y="330" font-size="11" class="d-muted">Same raw data, two questions: “what happened?” and “what is happening — and who is acting on it?”</text>
+</g>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>Anatomy of a monitored process stage: arrivals, wait time, work time, work in progress, completions, rework and breach risk</title>
+<g class="d-t">
+<text x="24" y="30" font-size="15" font-weight="600" class="d-td d-text">Anatomy of a monitored stage</text>
+<text x="24" y="50" font-size="12" class="d-muted">Seven measurements, taken at the edges of a stage and inside it</text>
+<!-- WIP bracket -->
+<path d="M134 108V98H520V108" class="d-accent-2-s" stroke-width="1.5"/>
+<circle cx="236" cy="80" r="10" class="d-accent"/><text x="236" y="84" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">4</text>
+<text x="252" y="84" font-size="12.5" font-weight="600" class="d-text">Work in progress = waiting + in work</text>
+<!-- arrivals -->
+<path d="M24 170H122" class="d-line" stroke-width="2"/><path d="M24 170H122" class="d-accent-s d-flow" stroke-width="2"/><path d="M116 164L126 170L116 176Z" class="d-accent"/>
+<circle cx="34" cy="136" r="10" class="d-accent"/><text x="34" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">1</text>
+<text x="50" y="140" font-size="12.5" font-weight="600" class="d-text">Arrivals</text>
+<text x="50" y="155" font-size="11" class="d-muted">per hour</text>
+<!-- queue -->
+<rect x="134" y="120" width="196" height="100" rx="12" class="d-surface"/><rect x="134" y="120" width="196" height="100" rx="12" class="d-line" stroke-width="1.5"/>
+<circle cx="152" cy="138" r="10" class="d-accent"/><text x="152" y="142" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">2</text>
+<text x="168" y="142" font-size="12.5" font-weight="600" class="d-text">Wait time</text>
+<g stroke-width="1.5"><rect x="148" y="160" width="26" height="40" rx="5" class="d-surface-2"/><rect x="148" y="160" width="26" height="40" rx="5" class="d-accent-2-s"/><rect x="184" y="160" width="26" height="40" rx="5" class="d-surface-2"/><rect x="184" y="160" width="26" height="40" rx="5" class="d-accent-2-s"/><rect x="220" y="160" width="26" height="40" rx="5" class="d-surface-2"/><rect x="220" y="160" width="26" height="40" rx="5" class="d-accent-2-s"/><rect x="256" y="160" width="26" height="40" rx="5" class="d-surface-2"/><rect x="256" y="160" width="26" height="40" rx="5" class="d-accent-2-s"/><rect x="292" y="160" width="26" height="40" rx="5" class="d-surface-2"/><rect x="292" y="160" width="26" height="40" rx="5" class="d-warn-s" stroke-width="2.5"/></g>
+<path d="M330 170H364" class="d-line" stroke-width="2"/><path d="M358 164L368 170L358 176Z" class="d-line-f"/>
+<!-- work -->
+<rect x="372" y="120" width="148" height="100" rx="12" class="d-surface"/><rect x="372" y="120" width="148" height="100" rx="12" class="d-accent-s" stroke-width="1.5"/>
+<circle cx="390" cy="138" r="10" class="d-accent"/><text x="390" y="142" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">3</text>
+<text x="406" y="142" font-size="12.5" font-weight="600" class="d-text">Work time</text>
+<rect x="412" y="160" width="26" height="40" rx="5" class="d-accent"/><rect x="454" y="160" width="26" height="40" rx="5" class="d-accent"/>
+<!-- exit -->
+<path d="M520 170H640" class="d-line" stroke-width="2"/><path d="M520 170H640" class="d-accent-s d-flow" stroke-width="2"/><path d="M634 164L644 170L634 176Z" class="d-accent"/>
+<circle cx="552" cy="136" r="10" class="d-accent"/><text x="552" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">5</text>
+<text x="568" y="140" font-size="12.5" font-weight="600" class="d-text">Completions</text>
+<text x="568" y="155" font-size="11" class="d-muted">and lead time</text>
+<rect x="648" y="152" width="60" height="36" rx="18" class="d-surface"/><rect x="648" y="152" width="60" height="36" rx="18" class="d-ok-s" stroke-width="1.5"/>
+<text x="678" y="174" text-anchor="middle" font-size="12" font-weight="600" class="d-text">Done</text>
+<!-- breach risk -->
+<path d="M305 202V226" class="d-warn-s" stroke-width="1.5"/>
+<circle cx="305" cy="238" r="10" class="d-accent"/><text x="305" y="242" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">7</text>
+<text x="321" y="242" font-size="12.5" font-weight="600" class="d-text">Breach risk</text>
+<text x="321" y="257" font-size="11" class="d-muted">oldest item: 46h of a 48h commitment</text>
+<!-- rework -->
+<path d="M590 170V292H190V224" class="d-warn-s" stroke-width="1.8" stroke-dasharray="6 5"/><path d="M184 232L190 221L196 232Z" class="d-warn"/>
+<circle cx="236" cy="316" r="10" class="d-accent"/><text x="236" y="320" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">6</text>
+<text x="252" y="320" font-size="12.5" font-weight="600" class="d-text">Rework</text>
+<text x="304" y="320" font-size="11" class="d-muted">items sent back for correction re-enter the queue</text>
+</g>
+</svg>

@@ -1,0 +1,36 @@
+---
+/**
+ * Narrative sequence for use cases: Problem → Signals → Investigation → Insight → Action → Outcome.
+ * Each step is a named slot (problem, signals, investigation, insight, action, outcome).
+ */
+const STEPS = [
+  { id: 'problem', label: 'The problem' },
+  { id: 'signals', label: 'The signals' },
+  { id: 'investigation', label: 'The investigation' },
+  { id: 'insight', label: 'The insight' },
+  { id: 'action', label: 'The possible action' },
+  { id: 'outcome', label: 'The outcome to measure' },
+];
+const rendered = await Promise.all(STEPS.map((s) => (Astro.slots.has(s.id) ? Astro.slots.render(s.id) : Promise.resolve(''))));
+---
+<ol class="story">
+  {STEPS.map((s, i) => rendered[i] && (
+    <li class="story-step reveal" id={`step-${s.id}`}>
+      <div class="ss-rail"><span class="ss-num">{String(i + 1).padStart(2, '0')}</span></div>
+      <div class="ss-body">
+        <p class="ss-label">{s.label}</p>
+        <Fragment set:html={rendered[i]} />
+      </div>
+    </li>
+  ))}
+</ol>
+<style>
+  .story { list-style: none; padding: 0; margin: 0; position: relative; }
+  .story-step { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: clamp(14px, 3vw, 32px); padding-bottom: clamp(32px, 5vw, 56px); position: relative; }
+  .story-step:not(:last-child)::before { content: ''; position: absolute; left: 27px; top: 56px; bottom: 0; width: 2px; background: linear-gradient(var(--accent), var(--border)); opacity: .5; }
+  .ss-num { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border-strong); font: 600 1rem/1 var(--font-mono); color: var(--accent-text); }
+  .ss-label { font: 500 .74rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent-text); margin: 0 0 .7rem; padding-top: 4px; }
+  .ss-body :global(h3) { font-size: clamp(1.3rem, 2vw, 1.6rem); }
+  .ss-body :global(p) { color: var(--text-2); max-width: 68ch; }
+  @media (max-width: 560px) { .story-step { grid-template-columns: 40px minmax(0, 1fr); } .ss-num { width: 40px; height: 40px; border-radius: 12px; font-size: .85rem; } .story-step:not(:last-child)::before { left: 19px; top: 40px; } }
+</style>

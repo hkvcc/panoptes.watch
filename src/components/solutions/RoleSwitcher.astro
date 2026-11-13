@@ -1,0 +1,34 @@
+---
+/** Compact strip linking the five role pages; marks the current one. */
+import Icon from '../Icon.astro';
+import { SOLUTIONS } from '../../data/site';
+interface Props { current?: string; title?: string }
+const { current, title = 'The same model, from the other seats' } = Astro.props;
+---
+<nav class="roleswitch" aria-label="Solutions by role">
+  <p class="kpi-label">{title}</p>
+  <ul>
+    {SOLUTIONS.map((s) => (
+      <li>
+        {s.href === current ? (
+          <span class="rs-item rs-current" aria-current="page"><Icon name={s.icon!} /><span><strong>{s.label}</strong><small>You are here</small></span></span>
+        ) : (
+          <a class="rs-item" href={s.href}><Icon name={s.icon!} /><span><strong>{s.label}</strong><small>{s.desc}</small></span></a>
+        )}
+      </li>
+    ))}
+  </ul>
+  <a href="/solutions/" class="link-arrow small">How the five views share one model</a>
+</nav>
+<style>
+  .roleswitch ul { list-style: none; padding: 0; margin: 1rem 0 1.2rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .rs-item { display: flex; gap: 10px; align-items: flex-start; height: 100%; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); text-decoration: none; transition: border-color .2s, transform .2s var(--ease); }
+  a.rs-item:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .rs-item :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .rs-item span { display: grid; gap: 2px; min-width: 0; }
+  .rs-item strong { font-size: .95rem; }
+  .rs-item small { font-size: .8rem; color: var(--text-2); line-height: 1.35; }
+  .rs-current { background: var(--accent-soft); border-color: transparent; }
+  @media (max-width: 1080px) { .roleswitch ul { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .roleswitch ul { grid-template-columns: 1fr; } }
+</style>

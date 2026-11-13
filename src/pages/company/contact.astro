@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CopyEmail from '../../components/CopyEmail.astro';
+
+const crumbs = [{ label: 'Company', href: '/company/' }, { label: 'Contact', href: '/company/contact/' }];
+const mail = (subject: string) => `mailto:sales@panoptes.watch?subject=${encodeURIComponent(subject)}`;
+
+const routes = [
+  { i: 'calendar', t: 'See the product', d: 'A working session built around your business questions, with the people who would use Panoptes.', primary: { label: 'Book a Demo', href: '/demo/' }, subject: 'Demo request' },
+  { i: 'revenue', t: 'Sales and pricing', d: 'Scope, evaluation approach and commercial questions for your organisation.', primary: { label: 'Message sales', href: '/contact/' }, subject: 'Sales enquiry' },
+  { i: 'shield', t: 'Security review', d: 'Security documentation, questionnaires and data residency or retention requirements.', primary: { label: 'Read the principles', href: '/integrations/security-governance/' }, subject: 'Security documentation request' },
+  { i: 'link', t: 'Partnerships', d: 'Consultancies, system integrators and technology companies interested in working together.', primary: { label: 'Message partnerships', href: '/contact/' }, subject: 'Partnership enquiry' },
+  { i: 'book', t: 'Press and analysts', d: 'Briefings, background on business observability and requests for comment.', primary: { label: 'Message press', href: '/contact/' }, subject: 'Press enquiry' },
+  { i: 'mail', t: 'Anything else', d: 'Feedback on the website, or a question that fits nowhere else.', primary: { label: 'Send a message', href: '/contact/' }, subject: 'Website enquiry' },
+];
+---
+<BaseLayout
+  title="Contact the Company"
+  description="How to reach Panoptes by topic — demos, sales, security reviews, partnerships and press — all through one address, sales@panoptes.watch."
+  ogImage="/social/og-company.png"
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Company · Contact"
+    title="One address. <span class='gradient-text'>The right person.</span>"
+    lede="Panoptes is building business observability: a connected, continuously updated view of how a business actually operates. Whatever brings you here, every route below leads to the same inbox, read by the team building the product."
+    breadcrumbs={crumbs}
+  >
+    <div class="hero-mail">
+      <CopyEmail large />
+      <p class="small muted">Add the topic to your subject line — the suggested subjects below do that for you.</p>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Ways to reach us" title="Choose the route that fits your question." lede="Use the form for a quick message, email if you prefer to attach documents, or book a demo if you want to see the product." />
+      <div class="grid grid-3">
+        {routes.map((r) => (
+          <article class="card route reveal">
+            <span class="icon-tile"><Icon name={r.i} /></span>
+            <h3>{r.t}</h3>
+            <p class="muted">{r.d}</p>
+            <div class="route-actions">
+              <a class="btn btn-sm" href={r.primary.href}>{r.primary.label}</a>
+              <a class="route-mail" href={mail(r.subject)}><Icon name="mail" /><span>Email with subject “{r.subject}”</span></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="facts">
+        <div>
+          <p class="eyebrow">Good to know</p>
+          <h2>How we handle what you send.</h2>
+        </div>
+        <dl class="facts-dl">
+          <div><dt>Replies</dt><dd>By email, from a person, to the address you write from.</dd></div>
+          <div><dt>Your details</dt><dd>Used to respond to you, as described in the <a href="/privacy/">privacy notice</a>. No newsletter sign-up.</dd></div>
+          <div><dt>Attachments</dt><dd>Send questionnaires or documents by email; the website form accepts text only.</dd></div>
+          <div><dt>Confidential topics</dt><dd>Say so in your first message and we will agree how to share details before you send them.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <RelatedLinks
+        eyebrow="About Panoptes"
+        title="Learn more about the company"
+        items={[
+          { label: 'About Panoptes', href: '/company/', desc: 'What we are building and why', icon: 'building' },
+          { label: 'Vision', href: '/company/vision/', desc: 'Towards a business operating system', icon: 'compass' },
+          { label: 'Contact form', href: '/contact/', desc: 'Send a message from the website', icon: 'mail' },
+          { label: 'Book a Demo', href: '/demo/', desc: 'A session built around your questions', icon: 'calendar' },
+        ]}
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-mail { display: grid; gap: 10px; justify-items: start; margin-top: 1.8rem; }
+  .hero-mail p { margin: 0; }
+  .route { display: flex; flex-direction: column; }
+  .route-actions { margin-top: auto; padding-top: 1rem; display: grid; gap: 12px; justify-items: start; }
+  .route-mail { display: inline-flex; align-items: center; gap: 8px; font-size: .86rem; color: var(--accent-text); text-decoration: none; }
+  .route-mail:hover { text-decoration: underline; }
+  .route-mail :global(svg) { width: 16px; height: 16px; flex: none; }
+  .facts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .facts h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  .facts-dl { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 24px 32px; }
+  .facts-dl dt { font: 500 .72rem/1.3 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin-bottom: .4rem; }
+  .facts-dl dd { margin: 0; color: var(--text-2); }
+  .facts-dl a { color: var(--accent-text); }
+  @media (max-width: 860px) { .facts { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .facts-dl { grid-template-columns: 1fr; } }
+</style>

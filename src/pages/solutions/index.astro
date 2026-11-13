@@ -1,0 +1,269 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Solutions', href: '/solutions/' }];
+
+const seats = [
+  { id: 'exec', r: 'CEO & executive team', short: 'Executives', icon: 'compass', href: '/solutions/executives/',
+    q: 'Is the business actually working — and where should I look first?',
+    owns: 'Strategy, commitments to the board and customers, and how the functions fit together.',
+    watches: ['Business health by domain', 'Commitments at risk, ranked by exposure', 'Leading indicators for strategic bets'] },
+  { id: 'ops', r: 'COO & operations', short: 'Operations', icon: 'process', href: '/solutions/operations/',
+    q: 'Where is work waiting, and what is it costing us?',
+    owns: 'Throughput, capacity, service levels and the hand-offs between teams.',
+    watches: ['Queue depth and wait time by stage', 'Capacity against expected demand', 'SLA attainment, projected rather than reported'] },
+  { id: 'fin', r: 'CFO & finance', short: 'Finance', icon: 'finance', href: '/solutions/finance/',
+    q: 'Why did the numbers move — operationally?',
+    owns: 'Cash, revenue recognition, unit economics and the close.',
+    watches: ['Expected vs billed vs collected', 'Unreconciled and unapplied items', 'Cost per transaction by process'] },
+  { id: 'rev', r: 'CRO & revenue', short: 'Revenue', icon: 'revenue', href: '/solutions/revenue/',
+    q: 'Where is revenue stalling between intent and cash?',
+    owns: 'Pipeline, conversion, retention and expansion.',
+    watches: ['Signed-to-live and live-to-paid time', 'Payment failure on renewals', 'Usage and contact signals before renewal'] },
+  { id: 'cx', r: 'Customer experience', short: 'Customer experience', icon: 'customers', href: '/solutions/customer-experience/',
+    q: 'Where do customers struggle, and are we keeping our promises?',
+    owns: 'Journeys across channels, service promises and the effort customers spend.',
+    watches: ['Journey completion by step and channel', 'Promises kept and broken', 'Repeat contacts by cause'] },
+];
+
+// The same event seen from five seats (fictional scenario).
+const nodes = [
+  { id: 'n1', t: 'Verification queue', m: 'Median wait 4.1h → 9.6h · 212 cases', roles: 'exec ops', origin: true },
+  { id: 'n2', t: 'Account activation', m: 'Go-live slipping for new accounts', roles: 'ops rev cx' },
+  { id: 'n3', t: 'Approve within 48h', m: 'Projected 91.8% against 95%', roles: 'exec ops cx' },
+  { id: 'n4', t: 'First invoices', m: '$186k of first-month billing moves out', roles: 'exec fin rev' },
+  { id: 'n5', t: 'Customer contacts', m: '“Where is my account?” contacts rising', roles: 'cx' },
+  { id: 'n6', t: 'Cash forecast', m: 'Collections for the month revised down', roles: 'fin' },
+];
+const lenses = [
+  { id: 'exec', label: 'Executives', sees: 'A commitment at risk: “enterprise go-live within 10 days” is projected at 62%, with $1.1M of this quarter’s revenue tied to it.',
+    why: 'It is a promise made to customers and the board. Nobody has reported it red yet, because each team’s own measure still looks acceptable.',
+    ask: 'Who owns this, how big is the exposure, and is it temporary or structural?',
+    decide: 'Whether to fund extra verification capacity now, or re-sequence enterprise start dates and tell the customers affected.', href: '/solutions/executives/' },
+  { id: 'ops', label: 'Operations', sees: 'Arrivals at verification have run above completion capacity since Tuesday; the queue will breach the 48-hour approval target from Thursday morning.',
+    why: 'Waiting time, not work time, is where the hours went. The work itself still takes 0.6 hours per case.',
+    ask: 'Which cases breach first, where is spare capacity, and how many cases are waiting on the customer rather than on us?',
+    decide: 'Shift reviewer capacity for two days, chase the cases waiting on documents and defer non-urgent re-verification.', href: '/solutions/operations/' },
+  { id: 'fin', label: 'Finance', sees: 'First-month invoices for new accounts are moving out of the period: $186k of expected billing will not be issued this month.',
+    why: 'Without the operational cause, it shows up at close as a revenue miss and a collections shortfall with no explanation attached.',
+    ask: 'How much moves into next month, and is it timing or is any of it lost?',
+    decide: 'Whether to revise the cash forecast now, and whether the cost of temporary capacity is smaller than the deferral.', href: '/solutions/finance/' },
+  { id: 'rev', label: 'Revenue', sees: 'Signed accounts are waiting longer to go live: time from closed-won to first invoice has moved from 14 days to 31 for enterprise deals.',
+    why: 'The pipeline looks healthy and the bookings are real, but first revenue slips into the next quarter — and the customer’s first impression is a delay.',
+    ask: 'Which signed accounts are waiting, on what, and which renewals start the clock late?',
+    decide: 'Which accounts to prioritise through verification and whether to adjust go-live dates promised in active deals.', href: '/solutions/revenue/' },
+  { id: 'cx', label: 'Customer experience', sees: 'The “verified within one hour” promise is being kept 61% of the time, and customers are contacting support to ask where their account is.',
+    why: 'Each repeat contact costs time and goodwill. The support queue grows for a reason that support cannot fix.',
+    ask: 'Which customers are affected, through which channels, and what are we telling them?',
+    decide: 'Whether to change what the journey promises while the queue recovers, and to message waiting customers before they contact us.', href: '/solutions/customer-experience/' },
+];
+
+const faqs = [
+  { q: 'Do different roles see different numbers?', a: 'They see different <em>parts</em> of the same model. A metric like “time to first invoice” has one definition, owned in one place, so the CFO and CRO are looking at the same figure even when they care about it for different reasons.' },
+  { q: 'Can access be limited by role?', a: 'Yes. Role-based access is a design principle, so people see the parts of the business model relevant to their responsibilities. See <a href="/integrations/security-governance/">security &amp; governance</a>.' },
+  { q: 'Does this replace our BI tools?', a: 'No. BI remains the right place for reporting and historical analysis. Panoptes focuses on what is happening now, why, and who should act. The <a href="/resources/business-observability-vs-bi/">comparison guide</a> explains the difference.' },
+  { q: 'Is Panoptes used to monitor individual employees?', a: 'No. Panoptes observes business processes and outcomes — queues, journeys, commitments and money movement — not individual people’s activity.' },
+];
+---
+<BaseLayout title="Solutions by role" description="Business observability for executives, operations, finance, revenue and customer experience: five views of one shared business model, so the answers agree." ogImage="/social/og-solutions.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Solutions" title="Five seats. <span class='gradient-text'>One shared picture.</span>" lede="Every leader asks a different first question about the business. Panoptes answers each one from the same continuously updated model — so when operations, finance and revenue look at the same event, they see the same facts and argue about what to do, not whose number is right." breadcrumbs={crumbs}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#one-event">See one event, five ways</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/diagrams/solutions-shared-model.svg" alt="Five role views — executives, operations, finance, revenue and customer experience — connected to one shared business model in which a verification delay is highlighted" frame="one model · five seats" illustrative={false} zoom class="hide-sm" />
+      <Diagram src="/diagrams/solutions-shared-model-vertical.svg" alt="One shared business model with five role views" frame class="show-sm" />
+    </Fragment>
+  </PageHero>
+
+  <!-- Seats -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="By role" title="Start from the question you are accountable for." lede="Each role page describes the visibility problems that seat typically lives with, the indicators worth watching and the decisions a connected model can support." />
+      <ol class="seats">
+        {seats.map((s, i) => (
+          <li class="seat reveal">
+            <a href={s.href} class="seat-link">
+              <span class="seat-n">0{i + 1}</span>
+              <span class="seat-role"><span class="icon-tile"><Icon name={s.icon} /></span><span><strong>{s.r}</strong><small>{s.owns}</small></span></span>
+              <span class="seat-q">“{s.q}”</span>
+              <ul class="seat-w">{s.watches.map((w) => <li>{w}</li>)}</ul>
+              <span class="link-arrow seat-cta">{s.short}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- One event, five seats -->
+  <section class="section section-alt" id="one-event">
+    <div class="container">
+      <SectionHead eyebrow="One event, five seats" title="The same delay matters differently to every leader." lede="A verification queue for new business accounts starts to back up on a Tuesday. Choose a seat to see which part of the chain that person cares about, and the decision it informs. The scenario and figures are illustrative." />
+      <div class="lens reveal" data-lens>
+        <div class="lens-event">
+          <span class="badge badge-crit"><span class="dot"></span>Signal · Tuesday 10:00</span>
+          <p><strong>New-account verification wait has more than doubled.</strong> <span class="muted">Arrivals are running above reviewer capacity, and the effect is travelling downstream.</span></p>
+        </div>
+        <ol class="chain" aria-label="How the delay propagates">
+          {nodes.map((n) => (
+            <li class:list={['node', { origin: n.origin, on: n.roles.includes('exec') }]} data-roles={n.roles}>
+              <strong>{n.t}</strong><span>{n.m}</span>
+            </li>
+          ))}
+        </ol>
+        <div class="lens-ui">
+          <div class="lens-tabs" role="group" aria-label="Choose a seat">
+            {lenses.map((l, i) => <button type="button" data-lens-btn={l.id} aria-pressed={i === 0 ? 'true' : 'false'}>{l.label}</button>)}
+          </div>
+          <div class="lens-panels" aria-live="polite">
+            {lenses.map((l, i) => (
+              <div class="lens-panel" data-lens-panel={l.id} hidden={i !== 0}>
+                <dl>
+                  <div><dt>What they see</dt><dd>{l.sees}</dd></div>
+                  <div><dt>Why it matters to them</dt><dd>{l.why}</dd></div>
+                  <div><dt>Their first question</dt><dd>{l.ask}</dd></div>
+                  <div><dt>The decision it informs</dt><dd>{l.decide}</dd></div>
+                </dl>
+                <a href={l.href} class="link-arrow">Panoptes for {l.label.toLowerCase()}</a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <p class="note mt-1">Highlighted steps are the ones the selected seat is accountable for. The underlying facts — the queue, the dates, the amounts — are identical for every seat.</p>
+    </div>
+  </section>
+
+  <!-- Why one model -->
+  <section class="section">
+    <div class="container">
+      <div class="split split-top why">
+        <div>
+          <p class="eyebrow">Why one model</p>
+          <h2>Five dashboards produce five versions of the truth.</h2>
+          <p class="lede">When each function builds its own view, the numbers are each correct and still disagree — because they use different definitions, refresh at different times and stop at the edge of the team’s own systems.</p>
+          <p class="muted">Panoptes models the business once: customers, orders, payments, cases, teams, commitments and the relationships between them. Role views are lenses on that model, not copies of it.</p>
+          <a href="/business-observability/" class="link-arrow">What is business observability?</a>
+        </div>
+        <ul class="why-list">
+          <li class="reveal"><span class="why-k">Same definitions</span><p>“Active customer”, “time to first invoice” and “SLA breach” are defined once, versioned and owned. Finance and revenue stop reconciling each other’s spreadsheets.</p></li>
+          <li class="reveal"><span class="why-k">Same moment</span><p>Everyone looks at the model as it is now, not at a weekly extract. A delay noticed by operations on Tuesday is visible to finance on Tuesday, not at close.</p></li>
+          <li class="reveal"><span class="why-k">Same evidence</span><p>When something moves, the investigation — what changed first, what it touched, what is correlation and what is confirmed — is shared rather than rebuilt by each team.</p></li>
+          <li class="reveal"><span class="why-k">Clear ownership</span><p>Signals are routed to the person accountable for that part of the business, so a cross-team problem does not sit between teams.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Under every view" title="The capabilities each seat draws on." />
+      <div class="grid grid-4">
+        <FeatureCard title="Business Graph" text="The shared model of entities, relationships and dependencies that every role view reads from." href="/platform/business-graph/" icon="graph" />
+        <FeatureCard title="Business Health" text="Objectives and expectations per domain, so “working” is defined before it is measured." href="/platform/business-health/" icon="health" />
+        <FeatureCard title="Command Center" text="One operating view per seat, ranked by what needs attention now." href="/platform/command-center/" icon="command" />
+        <FeatureCard title="Root Cause Analysis" text="Trace a symptom to contributing changes — and say clearly what is verified." href="/platform/root-cause-analysis/" icon="rootcause" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split split-top">
+        <RelatedLinks eyebrow="Use cases" title="Problems every seat recognises" items={[
+          { label: 'Operational bottlenecks', href: '/use-cases/operational-bottlenecks/', desc: 'See where work waits, and why', icon: 'clock' },
+          { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Find where earned revenue goes missing', icon: 'revenue' },
+          { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Watch commitments before they break', icon: 'target' },
+          { label: 'Customer journey friction', href: '/use-cases/customer-journey-friction/', desc: 'Locate the step where customers stall', icon: 'journey' },
+        ]} />
+        <div>
+          <p class="eyebrow">Questions</p>
+          <h2 class="faq-title">Common questions</h2>
+          <FAQ items={faqs} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTA title="See your seat in the shared model." text="Bring one cross-team problem — a slow onboarding queue, a gap between billed and collected — and we will walk through how each role would see it." />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-lens]');
+  if (root) {
+    const btns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-lens-btn]'));
+    const select = (id: string) => {
+      btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lensBtn === id)));
+      root.querySelectorAll<HTMLElement>('[data-lens-panel]').forEach((p) => { p.hidden = p.dataset.lensPanel !== id; });
+      root.querySelectorAll<HTMLElement>('[data-roles]').forEach((n) => n.classList.toggle('on', (n.dataset.roles ?? '').split(' ').includes(id)));
+    };
+    btns.forEach((b, i) => {
+      b.addEventListener('click', () => select(b.dataset.lensBtn!));
+      b.addEventListener('keydown', (e) => {
+        const k = e.key; let n = -1;
+        if (k === 'ArrowRight' || k === 'ArrowDown') n = (i + 1) % btns.length;
+        if (k === 'ArrowLeft' || k === 'ArrowUp') n = (i - 1 + btns.length) % btns.length;
+        if (n > -1) { e.preventDefault(); btns[n].focus(); select(btns[n].dataset.lensBtn!); }
+      });
+    });
+  }
+</script>
+
+<style>
+  .seats { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+  .seat { border-bottom: 1px solid var(--border); }
+  .seat-link { display: grid; grid-template-columns: 48px minmax(0, 1.25fr) minmax(0, 1.1fr) minmax(0, 1fr) 180px; gap: 24px; align-items: start; padding: 26px 8px; color: var(--text); text-decoration: none; transition: background .2s; border-radius: var(--radius); }
+  .seat-link:hover { background: var(--surface-2); }
+  .seat-n { font: 600 .8rem/1.6 var(--font-mono); color: var(--text-3); }
+  .seat-role { display: flex; gap: 14px; align-items: flex-start; }
+  .seat-role .icon-tile { margin: 0; }
+  .seat-role strong { display: block; font: 600 1.15rem/1.3 var(--font-display); margin-bottom: 4px; }
+  .seat-role small { display: block; color: var(--text-2); font-size: .88rem; line-height: 1.45; }
+  .seat-q { font: 500 1.05rem/1.45 var(--font-display); }
+  .seat-w { margin: 0; padding-left: 1.05em; font-size: .88rem; color: var(--text-2); display: grid; gap: 4px; }
+  .seat-w li::marker { color: var(--accent); }
+  .seat-cta { justify-self: end; font-size: .92rem; white-space: nowrap; }
+  @media (max-width: 1080px) { .seat-link { grid-template-columns: 40px 1fr 1fr; } .seat-w { grid-column: 2 / 3; } .seat-cta { grid-column: 3; justify-self: start; } }
+  @media (max-width: 720px) { .seat-link { grid-template-columns: 1fr; gap: 12px; padding: 22px 4px; } .seat-n { display: none; } .seat-w, .seat-cta { grid-column: auto; } }
+
+  .lens { border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); padding: clamp(18px, 3vw, 32px); box-shadow: var(--shadow); }
+  .lens-event { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-bottom: 18px; border-bottom: 1px dashed var(--border-strong); }
+  .lens-event p { margin: 0; flex: 1 1 340px; }
+  .chain { list-style: none; padding: 0; margin: 22px 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; counter-reset: c; }
+  .node { position: relative; padding: 14px 14px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-2); opacity: .45; transition: opacity .3s, border-color .3s, background .3s, transform .3s var(--ease); }
+  .node strong { display: block; font-size: .92rem; margin-bottom: 4px; }
+  .node span { display: block; font-size: .8rem; color: var(--text-2); line-height: 1.4; }
+  .node:not(:last-child)::after { content: ''; position: absolute; right: -9px; top: 50%; width: 8px; height: 2px; background: var(--border-strong); }
+  .node.on { opacity: 1; border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: var(--accent-soft); transform: translateY(-2px); }
+  .node.origin { box-shadow: inset 3px 0 0 var(--crit); }
+  .lens-ui { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 24px; align-items: start; }
+  .lens-tabs { display: grid; gap: 6px; }
+  .lens-tabs button { text-align: left; font: 600 .95rem/1.2 var(--font-body); padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text-2); cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+  .lens-tabs button:hover { border-color: var(--accent); }
+  .lens-tabs button[aria-pressed='true'] { background: var(--purple); border-color: var(--purple); color: #fff; }
+  .lens-panel dl { margin: 0 0 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; }
+  .lens-panel dt { font: 500 .72rem/1.3 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px; }
+  .lens-panel dd { margin: 0; font-size: .96rem; line-height: 1.55; }
+  @media (max-width: 1080px) { .chain { grid-template-columns: repeat(3, minmax(0, 1fr)); } .node::after { display: none; } }
+  @media (max-width: 860px) { .lens-ui { grid-template-columns: 1fr; } .lens-tabs { display: flex; flex-wrap: wrap; } .lens-tabs button { padding: 10px 12px; font-size: .88rem; } }
+  @media (max-width: 640px) { .chain { grid-template-columns: 1fr 1fr; } .lens-panel dl { grid-template-columns: 1fr; } }
+
+  .why h2 { max-width: 16ch; }
+  .why-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .why-list li { padding: 20px 22px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .why-k { font: 600 1.1rem/1.3 var(--font-display); display: block; margin-bottom: 6px; }
+  .why-list p { margin: 0; color: var(--text-2); font-size: .95rem; }
+  .faq-title { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  :global(.frame-bar .illustrative) { white-space: nowrap; flex: none; }
+</style>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" fill="none">
+<!--STYLE-->
+<title>How software observability concepts map to business observability: telemetry to business events, SLOs to business objectives, distributed tracing to journey tracing, cardinality to segments, incidents to interventions</title>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-accent-2"/></marker></defs>
+<g class="d-t">
+<g font-size="10" class="d-tm d-muted"><text x="20" y="40">SOFTWARE OBSERVABILITY</text><text x="330" y="40">BUSINESS OBSERVABILITY</text><text x="612" y="40">FIT</text></g>
+<g class="d-surface"><rect x="20" y="56" width="240" height="50" rx="10"/><rect x="20" y="118" width="240" height="50" rx="10"/><rect x="20" y="180" width="240" height="50" rx="10"/><rect x="20" y="242" width="240" height="50" rx="10"/><rect x="20" y="304" width="240" height="50" rx="10"/></g>
+<g class="d-line"><rect x="20" y="56" width="240" height="50" rx="10"/><rect x="20" y="118" width="240" height="50" rx="10"/><rect x="20" y="180" width="240" height="50" rx="10"/><rect x="20" y="242" width="240" height="50" rx="10"/><rect x="20" y="304" width="240" height="50" rx="10"/></g>
+<g class="d-surface-2"><rect x="330" y="56" width="270" height="50" rx="10"/><rect x="330" y="118" width="270" height="50" rx="10"/><rect x="330" y="180" width="270" height="50" rx="10"/><rect x="330" y="242" width="270" height="50" rx="10"/><rect x="330" y="304" width="270" height="50" rx="10"/></g>
+<path d="M266 81H324M266 143H324M266 205H324M266 267H324M266 329H324" class="d-accent-2-s" stroke-width="1.5" marker-end="url(#ah)"/>
+<g font-size="13" font-weight="600" class="d-text">
+<text x="34" y="78">Metrics, logs, traces</text><text x="34" y="140">SLOs &amp; error budgets</text><text x="34" y="202">Distributed tracing</text><text x="34" y="264">High cardinality</text><text x="34" y="326">Incidents &amp; postmortems</text>
+<text x="344" y="78">Business events &amp; state</text><text x="344" y="140">Objectives &amp; commitment budgets</text><text x="344" y="202">Journey tracing</text><text x="344" y="264">Segments</text><text x="344" y="326">Interventions &amp; reviews</text>
+</g>
+<g font-size="11" class="d-muted">
+<text x="34" y="96">machine telemetry</text><text x="34" y="158">availability, latency</text><text x="34" y="220">one request across services</text><text x="34" y="282">per user, per endpoint</text><text x="34" y="344">restore the service</text>
+<text x="344" y="96">orders, cases, payments, balances</text><text x="344" y="158">e.g. 95% activated within 48 h</text><text x="344" y="220">one order across systems and teams</text><text x="344" y="282">per cohort, route, region, tier</text><text x="344" y="344">change an outcome, then measure it</text>
+</g>
+<g stroke-width="1.5">
+<rect x="612" y="70" width="92" height="22" rx="11" class="d-warn-s"/><rect x="612" y="132" width="92" height="22" rx="11" class="d-warn-s"/><rect x="612" y="194" width="92" height="22" rx="11" class="d-ok-s"/><rect x="612" y="256" width="92" height="22" rx="11" class="d-ok-s"/><rect x="612" y="318" width="92" height="22" rx="11" class="d-warn-s"/>
+</g>
+<g font-size="11" font-weight="600" text-anchor="middle">
+<text x="658" y="85" class="d-warn">Adapt</text><text x="658" y="147" class="d-warn">Adapt</text><text x="658" y="209" class="d-ok">Strong fit</text><text x="658" y="271" class="d-ok">Strong fit</text><text x="658" y="333" class="d-warn">Adapt</text>
+</g>
+</g>
+</svg>

@@ -1,0 +1,126 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/resources-b/RbDiagram.astro';
+---
+<ArticleLayout
+  title="How business events connect to outcomes"
+  metaTitle="How Business Events Connect to Outcomes: Event Design and Causal Chains"
+  description="Business events versus metrics, how to design events, link them to entities and trace causal chains to revenue outcomes, with honest attribution and a worked example."
+  eyebrow="Business events"
+  dek="Metrics tell you that renewal revenue fell. Events tell you which renewals, for which customers, after what sequence of things happening. Connecting the two, carefully and with honest uncertainty, is how a business moves from noticing a change to understanding it."
+  related={['/resources/building-a-business-operating-model/', '/resources/business-process-monitoring/', '/resources/from-dashboards-to-decisions/']}
+>
+  <p>An order is placed. A payment fails. A case is escalated. A contract is signed. A shipment misses its collection. These are business events: discrete, timestamped facts that something meaningful happened to something the business cares about. They are the raw material from which every business metric is made, and yet most organisations only ever see them after they have been aggregated into a number on a dashboard.</p>
+  <p>That aggregation is useful, but it is also lossy. It throws away exactly the information you need when a number moves unexpectedly: which customers, which orders, what happened just before, and what else changed at the same time. This guide is about keeping that information: designing events well, connecting them to the entities they describe, following chains of events to outcomes, and being honest about how confident you can be in the chain.</p>
+
+  <h2>Events and metrics are different things</h2>
+  <p>A metric is a summary of many events over a period: payment success rate is successful payment events divided by attempted payment events, per day. You can always compute a metric from events. You can never recover the events from the metric. That asymmetry is the whole argument for keeping events.</p>
+  <table>
+    <thead><tr><th></th><th>Business event</th><th>Metric</th></tr></thead>
+    <tbody>
+      <tr><td><strong>What it is</strong></td><td>A single fact: this happened, to this, at this time</td><td>An aggregate over many facts and a period</td></tr>
+      <tr><td><strong>Grain</strong></td><td>One entity, one moment</td><td>A population, a window</td></tr>
+      <tr><td><strong>Answers</strong></td><td>What happened to <em>this</em> order? What happened before it?</td><td>How much, how often, how fast, on average?</td></tr>
+      <tr><td><strong>Can be re-cut</strong></td><td>By any attribute, at any time, after the fact</td><td>Only by the dimensions chosen when it was built</td></tr>
+      <tr><td><strong>Good for</strong></td><td>Investigation, sequences, causal chains, journeys</td><td>Monitoring, trends, targets, expected bands</td></tr>
+    </tbody>
+  </table>
+  <p>In practice you need both. Metrics, compared against <a href="/resources/business-observability-glossary/#expected-band">expected bands</a>, tell you <em>that</em> something changed. Events let you find <em>where</em> and start to understand <em>why</em>. A system that keeps only metrics can raise an alarm but cannot help investigate it.</p>
+
+  <h2>What makes a good business event</h2>
+  <p>Event design sounds like a technical concern, but the decisions that matter most are about business meaning. A well-designed event is one that a person running the business would recognise, and that carries enough context to be useful months later in an investigation nobody anticipated.</p>
+  <table>
+    <thead><tr><th>Element</th><th>Purpose</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>Name, past tense</td><td>States a fact that has happened, in business language</td><td><code>payment_failed</code>, not <code>process_txn_err</code></td></tr>
+      <tr><td>Occurred at</td><td>When it happened in the world</td><td>Day 0, 09:14 (not when the batch loaded it)</td></tr>
+      <tr><td>Entity identifiers</td><td>Every entity the fact is about</td><td>Customer, subscription, invoice</td></tr>
+      <tr><td>Attributes</td><td>The facts needed to interpret it</td><td>Amount, currency, method, attempt number</td></tr>
+      <tr><td>Reason or outcome code</td><td>Why, from a controlled list</td><td><code>card_expired</code>, <code>insufficient_funds</code></td></tr>
+      <tr><td>Source and version</td><td>Where it came from, which definition it follows</td><td>Billing system, schema v3</td></tr>
+    </tbody>
+  </table>
+  <h3>Design principles</h3>
+  <ul>
+    <li><strong>Describe the business, not the system.</strong> "Invoice issued" survives a change of billing platform. "Row inserted into INV_HDR" does not.</li>
+    <li><strong>Record facts, not states.</strong> "Order status is shipped" is a state, and it is overwritten tomorrow. "Order shipped at 14:02" is a fact, and it is true forever. States can be rebuilt from facts; facts cannot be rebuilt from states.</li>
+    <li><strong>One event, one fact.</strong> A single "order updated" event that might mean any of twelve things forces every consumer to reverse-engineer it.</li>
+    <li><strong>Carry the entities, generously.</strong> Include identifiers for every entity the fact touches, not only the obvious one. A payment failure that names the customer, the subscription and the invoice can be joined to all three without guesswork.</li>
+    <li><strong>Prefer controlled reason codes to free text.</strong> Free text is invaluable for humans and nearly useless for counting. Keep both if you can.</li>
+    <li><strong>Record changes as events too.</strong> A price change, a policy change, a configuration change, a release, a campaign launch: these are business events, and they belong on the same timeline as the operational ones. Most investigations end up asking "what changed?", and the answer is far easier to find if changes were recorded.</li>
+  </ul>
+  <div class="callout">
+    <strong>Design for questions you have not asked yet</strong>
+    The value of an event set is mostly realised in investigations nobody planned. The best predictor of whether an event will be useful later is whether it names its entities and its reasons. Events that do both can be recombined almost indefinitely.
+  </div>
+
+  <h2>Linking events to entities</h2>
+  <p>On their own, events are a stream. Connected to entities, they become a set of histories: the life of each customer, order, subscription or claim, told as the sequence of things that happened to it. That is what makes it possible to read across systems. The billing system knows about invoices and payments, the support tool knows about cases, and the email platform knows about bounces. None of them knows the whole story. Linked through shared entity identifiers, the story assembles itself.</p>
+  <Diagram src="/diagrams/events-entity-timeline.svg" alt="Timeline diagram with four lanes: customer, subscription, invoice and payment, across days minus 10 to plus 10. Customer lane: billing email bounced at day minus 8, support case about not being able to update card at day 4. Subscription lane: renewal reminder sent at day minus 10, renewal due at day 0, cancelled involuntarily at day 10. Invoice lane: invoice issued at day 0, invoice overdue at day 7. Payment lane: payment failed because card expired at day 0, retry failed at day 3 and day 6, retries exhausted at day 9. A detail card shows the payment failed event with its timestamp, the customer, subscription and invoice identifiers, and attributes amount 4,800 pounds, attempt 1, reason card expired." caption="One renewal as events on four entity lanes. The bounced email at day −8 and the support case at day +4 come from different systems from the payment events, and only connect because each event names its customer. Fictional data." zoom />
+  <p>Read the lanes together and a story emerges that no single system could tell. Eight days before renewal, the customer's billing email started bouncing, so the reminder that their card was about to expire probably never arrived. The renewal payment failed on an expired card. Two automated retries failed for the same reason. The customer tried to update their card, could not, and opened a support case, which was still open when retries were exhausted and the subscription was cancelled. The customer did not intend to leave. They were lost in the gaps between billing, email and support.</p>
+  <p>Linking requires identity: a way to know that the customer in the email platform is the same customer as in billing. This is often the hardest practical step, and it is worth tackling early in the <a href="/resources/building-a-business-operating-model/">operating model</a>, because every later question depends on it.</p>
+
+  <h2>From events to outcomes: causal chains</h2>
+  <p>An outcome, such as renewal revenue for the month, is the end of many chains of events. Some are short and obvious: a renewal payment succeeds, revenue is booked. Others are long and indirect: a configuration change alters retry behaviour, which changes how many failed payments are recovered, which changes involuntary cancellations, which changes renewal revenue.</p>
+  <p>A <a href="/resources/business-observability-glossary/#causal-chain">causal chain</a> is a hypothesis that links a change, through a sequence of mechanisms, to an outcome. Writing it down explicitly is useful for two reasons. It forces each link to be stated as a mechanism that could be checked. And it makes visible which links are well supported and which are assumed.</p>
+  <p>Events are what let you check the links. If the chain claims that fewer retries led to fewer recovered payments, you can count recoveries per failed payment before and after the change, by segment, and see whether the claim holds.</p>
+
+  <h2>Attribution humility</h2>
+  <p>The danger in tracing events to outcomes is that it is easy to find a story and hard to know whether it is the right one. Something always changed just before the metric moved; in any active business, many things did. Correlation in time is the weakest form of evidence, and it is the one most often presented as a root cause.</p>
+  <Diagram src="/diagrams/events-causal-chain.svg" alt="Causal chain diagram with four boxes connected by arrows: change event, card retry schedule cut from four to two attempts on day 0; signal, failed payments recovered fell from 61 to 38 per cent; signal, involuntary cancellations up from 31 to 58 a month; outcome, renewal bookings below expected band by about 130 thousand pounds a month. Below each link is its strength of evidence: strong, because of a known mechanism and a holdout group that kept four attempts; moderate, because timing and size fit but price-rise churn must be ruled out; and arithmetic, lost renewals times average contract value. Above, a dashed box lists competing explanations from the same fortnight: a price-rise email to annual plans and a card reissue wave." caption="A chain is only as strong as its weakest link, and competing explanations stay on the page until they have been tested. Fictional data." zoom />
+  <p>Being honest about attribution does not mean refusing to conclude anything. It means grading the evidence for each link and saying so. A rough ladder, from weakest to strongest:</p>
+  <table>
+    <thead><tr><th>Evidence</th><th>What it shows</th><th>What it does not</th></tr></thead>
+    <tbody>
+      <tr><td>Timing</td><td>The change preceded the effect</td><td>That nothing else changed at the same time</td></tr>
+      <tr><td>Dose and response</td><td>Bigger change, bigger effect, across segments</td><td>That a third factor is not driving both</td></tr>
+      <tr><td>Known mechanism</td><td>A plausible, specific way the change produces the effect</td><td>That the mechanism is what actually operated here</td></tr>
+      <tr><td>Consistency</td><td>The effect appears wherever the change applied, and not where it did not</td><td>That the groups were otherwise alike</td></tr>
+      <tr><td>Comparison group</td><td>Similar entities without the change behaved differently</td><td>Much, if the groups differed in ways that also matter</td></tr>
+      <tr><td>Intervention</td><td>Reversing or repeating the change reverses or repeats the effect</td><td>Why it works, if the mechanism is unclear; still, this is as close to proof as businesses usually get</td></tr>
+    </tbody>
+  </table>
+  <p>Most investigations stop somewhere in the middle of that ladder, and that is fine, as long as the conclusion says where it stopped. "Strongly suggested by timing, mechanism and consistency across segments; not yet tested by reversal" is a perfectly good basis for a decision, and a far better one than "root cause: the retry change" stated without qualification. The <a href="/platform/root-cause-analysis/">root cause analysis</a> page describes how Panoptes is designed to keep this distinction between correlation and verified cause visible.</p>
+
+  <h2>Worked example: tracing a renewal shortfall</h2>
+  <p>Consider a fictional B2B software company with annual subscriptions averaging around £4,800. Its finance team notices that monthly renewal bookings are below their expected band, by roughly £130,000. Here is how an event-based investigation might proceed.</p>
+  <h3>1. Decompose the outcome</h3>
+  <p>Renewal bookings fall when fewer renewals happen or when renewals happen at lower value. Value per renewal is in line with expectations. The count of renewals is down. Splitting non-renewals by type shows that voluntary cancellations, where a customer chooses to leave, are close to normal. Involuntary cancellations, where a subscription lapses because payment could not be collected, have risen from about 31 a month to about 58. Twenty-seven additional lost renewals at roughly £4,800 each accounts for nearly all of the shortfall.</p>
+  <h3>2. Follow the events upstream</h3>
+  <p>Involuntary cancellations are preceded by <code>retries_exhausted</code>, which is preceded by a sequence of <code>payment_failed</code> events. Two things have changed in that sequence. The number of renewal payments failing on first attempt has risen, from about 80 a month to about 94, with the increase concentrated in the <code>card_expired</code> reason code. And the share of failed payments eventually recovered by retries has fallen from about 61% to about 38%.</p>
+  <h3>3. Line up the change events</h3>
+  <p>Three changes sit on the timeline in the same fortnight. The payments team reduced the automatic retry schedule from four attempts to two, to save on processing fees. Marketing sent a price-rise notice to annual-plan customers. And a large card issuer reissued cards to many customers, which explains the rise in <code>card_expired</code> failures.</p>
+  <h3>4. Test each explanation</h3>
+  <ul>
+    <li><strong>The price-rise email.</strong> Plausible for voluntary cancellations, but those are near normal. Customers who were emailed and customers who were not show the same rise in involuntary cancellations. Weak support; set aside, but recorded.</li>
+    <li><strong>The card reissue wave.</strong> Clearly real: it explains the rise in first-attempt failures. But at the old recovery rate, 94 failures would have produced about 37 lost renewals, not 58. It accounts for roughly six of the extra losses, not twenty-seven.</li>
+    <li><strong>The retry change.</strong> The mechanism is direct: fewer attempts, fewer chances to recover a payment after a customer updates their card. Helpfully, the change had been rolled out in phases, and about 10% of accounts were still on the four-attempt schedule during the period. Their recovery rate stayed around 60%, against 38% for the rest. That comparison group is strong evidence. The retry change accounts for roughly the other twenty-one lost renewals, around £100,000 a month in bookings.</li>
+  </ul>
+  <h3>5. State the conclusion with its confidence</h3>
+  <p>"Most of the renewal shortfall, roughly four-fifths, is attributable to the reduced retry schedule. The evidence is strong: a direct mechanism and a comparison group that did not experience the change and did not experience the drop. The remainder is attributable to a card reissue wave, which is external and temporary. The price-rise email does not appear to have contributed to involuntary cancellations; its effect on voluntary cancellations should be watched over the coming months."</p>
+  <h3>6. Act, and measure the action</h3>
+  <p>The retry schedule was restored, which also serves as the strongest test of the conclusion: if recovery rates return to around 60%, the chain is confirmed by intervention. Separately, the bounced-email signal seen in the timeline above prompted a second action: a check, before each renewal, that the billing contact is reachable, and a prompt to update cards that will expire before the renewal date. That intervention has its own expected effect to measure. The processing-fee saving that motivated the original change turned out to be a small fraction of the revenue it cost, a trade-off that was invisible until events were connected to outcomes.</p>
+  <div class="callout">
+    <strong>The point is not the root cause</strong>
+    The investigation produced three things a metric alone could not: a specific, testable mechanism; an estimate of how much of the outcome it explained; and an honest account of what else contributed. That combination is what makes a decision defensible, and it is what lets the business learn whether the decision worked.
+  </div>
+
+  <h2>Putting it into practice</h2>
+  <ul>
+    <li><strong>Start from the outcomes that matter</strong> and work backwards to the events that precede them. You do not need every event in the business; you need the ones on the chains that lead to your important outcomes.</li>
+    <li><strong>Put change events on the same timeline</strong> as operational events: releases, configuration changes, price changes, campaigns, policy updates.</li>
+    <li><strong>Invest in identity early.</strong> Events that cannot be linked to entities cannot be assembled into histories.</li>
+    <li><strong>Look for natural comparison groups.</strong> Phased rollouts, regional differences and segments that were not affected by a change are often available, and they turn plausible stories into strong evidence.</li>
+    <li><strong>Write conclusions with their confidence attached</strong>, and record the competing explanations you set aside, so they can be revisited if the intervention does not work.</li>
+  </ul>
+  <p>The <a href="/integrations/api/">API and events</a> page describes how business events can be sent to Panoptes, and <a href="/platform/journey-intelligence/">Journey Intelligence</a> how they are designed to be assembled into end-to-end histories.</p>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>Metrics summarise events and lose the detail investigations need. Keep events, and compute metrics from them.</li>
+    <li>Good events are named in business language, record facts rather than states, carry every relevant entity identifier and use controlled reason codes.</li>
+    <li>Changes (releases, prices, policies, campaigns) are business events too, and belong on the same timeline.</li>
+    <li>Linked to entities, events become histories that cross systems and reveal stories no single system can tell.</li>
+    <li>A causal chain is a hypothesis. Grade the evidence for each link, keep competing explanations visible, and prefer comparison groups and interventions to timing alone.</li>
+  </ul>
+</ArticleLayout>

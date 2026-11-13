@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 330" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>A causal chain from a change event to a revenue outcome, with the strength of evidence for each link and competing explanations</title>
+<g class="d-t">
+<text x="24" y="26" font-size="15" font-weight="600" class="d-td d-text">A causal chain, with its evidence showing</text>
+<text x="24" y="44" font-size="12" class="d-muted">Each link carries its own confidence; competing explanations stay on the page (fictional example)</text>
+<rect x="216" y="60" width="342" height="44" rx="10" class="d-surface"/><rect x="216" y="60" width="342" height="44" rx="10" class="d-warn-s" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="230" y="77" font-size="9.5" font-weight="600" class="d-tm d-muted">COMPETING EXPLANATIONS, SAME FORTNIGHT</text>
+<text x="230" y="95" font-size="12" class="d-text">Price-rise email to annual plans · card reissue wave</text>
+<g class="d-warn-s" stroke-width="1.5" stroke-dasharray="4 4"><path d="M291 104V128M483 104V128"/></g>
+<g font-size="12" font-weight="700" class="d-text"><text x="299" y="122">?</text><text x="491" y="122">?</text></g>
+<g stroke-width="1.5">
+<rect x="24" y="130" width="150" height="84" rx="12" class="d-surface"/><rect x="24" y="130" width="150" height="84" rx="12" class="d-accent-s"/>
+<rect x="216" y="130" width="150" height="84" rx="12" class="d-surface"/><rect x="216" y="130" width="150" height="84" rx="12" class="d-line"/>
+<rect x="408" y="130" width="150" height="84" rx="12" class="d-surface"/><rect x="408" y="130" width="150" height="84" rx="12" class="d-line"/>
+<rect x="600" y="130" width="156" height="84" rx="12" class="d-surface"/><rect x="600" y="130" width="156" height="84" rx="12" class="d-crit-s"/>
+</g>
+<g font-size="9.5" font-weight="600" class="d-tm d-muted"><text x="38" y="150">CHANGE EVENT</text><text x="230" y="150">SIGNAL</text><text x="422" y="150">SIGNAL</text><text x="614" y="150">OUTCOME</text></g>
+<g font-size="12.5" font-weight="600" class="d-text">
+<text x="38" y="172">Card-retry schedule</text><text x="38" y="189">cut from 4 to 2</text><text x="38" y="206">attempts (day 0)</text>
+<text x="230" y="172">Failed payments</text><text x="230" y="189">recovered fell</text><text x="230" y="206">from 61% to 38%</text>
+<text x="422" y="172">Involuntary</text><text x="422" y="189">cancellations up</text><text x="422" y="206">31 → 58 a month</text>
+<text x="614" y="172">Renewal bookings</text><text x="614" y="189">below expected band</text><text x="614" y="206">by ~£130k a month</text>
+</g>
+<g class="d-accent-s" stroke-width="2"><path d="M174 172H210M366 172H402M558 172H594"/></g>
+<g class="d-accent"><path d="M204 166L214 172L204 178Z"/><path d="M396 166L406 172L396 178Z"/><path d="M588 166L598 172L588 178Z"/></g>
+<g font-size="11" text-anchor="middle">
+<rect x="112" y="234" width="166" height="62" rx="10" class="d-surface-2"/>
+<text x="195" y="253" font-weight="700" class="d-text">Strong</text><text x="195" y="269" class="d-muted">known mechanism; holdout</text><text x="195" y="284" class="d-muted">group kept 4 attempts</text>
+<rect x="304" y="234" width="166" height="62" rx="10" class="d-surface-2"/>
+<text x="387" y="253" font-weight="700" class="d-text">Moderate</text><text x="387" y="269" class="d-muted">timing and size fit; rule</text><text x="387" y="284" class="d-muted">out price-rise churn first</text>
+<rect x="496" y="234" width="166" height="62" rx="10" class="d-surface-2"/>
+<text x="579" y="253" font-weight="700" class="d-text">Arithmetic</text><text x="579" y="269" class="d-muted">lost renewals × average</text><text x="579" y="284" class="d-muted">contract value</text>
+</g>
+<g class="d-line" stroke-width="1"><path d="M195 182V234M387 182V234M579 182V234"/></g>
+<text x="24" y="320" font-size="12" class="d-text">The claim is only as strong as its weakest link: here, separating retry losses from price-rise cancellations.</text>
+</g>
+</svg>

@@ -1,0 +1,252 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Diagram from '../components/Diagram.astro';
+import Tabs from '../components/Tabs.astro';
+import TabPanel from '../components/TabPanel.astro';
+import FAQ from '../components/FAQ.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
+import Icon from '../components/Icon.astro';
+import CTA from '../components/CTA.astro';
+
+const crumbs = [{ label: 'How it works', href: '/how-it-works/' }];
+
+const stages = [
+  {
+    id: 'connect', n: '01', name: 'Connect', icon: 'plug', img: '/diagrams/how-it-works-connect.svg',
+    alt: 'Records from CRM, payments, support, finance and product systems flow into a connect step that maps, keys and de-duplicates them into business events such as order.created and payment.declined.',
+    title: 'Bring business signals in from the systems you already run.',
+    intro: 'Panoptes does not ask you to move your business into a new tool. It reads from the systems where the business already happens (CRM, payments, finance and ERP, support, product events, data warehouses) and accepts business events directly through an API.',
+    happens: ['Read-oriented connections are set up to source systems or to the warehouse that already holds their data.', 'Records are mapped to business events (an order created, a payment declined, a case opened) with timestamps and keys.', 'Identifiers are reconciled, so the same customer or order is recognised across systems.'],
+    team: ['Choose the first business area to observe, usually one with a known, painful question.', 'Identify where the relevant data lives and who owns it.', 'Agree access through least-privilege credentials; nothing is written back to source systems.'],
+    out: 'A stream of business events keyed to real entities, with known gaps written down rather than hidden.',
+    links: [{ l: 'Data sources', h: '/integrations/data-sources/' }, { l: 'API & events', h: '/integrations/api/' }],
+  },
+  {
+    id: 'model', n: '02', name: 'Model', icon: 'graph', img: '/diagrams/how-it-works-model.svg',
+    alt: 'Entities Customer, Order, Payment, Fulfilment and Revenue linked by relationships, an objective measured on payments, and the checkout process stages beneath.',
+    title: 'Describe the business as entities, relationships, processes and objectives.',
+    intro: 'Events on their own are just rows. The model is what turns them into a business: customers place orders, orders are paid by payments, payments release fulfilment, fulfilment triggers revenue recognition. Processes describe the stages work moves through, and objectives describe what “working” means.',
+    happens: ['Entities and the relationships between them form the Business Graph.', 'Processes are defined as stages with entry and exit events, so waits and hand-offs become measurable.', 'Objectives and indicators are attached to the entities and processes they describe, each with an owner.'],
+    team: ['Domain owners confirm definitions: what counts as an active customer, a completed payment, on time.', 'Decide which objectives matter first and who is accountable for each.', 'Review the model as you would any important definition. It is versioned, not buried in dashboard logic.'],
+    out: 'A shared, versioned description of how this part of the business works, which every later stage reads from.',
+    links: [{ l: 'Business Graph', h: '/platform/business-graph/' }, { l: 'Building a business operating model', h: '/resources/building-a-business-operating-model/' }],
+  },
+  {
+    id: 'observe', n: '03', name: 'Observe', icon: 'eye', img: '/diagrams/how-it-works-observe.svg',
+    alt: 'Line chart of EU card payment completion against a time-of-day expected band, dropping below the band from 09:40. Fictional data.',
+    title: 'Compare what is happening with what should be happening, continuously.',
+    intro: 'Observation is not a dashboard refresh. Each indicator has an expectation, often a band that varies by time of day, day of week or segment, and Panoptes compares actual behaviour against it as events arrive. The question is not “is the number low?” but “is it lower than it should be, here, now?”',
+    happens: ['Indicators are computed from the model as events arrive, at the grain of the entities involved.', 'Expected bands are derived from history, seasonality and explicit commitments.', 'Deviations are scored by size, persistence and the business weight of what they affect.'],
+    team: ['Sense-check the bands in the first weeks; tighten or loosen them where they do not match reality.', 'Mark known events (promotions, price changes, holidays) so they are not mistaken for problems.', 'Decide which deviations should reach a person and which should simply be recorded.'],
+    out: 'Health indicators, process flow measures, journey completion and anomalies: a living view of whether the business is inside its expectations.',
+    links: [{ l: 'Business Health', h: '/platform/business-health/' }, { l: 'Anomaly Detection', h: '/platform/anomaly-detection/' }],
+  },
+  {
+    id: 'understand', n: '04', name: 'Understand', icon: 'rootcause', img: '/diagrams/how-it-works-understand.svg',
+    alt: 'Three candidate explanations for a drop in EU card completion: a routing rule change with strong correlation, a campaign launch with weak timing-only correlation, and an issuer decline spike that is ruled out.',
+    title: 'Follow dependencies to see what moved first, and how sure you can be.',
+    intro: 'When an indicator leaves its band, the model already knows what it depends on. Panoptes is designed to walk those dependencies upstream, line them up against recent changes, and rank candidate explanations, while being explicit about which are correlations and which have been verified.',
+    happens: ['The deviation is segmented to find where it is concentrated: region, route, product, channel.', 'Upstream entities and processes are checked for changes that happened first.', 'Candidates are ranked with their evidence, and labelled as correlated, ruled out or verified.'],
+    team: ['Review the evidence rather than accept a single answer.', 'Run the check that would confirm or reject the leading candidate, such as comparing affected and unaffected routes.', 'Record the conclusion so the next investigation starts from it.'],
+    out: 'A ranked, evidenced explanation, with an honest statement of how certain it is.',
+    links: [{ l: 'Root Cause Analysis', h: '/platform/root-cause-analysis/' }, { l: 'How business events connect to outcomes', h: '/resources/how-business-events-connect-to-outcomes/' }],
+  },
+  {
+    id: 'act', n: '05', name: 'Act', icon: 'actions', img: '/diagrams/how-it-works-act.svg',
+    alt: 'A loop from finding to owner to action to measurement, with a small chart showing the indicator returning inside the same expected band after the action. Fictional data.',
+    title: 'Give it an owner, coordinate the response, and measure whether it worked.',
+    intro: 'A finding nobody owns is just an interesting chart. The final stage routes the issue to the people accountable for the objective, records what was done, and measures the effect against the same expectation that raised the issue. That is what closes the loop.',
+    happens: ['The Command Center ranks the issue among everything else that needs attention.', 'Ownership follows the model: the objective’s owner is the natural first responder.', 'After the intervention, the indicator is watched against its band and the outcome is recorded.'],
+    team: ['Accept, reassign or dismiss the issue, with a reason.', 'Take the action in the systems where work already happens.', 'Confirm the result and capture what was learned for next time.'],
+    out: 'An auditable record of finding, decision, action and measured effect, and a model that gets better each time.',
+    links: [{ l: 'Actions & Automation', h: '/platform/actions-automation/' }, { l: 'Command Center', h: '/platform/command-center/' }],
+  },
+];
+
+const example = [
+  { id: 'ex-connect', label: '01 Connect', h: 'The events are already flowing.', p: 'Card authorisations, declines and 3-D Secure outcomes arrive from the payment provider. Orders come from the commerce platform, and refunds and disputes from the finance system. Each payment carries its order, customer, region, method and the route it was sent through.', k: 'Signals in play', list: ['payment.authorised / payment.declined by route', 'order.created and order.cancelled', '3-D Secure challenge outcomes'] },
+  { id: 'ex-model', label: '02 Model', h: 'The payment sits inside a chain.', p: 'In the model, a payment belongs to an order, which belongs to a customer. Payments release fulfilment, and fulfilment triggers revenue recognition. The objective “card payments complete as expected” is owned by payments operations and measured per region and route.', k: 'Relationships followed', list: ['Customer → Order → Payment → Fulfilment → Revenue', 'Payment → Route → Provider', 'Objective → Indicator → Owner'] },
+  { id: 'ex-observe', label: '03 Observe', h: 'Completion leaves its band at 09:40.', p: 'EU card completion normally sits within a band that rises and falls through the day. At 09:40 it drops below that band and stays there. Other regions and payment methods are unaffected, which already narrows the search.', k: 'What is noticed', list: ['Deviation size and persistence, not a single dip', 'Concentration: EU, card, one route', 'Orders awaiting payment beginning to accumulate'] },
+  { id: 'ex-understand', label: '04 Understand', h: 'One change lines up. It is a lead, not a verdict.', p: 'A routing rule for EU card traffic changed at 09:38. A marketing campaign launched at 08:00, but across all regions, so its timing fits poorly. Issuer decline codes show no shift, which rules out an issuer-side problem. The routing change is the strongest correlation and is labelled as unverified until checked.', k: 'Evidence', list: ['Timing: change two minutes before the drop', 'Scope: only traffic on the changed route is affected', 'Check: compare completion on old versus new route'] },
+  { id: 'ex-act', label: '05 Act', h: 'Owned, reverted, measured.', p: 'The issue ranks first in the Command Center because it affects new-order revenue and threatens today’s fulfilment cut-off. Payments operations owns it, reverts the routing rule and watches completion. The outcome is measured against the same band, and the finding is recorded against the route for next time.', k: 'Outcome to measure', list: ['Completion back inside its band', 'Orders awaiting payment cleared before cut-off', 'Revenue recognition timing for the affected orders'] },
+];
+
+const faqs = [
+  { q: 'Do we need to move our data into Panoptes first?', a: 'No. Panoptes is designed to read from the systems and warehouses you already use and to accept events through an API. Which connections suit your environment is something we work out together during evaluation.' },
+  { q: 'Where do teams usually start?', a: 'With one business question that matters and that current tools answer badly: for example payment completion, an onboarding queue or invoice collection. Starting narrow keeps the first model small and makes it easy to check whether the observations match reality.' },
+  { q: 'How long does it take to see something useful?', a: 'It depends mainly on how accessible the relevant data is and how quickly definitions can be agreed, not on the size of the business. We would rather scope a realistic first milestone with you than quote a number that does not fit your situation.' },
+  { q: 'Who needs to be involved?', a: 'Someone who owns the business outcome, someone who knows where the data lives, and someone able to grant access. The domain owner’s time matters most, because definitions and expectations are business decisions, not technical ones.' },
+  { q: 'Does Panoptes write back to our systems?', a: 'Connections are designed to be read-oriented. Actions are coordinated through owners and the tools where work already happens; any automated execution is part of the product vision rather than a default behaviour.' },
+  { q: 'How are expected bands set if we have never defined them?', a: 'Initially from history, seasonality and any explicit commitments such as SLAs or cut-offs. Teams then review and adjust them, and the reasoning stays visible, so a band is never a mysterious threshold.' },
+  { q: 'Does Panoptes monitor individual employees?', a: 'No. Panoptes observes business processes and outcomes, such as cases, orders, payments and commitments, not the performance of individuals.' },
+];
+---
+<BaseLayout title="How it works" description="A detailed walkthrough of Connect, Model, Observe, Understand and Act, with a worked example following one EU card-payment problem through every stage." ogImage="/social/og-platform.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="How Panoptes works" title="From raw signals to <span class='gradient-text'>measured action</span>, in five stages." lede="Panoptes runs a continuous loop: connect to the systems the business runs on, model how the business works, observe it against expectations, understand what changed, and act on it with an owner and a measurable outcome." breadcrumbs={crumbs}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#worked-example">Jump to the worked example</a>
+    </div>
+  </PageHero>
+
+  <nav class="stage-nav" aria-label="Stages">
+    <div class="container">
+      <ol>
+        {stages.map((s) => <li><a href={`#${s.id}`}><span>{s.n}</span>{s.name}</a></li>)}
+        <li><a href="#worked-example"><span>→</span>Example</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="section loop-intro">
+    <div class="container">
+      <div class="loop-grid">
+        <div>
+          <p class="eyebrow">The loop</p>
+          <h2>Each stage produces something the next one needs.</h2>
+        </div>
+        <div>
+          <p class="lede">Connections produce events. Events become a model. The model makes observation meaningful. Observation tells you where to look, understanding tells you why, and action changes the outcome, which is then observed again.</p>
+          <p class="muted">The stages are not a one-off implementation project. Most organisations start with one business area, run the whole loop on it, and widen the model from there. Below, each stage in turn: what happens inside Panoptes, what your team does, and what comes out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {stages.map((s, i) => (
+    <section id={s.id} class:list={['section stage', { 'section-alt': i % 2 === 1 }]}>
+      <div class="container">
+        <div class:list={['split stage-split', { 'split-rev': i % 2 === 1 }]}>
+          <div class="stage-copy">
+            <p class="stage-k"><span class="icon-tile"><Icon name={s.icon} /></span><span>Stage {s.n} · {s.name}</span></p>
+            <h2>{s.title}</h2>
+            <p class="lede">{s.intro}</p>
+          </div>
+          <div class="stage-art reveal">
+            <Diagram src={s.img} alt={s.alt} frame={`${s.name.toLowerCase()} stage`} illustrative={i === 2 || i === 4} zoom />
+          </div>
+        </div>
+        <div class="stage-cols">
+          <div class="sc reveal">
+            <p class="kpi-label">What happens</p>
+            <ul class="checklist small">{s.happens.map((h) => <li>{h}</li>)}</ul>
+          </div>
+          <div class="sc reveal">
+            <p class="kpi-label">What your team does</p>
+            <ul class="team-list small">{s.team.map((h) => <li>{h}</li>)}</ul>
+          </div>
+          <div class="sc sc-out reveal">
+            <p class="kpi-label">What comes out</p>
+            <p class="out">{s.out}</p>
+            <div class="out-links">{s.links.map((l) => <a href={l.h} class="link-arrow small">{l.l}</a>)}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section id="worked-example" class="section section-dark example">
+    <div class="container">
+      <div class="ex-head">
+        <div>
+          <p class="eyebrow">Worked example</p>
+          <h2>One problem, all five stages: EU card payments stop completing.</h2>
+        </div>
+        <p class="lede">A Tuesday morning. Nothing is down. Every system reports healthy. But fewer EU card payments are completing than should be, and every one that fails is an order that may not ship before today’s cut-off. Step through how Panoptes would handle it.</p>
+      </div>
+      <Tabs uid="ex" label="Worked example stages" tabs={example.map((e) => ({ id: e.id, label: e.label }))} class="ex-tabs">
+        {example.map((e, i) => (
+          <TabPanel uid="ex" id={e.id} first={i === 0}>
+            <div class="ex-panel">
+              <div>
+                <span class="illustrative">Illustrative scenario · fictional details</span>
+                <h3>{e.h}</h3>
+                <p>{e.p}</p>
+              </div>
+              <div class="ex-side">
+                <p class="kpi-label">{e.k}</p>
+                <ul>{e.list.map((l) => <li>{l}</li>)}</ul>
+                <div class="ex-prog" aria-hidden="true">{example.map((_, j) => <i class:list={{ on: j <= i }}></i>)}</div>
+              </div>
+            </div>
+          </TabPanel>
+        ))}
+      </Tabs>
+      <p class="note ex-note">Every relationship, band and timing in this example is fictional and used only to illustrate how the stages connect. For the full scenario see <a href="/use-cases/revenue-leakage/">revenue leakage</a>.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="faq-grid">
+        <div>
+          <SectionHead eyebrow="Implementation" title="Questions about getting started." lede="Straight answers on what an implementation involves. Specifics depend on your systems and the first question you choose, so we scope them with you rather than promise in advance." />
+          <a href="/contact/" class="btn mt-1">Ask us something else</a>
+        </div>
+        <FAQ items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight section-alt">
+    <div class="container">
+      <RelatedLinks eyebrow="Keep exploring" title="Related pages" items={[
+        { label: 'Platform overview', href: '/platform/', desc: 'All nine capabilities on one model', icon: 'layers' },
+        { label: 'Business Graph', href: '/platform/business-graph/', desc: 'The model at the centre of the loop', icon: 'graph' },
+        { label: 'Integrations', href: '/integrations/', desc: 'Where the Connect stage begins', icon: 'plug' },
+        { label: 'What is Business Observability?', href: '/business-observability/', desc: 'The category in one page', icon: 'eye' },
+      ]} />
+    </div>
+  </section>
+
+  <CTA title="Run the loop on one of your own questions." text="Pick a business area where you suspect something is not working as it should. We will walk through how each stage would apply to it." />
+</BaseLayout>
+
+<style>
+  .stage-nav { position: sticky; top: var(--header-h); z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  .stage-nav ol { list-style: none; margin: 0; padding: 10px 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .stage-nav a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; font: 600 .88rem/1 var(--font-body); color: var(--text-2); text-decoration: none; white-space: nowrap; border: 1px solid transparent; }
+  .stage-nav a:hover { color: var(--text); border-color: var(--border-strong); background: var(--surface); }
+  .stage-nav a span { font: 500 .72rem/1 var(--font-mono); color: var(--accent-text); }
+
+  .loop-intro { padding-bottom: clamp(24px, 4vw, 48px); }
+  .loop-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  @media (max-width: 860px) { .loop-grid { grid-template-columns: 1fr; } }
+
+  .stage { scroll-margin-top: calc(var(--header-h) + 60px); }
+  .stage-split { align-items: center; }
+  .stage-k { display: flex; align-items: center; gap: 12px; font: 500 .78rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 1.2rem; }
+  .stage-k .icon-tile { margin: 0; }
+  .stage-copy h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .stage-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: clamp(28px, 4vw, 48px); }
+  .sc { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: 22px; }
+  .sc .kpi-label { margin-bottom: 1rem; }
+  .team-list { margin: 0; padding-left: 1.1em; display: grid; gap: .7rem; color: var(--text-2); }
+  .team-list li::marker { color: var(--accent); }
+  .sc-out { background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 10%, var(--surface)), var(--surface)); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); display: flex; flex-direction: column; }
+  .out { font: 500 1.08rem/1.5 var(--font-display); color: var(--text); }
+  .out-links { margin-top: auto; display: grid; gap: 6px; padding-top: .6rem; }
+  @media (max-width: 960px) { .stage-cols { grid-template-columns: 1fr; } }
+
+  .example { --bg-2: #120D1A; overflow: hidden; background: radial-gradient(ellipse 60% 70% at 10% 0%, rgba(113, 38, 232, .3), transparent 70%), #0A0710; scroll-margin-top: calc(var(--header-h) + 60px); }
+  .example h2 { color: #fff; }
+  .ex-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 64px); align-items: end; margin-bottom: clamp(28px, 4vw, 44px); }
+  @media (max-width: 860px) { .ex-head { grid-template-columns: 1fr; } }
+  .ex-panel { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 48px); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(20px, 3vw, 36px); }
+  .ex-panel h3 { font-size: clamp(1.35rem, 2.4vw, 1.8rem); margin-top: .8rem; }
+  .ex-panel p { color: var(--text-2); }
+  .ex-side { border-left: 1px solid var(--border-strong); padding-left: clamp(16px, 3vw, 32px); display: flex; flex-direction: column; }
+  .ex-side ul { margin: .8rem 0 1.2rem; padding-left: 1.1em; display: grid; gap: .5rem; font-size: .95rem; }
+  .ex-side li::marker { color: var(--accent); }
+  .ex-prog { display: flex; gap: 6px; margin-top: auto; }
+  .ex-prog i { flex: 1; height: 4px; border-radius: 4px; background: var(--border-strong); }
+  .ex-prog i.on { background: var(--accent); }
+  @media (max-width: 760px) { .ex-panel { grid-template-columns: 1fr; } .ex-side { border-left: 0; padding-left: 0; border-top: 1px solid var(--border-strong); padding-top: 1.2rem; } }
+  .ex-note { margin-top: 1.4rem; color: var(--text-3); }
+  .ex-note a { color: var(--accent-text); }
+
+  .faq-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  @media (max-width: 860px) { .faq-grid { grid-template-columns: 1fr; } }
+</style>

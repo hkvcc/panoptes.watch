@@ -1,0 +1,244 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Tabs from '../../components/Tabs.astro';
+import TabPanel from '../../components/TabPanel.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import ProductScreen from '../../components/solutions/ProductScreen.astro';
+import RoleSwitcher from '../../components/solutions/RoleSwitcher.astro';
+
+const crumbs = [{ label: 'Solutions', href: '/solutions/' }, { label: 'Revenue', href: '/solutions/revenue/' }];
+
+const stageNames = ['Closed-won', 'Live', 'First invoice', 'Paid', 'Renewal'];
+const problems = [
+  { at: [0, 1], t: 'Closed-won is not revenue', crm: 'The deal is marked won and the forecast counts it.', real: 'The customer still has to sign the order form, pass verification, integrate and go live. Until then the bookings are real but the revenue is not, and nothing in the CRM tracks the gap.' },
+  { at: [1, 2], t: 'Onboarding delays first revenue', crm: 'Onboarding is “in progress” for 14 accounts.', real: 'Four of them have waited more than three weeks on verification or documents. Their first invoices — and the quarter’s new revenue — move with every day of delay, and the customer’s first experience is waiting.' },
+  { at: [3, 4], t: 'Payment failure looks like churn', crm: 'Nineteen renewals are flagged as at risk.', real: 'Most of those customers intend to stay; their cards expired or a regional issuer started declining. Involuntary churn is a payments problem that ends up in the churn figure.' },
+  { at: [4], t: 'Expansion and churn signals are scattered', crm: 'Account health is a score updated by the account manager before the QBR.', real: 'The signals are already elsewhere: usage falling in the product, repeat billing questions in support, seat limits reached, a champion’s login stopping. They are rarely seen together, or in time.' },
+];
+
+const stages = [
+  { id: 'live', label: 'Signed → live', stall: 'Verification and compliance checks, customer documents, integration and security reviews, implementation capacity.', signals: ['Days from closed-won to live, against the date promised in the deal', 'Signed accounts waiting, grouped by what they are waiting on', 'Implementation capacity against signed start dates'], owner: 'Revenue operations with onboarding', ex: 'Account 4471 closed 34 days ago and is still in the verification queue; $310k of annual value is waiting.' },
+  { id: 'invoice', label: 'Live → first invoice', stall: 'Billing set-up, plan configuration, usage metering not yet connected, contract terms not reflected in billing.', signals: ['Live accounts without a first invoice', 'Time from go-live to first invoice', 'Contracted vs configured price and terms'], owner: 'Billing operations', ex: 'Three accounts went live last week with no billing plan attached; the first invoice will be raised manually.' },
+  { id: 'paid', label: 'Invoice → paid', stall: 'Failed card payments, incorrect billing contacts, disputes, unapplied bank transfers.', signals: ['Payment success on first invoices and renewals', 'Days to cash by segment and method', 'Invoices overdue with a failed payment attempt'], owner: 'Finance with customer success', ex: '19 renewals ($210k ARR) have failed payments, mostly expired cards — recoverable if contacted before the grace period ends.' },
+  { id: 'renew', label: 'Paid → renewal & expansion', stall: 'Low adoption, unresolved support issues, a lost internal champion, pricing that no longer fits usage.', signals: ['Usage trend in the 90 days before renewal', 'Repeat contacts and unresolved issues per account', 'Accounts at plan or seat limits'], owner: 'Customer success and account management', ex: 'Usage is down more than 30% at six accounts renewing in the next 60 days; eleven accounts have reached their seat limit.' },
+];
+
+const indicators = [
+  { s: 'Pipeline', items: ['Stage conversion against expected', 'Velocity: days per stage', 'Pipeline created by source (e.g. partner-sourced)'] },
+  { s: 'Signed → live', items: ['Closed-won to live, median and slowest 10%', 'Signed value waiting to go live', 'Accounts waiting, by blocker'] },
+  { s: 'Live → cash', items: ['Live to first invoice', 'First-payment success rate', 'Days to cash for new accounts'] },
+  { s: 'Retain & expand', items: ['Involuntary churn (payment-driven)', 'Usage trend before renewal', 'Seat or plan limits reached', 'Repeat contacts per account'] },
+];
+
+const decisions = [
+  { q: 'Is the forecast real?', d: 'Weight signed revenue by how long its accounts are likely to take to go live and pay, not only by stage.' },
+  { q: 'Which signed accounts get onboarding priority?', d: 'Order the queue by value waiting and promised go-live date, together with operations.' },
+  { q: 'Should we stop promising ten-day go-live?', d: 'Compare the promise with what onboarding actually delivers this quarter, by segment.' },
+  { q: 'Where does a renewal need attention?', d: 'Route payment failures to finance, usage declines to customer success and seat limits to the account team.' },
+  { q: 'Is the new channel working?', d: 'Follow partner-sourced deals past closed-won to go-live and first payment, not just to signature.' },
+  { q: 'What did the pricing change do?', d: 'Line up plan mix, conversion and payment success against the change date, and check correlation before concluding.' },
+];
+
+const faqs = [
+  { q: 'Does Panoptes replace our CRM?', a: 'No. The CRM remains the system of record for pipeline and accounts. Panoptes connects it to onboarding, billing, payments, product usage and support, so you can see what happens to a deal after it is won.' },
+  { q: 'Is this a forecasting tool?', a: 'Not primarily. It is designed to show the operational reality behind a forecast — how long signed revenue is taking to become cash, and where it is stuck — which can make forecasts more honest.' },
+  { q: 'How are churn and expansion signals defined?', a: 'They are explicit, owned definitions in the shared model — for example “usage down more than 30% over 60 days before renewal” — not a black-box score. See <a href="/platform/business-health/">Business Health</a>.' },
+  { q: 'Does it use AI to predict churn?', a: 'Assisted investigation and explanation are part of the <a href="/platform/ai-intelligence/">AI Intelligence</a> product vision. Today’s focus is making the underlying signals observable and connected, so any prediction can be checked against evidence.' },
+];
+---
+<BaseLayout title="Business observability for revenue leaders" description="For CROs and revenue teams: follow revenue from closed-won to cash — onboarding delays, first invoices, payment failure and the signals before churn or expansion." ogImage="/social/og-solutions.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Solutions · Revenue" title="Follow revenue past closed-won, all the way to cash." lede="The CRM ends where most revenue risk begins. Panoptes follows each deal through onboarding, billing, payment and renewal, so you can see which signed revenue is stuck, why, and what is quietly turning into churn." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#stages">Explore the stages</a>
+    </div>
+    <Fragment slot="visual">
+      <ProductScreen src="/screenshots/revenue-pipeline-to-cash.svg" alt="Fictional pipeline-to-cash view: $3.2M closed-won falling to $1.5M paid with the largest drop between onboarded and live, a table of signed accounts not yet live, and renewal and expansion signals" title="panoptes / revenue / pipeline-to-cash" tone="dark" />
+    </Fragment>
+  </PageHero>
+
+  <!-- Problems pinned to stages -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Where revenue visibility ends" title="The pipeline is visible. What happens after the win is not." lede="Revenue teams are measured on the whole journey from intent to cash, but their tools mostly see the first half. Each of these problems sits at a specific point in that journey." />
+      <div class="pins">
+        {problems.map((p) => (
+          <article class="pin reveal">
+            <ol class="pin-stages" aria-label="Stages affected">
+              {stageNames.map((n, i) => <li class:list={{ on: p.at.includes(i) }}>{n}</li>)}
+            </ol>
+            <h3>{p.t}</h3>
+            <div class="pin-body">
+              <p><span class="kpi-label">What the CRM shows</span>{p.crm}</p>
+              <p><span class="kpi-label">What is happening</span>{p.real}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Illustrative workflow" title="One deal, seventeen days late, never lost." lede="A fictional enterprise deal, planned against actual. Verification waited 19 days on documents and queue time. Go-live, the first invoice and the first cash all moved by 17 days — into the next quarter. No report marked the deal as a problem." />
+      <div class="reveal">
+        <Diagram src="/diagrams/revenue-onboarding-delay-timeline.svg" alt="Timeline comparing planned and actual route to cash: planned go-live day 14 and cash day 44; actual verification from day 5 to 24, go-live day 31 and cash day 61" frame="journey intelligence · deal timeline" zoom class="hide-sm" />
+        <Diagram src="/diagrams/revenue-onboarding-delay-timeline-vertical.svg" alt="Planned versus actual dates for one deal: go-live and cash 17 days late" frame class="show-sm" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Stage explorer -->
+  <section class="section" id="stages">
+    <div class="container">
+      <SectionHead eyebrow="Interactive · stage by stage" title="What stalls at each step, and what to watch." lede="Choose a stage of the journey from signature to renewal. Examples refer to the fictional view at the top of this page." />
+      <Tabs uid="revst" label="Revenue journey stages" tabs={stages.map((s) => ({ id: s.id, label: s.label }))} class="reveal stage-tabs">
+        {stages.map((s, i) => (
+          <TabPanel uid="revst" id={s.id} first={i === 0}>
+            <div class="st">
+              <div class="st-main">
+                <p class="kpi-label">What usually stalls here</p>
+                <p class="st-stall">{s.stall}</p>
+                <p class="kpi-label mt-2">Signals to watch</p>
+                <ul class="checklist">{s.signals.map((x) => <li>{x}</li>)}</ul>
+              </div>
+              <aside class="st-side">
+                <p class="kpi-label">Typical owner</p>
+                <p class="st-owner"><Icon name="users" />{s.owner}</p>
+                <p class="kpi-label mt-2">In the example</p>
+                <p class="st-ex">{s.ex}</p>
+                <span class="illustrative">Fictional</span>
+              </aside>
+            </div>
+          </TabPanel>
+        ))}
+      </Tabs>
+    </div>
+  </section>
+
+  <!-- Observable + indicators -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="split split-top">
+        <div>
+          <p class="eyebrow">What Panoptes makes observable</p>
+          <h2>Revenue as a journey, not a stage in a CRM.</h2>
+          <p class="lede">Panoptes connects accounts and deals to the onboarding cases, invoices, payments, product usage and support contacts that follow them.</p>
+          <ul class="checklist mt-2">
+            <li>Every signed account’s route to live, with the blocker it is waiting on</li>
+            <li>The time between signature, first invoice and first cash, by segment and channel</li>
+            <li>Payment outcomes on first invoices and renewals, separated from voluntary churn</li>
+            <li>Usage, support and billing signals per account in the months before renewal</li>
+            <li>Pricing, packaging and process changes on the same timeline as conversion</li>
+          </ul>
+        </div>
+        <div class="rail reveal" aria-label="Recommended indicators by stage">
+          <p class="kpi-label">Recommended indicators</p>
+          <ol>
+            {indicators.map((g) => (
+              <li><strong>{g.s}</strong><ul>{g.items.map((x) => <li>{x}</li>)}</ul></li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Decisions -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Decisions it can support" title="Questions a revenue leader can answer with evidence." />
+      <div class="qd">
+        {decisions.map((d) => (
+          <div class="qd-item reveal"><p class="qd-q">{d.q}</p><p class="muted small">{d.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Relevant capabilities" title="What the revenue view draws on." />
+      <div class="grid grid-4">
+        <FeatureCard title="Journey Intelligence" text="Follow each account from signature to cash and renewal across systems." href="/platform/journey-intelligence/" icon="journey" />
+        <FeatureCard title="Business Graph" text="Accounts linked to their cases, invoices, payments, usage and contacts." href="/platform/business-graph/" icon="graph" />
+        <FeatureCard title="Anomaly Detection" text="Conversion, payment success and usage compared with expected patterns." href="/platform/anomaly-detection/" icon="anomaly" />
+        <FeatureCard title="Actions & Automation" text="Route a stuck account or failed renewal to the team that can fix it." href="/platform/actions-automation/" icon="actions" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split split-top">
+        <RelatedLinks eyebrow="Related use cases" title="Go deeper" items={[
+          { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Find where earned revenue goes missing', icon: 'revenue' },
+          { label: 'Customer journey friction', href: '/use-cases/customer-journey-friction/', desc: 'Locate the step where customers stall', icon: 'journey' },
+          { label: 'Operational bottlenecks', href: '/use-cases/operational-bottlenecks/', desc: 'Why onboarding queues form', icon: 'clock' },
+          { label: 'Business anomalies', href: '/use-cases/business-anomalies/', desc: 'Separate real change from noise', icon: 'anomaly' },
+        ]} />
+        <div>
+          <p class="eyebrow">FAQ</p>
+          <h2 class="faq-title">Questions revenue leaders ask</h2>
+          <FAQ items={faqs} />
+        </div>
+      </div>
+      <div class="mt-3"><RoleSwitcher current="/solutions/revenue/" /></div>
+    </div>
+  </section>
+
+  <CTA title="See where your signed revenue is waiting." text="Bring a list of deals closed last quarter. We will show how Panoptes would follow them to cash — and where they would have stalled." />
+</BaseLayout>
+
+<style>
+  .pins { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pin { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(20px, 2.6vw, 28px); }
+  .pin-stages { list-style: none; padding: 0; margin: 0 0 1.2rem; display: flex; gap: 4px; }
+  .pin-stages li { flex: 1; min-width: 0; font: 500 .66rem/1.2 var(--font-mono); letter-spacing: .03em; text-transform: uppercase; color: var(--text-3); padding-top: 9px; border-top: 4px solid var(--border); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pin-stages li.on { border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+  .pin h3 { font-size: 1.3rem; }
+  .pin-body p { margin: 0 0 .9rem; font-size: .95rem; display: grid; gap: 3px; }
+  .pin-body p:first-child { color: var(--text-2); }
+  .pin-body p:last-child { margin: 0; }
+  @media (max-width: 860px) { .pins { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .pin-stages li { font-size: .58rem; } }
+
+  .stage-tabs :global([role='tabpanel']) { margin-top: 20px; }
+  .st { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); padding: clamp(20px, 3vw, 36px); }
+  .st .kpi-label { margin-bottom: .7rem; }
+  .st-stall { font: 500 1.15rem/1.5 var(--font-display); margin: 0; }
+  .st-side { border-left: 1px solid var(--border); padding-left: clamp(20px, 3vw, 36px); }
+  .st-owner { display: flex; gap: 10px; align-items: center; font-weight: 600; margin: 0; }
+  .st-owner :global(svg) { width: 20px; height: 20px; color: var(--accent-text); flex: none; }
+  .st-ex { padding: 14px 16px; border-radius: var(--radius); background: var(--accent-soft); font-size: .95rem; margin-bottom: .8rem; }
+  @media (max-width: 860px) { .st { grid-template-columns: 1fr; } .st-side { border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: 20px; } }
+
+  .rail { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(20px, 3vw, 30px); }
+  .rail > ol { list-style: none; margin: 1rem 0 0; padding: 0; position: relative; }
+  .rail > ol::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--accent), var(--accent-soft)); }
+  .rail > ol > li { position: relative; padding: 0 0 1.3rem 32px; }
+  .rail > ol > li:last-child { padding-bottom: 0; }
+  .rail > ol > li::before { content: ''; position: absolute; left: 0; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 3px solid var(--accent); }
+  .rail strong { font: 600 1.05rem/1.3 var(--font-display); }
+  .rail ul { margin: .45rem 0 0; padding-left: 1em; color: var(--text-2); font-size: .92rem; display: grid; gap: 3px; }
+  .rail ul li::marker { color: var(--accent); }
+
+  .qd { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--border); }
+  .qd-item { padding: 24px 24px 24px 0; border-bottom: 1px solid var(--border); }
+  .qd-item:not(:nth-child(3n + 1)) { padding-left: 24px; border-left: 1px solid var(--border); }
+  .qd-q { font: 600 1.15rem/1.35 var(--font-display); margin-bottom: .5rem; }
+  .qd-q::before { content: '?'; display: inline-grid; place-items: center; width: 24px; height: 24px; margin-right: 10px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-text); font: 600 .8rem/1 var(--font-mono); vertical-align: 2px; }
+  .qd-item p:last-child { margin: 0; }
+  @media (max-width: 960px) { .qd { grid-template-columns: 1fr 1fr; } .qd-item, .qd-item:not(:nth-child(3n + 1)) { padding: 22px 20px 22px 0; border-left: 0; } .qd-item:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--border); } }
+  @media (max-width: 600px) { .qd { grid-template-columns: 1fr; } .qd-item:nth-child(even) { padding-left: 0; border-left: 0; } }
+  .faq-title { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  :global(.frame-bar .illustrative) { white-space: nowrap; flex: none; }
+</style>

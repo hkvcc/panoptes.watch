@@ -1,0 +1,336 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'Actions & Automation', href: '/platform/actions-automation/' }];
+
+const routes = [
+  {
+    id: 'pay', signal: 'Card completion drops on one acquirer route', domain: 'Payments', sev: 'High', sevTone: 'crit',
+    owner: 'Head of Payments', team: 'Payments operations', notify: ['Finance (revenue exposure)', 'Customer support lead'],
+    steps: [
+      { t: 'Open investigation with route, segment and change timeline attached', auto: true },
+      { t: 'Notify the owner and post a summary to the payments channel', auto: true },
+      { t: 'Shift a share of traffic to the healthy route', approve: true },
+      { t: 'Roll back the most recent rule change behind a holdout', approve: true },
+    ],
+    measure: 'Route completion back inside its expected band; recovered vs control traffic compared.',
+  },
+  {
+    id: 'onb', signal: 'Verification queue arrivals exceed capacity', domain: 'Onboarding', sev: 'Medium', sevTone: 'warn',
+    owner: 'Onboarding operations manager', team: 'Verification team', notify: ['Customer success (affected accounts)'],
+    steps: [
+      { t: 'Flag cases projected to miss the activation commitment', auto: true },
+      { t: 'Create a task to rebalance the queue by tier', auto: true },
+      { t: 'Bring in trained cover from a neighbouring team', approve: true },
+      { t: 'Send proactive status updates to waiting customers', approve: true },
+    ],
+    measure: 'Median wait back under target within a week; compared with the tier not given extra cover.',
+  },
+  {
+    id: 'sla', signal: 'Enterprise SLA projected to breach within 6 hours', domain: 'Customer service', sev: 'High', sevTone: 'crit',
+    owner: 'Service delivery lead', team: 'Tier-2 support', notify: ['Account manager for each affected customer'],
+    steps: [
+      { t: 'List open cases by time-to-breach and customer tier', auto: true },
+      { t: 'Escalate the top cases to Tier-2 with full history', auto: true },
+      { t: 'Contact affected customers before the breach', approve: true },
+    ],
+    measure: 'Projected attainment restored; breaches avoided compared with the same week last quarter.',
+  },
+  {
+    id: 'inv', signal: 'Invoice disputes rising for one reason code', domain: 'Finance', sev: 'Medium', sevTone: 'warn',
+    owner: 'Accounts receivable lead', team: 'Billing operations', notify: ['Sales operations (order data quality)'],
+    steps: [
+      { t: 'Group disputed invoices by reason and customer', auto: true },
+      { t: 'Create a ticket to inspect the order-to-billing field mapping', auto: true },
+      { t: 'Reissue affected invoices with corrected references', approve: true },
+    ],
+    measure: 'Days-to-payment for reissued invoices against those still awaiting correction.',
+  },
+];
+
+const matrix = [
+  { area: 'Payment completion', a: 'Head of Payments', r: 'Payments operations', c: 'Fraud & risk', i: 'Finance, Support', ap: 'Head of Payments' },
+  { area: 'Onboarding time-to-value', a: 'Onboarding ops manager', r: 'Verification team', c: 'Product', i: 'Customer success', ap: 'Onboarding ops manager' },
+  { area: 'Enterprise SLA attainment', a: 'Service delivery lead', r: 'Tier-2 support', c: 'Account management', i: 'Executive sponsor', ap: 'Service delivery lead' },
+  { area: 'Invoice collection', a: 'AR lead', r: 'Billing operations', c: 'Sales operations', i: 'CFO', ap: 'Finance controller' },
+  { area: 'Fulfilment cut-off', a: 'Warehouse operations manager', r: 'Dispatch team', c: 'Carrier management', i: 'Customer service', ap: 'Warehouse ops manager' },
+];
+
+const lifecycle = [
+  { n: '01', t: 'Detect', d: 'A signal breaks its expectation, an objective slips, or a journey step slows. The finding arrives with its segment, impact estimate and evidence.' },
+  { n: '02', t: 'Assign', d: 'Ownership in the business model decides who is accountable. One owner, a clear priority, and the right people informed — not a broadcast to everyone.' },
+  { n: '03', t: 'Intervene', d: 'The owner chooses a response — often from a playbook. Steps that change something in the business can be configured to require explicit approval.' },
+  { n: '04', t: 'Verify', d: 'The outcome is watched against a comparison so the team can tell whether the intervention moved it, or whether it recovered by itself.' },
+  { n: '05', t: 'Learn', d: 'What worked, what did not and how long it took is recorded against the playbook, so the next response starts from experience rather than memory.' },
+];
+
+const guard = [
+  { i: 'check', t: 'Notify and organise', d: 'Alerts, summaries, tasks and tickets can be created automatically, because they inform people rather than change the business.' },
+  { i: 'key', t: 'Approve before executing', d: 'Steps that change prices, routes, queues or customer communications are designed to wait for a named person to approve them.' },
+  { i: 'plug', t: 'Trigger your own workflows', d: 'Approved steps can be configured to call out to the workflow and ticketing tools you already use, through webhooks and APIs.' },
+  { i: 'audit', t: 'Leave an audit trail', d: 'Who approved what, when, on which evidence, and with what result — recorded with the investigation it came from.' },
+];
+
+const schema = { '@type': 'WebPage', name: 'Actions & Automation — Panoptes', about: 'Routing business findings to owners, coordinating interventions with human approval, and measuring whether they worked.' };
+---
+<BaseLayout title="Actions & Automation" description="Route business findings to accountable owners, coordinate interventions with human approval, and measure whether they actually improved the outcome — closing the loop." ogImage="/social/og-platform.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Platform · Actions & Automation" title="From insight <span class='gradient-text'>to measured action.</span>" lede="Seeing a problem is not the same as solving it. Actions & Automation is designed to route each finding to the person who owns it, coordinate the response with the right approvals, and check whether the intervention actually changed the outcome." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#routing">Try the routing example</a>
+    </div>
+    <Fragment slot="visual"><Diagram src="/diagrams/actions-automation-lifecycle.svg" alt="Action lifecycle loop around the shared business model: detect, assign, intervene, verify, learn, with a human approval gate between assign and intervene" frame="action lifecycle" illustrative={false} zoom /></Fragment>
+  </PageHero>
+
+  <!-- Why it matters -->
+  <section class="section">
+    <div class="container">
+      <div class="why-head">
+        <div>
+          <p class="eyebrow">Why it matters</p>
+          <h2>Most findings die somewhere between the alert and the fix.</h2>
+        </div>
+        <p class="lede">An anomaly gets posted in a channel. Three people react. Someone says they will look into it. Two weeks later the metric has recovered — or it has not — and nobody can say whether anything that was done made a difference.</p>
+      </div>
+      <div class="fails">
+        <div class="fail reveal"><p class="kpi-label">Failure mode 1</p><h3>Nobody owns it</h3><p class="muted small">The finding crosses team boundaries, so everyone assumes someone else has it. It waits until a customer escalates.</p></div>
+        <div class="fail reveal"><p class="kpi-label">Failure mode 2</p><h3>Everybody acts</h3><p class="muted small">Three teams make three changes at once. The metric improves, and it is impossible to say which change helped — or which one hurt.</p></div>
+        <div class="fail reveal"><p class="kpi-label">Failure mode 3</p><h3>Nobody checks</h3><p class="muted small">The fix ships and attention moves on. Whether it worked is never measured, so the same problem returns and the same guess is made again.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Routing explorer -->
+  <section class="section section-alt" id="routing">
+    <div class="container">
+      <SectionHead eyebrow="Interactive" title="Choose a finding. See where it goes." lede="An illustrative routing configuration. Each finding resolves to one accountable owner, a playbook, the steps that can run automatically, and the steps that are designed to wait for human approval." />
+      <div class="router reveal" data-router>
+        <fieldset class="r-pick">
+          <legend class="kpi-label">Incoming finding</legend>
+          {routes.map((r, i) => (
+            <label class="r-opt">
+              <input type="radio" name="route" value={r.id} checked={i === 0} />
+              <span class="r-card"><span class="r-dom mono">{r.domain}</span><span class="r-sig">{r.signal}</span></span>
+            </label>
+          ))}
+        </fieldset>
+        <div class="r-out" aria-live="polite">
+          {routes.map((r, i) => (
+            <div class="r-panel" data-route={r.id} hidden={i !== 0}>
+              <div class="r-head">
+                <span class="illustrative">Illustrative routing · fictional</span>
+                <span class={`badge badge-${r.sevTone}`}>{r.sev} priority</span>
+              </div>
+              <div class="r-who">
+                <div><p class="kpi-label">Accountable owner</p><p class="r-owner"><Icon name="users" />{r.owner}</p></div>
+                <div><p class="kpi-label">Responsible team</p><p>{r.team}</p></div>
+                <div><p class="kpi-label">Informed</p><p>{r.notify.join(' · ')}</p></div>
+              </div>
+              <p class="kpi-label">Playbook</p>
+              <ol class="r-steps">
+                {r.steps.map((s) => (
+                  <li class:list={{ ap: s.approve }}>
+                    <span>{s.t}</span>
+                    {s.approve ? <span class="badge badge-warn">Needs approval</span> : <span class="badge badge-outline">Can be automated</span>}
+                  </li>
+                ))}
+              </ol>
+              <p class="r-measure"><Icon name="target" /><span><strong>Measure of success:</strong> {r.measure}</span></p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ownership matrix -->
+  <section class="section">
+    <div class="container">
+      <div class="own-head">
+        <SectionHead eyebrow="Ownership" title="Ownership is part of the model, not a spreadsheet on the side." />
+        <p class="muted reveal">In Panoptes, owners attach to objectives, processes and journeys in the Business Graph. When something changes, the model already knows who is accountable, who does the work, who should be consulted and who needs to know. Ownership is assigned to roles and teams — the aim is accountability for outcomes, not surveillance of individuals.</p>
+      </div>
+      <div class="table-wrap reveal">
+        <table class="table">
+          <caption class="sr-only">Example ownership matrix by business area</caption>
+          <thead><tr><th scope="col">Business area</th><th scope="col">Accountable</th><th scope="col">Responsible</th><th scope="col">Consulted</th><th scope="col">Informed</th><th scope="col">Approves changes</th></tr></thead>
+          <tbody>
+            {matrix.map((m) => (
+              <tr><th scope="row" class="m-area">{m.area}</th><td>{m.a}</td><td>{m.r}</td><td>{m.c}</td><td>{m.i}</td><td class="m-ap"><Icon name="key" />{m.ap}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="note mt-1">Example matrix for illustration. Roles and teams are fictional.</p>
+    </div>
+  </section>
+
+  <!-- Lifecycle detail -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="The action lifecycle" title="Detect → assign → intervene → verify → learn." lede="Five stages, each with a clear handover. The loop closes only when the effect has been measured and the lesson recorded." />
+      <ol class="life">
+        {lifecycle.map((l) => (
+          <li class="reveal"><span class="l-n">{l.n}</span><h3>{l.t}</h3><p class="muted small">{l.d}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Measuring effect -->
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Intervention tracking</p>
+        <h2>Did it work — or would it have recovered anyway?</h2>
+        <p class="muted">Business metrics move for many reasons. A queue shrinks because demand eased; conversion recovers because a holiday ended. Comparing “before” with “after” on its own credits every intervention with whatever happened next.</p>
+        <p class="muted">Panoptes is designed to measure an intervention against a comparison: a similar segment, region or tier that was not changed, or a holdout deliberately left on the old way of working. The estimated effect is the difference between the two changes — and it is stored with the intervention, so the playbook gets better evidence every time it is used.</p>
+        <ul class="checklist small">
+          <li>Every intervention linked to the finding, owner and evidence that prompted it</li>
+          <li>Comparison groups suggested from the business model</li>
+          <li>Effect estimates recorded with their uncertainty, not rounded into success stories</li>
+        </ul>
+      </div>
+      <div class="reveal">
+        <Diagram src="/illustrations/actions-automation-intervention-effect.svg" alt="Chart of onboarding median days to activation over twelve weeks. The treated business tier rises, then falls by one day after extra verification capacity is added in week six. The comparison standard tier falls by 0.2 days, giving an estimated effect of about 0.8 days." frame="intervention effect · onboarding" zoom />
+      </div>
+    </div>
+  </section>
+
+  <!-- Automation guardrails -->
+  <section class="section section-dark guard">
+    <div class="container">
+      <div class="guard-head">
+        <SectionHead eyebrow="Automation, with guardrails" title="Automate the coordination. Keep people in charge of change." />
+        <p class="muted">Automated execution is part of the product vision, and it is designed around explicit limits. Panoptes can be configured to handle the organising work automatically, while anything that changes the business itself waits for a person.</p>
+      </div>
+      <div class="grid grid-4">
+        {guard.map((g) => (
+          <div class="g-item reveal"><span class="icon-tile"><Icon name={g.i} /></span><h3>{g.t}</h3><p class="small">{g.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Continuous improvement + platform -->
+  <section class="section">
+    <div class="container split split-top">
+      <div>
+        <p class="eyebrow">Continuous improvement</p>
+        <h2>Every response makes the next one better.</h2>
+        <p class="muted">Over time, the record of findings, interventions and measured effects becomes an operating memory: which responses work for which kinds of problem, how long they take, and who has done them well before. Playbooks can be refined from that evidence, and expectations in Anomaly Detection and Business Health can be updated when the business has genuinely changed.</p>
+        <p class="muted">This is where business observability starts to become a business operating system: one shared model where problems are seen, owned, acted on and learned from.</p>
+        <a href="/company/vision/" class="link-arrow">Read the vision</a>
+      </div>
+      <ul class="plat">
+        <li><a href="/platform/anomaly-detection/"><Icon name="anomaly" /><span><strong>Anomaly Detection</strong> and <strong>Business Health</strong> supply the findings and the objectives at stake.</span></a></li>
+        <li><a href="/platform/root-cause-analysis/"><Icon name="rootcause" /><span><strong>Root Cause Analysis</strong> supplies the candidate cause — and the intervention that can confirm it.</span></a></li>
+        <li><a href="/platform/command-center/"><Icon name="command" /><span><strong>Command Center</strong> shows open actions, owners and progress alongside business health.</span></a></li>
+        <li><a href="/integrations/api/"><Icon name="api" /><span><strong>API &amp; events</strong> connect approved steps to the tools where work already happens.</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="rel3"><RelatedLinks eyebrow="Use cases and capabilities" title="Related" items={[
+        { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Watch commitments before they break', icon: 'target' },
+        { label: 'Operational bottlenecks', href: '/use-cases/operational-bottlenecks/', desc: 'See where work waits, and why', icon: 'clock' },
+        { label: 'Operational efficiency', href: '/use-cases/operational-efficiency/', desc: 'Cost, effort and rework, in context', icon: 'spark' },
+        { label: 'Operations', href: '/solutions/operations/', desc: 'Flow, capacity and service commitments', icon: 'process' },
+        { label: 'Command Center', href: '/platform/command-center/', desc: 'One cockpit for business operations', icon: 'command' },
+        { label: 'Security & governance', href: '/integrations/security-governance/', desc: 'Access, ownership and auditability', icon: 'shield' },
+      ]} /></div>
+    </div>
+  </section>
+
+  <CTA title="Close the loop between seeing and doing." text="Show us a finding that never quite got fixed. We will walk through how Panoptes would route it, coordinate the response and measure the result." />
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-router]').forEach((root) => {
+    const panels = root.querySelectorAll<HTMLElement>('[data-route]');
+    root.querySelectorAll<HTMLInputElement>('input[name="route"]').forEach((r) =>
+      r.addEventListener('change', () => panels.forEach((p) => (p.hidden = p.dataset.route !== r.value))),
+    );
+  });
+</script>
+
+<style>
+  .rel3 :global(.related-list) { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .why-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 72px); align-items: end; margin-bottom: clamp(32px, 4vw, 48px); }
+  .why-head h2 { margin: 0; font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
+  .why-head .lede { margin: 0; }
+  .fails { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .fail { padding: 24px; border-radius: var(--radius-lg); border: 1px dashed var(--border-strong); background: var(--bg-2); }
+  .fail h3 { margin-top: .6rem; }
+  .fail p:last-child { margin: 0; }
+  @media (max-width: 860px) { .why-head, .fails { grid-template-columns: 1fr; } }
+
+  .router { display: grid; grid-template-columns: minmax(260px, 380px) minmax(0, 1fr); gap: 24px; align-items: start; }
+  .r-pick { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; min-width: 0; }
+  .r-pick legend { margin-bottom: 10px; }
+  .r-opt { position: relative; display: block; cursor: pointer; }
+  .r-opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .r-card { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); transition: border-color .2s, box-shadow .2s; }
+  .r-dom { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
+  .r-sig { font-weight: 600; font-size: .95rem; line-height: 1.35; }
+  .r-opt:hover .r-card { border-color: var(--border-strong); }
+  .r-opt input:checked + .r-card { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .r-opt input:checked + .r-card .r-dom { color: var(--accent-text); }
+  .r-opt input:focus-visible + .r-card { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .r-out { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(18px, 3vw, 28px); box-shadow: var(--shadow); min-width: 0; }
+  .r-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 1.2rem; }
+  .r-who { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border); }
+  .r-who p { margin: 0; font-size: .93rem; }
+  .r-who .kpi-label { margin-bottom: .4rem; }
+  .r-owner { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .r-owner :global(svg) { width: 18px; height: 18px; color: var(--accent-text); flex: none; }
+  .r-steps { margin: .6rem 0 1.2rem; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 8px; }
+  .r-steps li { counter-increment: s; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; background: var(--bg-2); font-size: .92rem; }
+  .r-steps li::before { content: counter(s); font: 600 .78rem/1 var(--font-mono); color: var(--accent-text); flex: none; }
+  .r-steps li > span:first-child { flex: 1; }
+  .r-steps li.ap { background: var(--warn-bg); }
+  .r-measure { display: flex; gap: 10px; align-items: flex-start; margin: 0; font-size: .93rem; }
+  .r-measure :global(svg) { width: 20px; height: 20px; color: var(--accent-text); flex: none; margin-top: 2px; }
+  @media (max-width: 960px) { .router { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .r-who { grid-template-columns: 1fr; } .r-steps li { flex-wrap: wrap; } }
+
+  .own-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 5vw, 64px); align-items: end; margin-bottom: clamp(28px, 4vw, 40px); }
+  .own-head :global(.section-head) { margin-bottom: 0; }
+  .m-area { font: 600 .92rem/1.4 var(--font-body); text-transform: none; letter-spacing: 0; color: var(--text); background: transparent; }
+  .m-ap { white-space: nowrap; } .m-ap :global(svg) { width: 15px; height: 15px; display: inline-block; vertical-align: -2px; margin-right: 6px; color: var(--warn-text); }
+  @media (max-width: 860px) { .own-head { grid-template-columns: 1fr; } }
+
+  .life { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); }
+  .life li { padding: 24px 22px; border-left: 1px solid var(--border); position: relative; }
+  .life li:first-child { border-left: 0; }
+  .l-n { display: inline-block; font: 600 .78rem/1 var(--font-mono); color: var(--accent-text); margin-bottom: .9rem; }
+  .life h3 { font-size: 1.2rem; }
+  .life p { margin: 0; }
+  .life li:nth-child(1) { box-shadow: inset 0 3px 0 var(--crit); }
+  .life li:nth-child(2), .life li:nth-child(3), .life li:nth-child(5) { box-shadow: inset 0 3px 0 var(--accent); }
+  .life li:nth-child(4) { box-shadow: inset 0 3px 0 var(--ok); }
+  @media (max-width: 1000px) { .life { grid-template-columns: 1fr; } .life li { border-left: 0; border-top: 1px solid var(--border); } .life li:first-child { border-top: 0; } }
+
+  .guard { background: radial-gradient(ellipse 60% 80% at 0% 100%, rgba(113, 38, 232, .3), transparent 70%), #0A0710; }
+  .guard-head { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(20px, 5vw, 64px); align-items: end; margin-bottom: clamp(28px, 4vw, 44px); }
+  .guard-head :global(.section-head) { margin-bottom: 0; }
+  .guard-head :global(h2) { color: #fff; }
+  .g-item { padding: 22px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .g-item h3 { color: #fff; font-size: 1.1rem; margin-top: 1rem; }
+  .g-item p { color: var(--text-2); margin: 0; }
+  @media (max-width: 860px) { .guard-head { grid-template-columns: 1fr; } }
+
+  .plat { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .plat a { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text-2); text-decoration: none; font-size: .94rem; transition: border-color .2s; }
+  .plat a:hover { border-color: var(--accent); }
+  .plat strong { color: var(--text); }
+  .plat :global(svg) { width: 22px; height: 22px; flex: none; color: var(--accent-text); margin-top: 1px; }
+</style>

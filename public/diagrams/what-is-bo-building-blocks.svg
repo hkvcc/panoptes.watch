@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" fill="none">
+<!--STYLE-->
+<title>The building blocks of business observability: entities and relationships, processes and journeys, change and context, expectations, and ownership and action, built on existing systems of record</title>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-line-f"/></marker></defs>
+<g class="d-t">
+<rect x="16" y="16" width="200" height="64" rx="12" class="d-surface"/><rect x="16" y="16" width="200" height="64" rx="12" class="d-accent-s" stroke-width="1.5"/>
+<text x="32" y="44" font-size="14" font-weight="600" class="d-td d-text">Ownership &amp; action</text><text x="32" y="63" font-size="11" class="d-muted">Who acts, and did it work</text>
+<rect x="228" y="16" width="476" height="64" rx="12" class="d-bg"/><rect x="228" y="16" width="476" height="64" rx="12" class="d-line"/>
+<rect x="242" y="33" width="100" height="30" rx="15" class="d-surface-2"/><text x="292" y="52" font-size="11" text-anchor="middle" class="d-text">Owner</text>
+<rect x="356" y="33" width="100" height="30" rx="15" class="d-surface-2"/><text x="406" y="52" font-size="11" text-anchor="middle" class="d-text">Decision</text>
+<rect x="470" y="33" width="100" height="30" rx="15" class="d-surface-2"/><text x="520" y="52" font-size="11" text-anchor="middle" class="d-text">Intervention</text>
+<rect x="584" y="33" width="106" height="30" rx="15" class="d-accent"/><text x="637" y="52" font-size="11" text-anchor="middle" fill="#fff" font-weight="600">Measured effect</text>
+<path d="M343 48h11M457 48h11M571 48h11" class="d-line" stroke-width="1.5" marker-end="url(#ah)"/>
+
+<rect x="16" y="92" width="200" height="64" rx="12" class="d-surface"/><rect x="16" y="92" width="200" height="64" rx="12" class="d-line"/>
+<text x="32" y="120" font-size="14" font-weight="600" class="d-td d-text">Expectations</text><text x="32" y="139" font-size="11" class="d-muted">What should be happening</text>
+<rect x="228" y="92" width="476" height="64" rx="12" class="d-bg"/><rect x="228" y="92" width="476" height="64" rx="12" class="d-line"/>
+<path d="M244 120L560 110V134L244 144Z" class="d-soft"/>
+<path d="M244 132L300 128L360 131L420 126L480 123" class="d-accent-s" stroke-width="2" stroke-linecap="round"/>
+<path d="M480 123L520 134L560 146" class="d-crit-s" stroke-width="2" stroke-linecap="round"/><circle cx="560" cy="146" r="4" class="d-crit d-pulse"/>
+<text x="578" y="120" font-size="11" class="d-text">Objective: 95% in 48 h</text><text x="578" y="138" font-size="11" class="d-crit">Drift flagged early</text>
+
+<rect x="16" y="168" width="200" height="64" rx="12" class="d-surface"/><rect x="16" y="168" width="200" height="64" rx="12" class="d-line"/>
+<text x="32" y="196" font-size="14" font-weight="600" class="d-td d-text">Change &amp; context</text><text x="32" y="215" font-size="11" class="d-muted">What moved, and when</text>
+<rect x="228" y="168" width="476" height="64" rx="12" class="d-bg"/><rect x="228" y="168" width="476" height="64" rx="12" class="d-line"/>
+<path d="M244 200H690" class="d-line" stroke-width="1.5"/>
+<g font-size="10" class="d-tm d-muted" text-anchor="middle"><text x="290" y="190">Mon</text><text x="405" y="190">Tue</text><text x="520" y="190">Wed</text><text x="630" y="190">Thu</text></g>
+<circle cx="290" cy="200" r="5" class="d-accent"/><circle cx="405" cy="200" r="5" class="d-accent"/><circle cx="520" cy="200" r="5" class="d-accent"/><circle cx="630" cy="200" r="5" class="d-accent"/>
+<g font-size="11" class="d-text" text-anchor="middle"><text x="290" y="222">Release 4.2</text><text x="405" y="222">Price change</text><text x="520" y="222">Campaign</text><text x="630" y="222">Rota change</text></g>
+
+<rect x="16" y="244" width="200" height="64" rx="12" class="d-surface"/><rect x="16" y="244" width="200" height="64" rx="12" class="d-line"/>
+<text x="32" y="272" font-size="14" font-weight="600" class="d-td d-text">Processes &amp; journeys</text><text x="32" y="291" font-size="11" class="d-muted">How work actually flows</text>
+<rect x="228" y="244" width="476" height="64" rx="12" class="d-bg"/><rect x="228" y="244" width="476" height="64" rx="12" class="d-line"/>
+<rect x="244" y="261" width="96" height="30" rx="8" class="d-surface"/><rect x="244" y="261" width="96" height="30" rx="8" class="d-line"/><text x="292" y="280" font-size="11" text-anchor="middle" class="d-text">Application</text>
+<rect x="362" y="261" width="96" height="30" rx="8" class="d-surface"/><rect x="362" y="261" width="96" height="30" rx="8" class="d-warn-s" stroke-width="1.5"/><text x="410" y="280" font-size="11" text-anchor="middle" class="d-text">Verification</text>
+<rect x="480" y="261" width="96" height="30" rx="8" class="d-surface"/><rect x="480" y="261" width="96" height="30" rx="8" class="d-line"/><text x="528" y="280" font-size="11" text-anchor="middle" class="d-text">Approval</text>
+<rect x="598" y="261" width="96" height="30" rx="8" class="d-surface"/><rect x="598" y="261" width="96" height="30" rx="8" class="d-line"/><text x="646" y="280" font-size="11" text-anchor="middle" class="d-text">Activation</text>
+<path d="M341 276h18M459 276h18M577 276h18" class="d-line" stroke-width="1.5" marker-end="url(#ah)"/>
+
+<rect x="16" y="320" width="200" height="64" rx="12" class="d-surface"/><rect x="16" y="320" width="200" height="64" rx="12" class="d-line"/>
+<text x="32" y="348" font-size="14" font-weight="600" class="d-td d-text">Entities &amp; relationships</text><text x="32" y="367" font-size="11" class="d-muted">What the business is made of</text>
+<rect x="228" y="320" width="476" height="64" rx="12" class="d-bg"/><rect x="228" y="320" width="476" height="64" rx="12" class="d-line"/>
+<path d="M270 342H650" class="d-accent-2-s" stroke-width="1.5"/>
+<g class="d-accent"><circle cx="270" cy="342" r="6"/><circle cx="365" cy="342" r="6"/><circle cx="460" cy="342" r="6"/><circle cx="555" cy="342" r="6"/><circle cx="650" cy="342" r="6"/></g>
+<g font-size="11" class="d-text" text-anchor="middle"><text x="270" y="369">Customer</text><text x="365" y="369">Order</text><text x="460" y="369">Payment</text><text x="555" y="369">Invoice</text><text x="650" y="369">Ledger</text></g>
+
+<rect x="16" y="396" width="688" height="30" rx="8" class="d-surface-2"/>
+<text x="360" y="415" font-size="11" text-anchor="middle" class="d-tm d-muted">SOURCES · CRM · billing · payments · support · product events · warehouse</text>
+</g>
+</svg>

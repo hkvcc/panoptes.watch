@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>Act: route to an owner, intervene, and measure the effect</title>
+<rect x="12" y="14" width="138" height="122" rx="12" class="d-surface"/><rect x="12" y="14" width="138" height="122" rx="12" class="d-line"/>
+<g class="d-t" font-size="8.5">
+<text x="26" y="36" class="d-text" font-weight="600" font-size="10">Intervention</text>
+<circle cx="31" cy="56" r="5" class="d-ok"/><path d="M28.5 56l1.8 1.8 3.2-3.4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><text x="42" y="59" class="d-muted">Owner: Payments Ops</text>
+<circle cx="31" cy="78" r="5" class="d-ok"/><path d="M28.5 78l1.8 1.8 3.2-3.4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><text x="42" y="81" class="d-muted">Roll back routing rule</text>
+<circle cx="31" cy="100" r="5" class="d-accent-2"/><text x="42" y="103" class="d-text" font-weight="600">Watch recovery</text>
+<circle cx="31" cy="122" r="5" class="d-line-f"/><text x="42" y="125" class="d-muted">Close &amp; record learning</text>
+</g>
+<path d="M160 104C176 104 180 60 196 60S216 44 228 40" class="d-ok-s" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M160 116h68" class="d-line"/><circle cx="196" cy="60" r="4" class="d-ok"/>
+<text x="166" y="136" class="d-tm d-muted" font-size="7.5">effect over time</text>
+</svg>

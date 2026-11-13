@@ -1,0 +1,282 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'Business Graph', href: '/platform/business-graph/' }];
+
+const chain = [
+  { id: 'customer', label: 'Customer', icon: 'customers', fail: 'Customers cannot sign in or update their details',
+    impact: 'Fewer orders are placed, so every later step sees less volume. Downstream steps look “quiet” rather than broken, which is exactly why this is easy to miss.',
+    watch: 'Sign-up and login completion by segment; orders per active customer against the expected band.' },
+  { id: 'order', label: 'Order', icon: 'cart', fail: 'Orders fail validation for one product line',
+    impact: 'Payments are never attempted for those orders, fulfilment has nothing to pick, and expected revenue for the product line slips with no error anywhere in payments or the warehouse.',
+    watch: 'Orders created versus baskets submitted, by product line; cancellations with a validation reason.' },
+  { id: 'payment', label: 'Payment', icon: 'finance', fail: 'Card payments on one route stop completing',
+    impact: 'Orders sit in “awaiting payment”, so fulfilment cannot release them before today’s carrier cut-off, and revenue recognition for those orders moves into a later period.',
+    watch: 'Completion by route and region; orders awaiting payment; orders at risk of missing cut-off.' },
+  { id: 'fulfilment', label: 'Fulfilment', icon: 'delivery', fail: 'The warehouse misses the carrier cut-off',
+    impact: 'Paid orders ship a day late. Delivery promises break, contact rates rise, and revenue recognised on delivery moves, even though payment and order data look perfectly healthy.',
+    watch: 'Dispatch before cut-off; pick queue against capacity; promised versus projected delivery dates.' },
+  { id: 'revenue', label: 'Revenue recognition', icon: 'revenue', fail: 'Delivered orders are not matched to invoices',
+    impact: 'The final step. The customer is served, but revenue is not recognised on time and the books disagree with operations until someone reconciles by hand.',
+    watch: 'Delivered but unrecognised orders; reconciliation exceptions; ageing of unmatched items.' },
+];
+
+const features = [
+  { t: 'Entities', d: 'Customers, accounts, orders, subscriptions, payments, shipments, cases, teams and suppliers, each with a stable identity across systems.', i: 'database' },
+  { t: 'Relationships', d: 'Typed links such as “places”, “is paid by”, “releases” and “triggers”, so the graph says how things relate, not just that they do.', i: 'link' },
+  { t: 'Dependencies', d: 'Which processes, commitments and outcomes rely on a given system, supplier, route or team. That is where concentration risk becomes visible.', i: 'layers' },
+  { t: 'Impact propagation', d: 'When a step degrades, the graph identifies what sits downstream and how much revenue, how many customers and which commitments are exposed.', i: 'flow' },
+  { t: 'Shared definitions', d: 'Entity and metric definitions are explicit, owned and versioned, so every capability uses the same meaning of “order” or “completed”.', i: 'list' },
+  { t: 'History of the model', d: 'Relationships change: new routes, new suppliers, reorganised teams. The graph is designed to keep that history so past investigations still make sense.', i: 'clock' },
+];
+---
+<BaseLayout title="Business Graph" description="Model customers, orders, payments, fulfilment and revenue as one connected graph, so an issue at any step can be traced to its downstream business consequences." ogImage="/social/og-platform.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Platform · Business Graph" title="Your business, <span class='gradient-text'>as it is actually connected.</span>" lede="The Business Graph models the entities your business runs on (customers, orders, payments, fulfilment, revenue, teams and suppliers) and the relationships between them. It is the shared model that lets Panoptes follow a problem from where it starts to everything it affects." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#break-a-step">Try the impact explorer</a>
+    </div>
+    <Fragment slot="visual"><Diagram src="/diagrams/business-graph-order-to-revenue.svg" alt="Customer places Order, which is paid by Payment, which releases Fulfilment, which triggers Revenue recognition. Payment is flagged with an issue and the two downstream steps are marked as affected." frame="business graph · order to revenue" zoom /></Fragment>
+  </PageHero>
+
+  <!-- What it does / why it matters -->
+  <section class="section">
+    <div class="container">
+      <div class="why">
+        <div class="why-main">
+          <p class="eyebrow">Why it matters</p>
+          <h2>Every department sees its own link. Nobody sees the chain.</h2>
+          <p class="lede">Sales sees customers and orders. Payments sees authorisations. The warehouse sees picks and dispatches. Finance sees invoices and the ledger. Each view can be accurate and still miss the point, because business problems travel along the links between them.</p>
+          <p class="muted">A payment route that quietly stops completing does not show up as a payments problem in the warehouse. It shows up as fewer orders to pick, a missed carrier cut-off and, at month end, revenue that landed in the wrong period. By the time those symptoms reach the people who own them, the cause is days old and three teams away.</p>
+          <p class="muted">The Business Graph makes the chain explicit. It holds each entity once, with its relationships to everything it touches, so Panoptes can answer the question every operational review eventually asks: <em>if this step is struggling, what else is it hurting?</em></p>
+        </div>
+        <aside class="why-side">
+          <p class="kpi-label">What the graph does</p>
+          <ul class="checklist">
+            <li>Gives each customer, order, payment and shipment one identity across systems</li>
+            <li>Records how entities relate, with named, directional relationships</li>
+            <li>Connects processes, objectives and owners to the entities they describe</li>
+            <li>Traces impact downstream and causes upstream</li>
+            <li>Provides the shared model every other capability reads from</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive -->
+  <section id="break-a-step" class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Interactive" title="Break one step. Watch what happens downstream." lede="Select a step in the order-to-revenue chain to simulate a problem there. The graph highlights what is affected downstream, and what Panoptes would watch to catch it early." />
+      <div class="chainx" data-chainx>
+        <div class="cx-chain" role="group" aria-label="Order-to-revenue chain. Select a step to simulate an issue there.">
+          {chain.map((c, i) => (
+            <>
+              <button type="button" class="cx-step" data-step={c.id} data-i={i} aria-pressed="false" aria-controls="cx-out">
+                <span class="cx-ico"><Icon name={c.icon} /></span>
+                <span class="cx-label">{c.label}</span>
+                <span class="cx-state" data-state>Healthy</span>
+              </button>
+              {i < chain.length - 1 && <span class="cx-link" data-link={i} aria-hidden="true"></span>}
+            </>
+          ))}
+        </div>
+        <div class="cx-out" id="cx-out" aria-live="polite">
+          <div class="cx-empty" data-empty>
+            <Icon name="graph" />
+            <p><strong>Select a step above</strong> to break it. The steps downstream will be highlighted, with an explanation of how the problem travels.</p>
+          </div>
+          {chain.map((c, i) => (
+            <article class="cx-panel" data-panel={c.id} hidden>
+              <div class="cx-p-head">
+                <span class="badge badge-crit">Issue at {c.label}</span>
+                <span class="illustrative">Illustrative scenario</span>
+              </div>
+              <h3>{c.fail}</h3>
+              <div class="cx-cols">
+                <div>
+                  <p class="kpi-label">How it travels downstream</p>
+                  <p>{c.impact}</p>
+                  <p class="cx-affected">{i < chain.length - 1 ? <>Affected downstream: <strong>{chain.slice(i + 1).map((d) => d.label).join(' → ')}</strong></> : <>No further steps downstream in this chain, but finance and reporting both depend on it.</>}</p>
+                </div>
+                <div>
+                  <p class="kpi-label">What Panoptes would watch</p>
+                  <p>{c.watch}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+          <button type="button" class="btn btn-sm cx-reset" data-reset hidden>Reset the chain</button>
+        </div>
+      </div>
+      <p class="note mt-1">Conceptual simulation of a five-step chain. Real business graphs contain many more entities and relationships.</p>
+    </div>
+  </section>
+
+  <!-- Scenario -->
+  <section class="section">
+    <div class="container">
+      <div class="scen">
+        <div class="scen-head">
+          <p class="eyebrow">Scenario</p>
+          <h2>One payment route, three processes, four outcomes.</h2>
+          <p class="lede">Dependencies are rarely one-to-one. A single payment route can sit underneath checkout, subscription renewals and automatic invoice collection, and through them, under new revenue, recurring revenue, the cash forecast and customer retention.</p>
+        </div>
+        <div class="scen-art reveal">
+          <Diagram src="/diagrams/business-graph-shared-dependency.svg" alt="Payment route EU-card-B feeds checkout, subscription renewals and invoice auto-collection, which feed new-order revenue, recurring revenue, the cash collection forecast and customer retention risk." frame="dependency · payment route" illustrative={false} zoom class="hide-sm" />
+          <Diagram src="/diagrams/business-graph-shared-dependency-vertical.svg" alt="Payment route EU-card-B feeds three processes, which feed four business outcomes." frame="dependency" illustrative={false} class="show-sm" />
+        </div>
+        <div class="scen-cols">
+          <p class="muted">Suppose the provider behind that route starts declining a slightly higher share of cards. Each process owner sees a small dip in their own numbers and reasonably treats it as noise. The graph sees the same upstream node under all three and raises a single question: is the route degrading, and what is exposed if it is?</p>
+          <div>
+            <p class="muted">That is the difference between watching metrics and watching a business. The graph lets Panoptes rank the route by everything that depends on it: revenue at stake, customers affected and commitments that could be missed. The finding goes to the people who own the route rather than to three teams who each own a symptom.</p>
+            <a href="/use-cases/revenue-leakage/" class="link-arrow">See the revenue leakage use case</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key functionality -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Key functionality" title="What the Business Graph is made of." />
+      <div class="grid grid-3">
+        {features.map((f) => <FeatureCard title={f.t} text={f.d} icon={f.i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Connects to platform -->
+  <section class="section">
+    <div class="container">
+      <div class="hub">
+        <div class="hub-copy">
+          <p class="eyebrow">How it connects</p>
+          <h2>The graph is the part every other capability stands on.</h2>
+          <p class="muted">The Business Graph is not a feature you visit; it is the reason the other capabilities agree with each other. Each one reads entities, relationships and definitions from it.</p>
+        </div>
+        <ul class="hub-list">
+          <li><a href="/platform/business-health/"><Icon name="health" /><span><strong>Business Health</strong> attaches objectives and indicators to graph entities, so “payment completion” is measured on real payments.</span></a></li>
+          <li><a href="/platform/process-intelligence/"><Icon name="process" /><span><strong>Process Intelligence</strong> uses the graph to know which cases belong to which process and stage.</span></a></li>
+          <li><a href="/platform/root-cause-analysis/"><Icon name="rootcause" /><span><strong>Root Cause Analysis</strong> walks relationships upstream to find what changed first.</span></a></li>
+          <li><a href="/platform/command-center/"><Icon name="command" /><span><strong>Command Center</strong> ranks issues by the revenue, customers and commitments the graph says are exposed.</span></a></li>
+          <li><a href="/platform/journey-intelligence/"><Icon name="journey" /><span><strong>Journey Intelligence</strong> follows the same customer and order identities across systems.</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight section-alt">
+    <div class="container">
+      <RelatedLinks eyebrow="Use cases" title="Where the graph does the heavy lifting" items={[
+        { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Follow money from intent to ledger', icon: 'revenue' },
+        { label: 'Business anomalies', href: '/use-cases/business-anomalies/', desc: 'Judge change by what it touches', icon: 'anomaly' },
+        { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Commitments that share a dependency', icon: 'target' },
+      ]} />
+      <div class="mt-3">
+        <RelatedLinks eyebrow="Related capabilities" title="Explore further" items={[
+          { label: 'Root Cause Analysis', href: '/platform/root-cause-analysis/', desc: 'From symptom to contributing change', icon: 'rootcause' },
+          { label: 'Business Health', href: '/platform/business-health/', desc: 'Objectives on top of the graph', icon: 'health' },
+          { label: 'Building a business operating model', href: '/resources/building-a-business-operating-model/', desc: 'Guide: how to model a business', icon: 'book' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <CTA title="Map the chain your business depends on." text="Tell us which outcome matters most. We will show how the graph would connect it to everything upstream." />
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-chainx]').forEach((root) => {
+    const steps = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-step]'));
+    const links = Array.from(root.querySelectorAll<HTMLElement>('[data-link]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const reset = root.querySelector<HTMLButtonElement>('[data-reset]')!;
+    const set = (idx: number | null) => {
+      steps.forEach((s, i) => {
+        const st = idx === null ? 'ok' : i === idx ? 'broken' : i > idx ? 'affected' : 'up';
+        s.dataset.status = st;
+        s.setAttribute('aria-pressed', String(i === idx));
+        s.querySelector<HTMLElement>('[data-state]')!.textContent = st === 'broken' ? 'Issue' : st === 'affected' ? 'Affected' : st === 'up' ? 'Upstream' : 'Healthy';
+      });
+      links.forEach((l, i) => { l.dataset.status = idx !== null && i >= idx ? 'affected' : 'ok'; });
+      panels.forEach((p) => (p.hidden = idx === null || p.dataset.panel !== steps[idx].dataset.step));
+      empty.hidden = idx !== null;
+      reset.hidden = idx === null;
+    };
+    steps.forEach((s, i) => s.addEventListener('click', () => set(s.getAttribute('aria-pressed') === 'true' ? null : i)));
+    reset.addEventListener('click', () => { set(null); steps[0].focus(); });
+    set(null);
+  });
+</script>
+
+<style>
+  .why { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  .why-side { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface-2); padding: clamp(20px, 3vw, 32px); position: sticky; top: calc(var(--header-h) + 24px); }
+  .why-side .kpi-label { margin-bottom: 1.1rem; }
+  @media (max-width: 960px) { .why { grid-template-columns: 1fr; } .why-side { position: static; } }
+
+  .chainx { border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); padding: clamp(16px, 3vw, 32px); box-shadow: var(--shadow); }
+  .cx-chain { display: flex; align-items: center; }
+  .cx-step { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 8px; border-radius: var(--radius-lg); border: 1px solid var(--border-strong); background: var(--elevated); color: var(--text); cursor: pointer; font: inherit; transition: border-color .2s, background .2s, transform .2s var(--ease), opacity .2s; }
+  .cx-step:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .cx-ico { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-text); }
+  .cx-ico :global(svg) { width: 20px; height: 20px; }
+  .cx-label { font: 600 .95rem/1.2 var(--font-display); text-align: center; }
+  .cx-state { font: 500 .68rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ok-text); background: var(--ok-bg); padding: 4px 8px; border-radius: 999px; }
+  .cx-link { flex: 0 0 28px; height: 2px; background: var(--accent); position: relative; opacity: .6; }
+  .cx-link::after { content: ''; position: absolute; right: -1px; top: -4px; border-left: 7px solid var(--accent); border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+  .cx-link[data-status='affected'] { background: var(--warn); opacity: 1; }
+  .cx-link[data-status='affected']::after { border-left-color: var(--warn); }
+  .cx-step[data-status='broken'] { border-color: var(--crit); background: var(--crit-bg); }
+  .cx-step[data-status='broken'] .cx-ico { background: var(--crit); color: #fff; }
+  .cx-step[data-status='broken'] .cx-state { color: var(--crit-text); background: transparent; border: 1px solid var(--crit); }
+  .cx-step[data-status='affected'] { border-color: var(--warn); background: var(--warn-bg); }
+  .cx-step[data-status='affected'] .cx-state { color: var(--warn-text); background: transparent; border: 1px solid var(--warn); }
+  .cx-step[data-status='up'] { opacity: .6; }
+  .cx-step[data-status='up'] .cx-state { color: var(--text-3); background: var(--surface-2); }
+  .cx-out { margin-top: clamp(18px, 3vw, 28px); border-top: 1px dashed var(--border-strong); padding-top: clamp(18px, 3vw, 28px); min-height: 220px; }
+  .cx-empty { display: flex; gap: 14px; align-items: center; color: var(--text-2); max-width: 60ch; }
+  .cx-empty :global(svg) { width: 28px; height: 28px; color: var(--accent-text); flex: none; }
+  .cx-empty p { margin: 0; }
+  .cx-p-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: .9rem; }
+  .cx-panel h3 { font-size: clamp(1.25rem, 2.2vw, 1.6rem); }
+  .cx-cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(16px, 3vw, 40px); margin-top: 1rem; }
+  .cx-cols .kpi-label { margin-bottom: .6rem; }
+  .cx-cols p { color: var(--text-2); }
+  .cx-affected { font-size: .92rem; }
+  .cx-affected strong { color: var(--warn-text); }
+  .cx-reset { margin-top: .4rem; }
+  @media (max-width: 760px) {
+    .cx-chain { flex-direction: column; align-items: stretch; }
+    .cx-step { flex-direction: row; padding: 10px 14px; text-align: left; }
+    .cx-label { flex: 1; text-align: left; }
+    .cx-link { flex: 0 0 18px; width: 2px; height: 18px; align-self: center; }
+    .cx-link::after { right: auto; left: -4px; top: auto; bottom: -2px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid var(--accent); border-bottom: 0; }
+    .cx-link[data-status='affected']::after { border-left-color: transparent; border-top-color: var(--warn); }
+    .cx-cols { grid-template-columns: 1fr; }
+  }
+
+  .scen-head { max-width: 820px; }
+  .scen-art { max-width: 900px; margin: clamp(24px, 3vw, 40px) auto; }
+  .scen-cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 56px); }
+  @media (max-width: 760px) { .scen-cols { grid-template-columns: 1fr; } }
+  .cx-empty[hidden], .cx-reset[hidden] { display: none; }
+
+  .hub { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 72px); align-items: center; }
+  @media (max-width: 960px) { .hub { grid-template-columns: 1fr; } }
+  .hub-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .hub-list a { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text-2); text-decoration: none; font-size: .94rem; transition: border-color .2s; }
+  .hub-list a:hover { border-color: var(--accent); }
+  .hub-list strong { color: var(--text); }
+  .hub-list :global(svg) { width: 20px; height: 20px; color: var(--accent-text); flex: none; margin-top: 2px; }
+</style>

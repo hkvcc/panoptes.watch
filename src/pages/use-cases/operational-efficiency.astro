@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import StoryFlow from '../../components/StoryFlow.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import SignalTable from '../../components/use-cases/SignalTable.astro';
+import ReportVsObserve from '../../components/use-cases/ReportVsObserve.astro';
+import ScenarioCard from '../../components/use-cases/ScenarioCard.astro';
+import UseCaseLinks from '../../components/use-cases/UseCaseLinks.astro';
+import { cap } from '../../components/use-cases/data';
+
+const crumbs = [{ label: 'Use Cases', href: '/use-cases/' }, { label: 'Operational Efficiency', href: '/use-cases/operational-efficiency/' }];
+
+const signals = [
+  { signal: 'Cost to serve per unit', tells: 'The cost of one order, case or customer, broken into process steps — so a rise has a location, not just a total.', source: 'Finance · process data' },
+  { signal: 'Touches per unit', tells: 'How many times work is handled before it is done. Extra touches are the most direct measure of rework.', source: 'Workflow · ERP' },
+  { signal: 'Rework loops', tells: 'Work sent back to an earlier step: corrections, re-picks, credit notes, re-submissions. Each loop is unplanned cost.', source: 'ERP · case system' },
+  { signal: 'Exceptions by reason', tells: 'Why work leaves the standard path — mismatched prices, missing data, stock substitutions — ranked by volume and cost.', source: 'ERP · support' },
+  { signal: 'Customer contacts per order', tells: 'Contacts caused by process failures (“where is my credit note?”) rather than genuine customer need.', source: 'Support' },
+  { signal: 'Spend vs volume', tells: 'Cost lines that moved without a matching change in volume — the first hint that efficiency changed.', source: 'Finance' },
+];
+---
+<BaseLayout title="Operational Efficiency" description="Understand operational efficiency with business observability: break unit cost into process steps, find rework and exceptions, and measure what an improvement really changes." ogImage="/social/og-use-cases.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Use case · Operational efficiency" title="Cost, effort and rework, <span class='gradient-text'>in context.</span>" lede="Cost per order rises while volume stays flat. The finance view shows the total. It does not show that one step in the process now sends a growing share of orders back for correction. Efficiency problems live in the process; the ledger only records their price." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#story">Follow the investigation</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/diagrams/uc-efficiency-cost-breakdown.svg" alt="Cost to serve per order rises from 100 in Q1 to 109 in Q2, mostly from rework and exceptions, which doubled, and extra customer contacts. Illustrative data." frame="cost to serve · per order" zoom />
+    </Fragment>
+  </PageHero>
+
+  <section class="section" id="story">
+    <div class="container">
+      <div class="brief">
+        <SectionHead eyebrow="The investigation" title="Nine points of unit cost, traced to a loop in the process." lede="A fictional distributor and fictional figures, used to show how the investigation would unfold — not a claimed result." />
+        <ScenarioCard company="A wholesale food distributor" question="Why did cost to serve per order rise nine points in a quarter with flat volume?" title="The brief" facts={[
+          { k: 'Process', v: 'Order → credit & pricing → pick → dispatch → invoice' },
+          { k: 'Volume', v: 'Flat quarter on quarter' },
+          { k: 'Symptom', v: 'Cost to serve +9 (indexed)' },
+        ]} />
+      </div>
+      <div class="story-cols">
+        <StoryFlow>
+          <Fragment slot="problem">
+            <h3>Costs up, volume flat, no obvious culprit.</h3>
+            <p>The distributor's quarterly review shows cost to serve per order up by nine index points. Volume and order mix are broadly unchanged. Warehouse and delivery costs are close to plan. The finance team can see where the money went by cost centre; it cannot see which part of the order process is consuming it.</p>
+          </Fragment>
+          <Fragment slot="signals">
+            <h3>The growth is in rework and contacts.</h3>
+            <p>Decomposing unit cost by process step rather than by cost centre, almost all of the increase sits in two places: rework and exceptions, which roughly doubled, and customer contacts per order. Order handling, picking and delivery barely moved. Touches per order at the credit and pricing step are well above one — some orders pass through it more than once.</p>
+          </Fragment>
+          <Fragment slot="investigation">
+            <h3>Follow the orders that loop back.</h3>
+            <p>Using <a href={cap('process-intelligence').href}>Process Intelligence</a>, Panoptes would trace the path each order takes. Two loops stand out. Stock substitutions cause re-picks — a known, stable pattern. The growing loop runs from invoicing all the way back to credit and pricing: invoices go out at a price the customer disputes, a credit note is raised, and the order is re-checked.</p>
+            <Diagram src="/diagrams/uc-efficiency-rework-loop.svg" alt="Order-to-invoice process with two rework loops: price mismatches send about one in nine orders back to the credit and pricing check, and stock substitutions cause re-picks. Illustrative data." frame="order-to-invoice · rework" zoom class="uc-fig" />
+            <p>The <a href={cap('business-graph').href}>Business Graph</a> connects the disputed invoices to their customers and price lists. They concentrate among customers on negotiated contract pricing, and they begin after a price-list update was loaded into the ordering system but not into the invoicing system.</p>
+          </Fragment>
+          <Fragment slot="insight">
+            <h3>Two systems disagree about the price.</h3>
+            <p>The likely mechanism: customers order at their contract price, the invoice is raised at list price, the customer disputes it, and the fix costs a credit note, a re-check and at least one contact. None of this appears as an error anywhere; each system is doing what it was told.</p>
+            <p class="uc-caveat"><Icon name="rootcause" /> <span>The timing and customer concentration are strongly suggestive. Confirming means checking that disputed invoices match the out-of-sync price lists. <a href={cap('root-cause-analysis').href}>Root Cause Analysis</a> keeps the evidence and the open question together.</span></p>
+          </Fragment>
+          <Fragment slot="action">
+            <h3>Fix the source, then clear the backlog.</h3>
+            <p>The owner of pricing data synchronises the price lists and adds a check that contract prices match between systems before invoicing. Finance identifies open invoices raised at the wrong price and corrects them proactively, before customers have to call. <a href={cap('actions-automation').href}>Actions &amp; Automation</a> tracks both tasks against the measures below.</p>
+          </Fragment>
+          <Fragment slot="outcome">
+            <h3>Measure cost per order, not activity.</h3>
+            <ul class="checklist">
+              <li>Share of orders looping back from invoicing to pricing</li>
+              <li>Credit notes per hundred invoices</li>
+              <li>Customer contacts per order about billing</li>
+              <li>Cost to serve per order, by step, against the prior quarter</li>
+            </ul>
+          </Fragment>
+        </StoryFlow>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Example signals" title="Signals that put unit cost in context." lede="Efficiency is not one number. These signals connect money spent to the work that consumed it." />
+      <SignalTable rows={signals} caption="Example operational efficiency signals" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Reporting vs observability" title="The ledger shows what it cost. The process shows why." />
+      <ReportVsObserve
+        report={[
+          'Cost by cost centre and period',
+          'Cost per order, as a single number',
+          'Headcount and overtime against budget',
+          'Volume, which has not changed',
+        ]}
+        observe={[
+          'Unit cost decomposed by process step',
+          'Rework loops and exception reasons, with their cost',
+          'The data or system mismatch that starts the loop',
+          'A before-and-after measure for every fix',
+        ]} />
+      <div class="not-this reveal mt-2">
+        <Icon name="shield" />
+        <p><strong>Efficiency, not surveillance.</strong> Panoptes looks at how work flows through processes — touches, loops, exceptions and cost — not at how fast individual people work. The most expensive inefficiencies are usually designed into the process, not caused by the people in it.</p>
+      </div>
+    </div>
+  </section>
+
+  <UseCaseLinks
+    caps={[
+      { slug: 'process-intelligence', why: 'Paths, touches and rework loops across the whole process.' },
+      { slug: 'business-graph', why: 'Connect costs to orders, customers, price lists and systems.' },
+      { slug: 'business-health', why: 'Set an expected unit cost and watch it continuously.' },
+      { slug: 'actions-automation', why: 'Own each fix and measure whether unit cost responds.' },
+    ]}
+    roles={[
+      { slug: 'operations', why: 'Where effort goes, and where it is wasted' },
+      { slug: 'finance', why: 'Cost drivers explained by process, not cost centre' },
+      { slug: 'executives', why: 'Margin pressure traced to its operational source' },
+    ]}
+    related={[
+      { slug: 'operational-bottlenecks', why: 'When rework also creates waiting time' },
+      { slug: 'revenue-leakage', why: 'When billing errors cost revenue, not only effort' },
+      { slug: 'sla-monitoring', why: 'When efficiency and service pull against each other' },
+    ]} />
+
+  <CTA title="See what your unit costs are made of." text="Bring a process where cost has crept up. We will show how Panoptes would break it down step by step." />
+</BaseLayout>
+
+<style>
+  .brief { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: clamp(28px, 5vw, 64px); align-items: start; margin-bottom: clamp(36px, 5vw, 56px); }
+  .brief :global(.section-head) { margin-bottom: 0; }
+  .story-cols { max-width: 900px; }
+  .story-cols :global(.uc-fig) { margin: 1.4rem 0; max-width: 620px; }
+  .story-cols :global(.checklist) { margin: 1rem 0; color: var(--text-2); }
+  .uc-caveat { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--border); font-size: .95rem; }
+  .uc-caveat :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .not-this { display: flex; gap: 16px; align-items: flex-start; padding: 20px 22px; border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); max-width: 860px; }
+  .not-this :global(svg) { width: 24px; height: 24px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .not-this p { margin: 0; color: var(--text-2); }
+  .not-this strong { color: var(--text); }
+  @media (max-width: 960px) { .brief { grid-template-columns: minmax(0, 1fr); } }
+</style>

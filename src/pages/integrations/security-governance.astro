@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import CopyEmail from '../../components/CopyEmail.astro';
+
+const crumbs = [{ label: 'Integrations', href: '/integrations/' }, { label: 'Security & Governance', href: '/integrations/security-governance/' }];
+
+const pillars = [
+  {
+    id: 'access', i: 'key', t: 'Access control',
+    d: 'People should see the parts of the business model relevant to their responsibilities — no more.',
+    c: ['Role-based access to domains, entities and investigations', 'Single sign-on and centrally managed identities as the design target', 'Administrative actions separated from everyday use', 'Access reviewed and revocable without touching source systems'],
+  },
+  {
+    id: 'ownership', i: 'database', t: 'Data ownership',
+    d: 'Your business data remains yours. Panoptes is designed to model and observe it, not to repurpose it.',
+    c: ['Customer data is not used to build products for other customers', 'Clear export of your model, definitions and history on request', 'Deletion on exit, with the process agreed in writing', 'Sub-processors disclosed during evaluation'],
+  },
+  {
+    id: 'definitions', i: 'layers', t: 'Governance of definitions',
+    d: 'Metrics, entities, states and objectives are explicit, owned and versioned — not hidden inside dashboard logic.',
+    c: ['Every definition has a named owner', 'Changes are versioned, with who changed what and why', 'Signals show which definition version produced them', 'Disagreements between systems are surfaced, not silently resolved'],
+  },
+  {
+    id: 'audit', i: 'audit', t: 'Auditability',
+    d: 'Investigations, conclusions and actions leave a trail, so you can see who concluded what, on which evidence.',
+    c: ['Investigations record the evidence they relied on', 'Correlation and verified cause are labelled differently', 'Ownership changes and actions are logged with time and actor', 'Configuration and access changes are logged'],
+  },
+  {
+    id: 'integrations', i: 'plug', t: 'Secure integrations',
+    d: 'Least-privilege, read-oriented connections to source systems, with credentials kept server-side.',
+    c: ['Dedicated service credentials per source, never personal logins', 'Scopes limited to the objects and fields agreed', 'API keys scoped, rotatable and never used from browsers', 'Outbound webhooks signed so receivers can verify them'],
+  },
+  {
+    id: 'protection', i: 'lock', t: 'Data protection',
+    d: 'Encryption in transit and at rest, data minimisation and clear retention are core design principles.',
+    c: ['Encryption in transit and at rest', 'Personal data minimised; free-text and sensitive fields excluded by default', 'Environments and customer data logically separated', 'Retention periods defined per data class'],
+  },
+];
+
+const evaluation = [
+  { t: 'Data residency', d: 'Where data is processed and stored, and whether a specific region is required.' },
+  { t: 'Retention', d: 'How long raw events, derived signals and investigation history are kept, and how deletion works.' },
+  { t: 'Scope of sources', d: 'Which systems, objects and fields are connected, at what freshness, with which credentials.' },
+  { t: 'Personal data', d: 'Which personal data, if any, is needed, the lawful basis, and data processing terms.' },
+  { t: 'Access model', d: 'Roles, identity provider integration and who administers access.' },
+  { t: 'Security review', d: 'Your questionnaire, architecture review and any documentation your process requires.' },
+];
+
+const faqs = [
+  { q: 'Which security certifications does Panoptes hold?', a: 'This website does not claim any security certifications or attestations. If certifications are a requirement for your organisation, ask us directly at sales@panoptes.watch and we will tell you plainly where things stand and share the security documentation available.' },
+  { q: 'Can we complete our own security questionnaire?', a: 'Yes. Security review is a normal part of evaluation. Send your questionnaire or requirements to sales@panoptes.watch and we will respond as part of the process.' },
+  { q: 'Does Panoptes monitor employees?', a: 'No. Panoptes is designed to observe business processes and outcomes — orders, payments, cases, commitments — not the activity or productivity of individual people. Team-level ownership is used to route work, not to score individuals.' },
+  { q: 'Where is our data stored?', a: 'Data residency is agreed during evaluation rather than assumed. Tell us your requirements early so they shape the deployment.' },
+];
+---
+<BaseLayout
+  title="Security & Governance"
+  description="Panoptes security and governance principles: access control, data ownership, governed definitions, auditability, least-privilege integrations and data protection."
+  ogImage="/social/og-integrations.png"
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Integrations · Security & Governance"
+    title="Observe the business. <span class='gradient-text'>Protect what you observe.</span>"
+    lede="A model of how your business operates is sensitive by nature. These are the principles and design commitments Panoptes is built around — and the topics we agree with you explicitly during evaluation."
+    breadcrumbs={crumbs}
+  >
+    <div class="btn-row">
+      <a class="btn btn-primary" href="mailto:sales@panoptes.watch?subject=Security%20documentation%20request">Request security documentation<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#principles">Read the principles</a>
+    </div>
+    <ul class="pill-list hero-pills" aria-label="Topics on this page">
+      {pillars.map((p) => <li><a href={`#${p.id}`}>{p.t}</a></li>)}
+    </ul>
+  </PageHero>
+
+  <!-- Honesty notice -->
+  <section class="section section-tight">
+    <div class="container">
+      <div class="honest reveal">
+        <div>
+          <p class="kpi-label">What this page is — and is not</p>
+          <h2 class="h-sm">Principles and design commitments, not certifications.</h2>
+          <p class="muted">This website does not claim any security certifications, attestations or compliance programmes. It describes how Panoptes is designed and what we commit to discuss with you. Security documentation is available on request, and we will answer your questionnaire as part of evaluation.</p>
+        </div>
+        <div class="honest-side">
+          <p class="small muted">Security documentation and questionnaires:</p>
+          <CopyEmail />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pillars -->
+  <section class="section section-alt" id="principles">
+    <div class="container">
+      <SectionHead eyebrow="Principles" title="Six commitments that shape the platform." lede="Each principle is a design commitment: it constrains how features are built, and it is something you can hold us to during evaluation." />
+      <div class="grid grid-3">
+        {pillars.map((p) => (
+          <article class="card pillar reveal" id={p.id}>
+            <span class="icon-tile"><Icon name={p.i} /></span>
+            <h3>{p.t}</h3>
+            <p class="muted">{p.d}</p>
+            <ul class="checklist small">{p.c.map((c) => <li>{c}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Processes not people -->
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Observe processes, not individuals</p>
+        <h2>Business observability is not employee surveillance.</h2>
+        <p class="lede">Panoptes watches how work flows through the business — where invoices stall, where verification queues grow, which commitments are at risk. It is not designed to track keystrokes, rank individuals or measure personal productivity.</p>
+        <p class="muted">Where a person’s or team’s identity appears, it is to route ownership of a problem to the right place. Measures are aggregated at process, queue and team level, and the question is always “what is constraining the process?”, never “who is slow?”.</p>
+      </div>
+      <div class="card card-tint reveal">
+        <div class="compare-pp">
+          <div>
+            <p class="kpi-label">Panoptes is designed to observe</p>
+            <ul class="checklist small">
+              <li>Stage durations and waiting time in a process</li>
+              <li>Queue depth against capacity, by team</li>
+              <li>Commitments approaching breach</li>
+              <li>Outcomes: revenue collected, journeys completed</li>
+            </ul>
+          </div>
+          <div>
+            <p class="kpi-label">Panoptes is not designed to</p>
+            <ul class="not-list small">
+              <li>Track individual activity or keystrokes</li>
+              <li>Rank or score employees</li>
+              <li>Read private messages or free-text notes</li>
+              <li>Replace management judgement with a metric</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agree in evaluation -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Agreed during evaluation" title="Decided with you, in writing — not assumed." lede="Some decisions depend on your organisation, your regulators and your data. These are settled explicitly before any production data is connected." />
+      <div class="grid grid-3">
+        {evaluation.map((e, i) => (
+          <article class="card eval reveal">
+            <span class="eval-n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{e.t}</h3>
+            <p class="muted">{e.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-narrow">
+      <SectionHead eyebrow="Questions" title="Security and governance questions." />
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <section class="section section-tight section-alt">
+    <div class="container">
+      <RelatedLinks
+        eyebrow="Keep exploring"
+        title="Related pages"
+        items={[
+          { label: 'Data sources', href: '/integrations/data-sources/', desc: 'Least-privilege, read-oriented connections', icon: 'database' },
+          { label: 'API & events', href: '/integrations/api/', desc: 'Keys, signed webhooks and minimal payloads', icon: 'api' },
+          { label: 'Integrations overview', href: '/integrations/', desc: 'Ecosystem directory and architecture', icon: 'plug' },
+          { label: 'Root Cause Analysis', href: '/platform/root-cause-analysis/', desc: 'Correlation versus verified cause', icon: 'rootcause' },
+          { label: 'Privacy notice', href: '/privacy/', desc: 'How this website handles personal data', icon: 'lock' },
+          { label: 'Contact', href: '/company/contact/', desc: 'Ways to reach the team', icon: 'mail' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <CTA title="Bring your security questions early." text="Send your questionnaire or requirements with your demo request, and we will cover them alongside the product." primary={{ label: 'Book a Demo', href: '/demo/' }} secondary={{ label: 'Contact us', href: '/contact/' }} />
+</BaseLayout>
+
+<style>
+  .hero-pills { margin-top: 1.6rem; }
+  .hero-pills a { color: inherit; text-decoration: none; }
+  .hero-pills a:hover { color: var(--accent-text); }
+  .honest { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 48px); align-items: center; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--border-strong); border-left: 3px solid var(--accent); border-radius: var(--radius-lg); background: var(--surface); }
+  .honest .h-sm { font-size: clamp(1.2rem, 2vw, 1.5rem); margin: .4rem 0 .5rem; }
+  .honest p { margin-bottom: 0; }
+  .honest-side { display: grid; gap: 10px; justify-items: start; }
+  .honest-side p { margin: 0; }
+  @media (max-width: 860px) { .honest { grid-template-columns: 1fr; } }
+  .pillar { scroll-margin-top: calc(var(--header-h) + 24px); }
+  .pillar .checklist { margin-top: 1rem; gap: .5rem; }
+  .compare-pp { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .compare-pp .checklist, .compare-pp .not-list { margin-top: .8rem; }
+  .not-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .7rem; }
+  .not-list li { position: relative; padding-left: 1.9rem; color: var(--text-2); }
+  .not-list li::before { content: '×'; position: absolute; left: 0; top: .05em; width: 1.2rem; height: 1.2rem; border-radius: 50%; display: grid; place-items: center; background: var(--crit-bg); color: var(--crit-text); font-weight: 700; line-height: 1; }
+  @media (max-width: 640px) { .compare-pp { grid-template-columns: 1fr; } }
+  .eval-n { font: 600 .78rem/1 var(--font-mono); color: var(--accent-text); display: block; margin-bottom: 1rem; }
+</style>

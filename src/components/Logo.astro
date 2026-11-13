@@ -1,0 +1,13 @@
+---
+import { readSvg, svgWithA11y } from '../lib/svg';
+interface Props { class?: string }
+const svg = svgWithA11y(readSvg('/logos/panoptes-horizontal-light.svg'), 'Panoptes', `logo ${Astro.props.class ?? ''}`);
+---
+<Fragment set:html={svg} />
+<style is:global>
+  .logo { height: 30px; width: auto; }
+  :root[data-theme='dark'] .logo rect, .section-dark .logo rect { fill: #fff; }
+  :root[data-theme='dark'] .logo > path:last-of-type, .section-dark .logo > path:last-of-type { fill: #fff; }
+  :root[data-theme='dark'] .logo g path, .section-dark .logo g path { stroke: #9965FF; }
+  :root[data-theme='dark'] .logo g circle:first-of-type, .section-dark .logo g circle:first-of-type { fill: #fff; }
+</style>

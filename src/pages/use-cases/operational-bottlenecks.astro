@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import StoryFlow from '../../components/StoryFlow.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import SignalTable from '../../components/use-cases/SignalTable.astro';
+import ReportVsObserve from '../../components/use-cases/ReportVsObserve.astro';
+import UseCaseLinks from '../../components/use-cases/UseCaseLinks.astro';
+import { cap } from '../../components/use-cases/data';
+
+const crumbs = [{ label: 'Use Cases', href: '/use-cases/' }, { label: 'Operational Bottlenecks', href: '/use-cases/operational-bottlenecks/' }];
+
+const kpis = [
+  { v: '+1.6 days', l: 'End-to-end onboarding time', s: 'warn' },
+  { v: '184', l: 'Cases queued at verification', s: 'crit' },
+  { v: '31h', l: 'Median wait at verification', s: 'crit' },
+  { v: '≈ 0', l: 'Change in arrivals', s: 'ok' },
+];
+
+const signals = [
+  { signal: 'Arrival rate vs completion rate per stage', tells: 'Where work arrives faster than it leaves. A stage whose completions fall below arrivals will build a queue, however busy it looks.' },
+  { signal: 'Queue depth and its age', tells: 'How much work is waiting and for how long. Old items in a queue matter more than a large but fresh one.' },
+  { signal: 'Median and 90th-percentile wait time', tells: 'Whether the delay affects everyone or a long tail of cases. A rising 90th percentile is often the first sign.' },
+  { signal: 'Waiting on customer vs waiting on us', tells: 'Separates external delays (missing documents) from internal ones (capacity, rules, hand-offs).' },
+  { signal: 'Routing and rule changes', tells: 'Configuration changes that alter how much work enters a stage — often the trigger nobody connects to the queue.' },
+  { signal: 'Rework and returns between stages', tells: 'Cases sent back upstream inflate demand on a stage without any new customers arriving.' },
+];
+---
+<BaseLayout title="Operational Bottlenecks" description="Find operational bottlenecks with business observability: see where work waits, compare arrivals with completions by stage, and trace why a queue started to grow." ogImage="/social/og-use-cases.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Use case · Operational bottlenecks" title="See where work waits — <span class='gradient-text'>and why it started waiting there.</span>" lede="End-to-end time creeps up, yet every team reports that it is busy and performing. Bottlenecks rarely announce themselves. They show up as waiting time between stages, spread across teams, invisible in any one team's metrics." breadcrumbs={crumbs} center>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/platform/process-intelligence/">Process Intelligence</a>
+    </div>
+  </PageHero>
+
+  <section class="section-tight hero-visual-band">
+    <div class="container container-wide">
+      <div class="reveal">
+        <Diagram src="/diagrams/uc-bottleneck-stage-map.svg" alt="Onboarding stage map: verification holds 184 queued cases with a 31-hour median wait, 3.4 times its baseline. Illustrative data." frame="onboarding · stage view" zoom class="hide-sm" />
+        <Diagram src="/diagrams/uc-bottleneck-stage-map-vertical.svg" alt="Onboarding stage map: verification holds 184 queued cases with a 31-hour median wait, 3.4 times its baseline. Illustrative data." frame="onboarding · stage view" class="show-sm" />
+      </div>
+      <ul class="kpi-strip">
+        {kpis.map((k) => (
+          <li class="reveal"><span class:list={['kpi', `k-${k.s}`]}>{k.v}</span><span class="kpi-label">{k.l}</span></li>
+        ))}
+      </ul>
+      <p class="note text-center">Illustrative scenario: a business lending platform onboarding new small-business customers. All figures are fictional.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container story-wrap">
+      <SectionHead eyebrow="The investigation" title="A slower process is a symptom. The queue is the clue." lede="The same six questions Panoptes would work through for any bottleneck, applied to one fictional onboarding flow." />
+      <StoryFlow>
+        <Fragment slot="problem">
+          <h3>New customers take longer to go live, and no team looks slow.</h3>
+          <p>A business lending platform onboards small businesses through five stages: application, document collection, identity and business verification, credit review and account activation. Over three weeks, the median time from application to activation grows by more than a day and a half. Sales hear about it from frustrated applicants. Each operations team, asked directly, reports normal productivity.</p>
+          <p>They are all telling the truth. Throughput per team is steady. The extra time is not spent <em>working</em> — it is spent <em>waiting</em>.</p>
+        </Fragment>
+        <Fragment slot="signals">
+          <h3>Waiting time concentrates in one stage.</h3>
+          <p>Viewed stage by stage, four of the five stages are within their normal range. Verification is not: its queue has roughly tripled and its median wait is several times its baseline. Its 90th-percentile wait has grown even faster, meaning some applicants are waiting days.</p>
+          <p>That alone narrows the search from “onboarding is slow” to “verification cannot keep up” — but not yet <em>why</em>.</p>
+        </Fragment>
+        <Fragment slot="investigation">
+          <h3>Compare what arrives with what leaves.</h3>
+          <p>A queue grows only when work arrives faster than it is completed. <a href={cap('process-intelligence').href}>Process Intelligence</a> would line up both rates for the verification stage. Arrivals barely moved. Completions dropped sharply on one specific day and stayed lower.</p>
+          <Diagram src="/diagrams/uc-bottleneck-queue-chart.svg" alt="Cases arriving at verification stay steady while completions drop after a screening rule is widened on day 5, so the backlog grows daily. Illustrative data." frame="verification · arrivals vs completions" zoom class="uc-fig" />
+          <p>Looking at what changed that day, the <a href={cap('business-graph').href}>Business Graph</a> connects the stage to its upstream rules: a screening rule was widened, sending a larger share of applications to manual review instead of automatic approval. Each case now takes longer to clear, so the same team completes fewer of them.</p>
+        </Fragment>
+        <Fragment slot="insight">
+          <h3>Capacity did not fall. The work per case rose.</h3>
+          <p>The bottleneck is a policy change with an operational consequence nobody modelled. The share of cases needing manual review rose; nobody adjusted capacity, prioritisation or the rule's scope to match. Whether the widened rule is <em>worth</em> the delay is a risk decision — but it should be made knowingly, with the cost visible.</p>
+          <p class="uc-caveat"><Icon name="rootcause" /> <span>The timing is a strong correlation. Confirming it means checking that manual-review cases account for the growth in wait time — a test Panoptes would set up rather than assume.</span></p>
+        </Fragment>
+        <Fragment slot="action">
+          <h3>Make the trade-off explicit, then act on it.</h3>
+          <p>Possible responses, for the owners of risk policy and operations to choose between: narrow the rule to the segment it was meant for, add reviewer capacity temporarily while the backlog clears, or triage the queue so low-risk applications move first. <a href={cap('actions-automation').href}>Actions &amp; Automation</a> would assign each step and record the decision alongside its evidence.</p>
+        </Fragment>
+        <Fragment slot="outcome">
+          <h3>Watch the queue drain — and stay drained.</h3>
+          <ul class="checklist">
+            <li>Completions at verification back above arrivals until the backlog clears</li>
+            <li>Median and 90th-percentile wait returning toward baseline</li>
+            <li>Share of cases routed to manual review, and what they find</li>
+            <li>End-to-end time to activation, and first revenue per new account</li>
+          </ul>
+        </Fragment>
+      </StoryFlow>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="split split-top sig-split">
+        <div>
+          <SectionHead eyebrow="Example signals" title="The signals that locate a bottleneck." lede="A bottleneck is a relationship between demand and capacity at one stage. These signals describe that relationship rather than any one team's output." />
+          <div class="law card card-tint reveal">
+            <p class="kpi-label">A useful rule of thumb</p>
+            <p class="law-eq mono">wait time ≈ work in queue ÷ completion rate</p>
+            <p class="muted small">If the queue grows while completions fall, waiting time rises twice over. That is why small changes upstream can produce large delays downstream.</p>
+            <a class="link-arrow small" href="/resources/understanding-business-bottlenecks/">Understanding business bottlenecks</a>
+          </div>
+        </div>
+        <SignalTable rows={signals} caption="Example operational bottleneck signals" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Reporting vs observability" title="Team reports say “busy”. The flow says “stuck”." />
+      <ReportVsObserve
+        report={[
+          'Cases handled per team per week — steady',
+          'Average onboarding time for the month — up',
+          'Headcount and utilisation by team',
+          'A backlog figure, without its age or origin',
+        ]}
+        observe={[
+          'Waiting time by stage, so the delay has an address',
+          'Arrivals against completions, so the cause has a mechanism',
+          'Upstream rule and routing changes on the same timeline',
+          'An owner and a measurable target for the queue to return to',
+        ]}
+        reportNote="Each team's own view, accurate in isolation." />
+      <p class="muted mt-2 uc-note">Bottleneck analysis is about the flow of work, not the people doing it. Panoptes observes stages, queues and outcomes; it is not designed to monitor individuals.</p>
+    </div>
+  </section>
+
+  <UseCaseLinks
+    caps={[
+      { slug: 'process-intelligence', why: 'Stages, queues, waiting time and throughput for real workflows.' },
+      { slug: 'business-graph', why: 'Connect a stage to the rules, systems and teams it depends on.' },
+      { slug: 'command-center', why: 'Surface the growing queue before it becomes a missed commitment.' },
+      { slug: 'actions-automation', why: 'Assign the response and measure whether the queue drains.' },
+    ]}
+    roles={[
+      { slug: 'operations', why: 'Flow, capacity and waiting time across teams' },
+      { slug: 'executives', why: 'Where delay is costing growth, in one view' },
+      { slug: 'customer-experience', why: 'The customer side of a slow process' },
+    ]}
+    related={[
+      { slug: 'sla-monitoring', why: 'When queues start to threaten commitments' },
+      { slug: 'operational-efficiency', why: 'When the delay also raises unit cost' },
+      { slug: 'customer-journey-friction', why: 'When customers give up while waiting' },
+    ]} />
+
+  <CTA title="Find where your work is waiting." text="Bring one process that feels slower than it should. We will show how Panoptes would map its stages and find the queue." />
+</BaseLayout>
+
+<style>
+  .hero-visual-band { padding-top: clamp(28px, 4vw, 48px); }
+  .kpi-strip { list-style: none; padding: 0; margin: clamp(20px, 3vw, 32px) 0 1rem; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .kpi-strip li { display: grid; gap: 6px; padding: 18px 20px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .k-crit { color: var(--crit-text); } .k-warn { color: var(--warn-text); } .k-ok { color: var(--ok-text); }
+  .story-wrap { max-width: 900px; }
+  .story-wrap :global(.uc-fig) { margin: 1.4rem 0; }
+  .story-wrap :global(.checklist) { margin: 1rem 0; color: var(--text-2); }
+  .uc-caveat { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--border); font-size: .95rem; }
+  .uc-caveat :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .sig-split { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  .sig-split :global(.section-head) { margin-bottom: 1.6rem; }
+  .law-eq { font-size: 1rem; color: var(--accent-text); margin: .6rem 0 .8rem; }
+  .uc-note { max-width: 70ch; font-size: .92rem; }
+  @media (max-width: 960px) { .kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sig-split { grid-template-columns: minmax(0, 1fr); } }
+</style>

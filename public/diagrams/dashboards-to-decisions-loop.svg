@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 370" fill="none">
+<!--STYLE-->
+<title>The typical dashboard path fades from a metric moving to being forgotten; the decision loop runs signal, triage, diagnose, decide, act and measure, each step owned and time-bound</title>
+<g class="d-t">
+<rect x="20" y="30" width="240" height="310" rx="12" class="d-surface"/><rect x="20" y="30" width="240" height="310" rx="12" class="d-line"/>
+<text x="36" y="58" font-size="14" font-weight="600" class="d-td d-text">The dashboard path</text>
+<path d="M44 96V296" class="d-line" stroke-width="1.5" stroke-dasharray="3 4"/>
+<g font-size="12" class="d-text">
+<g opacity="1"><circle cx="44" cy="96" r="6" class="d-accent"/><text x="60" y="100">Metric moves</text></g>
+<g opacity=".85"><circle cx="44" cy="136" r="6" class="d-accent"/><text x="60" y="140">Seen in the weekly review</text></g>
+<g opacity=".7"><circle cx="44" cy="176" r="6" class="d-accent"/><text x="60" y="180">Discussed for ten minutes</text></g>
+<g opacity=".55"><circle cx="44" cy="216" r="6" class="d-accent"/><text x="60" y="220">“Someone should look”</text></g>
+<g opacity=".42"><circle cx="44" cy="256" r="6" class="d-accent"/><text x="60" y="260">No owner, no date</text></g>
+<g opacity=".3"><circle cx="44" cy="296" r="6" class="d-accent"/><text x="60" y="300">Resurfaces next quarter</text></g>
+</g>
+<circle cx="500" cy="190" r="135" class="d-line" stroke-width="2"/>
+<circle cx="500" cy="190" r="135" class="d-accent-s d-flow" stroke-width="2"/>
+<text x="500" y="186" font-size="15" font-weight="600" text-anchor="middle" class="d-td d-text">Decision loop</text>
+<text x="500" y="205" font-size="11" text-anchor="middle" class="d-muted">owned · time-bound · measured</text>
+<g>
+<rect x="440" y="33" width="120" height="44" rx="10" class="d-accent"/>
+<rect x="557" y="100" width="120" height="44" rx="10" class="d-bg"/><rect x="557" y="100" width="120" height="44" rx="10" class="d-accent-s" stroke-width="1.5"/>
+<rect x="557" y="236" width="120" height="44" rx="10" class="d-bg"/><rect x="557" y="236" width="120" height="44" rx="10" class="d-accent-s" stroke-width="1.5"/>
+<rect x="440" y="303" width="120" height="44" rx="10" class="d-bg"/><rect x="440" y="303" width="120" height="44" rx="10" class="d-accent-s" stroke-width="1.5"/>
+<rect x="323" y="236" width="120" height="44" rx="10" class="d-bg"/><rect x="323" y="236" width="120" height="44" rx="10" class="d-accent-s" stroke-width="1.5"/>
+<rect x="323" y="100" width="120" height="44" rx="10" class="d-bg"/><rect x="323" y="100" width="120" height="44" rx="10" class="d-accent-s" stroke-width="1.5"/>
+</g>
+<g font-size="13" font-weight="600" text-anchor="middle" class="d-td">
+<text x="500" y="54" fill="#fff">1 · Signal</text><text x="617" y="121" class="d-text">2 · Triage</text><text x="617" y="257" class="d-text">3 · Diagnose</text><text x="500" y="324" class="d-text">4 · Decide</text><text x="383" y="257" class="d-text">5 · Act</text><text x="383" y="121" class="d-text">6 · Measure</text>
+</g>
+<g font-size="10" text-anchor="middle" class="d-muted">
+<text x="500" y="69" fill="#fff" opacity=".9">drift vs expected</text><text x="617" y="136">is it real? whose?</text><text x="617" y="272">what changed, where</text><text x="500" y="339">option, owner, date</text><text x="383" y="272">change ships</text><text x="383" y="136">vs expected path</text>
+</g>
+</g>
+</svg>

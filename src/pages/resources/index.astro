@@ -1,0 +1,283 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import { experimental_AstroContainer as AstroContainer } from 'astro/container';
+import { RESOURCES, SITE } from '../../data/site';
+
+// Reading times come from rendering each article at build time and reading the figure
+// ArticleLayout prints, so the hub always matches the article pages exactly.
+const articles = import.meta.glob<{ default: any }>('./*.astro');
+const container = await AstroContainer.create();
+const readingMinutes = async (href: string): Promise<number | undefined> => {
+  const load = articles[`./${href.split('/').filter(Boolean).pop()}.astro`];
+  if (!load) return undefined;
+  try {
+    const html = await container.renderToString((await load()).default, { request: new Request(new URL(href, SITE.origin)) });
+    const m = /(\d+) min read/.exec(html);
+    return m ? Number(m[1]) : undefined;
+  } catch { return undefined; }
+};
+
+const crumbs = [{ label: 'Resources', href: '/resources/' }];
+
+type Group = 'Foundations' | 'Comparisons' | 'Practice' | 'Reference';
+type Topic = 'fundamentals' | 'metrics' | 'operations' | 'decisions' | 'modelling';
+
+const TOPICS: { id: Topic; label: string }[] = [
+  { id: 'fundamentals', label: 'Fundamentals' },
+  { id: 'metrics', label: 'Metrics & health' },
+  { id: 'operations', label: 'Processes & operations' },
+  { id: 'decisions', label: 'Decision-making' },
+  { id: 'modelling', label: 'Data & modelling' },
+];
+
+const META: Record<string, { title: string; desc: string; mins: number; group: Group; topics: Topic[] }> = {
+  '/resources/what-is-business-observability/': {
+    title: 'What is business observability?',
+    desc: 'Where the idea comes from, a working definition, the five building blocks, what it is not, maturity stages and a practical way to start.',
+    mins: 12, group: 'Foundations', topics: ['fundamentals', 'modelling'],
+  },
+  '/resources/how-business-events-connect-to-outcomes/': {
+    title: 'How business events connect to outcomes',
+    desc: 'How individual state changes — an order placed, a case escalated, an invoice overdue — add up to the results that appear in the board pack.',
+    mins: 10, group: 'Foundations', topics: ['fundamentals', 'modelling', 'metrics'],
+  },
+  '/resources/building-a-business-operating-model/': {
+    title: 'Building a business operating model',
+    desc: 'Describing the business as entities, flows, objectives and owners — and growing that model from one value stream to many.',
+    mins: 11, group: 'Foundations', topics: ['modelling', 'operations'],
+  },
+  '/resources/business-observability-vs-bi/': {
+    title: 'Business observability vs business intelligence',
+    desc: 'Questions answered, latency, grain, models versus reports and who uses each — with a detailed comparison and when BI is the right tool.',
+    mins: 9, group: 'Comparisons', topics: ['fundamentals', 'decisions'],
+  },
+  '/resources/business-observability-vs-system-observability/': {
+    title: 'Business observability vs system observability',
+    desc: 'Which ideas carry over from software — SLOs, tracing, cardinality — where the analogy breaks, and a checkout that is up but converting worse.',
+    mins: 9, group: 'Comparisons', topics: ['fundamentals', 'modelling'],
+  },
+  '/resources/from-dashboards-to-decisions/': {
+    title: 'From business monitoring to business decisions',
+    desc: 'Why more dashboards rarely mean better decisions, and how ownership, action records and honest measurement close the loop.',
+    mins: 10, group: 'Practice', topics: ['decisions', 'metrics'],
+  },
+  '/resources/why-dashboards-miss-the-full-picture/': {
+    title: 'Why dashboards do not show the full picture',
+    desc: 'Six predictable blind spots — mix shifts, lagging indicators, siloed definitions, missing relationships, Goodhart effects and watermelon metrics.',
+    mins: 9, group: 'Practice', topics: ['metrics', 'decisions'],
+  },
+  '/resources/business-process-monitoring/': {
+    title: 'Business process monitoring',
+    desc: 'Watching stages, hand-offs, waiting time and rework in real workflows — and what separates process monitoring from task tracking.',
+    mins: 10, group: 'Practice', topics: ['operations', 'metrics'],
+  },
+  '/resources/understanding-business-bottlenecks/': {
+    title: 'Understanding business bottlenecks',
+    desc: 'Where work waits and why: constraints, queues, arrival rates and capacity, and why fixing the wrong stage changes nothing.',
+    mins: 11, group: 'Practice', topics: ['operations'],
+  },
+  '/resources/business-health-metrics/': {
+    title: 'Business health metrics',
+    desc: 'Designing indicators that reflect whether the business is working: objectives, expectations, balanced pairs and segment-aware ranges.',
+    mins: 11, group: 'Practice', topics: ['metrics', 'decisions'],
+  },
+  '/resources/business-observability-glossary/': {
+    title: 'Business observability glossary',
+    desc: 'Plain-language definitions of the terms used across this site, from business graph and commitment budget to leading indicator.',
+    mins: 8, group: 'Reference', topics: ['fundamentals'],
+  },
+};
+
+const GROUPS: { id: Group; intro: string }[] = [
+  { id: 'Foundations', intro: 'What business observability is, and the ideas it is built on.' },
+  { id: 'Comparisons', intro: 'How it relates to the disciplines you already use.' },
+  { id: 'Practice', intro: 'Applying the ideas to metrics, processes and decisions.' },
+  { id: 'Reference', intro: 'Definitions to keep close at hand.' },
+];
+
+const items = await Promise.all(RESOURCES.map(async (r) => {
+  const m = META[r.href];
+  return {
+    href: r.href, icon: r.icon ?? 'book',
+    title: m?.title ?? r.label, desc: m?.desc ?? '', mins: (await readingMinutes(r.href)) ?? m?.mins ?? 10,
+    group: (m?.group ?? 'Practice') as Group, topics: m?.topics ?? (['fundamentals'] as Topic[]),
+  };
+}));
+const topicLabel = (t: Topic) => TOPICS.find((x) => x.id === t)?.label ?? t;
+const featured = items.find((i) => i.href === '/resources/what-is-business-observability/')!;
+
+const schema = {
+  '@type': 'CollectionPage',
+  name: 'Business observability resources',
+  url: new URL('/resources/', SITE.origin).href,
+  description: 'Guides, comparisons and reference material on business observability.',
+  hasPart: items.map((i) => ({ '@type': 'Article', headline: i.title, url: new URL(i.href, SITE.origin).href })),
+};
+---
+<BaseLayout
+  title="Business Observability Resources and Guides"
+  description="Guides, comparisons and reference material on business observability: what it is, how it differs from BI and system observability, and how to put it into practice."
+  ogImage="/social/og-resources.png"
+  breadcrumbs={crumbs}
+  schema={schema}
+>
+  <PageHero
+    eyebrow="Resources"
+    title="Ideas for running an <span class='gradient-text'>observable business</span>."
+    lede="Long-form guides on business observability — what it is, how it relates to BI and software observability, and how to turn signals into decisions. Written for operations, finance and revenue leaders, not just analysts."
+    breadcrumbs={crumbs}
+  >
+    <div class="btn-row">
+      <a class="btn btn-primary" href={featured.href}>Start with the introduction</a>
+      <a class="btn btn-ghost" href="/resources/business-observability-glossary/">Open the glossary</a>
+    </div>
+  </PageHero>
+
+  <section class="section-tight">
+    <div class="container">
+      <article class="card card-accent featured">
+        <div class="featured-copy">
+          <p class="eyebrow">Featured · Start here</p>
+          <h2><a href={featured.href}>{featured.title}</a></h2>
+          <p class="lede">The definitive introduction: the origins of observability thinking, a working definition, the five building blocks, what business observability is not, a five-stage maturity model and a seven-step way to begin.</p>
+          <p class="meta mono"><Icon name="clock" /> {featured.mins} min read · Foundations</p>
+          <a class="link-arrow" href={featured.href}>Read the guide</a>
+        </div>
+        <div class="featured-visual" aria-hidden="true">
+          <Diagram src="/diagrams/what-is-bo-building-blocks.svg" alt="" />
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-label="Resource library">
+    <div class="container">
+      <SectionHead eyebrow="Library" title="All guides" lede="Eleven pieces, grouped from foundations to reference. Filter by topic to find what is relevant to you." />
+      <div class="filter" role="group" aria-label="Filter guides by topic">
+        <button type="button" class="chip" data-topic="all" aria-pressed="true">All topics</button>
+        {TOPICS.map((t) => <button type="button" class="chip" data-topic={t.id} aria-pressed="false">{t.label}</button>)}
+      </div>
+      <p class="filter-status small muted" aria-live="polite" data-count>Showing all {items.length} guides</p>
+
+      {GROUPS.map((g) => (
+        <div class="group" data-group>
+          <div class="group-head">
+            <h3 class="group-title">{g.id}</h3>
+            <p class="muted small">{g.intro}</p>
+          </div>
+          <ul class="res-grid" role="list">
+            {items.filter((i) => i.group === g.id).map((i) => (
+              <li data-topics={i.topics.join(' ')} data-item>
+                <a href={i.href} class="card card-link res-card">
+                  <span class="icon-tile"><Icon name={i.icon} /></span>
+                  <h4>{i.title}</h4>
+                  <p>{i.desc}</p>
+                  <span class="res-meta">
+                    <span class="mono small"><Icon name="clock" /> {i.mins} min</span>
+                    <span class="tags">{i.topics.map((t) => <span class="badge badge-outline">{topicLabel(t)}</span>)}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <p class="empty muted" data-empty hidden>No guides match this topic yet.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container grid grid-2 paths-grid">
+      <div>
+        <SectionHead eyebrow="Reading paths" title="Where to start, by role" lede="Not sure which guide to read first? These short paths are a good order for each kind of reader." />
+        <ol class="paths">
+          <li><strong>Operations leaders:</strong> <a href="/resources/understanding-business-bottlenecks/">bottlenecks</a> → <a href="/resources/business-process-monitoring/">process monitoring</a> → <a href="/resources/from-dashboards-to-decisions/">dashboards to decisions</a>.</li>
+          <li><strong>Finance leaders:</strong> <a href="/resources/business-observability-vs-bi/">observability vs BI</a> → <a href="/resources/why-dashboards-miss-the-full-picture/">why dashboards miss the picture</a> → <a href="/resources/business-health-metrics/">health metrics</a>.</li>
+          <li><strong>Engineering and data teams:</strong> <a href="/resources/business-observability-vs-system-observability/">vs system observability</a> → <a href="/resources/how-business-events-connect-to-outcomes/">events to outcomes</a> → <a href="/resources/building-a-business-operating-model/">operating model</a>.</li>
+          <li><strong>Executives:</strong> <a href="/resources/what-is-business-observability/">the introduction</a> → <a href="/resources/from-dashboards-to-decisions/">dashboards to decisions</a> → <a href="/company/vision/">our vision</a>.</li>
+        </ol>
+      </div>
+      <RelatedLinks eyebrow="Beyond the guides" title="See the ideas applied" items={[
+        { label: 'Business observability overview', href: '/business-observability/', desc: 'The category in one page', icon: 'eye' },
+        { label: 'How Panoptes works', href: '/how-it-works/', desc: 'Connect → Model → Observe → Understand → Act', icon: 'flow' },
+        { label: 'Use cases', href: '/use-cases/', desc: 'Concrete problems, told as investigations', icon: 'search' },
+        { label: 'The platform', href: '/platform/', desc: 'Capabilities that make a business observable', icon: 'layers' },
+      ]} />
+    </div>
+  </section>
+
+  <CTA title="Questions the guides do not answer?" text="Talk to us about your own processes, metrics and decisions — we are happy to think it through with you." />
+</BaseLayout>
+
+<script>
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter .chip'));
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-item]'));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-group]'));
+  const status = document.querySelector<HTMLElement>('[data-count]');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  function apply(topic: string, label: string) {
+    let shown = 0;
+    items.forEach((li) => {
+      const match = topic === 'all' || (li.dataset.topics ?? '').split(' ').includes(topic);
+      li.hidden = !match;
+      if (match) shown++;
+    });
+    groups.forEach((g) => { g.hidden = !g.querySelector('[data-item]:not([hidden])'); });
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.topic === topic)));
+    if (empty) empty.hidden = shown > 0;
+    if (status) status.textContent = topic === 'all' ? `Showing all ${items.length} guides` : `Showing ${shown} of ${items.length} guides tagged “${label}”`;
+  }
+  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.topic ?? 'all', b.textContent?.trim() ?? '')));
+</script>
+
+<style>
+  .featured { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+  .featured h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); margin-bottom: .4em; }
+  .featured h2 a { color: inherit; text-decoration: none; }
+  .featured h2 a:hover { color: var(--accent-text); }
+  .featured .lede { font-size: 1.05rem; }
+  .featured .meta { display: flex; align-items: center; gap: 7px; color: var(--text-3); font-size: .8rem; margin: .4rem 0 1rem; }
+  .featured .meta :global(svg) { width: 15px; height: 15px; }
+  .featured-visual { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+  .featured-visual :global(svg) { width: 100%; height: auto; display: block; }
+  .featured-visual :global(figure) { margin: 0; }
+
+  .filter { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.4rem; }
+  .chip { font: 500 .86rem/1 var(--font-body, inherit); padding: .62em 1em; border-radius: 999px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2); cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+  .chip:hover { border-color: var(--accent); color: var(--text); }
+  .chip[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .filter-status { margin: .9rem 0 0; }
+
+  .group { margin-top: clamp(32px, 4vw, 48px); }
+  .group[hidden] { display: none; }
+  .group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .group-title { font-size: 1.15rem; margin: 0; }
+  .group-head p { margin: 0; }
+  .res-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .res-grid li[hidden] { display: none; }
+  .res-card { height: 100%; display: flex; flex-direction: column; }
+  .res-card h4 { font-size: 1.12rem; margin: 0 0 .45em; }
+  .res-card p { color: var(--text-2); font-size: .95rem; margin-bottom: 1rem; }
+  .res-meta { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; color: var(--text-3); }
+  .res-meta .mono { display: inline-flex; align-items: center; gap: 6px; }
+  .res-meta :global(svg) { width: 14px; height: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .empty { margin-top: 2rem; }
+
+  .paths-grid { align-items: start; gap: clamp(32px, 5vw, 72px); }
+  .paths { padding-left: 1.2em; margin: 1.4rem 0 0; display: grid; gap: .9rem; color: var(--text-2); }
+  .paths li::marker { color: var(--accent); font-weight: 600; }
+  .paths strong { color: var(--text); }
+
+  @media (max-width: 1024px) { .res-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 760px) {
+    .featured { grid-template-columns: minmax(0, 1fr); }
+    .res-grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

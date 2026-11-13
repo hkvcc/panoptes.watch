@@ -1,0 +1,168 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import StoryFlow from '../../components/StoryFlow.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import SignalTable from '../../components/use-cases/SignalTable.astro';
+import ReportVsObserve from '../../components/use-cases/ReportVsObserve.astro';
+import UseCaseLinks from '../../components/use-cases/UseCaseLinks.astro';
+import { cap } from '../../components/use-cases/data';
+
+const crumbs = [{ label: 'Use Cases', href: '/use-cases/' }, { label: 'SLA Monitoring', href: '/use-cases/sla-monitoring/' }];
+
+const setup = [
+  { i: 'delivery', k: 'Who', v: 'A regional logistics operator delivering for retail and trade customers.' },
+  { i: 'target', k: 'Commitment', v: 'Delivery exceptions — failed, damaged or late drops — resolved within 48 hours.' },
+  { i: 'chart', k: 'Report', v: 'Monthly attainment above the 95% target. Green for four months running.' },
+  { i: 'customers', k: 'Reality', v: 'Key trade customers complain of repeated misses early in the week.' },
+];
+
+const signals = [
+  { signal: 'Time to breach on open cases', tells: 'How long each open case has left before it misses its commitment — the forward-looking view that monthly attainment cannot give.', source: 'Case system' },
+  { signal: 'Projected attainment', tells: 'Where attainment will land if current queue and handling time continue, so the team can act while the period is still open.', source: 'Derived' },
+  { signal: 'Attainment by day, tier and customer', tells: 'Whether misses cluster — on certain days, for certain customers or in one depot — instead of being spread evenly.', source: 'Case system · CRM' },
+  { signal: 'Arrivals vs capacity by shift', tells: 'Whether the work arriving matches the people and slots available when it arrives.', source: 'Ops planning' },
+  { signal: 'Breach recovery time', tells: 'How long a breached case stays open after its deadline — the part of the miss customers actually feel.', source: 'Case system' },
+  { signal: 'Upstream dependencies', tells: 'Carrier, depot or system delays that feed exceptions into the queue faster than usual.', source: 'Carrier · TMS' },
+];
+---
+<BaseLayout title="SLA Monitoring" description="Monitor SLAs before they break: watch time-to-breach on open work, project attainment, and find misses that monthly averages hide. Business observability for commitments." ogImage="/social/og-use-cases.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Use case · SLA monitoring" title="Watch commitments <span class='gradient-text'>before they break.</span>" lede="Monthly SLA reports tell you whether you kept a promise on average, weeks after it mattered. Customers experience individual cases. Business observability watches the open work against each commitment, so a breach can be prevented rather than reported." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/platform/business-health/">Business Health</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/diagrams/uc-sla-time-to-breach.svg" alt="Open delivery exceptions against a 48-hour commitment: one already breached, three projected to breach within seven hours, the rest on track. Illustrative data." frame="open exceptions · time to breach" zoom />
+    </Fragment>
+  </PageHero>
+
+  <section class="section-tight section-alt">
+    <div class="container">
+      <p class="kpi-label setup-k">The scenario · fictional</p>
+      <ul class="setup">
+        {setup.map((s) => (
+          <li class="reveal"><span class="icon-tile"><Icon name={s.i} /></span><div><p class="kpi-label">{s.k}</p><p>{s.v}</p></div></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split avg">
+        <div class="reveal">
+          <Diagram src="/diagrams/uc-sla-attainment-chart.svg" alt="Daily SLA attainment over four weeks: the monthly average is above the 95% target, but every Monday and Tuesday falls below it. Illustrative data." frame="daily attainment · four weeks" zoom />
+        </div>
+        <div>
+          <p class="eyebrow">Why green can be wrong</p>
+          <h2>An average above target can hide a pattern of misses.</h2>
+          <p class="lede">Four strong days recover the average from two weak ones. The monthly report is accurate and the commitment still breaks, every week, for the customers whose exceptions arrive on a Monday.</p>
+          <p class="muted">An SLA is a promise to each customer, not to the average. Watching it per case, per day and per customer is what makes the pattern visible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container story-wrap">
+      <SectionHead eyebrow="The investigation" title="From a green report to a Monday problem you can fix." />
+      <StoryFlow>
+        <Fragment slot="problem">
+          <h3>The report says the promise is kept. Customers say it is not.</h3>
+          <p>The operator's service review shows 48-hour exception resolution comfortably above target. Yet two large trade customers raise the same complaint in the same month: exceptions logged early in the week are routinely resolved late. The account team cannot reconcile the complaint with the report.</p>
+        </Fragment>
+        <Fragment slot="signals">
+          <h3>Attainment by day tells a different story.</h3>
+          <p>Broken down by the day a case opened, Mondays and Tuesdays fall well short of target in every week; the rest of the week sits near 100%. Breached cases also stay open for some time after their deadline, so the miss customers feel is longer than the breach count suggests.</p>
+        </Fragment>
+        <Fragment slot="investigation">
+          <h3>Compare what arrives with what is available to handle it.</h3>
+          <p>Linking exceptions to their origin in the <a href={cap('business-graph').href}>Business Graph</a> shows a weekly rhythm: weekend deliveries generate a burst of exceptions that lands on Monday morning. The resolution team's capacity is flat across the week. <a href={cap('process-intelligence').href}>Process Intelligence</a> shows Monday's queue taking until Wednesday to clear — and the cases at the back of it are the ones that breach.</p>
+          <p>The misses also cluster by customer tier: priority trade accounts send more weekend deliveries, so they are disproportionately affected.</p>
+        </Fragment>
+        <Fragment slot="insight">
+          <h3>A demand pattern meets a flat capacity plan.</h3>
+          <p>Nothing is broken in the process itself. The commitment is designed around average daily volume, while exceptions arrive in a weekly wave. The most valuable customers carry most of the cost. This is a planning mismatch that historical, averaged reporting is structurally unable to show.</p>
+        </Fragment>
+        <Fragment slot="action">
+          <h3>Act on cases before they breach, and fix the rhythm.</h3>
+          <p>Two kinds of response. In the moment, open cases are ranked by time to breach in the <a href={cap('command-center').href}>Command Center</a>, and those projected to miss are routed to an owner while there is still time — for example, prioritising priority-tier cases first on Monday. Structurally, the operations lead can test shifting capacity toward the start of the week, or handling weekend exceptions on Sunday.</p>
+        </Fragment>
+        <Fragment slot="outcome">
+          <h3>Measure the promise per customer, not per month.</h3>
+          <ul class="checklist">
+            <li>Attainment by weekday — Monday and Tuesday back above target</li>
+            <li>Breaches for priority-tier customers</li>
+            <li>Time from projected breach to owner action</li>
+            <li>Hours over deadline for cases that do breach</li>
+          </ul>
+        </Fragment>
+      </StoryFlow>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Example signals" title="Signals that watch a commitment, not just report on it." lede="The first two look forward. The rest explain why a commitment is at risk, and for whom." />
+      <SignalTable rows={signals} caption="Example SLA monitoring signals" />
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Reporting vs observability" title="Reporting tells you whether you kept the promise. Observability helps you keep it." />
+      <ReportVsObserve
+        report={[
+          'Monthly attainment against target',
+          'Total breaches in the period',
+          'Averages that let strong days hide weak ones',
+          'Results available after the period closes',
+        ]}
+        observe={[
+          'Time to breach on every open case, now',
+          'Projected attainment while there is time to change it',
+          'Misses clustered by day, customer tier or depot',
+          'The demand and capacity pattern behind the misses',
+        ]} />
+      <p class="muted mt-2 uc-note">Panoptes observes cases, queues and commitments. It is not designed for monitoring individual employees, and SLA views focus on the flow of work and the customer outcome.</p>
+    </div>
+  </section>
+
+  <UseCaseLinks alt={false}
+    caps={[
+      { slug: 'business-health', why: 'Define each commitment and watch it continuously, per customer and tier.' },
+      { slug: 'process-intelligence', why: 'Queues, handling time and the capacity behind them.' },
+      { slug: 'command-center', why: 'Open cases ranked by time to breach and impact.' },
+      { slug: 'actions-automation', why: 'Route at-risk cases to an owner before the deadline passes.' },
+    ]}
+    roles={[
+      { slug: 'operations', why: 'Commitments, capacity and queues in one view' },
+      { slug: 'customer-experience', why: 'Promises kept and broken, per customer' },
+      { slug: 'executives', why: 'Service risk to key accounts, early' },
+    ]}
+    related={[
+      { slug: 'operational-bottlenecks', why: 'When a stage cannot keep up' },
+      { slug: 'business-anomalies', why: 'When breaches rise without a known cause' },
+      { slug: 'operational-efficiency', why: 'When meeting the SLA costs more each month' },
+    ]} />
+
+  <CTA title="Keep the promises your customers count on." text="Bring one commitment that matters. We will show how Panoptes would watch it per case, per day and per customer." />
+</BaseLayout>
+
+<style>
+  .setup-k { margin-bottom: 1rem; }
+  .setup { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .setup li { display: flex; gap: 14px; padding: 18px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .setup .icon-tile { width: 38px; height: 38px; margin: 0; }
+  .setup p:not(.kpi-label) { margin: .3rem 0 0; font-size: .93rem; color: var(--text); }
+  .avg h2 { font-size: clamp(1.8rem, 3.2vw, 2.6rem); }
+  .story-wrap { max-width: 900px; }
+  .story-wrap :global(.checklist) { margin: 1rem 0; color: var(--text-2); }
+  .uc-note { max-width: 70ch; font-size: .92rem; }
+  @media (max-width: 1080px) { .setup { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .setup { grid-template-columns: minmax(0, 1fr); } }
+</style>

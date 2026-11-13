@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+interface Props { email?: string; large?: boolean }
+const { email = 'sales@panoptes.watch', large = false } = Astro.props;
+---
+<div class:list={['copy-email', { large }]}>
+  <a href={`mailto:${email}`} class="ce-link"><Icon name="mail" />{email}</a>
+  <button type="button" class="ce-btn" data-copy={email} aria-label={`Copy ${email} to clipboard`}>
+    <Icon name="copy" /><span class="ce-label" aria-live="polite">Copy</span>
+  </button>
+</div>
+<style>
+  .copy-email { display: inline-flex; align-items: stretch; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); overflow: hidden; max-width: 100%; }
+  .ce-link { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; font: 500 .88rem/1.2 var(--font-mono); color: var(--text); text-decoration: none; min-width: 0; overflow-wrap: anywhere; }
+  .ce-link :global(svg) { width: 16px; height: 16px; color: var(--accent-text); flex: none; }
+  .ce-btn { display: inline-flex; align-items: center; gap: 6px; border: 0; border-left: 1px solid var(--border); background: var(--surface-2); color: var(--text-2); padding: 0 14px; font: 600 .8rem/1 var(--font-body); cursor: pointer; }
+  .ce-btn:hover { color: var(--accent-text); }
+  .ce-btn :global(svg) { width: 14px; height: 14px; }
+  .large .ce-link { font-size: 1.05rem; padding: 12px 20px; }
+  .large .ce-btn { padding: 0 18px; }
+</style>

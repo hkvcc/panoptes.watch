@@ -1,0 +1,72 @@
+---
+import DocPage from '../components/company/DocPage.astro';
+import { SITE } from '../data/site';
+import { LEGAL, lastUpdatedLabel, operatorHtml, missingIdentity } from '../data/legal';
+
+const crumbs = [{ label: 'Cookie notice', href: '/cookies/' }];
+const placeholders = missingIdentity.map((m) => `[${m}]`);
+---
+<DocPage
+  title="Cookie notice"
+  description="The panoptes.watch website sets no cookies of its own and uses no analytics or ad trackers. One local storage key remembers your theme; our host may set security cookies."
+  eyebrow="Legal · Cookies"
+  lede="This site sets no cookies of its own and uses no analytics or advertising trackers. It remembers one thing in your browser — your light or dark theme, if you choose one — and our hosting provider may set strictly necessary security cookies."
+  breadcrumbs={crumbs}
+  ogImage="/social/og-default.png"
+  updated={lastUpdatedLabel}
+  draft
+  placeholders={placeholders}
+>
+  <h2 id="summary">Summary</h2>
+  <table>
+    <thead><tr><th>Technology</th><th>Used on this site?</th></tr></thead>
+    <tbody>
+      <tr><td>Cookies set by Panoptes</td><td>No</td></tr>
+      <tr><td>Analytics or performance tracking</td><td>No</td></tr>
+      <tr><td>Advertising, remarketing or social media trackers</td><td>No</td></tr>
+      <tr><td>Browser local storage</td><td>Yes — one key for your theme preference, only if you use the theme switch</td></tr>
+      <tr><td>Security cookies set by our hosting provider</td><td>Possibly — strictly necessary, see below</td></tr>
+    </tbody>
+  </table>
+  <p>Because the site uses only strictly necessary technologies and storage you request yourself, it does not show a cookie consent banner.</p>
+
+  <h2 id="what-are-cookies">What cookies and similar technologies are</h2>
+  <p>Cookies are small text files a website asks your browser to store and send back with later requests. Similar technologies, such as the browser’s local storage, let a site keep small amounts of information on your device without sending it with every request. Under UK and EU rules (including the UK Privacy and Electronic Communications Regulations and the EU ePrivacy Directive), storing or reading information on your device generally needs your consent, unless it is strictly necessary to provide something you have asked for.</p>
+
+  <h2 id="local-storage">Local storage: your theme preference</h2>
+  <p>The site follows your device’s light or dark setting by default. If you use the theme switch in the header to choose one explicitly, the site saves that choice so that it stays the same as you move between pages and come back later.</p>
+  <dl class="storage-item">
+    <dt>Key</dt><dd><code>panoptes-theme</code></dd>
+    <dt>Type</dt><dd>Browser local storage, first party (not a cookie)</dd>
+    <dt>Value</dt><dd><code>light</code> or <code>dark</code></dd>
+    <dt>Purpose</dt><dd>Remember the colour theme you chose</dd>
+    <dt>Duration</dt><dd>Until you clear your browser’s site data</dd>
+  </dl>
+  <p>This value is only written when you use the theme switch. It is read by the page in your browser and is never sent to our servers or anyone else. If your browser blocks local storage, the site still works; it simply will not remember your choice.</p>
+
+  <h2 id="hosting-provider">Cookies our hosting provider may set</h2>
+  <p>The site is hosted on Cloudflare, which protects it against automated abuse and attacks. Depending on the security features enabled and on how a request looks, Cloudflare may set strictly necessary cookies — for example, <code>__cf_bm</code>, which helps distinguish people from bots, or <code>cf_clearance</code>, which records that your browser has passed a security check. Whether these cookies appear depends on the protection Cloudflare applies to a given request, so you may see them on some visits and not others.</p>
+  <p>Where these cookies are set, they are used only for security, are not used to track you across other websites, and are typically short-lived. Cloudflare describes them in its own cookie documentation. Because they are strictly necessary to deliver the site securely, they do not require consent.</p>
+
+  <h2 id="what-we-do-not-use">What we do not use</h2>
+  <p>The site does not load analytics tools, advertising or remarketing tags, tracking pixels, session recording tools, social media plugins or embedded third-party content. Fonts, images and scripts are served from our own domain, and the site’s security policy prevents pages from loading scripts from anywhere else.</p>
+  <p>If that ever changes, we will update this notice first and ask for your consent where the law requires it.</p>
+
+  <h2 id="managing">Managing cookies and storage</h2>
+  <ul>
+    <li><strong>Theme preference:</strong> clear this site’s data in your browser settings (often under “site data” or “cookies and other site data”), and the site will go back to following your device setting.</li>
+    <li><strong>Cookies:</strong> most browsers let you view, delete and block cookies. Blocking strictly necessary security cookies may mean you see additional security checks.</li>
+  </ul>
+
+  <h2 id="changes">Changes to this notice</h2>
+  <p>We will update this notice if the way the site uses cookies or browser storage changes. The “last updated” date at the top shows the latest revision.</p>
+
+  <h2 id="contact">Contact</h2>
+  <p>This site is operated by <Fragment set:html={operatorHtml(false)} />. Questions about this notice: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>. See also our <a href="/privacy/">privacy notice</a> and <a href="/terms/">website terms of use</a>.</p>
+</DocPage>
+
+<style>
+  .storage-item { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .5em 1.4em; padding: 1.1em 1.3em; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); margin: 1.4em 0; }
+  .storage-item dt { margin: 0 !important; font-size: .92rem; }
+  .storage-item dd { margin: 0 !important; font-size: .95rem; }
+</style>

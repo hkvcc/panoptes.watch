@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 450" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>A chain from leading to lagging indicators: wait time rises in week one, activation slips, invoices are late, early churn rises, and revenue misses at quarter end</title>
+<g class="d-t">
+<rect x="10" y="30" width="340" height="180" rx="12" class="d-soft" opacity=".7"/>
+<text x="24" y="52" font-size="12" font-weight="600" class="d-td d-accent">Window to act cheaply</text>
+<rect x="10" y="370" width="340" height="70" rx="12" class="d-warn-s" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="336" y="392" font-size="11" text-anchor="end" font-weight="600" class="d-text">Where reports look</text>
+<path d="M40 70V420" class="d-line" stroke-width="2"/>
+<path d="M40 84V404" class="d-accent-2-s d-flow" stroke-width="2"/>
+<circle cx="40" cy="84" r="8" class="d-accent"/><text x="64" y="88" font-size="14" font-weight="600" class="d-text">Wait time rises</text><text x="64" y="106" font-size="10" class="d-tm d-muted">WEEK 1 · ONBOARDING</text>
+<circle cx="40" cy="164" r="8" class="d-accent"/><text x="64" y="168" font-size="14" font-weight="600" class="d-text">Activation slips</text><text x="64" y="186" font-size="10" class="d-tm d-muted">WEEK 3 · CUSTOMERS</text>
+<circle cx="40" cy="244" r="8" class="d-accent-2"/><text x="64" y="248" font-size="14" font-weight="600" class="d-text">First invoices late</text><text x="64" y="266" font-size="10" class="d-tm d-muted">WEEK 5 · BILLING</text>
+<circle cx="40" cy="324" r="8" class="d-accent-2"/><text x="64" y="328" font-size="14" font-weight="600" class="d-text">Early churn rises</text><text x="64" y="346" font-size="10" class="d-tm d-muted">MONTH 3 · RETENTION</text>
+<circle cx="40" cy="404" r="8" class="d-warn"/><text x="64" y="408" font-size="14" font-weight="600" class="d-text">Revenue misses</text><text x="64" y="426" font-size="10" class="d-tm d-muted">QUARTER END · FINANCE</text>
+</g>
+</svg>

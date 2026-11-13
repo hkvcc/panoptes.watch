@@ -1,0 +1,150 @@
+---
+/**
+ * Interactive chart explorer for the Anomaly Detection page.
+ * Views: raw metric / expected band / segment breakdown, a sensitivity slider and a
+ * "sustained" rule. All data is local and fictional; rendering is shared with the server.
+ */
+import { renderChart, summary, type State } from './anomaly-data';
+const initial: State = { view: 'band', k: 2, sustained: false };
+const s0 = summary(initial);
+const views = [
+  { id: 'raw', label: 'Raw metric' },
+  { id: 'band', label: 'Expected band' },
+  { id: 'segment', label: 'Segment breakdown' },
+];
+---
+<div class="ax" data-ax>
+  <div class="ax-top">
+    <fieldset class="ax-views">
+      <legend class="sr-only">Chart view</legend>
+      {views.map((v) => (
+        <label class="ax-seg"><input type="radio" name="ax-view" value={v.id} checked={v.id === initial.view} /><span>{v.label}</span></label>
+      ))}
+    </fieldset>
+    <span class="illustrative">Fictional data</span>
+  </div>
+
+  <div class="ax-body">
+    <div class="ax-chart-wrap">
+      <p class="ax-title"><strong data-ax-title>Card payment completion · all routes</strong><span class="muted small"> · daily, last 8 weeks</span></p>
+      <div class="ax-chart" data-ax-chart set:html={renderChart(initial)} />
+      <ul class="ax-legend" data-ax-legend>
+        <li data-lg="line"><i class="lg-line"></i><span data-lg-line>Actual</span></li>
+        <li data-lg="band"><i class="lg-band"></i>Expected band</li>
+        <li data-lg="seg"><i class="lg-l2"></i>Route A</li>
+        <li data-lg="seg"><i class="lg-l3"></i>Wallets</li>
+        <li data-lg="flag"><i class="lg-hit"></i>Flagged in incident</li>
+        <li data-lg="flag"><i class="lg-noise"></i>Flagged noise</li>
+      </ul>
+    </div>
+
+    <div class="ax-side">
+      <div class="ax-ctrl">
+        <label for="ax-k" class="ax-k-label"><span>Sensitivity</span><output for="ax-k" data-ax-kout>±{initial.k.toFixed(2)}σ</output></label>
+        <input id="ax-k" type="range" min="1" max="3.5" step="0.25" value={initial.k} data-ax-k aria-describedby="ax-k-hint" />
+        <p id="ax-k-hint" class="ax-hint"><span>Narrow band · more alerts</span><span>Wide band · fewer</span></p>
+        <label class="check mt-1"><input type="checkbox" data-ax-sus /> Only flag if two readings in a row break the band</label>
+      </div>
+      <div class="ax-stats" aria-live="polite" data-ax-stats>
+        <div><span class="kpi" data-ax-total>{s0.total}</span><span class="kpi-label">readings flagged</span></div>
+        <div><span class="kpi ax-good" data-ax-real>{s0.real}</span><span class="kpi-label">in the incident</span></div>
+        <div><span class="kpi ax-bad" data-ax-noise>{s0.noise}</span><span class="kpi-label">likely noise</span></div>
+      </div>
+      <p class="ax-explain small" data-ax-explain></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { renderChart, summary, type State, type View } from './anomaly-data';
+  const explain: Record<View, (s: ReturnType<typeof summary>, st: State) => string> = {
+    raw: () => 'Without an expectation, every weekend dip looks like the start of a problem, and the final week looks only slightly worse than a normal Sunday. Is it an incident? A raw line cannot tell you.',
+    band: (s) => s.real === 0
+      ? `At this setting the blended metric hides the problem: the drop is diluted by healthy routes, so nothing in the incident window is flagged.${s.noise ? ` Meanwhile ${s.noise} ordinary wobble${s.noise === 1 ? '' : 's'} would still page someone.` : ''}`
+      : s.noise > 2
+        ? `The incident is caught, but so are ${s.noise} ordinary wobbles — roughly ${Math.max(1, Math.round(s.noise / 8))} false alarm${Math.round(s.noise / 8) > 1 ? 's' : ''} a week. That is how alert fatigue starts.`
+        : `The incident is flagged with ${s.noise === 0 ? 'no' : 'only ' + s.noise} false alarm${s.noise === 1 ? '' : 's'}. Note how the expected band dips at weekends, so normal seasonality is not treated as a problem.`,
+    segment: (s) => `Broken down by route, the cause of the dip is obvious: route B falls well outside its own band while route A and wallets stay normal. ${s.real ? `${s.real} route B readings are flagged in the incident window` : 'Lower the sensitivity slightly to flag route B'}${s.noise ? `, with ${s.noise} noise flag${s.noise === 1 ? '' : 's'}` : ' with no noise flags'}.`,
+  };
+  document.querySelectorAll<HTMLElement>('[data-ax]').forEach((root) => {
+    const chart = root.querySelector<HTMLElement>('[data-ax-chart]')!;
+    const k = root.querySelector<HTMLInputElement>('[data-ax-k]')!;
+    const sus = root.querySelector<HTMLInputElement>('[data-ax-sus]')!;
+    const st: State = { view: 'band', k: 2, sustained: false };
+    const $ = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const draw = () => {
+      chart.innerHTML = renderChart(st, chart.clientWidth || 760);
+      const s = summary(st);
+      $('[data-ax-total]').textContent = String(s.total);
+      $('[data-ax-real]').textContent = String(s.real);
+      $('[data-ax-noise]').textContent = String(s.noise);
+      $('[data-ax-kout]').textContent = `±${st.k.toFixed(2)}σ`;
+      $('[data-ax-explain]').textContent = explain[st.view](s, st);
+      $('[data-ax-title]').textContent = st.view === 'segment' ? 'Card payment completion · by route' : 'Card payment completion · all routes';
+      $('[data-lg-line]').textContent = st.view === 'segment' ? 'Route B' : 'Actual';
+      root.dataset.view = st.view;
+      k.disabled = sus.disabled = st.view === 'raw';
+    };
+    root.querySelectorAll<HTMLInputElement>('input[name="ax-view"]').forEach((r) => r.addEventListener('change', () => { st.view = r.value as View; draw(); }));
+    k.addEventListener('input', () => { st.k = +k.value; draw(); });
+    sus.addEventListener('change', () => { st.sustained = sus.checked; draw(); });
+    let raf = 0;
+    new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }).observe(chart);
+    draw();
+  });
+</script>
+
+<style>
+  .ax { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(16px, 2.6vw, 28px); box-shadow: var(--shadow); }
+  .ax-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .ax-views { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; margin: 0; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-2); min-width: 0; }
+  .ax-seg { position: relative; }
+  .ax-seg input { position: absolute; opacity: 0; inset: 0; cursor: pointer; margin: 0; }
+  .ax-seg span { display: block; padding: .6rem 1rem; border-radius: 999px; font: 600 .88rem/1 var(--font-body); color: var(--text-2); transition: background .2s, color .2s; }
+  .ax-seg input:checked + span { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+  .ax-seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .ax-body { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: clamp(20px, 3vw, 36px); }
+  .ax-title { margin: 0 0 8px; font-size: .95rem; }
+  .ax-chart { width: 100%; min-height: 200px; }
+  .ax-chart :global(svg) { width: 100%; height: auto; display: block; overflow: visible; }
+  .ax-chart :global(.ax-grid) { stroke: var(--d-line); stroke-dasharray: 2 4; }
+  .ax-chart :global(.ax-tick) { fill: var(--d-muted); font: 500 11px var(--font-mono); }
+  .ax-chart :global(.ax-we) { fill: var(--d-surface); }
+  .ax-chart :global(.ax-inc) { fill: var(--crit); opacity: .07; }
+  .ax-chart :global(.ax-inc-l) { fill: var(--crit-text); font: 600 11px var(--font-body); }
+  .ax-chart :global(.ax-band) { fill: var(--d-accent-2); opacity: .2; }
+  .ax-chart :global(.ax-exp) { stroke: var(--d-accent-2); stroke-width: 1.2; stroke-dasharray: 4 4; fill: none; }
+  .ax-chart :global(.ax-line) { fill: none; stroke-width: 2; stroke-linejoin: round; }
+  .ax-chart :global(.ax-l1) { stroke: var(--d-accent); stroke-width: 2.4; }
+  .ax-chart :global(.ax-l2) { stroke: var(--d-muted); opacity: .75; }
+  .ax-chart :global(.ax-l3) { stroke: var(--d-line); stroke-width: 2.2; }
+  .ax-chart :global(.ax-hit) { fill: var(--d-crit); stroke: var(--d-bg); stroke-width: 2; }
+  .ax-chart :global(.ax-noise) { fill: var(--d-bg); stroke: var(--d-warn); stroke-width: 2.4; }
+  .ax-legend { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .8rem; color: var(--text-2); }
+  .ax-legend li { display: inline-flex; align-items: center; gap: 6px; }
+  .ax-legend i { width: 16px; height: 10px; border-radius: 3px; display: inline-block; }
+  .lg-line { height: 3px !important; background: var(--d-accent); }
+  .lg-band { background: color-mix(in srgb, var(--d-accent-2) 30%, transparent); }
+  .lg-l2 { height: 3px !important; background: var(--d-muted); }
+  .lg-l3 { height: 3px !important; background: var(--d-line); }
+  .lg-hit { width: 10px !important; border-radius: 50% !important; background: var(--d-crit); }
+  .lg-noise { width: 10px !important; border-radius: 50% !important; border: 2px solid var(--d-warn); }
+  .ax:not([data-view='segment']) [data-lg='seg'] { display: none; }
+  .ax[data-view='raw'] [data-lg='band'], .ax[data-view='raw'] [data-lg='flag'] { display: none; }
+  .ax-side { display: flex; flex-direction: column; gap: 18px; }
+  .ax-ctrl { padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-2); }
+  .ax-k-label { display: flex; justify-content: space-between; font-weight: 600; font-size: .92rem; margin-bottom: 8px; }
+  .ax-k-label output { font: 600 .85rem/1.4 var(--font-mono); color: var(--accent-text); }
+  .ax-ctrl input[type='range'] { width: 100%; accent-color: var(--purple); }
+  .ax-ctrl input:disabled { opacity: .4; }
+  .ax-hint { display: flex; justify-content: space-between; gap: 8px; font-size: .74rem; color: var(--text-3); margin: 4px 0 0; }
+  .ax-ctrl .check { font-size: .86rem; }
+  .ax-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .ax-stats > div { display: grid; gap: 6px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); }
+  .ax-stats .kpi-label { font-size: .64rem; }
+  .ax-good { color: var(--crit-text); }
+  .ax-bad { color: var(--warn-text); }
+  .ax-explain { margin: 0; color: var(--text-2); min-height: 6.5em; }
+  .ax[data-view='raw'] .ax-stats { opacity: .45; }
+  @media (max-width: 900px) { .ax-body { grid-template-columns: minmax(0, 1fr); } }
+</style>

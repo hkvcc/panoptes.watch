@@ -1,0 +1,298 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Tabs from '../../components/Tabs.astro';
+import TabPanel from '../../components/TabPanel.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import ProductScreen from '../../components/solutions/ProductScreen.astro';
+import RoleSwitcher from '../../components/solutions/RoleSwitcher.astro';
+
+const crumbs = [{ label: 'Solutions', href: '/solutions/' }, { label: 'Operations', href: '/solutions/operations/' }];
+
+const problems = [
+  { i: 'clock', t: 'Queues you only see when they overflow', d: 'Work-in-progress lives in four tools: the CRM, the case system, a compliance platform and a shared inbox. Each shows its own backlog. Nobody sees that cases are piling up between two of them.', s: 'Customers chase before your team notices.' },
+  { i: 'workflow', t: 'Hand-offs where time disappears', d: 'A case is touched for forty minutes and waits for two days. Most of that waiting happens at hand-offs between teams — where ownership is unclear and no queue belongs to anyone.', s: '“It’s with compliance” — but compliance has not received it.' },
+  { i: 'users', t: 'Capacity planned against last month’s demand', d: 'Rotas are built on average volumes. A campaign, a regulatory change or a seasonal spike changes arrivals by Tuesday; the plan finds out by Friday.', s: 'Overtime and backlog, then idle time a week later.' },
+  { i: 'target', t: 'SLAs reported, not projected', d: 'Monthly attainment is calculated from closed cases. It says nothing about the open cases that will breach on Thursday — and it can stay green while the largest customers wait longest.', s: 'Green at month end, escalations mid-week.' },
+  { i: 'process', t: 'Rework that looks like throughput', d: 'Cases returned for missing documents or a failed check re-enter the queue and are counted again. Volume looks high and productivity looks fine, while the same work is done twice.', s: 'Busy teams, flat completions.' },
+];
+
+const indicators = {
+  flow: [['Work in progress by stage', 'Where cases are now, against a WIP limit', 'Verification at 212 against 120'], ['Wait time vs work time', 'How much of lead time is waiting', '14.7h waiting, 2.6h work'], ['Age of oldest cases', 'Cases at risk of being forgotten', '39 cases older than 24h'], ['Throughput', 'Cases completed end to end, per day', 'Completed vs started, by tier']],
+  capacity: [['Arrivals vs completions', 'Whether a queue is growing or draining', 'Arrivals 31/h, completions 22/h'], ['Capacity vs expected demand', 'Next 24–72h, per team and skill', 'Compliance short by 70 cases/day'], ['Hand-off delay', 'Time between one team finishing and the next starting', 'Triage → verification: 9.6h'], ['Waiting on customer', 'Cases paused for external input', '41 cases waiting on documents']],
+  commitments: [['Projected attainment', 'Expected SLA result from open cases', '91.8% against a 95% target'], ['Time to breach', 'Open cases grouped by hours remaining', '38 cases breach in < 8h'], ['Breaches by tier and channel', 'Who bears the misses', 'Enterprise tier first'], ['Escalations', 'Contacts that cite a missed commitment', 'Linked to the case that caused them']],
+  quality: [['Rework rate', 'Share of cases returned to an earlier stage', '18% returned from risk review'], ['First-time-right', 'Cases completed without a loop', 'By stage and team'], ['Manual touches per case', 'Effort that does not move a case forward', 'Rising with a new check'], ['Exception volume', 'Cases leaving the standard path', 'Grouped by exception type']],
+};
+const tabs = [{ id: 'flow', label: 'Flow' }, { id: 'capacity', label: 'Capacity' }, { id: 'commitments', label: 'Commitments' }, { id: 'quality', label: 'Quality & rework' }];
+
+const decisions = [
+  ['Arrivals exceed completions for two consecutive periods', 'Move capacity between teams for a set window — and see whether the queue drains.'],
+  ['Open cases projected to breach', 'Prioritise by time to breach and customer tier, instead of first in, first out.'],
+  ['Hand-off wait exceeds work time', 'Change the hand-off — a shared queue, a clearer owner or an automatic trigger — rather than add people.'],
+  ['Rework concentrated on one reason', 'Fix the upstream cause (for example, a document checklist at application) rather than staffing the loop.'],
+  ['A change precedes a slowdown', 'Decide whether to roll back a policy or rule change, once the correlation has been checked.'],
+];
+
+const faqs = [
+  { q: 'Is this process mining?', a: 'It overlaps. Process mining reconstructs how a process ran from event logs. Panoptes uses the same kind of events to observe processes continuously, in context with customers, commitments, capacity and money — and to flag when the flow drifts from what is expected. See <a href="/platform/process-intelligence/">Process Intelligence</a>.' },
+  { q: 'Does it track individual employees’ productivity?', a: 'No. Panoptes observes processes, queues, teams’ capacity and outcomes. It is not designed to monitor or rank individual people.' },
+  { q: 'Where does capacity data come from?', a: 'Typically from workforce or rota systems, or from a simple capacity model your team maintains (people × hours × skills). Expected demand is derived from historical arrival patterns and known events such as campaigns.' },
+  { q: 'Can it act on what it finds?', a: 'Panoptes can route signals to owners and track the response. Automated execution of interventions is part of the product vision. See <a href="/platform/actions-automation/">Actions &amp; Automation</a>.' },
+];
+---
+<BaseLayout title="Business observability for operations" description="For COOs and operations leaders: see queues, hand-offs, capacity against demand and SLA attainment projected from open work, across every team and system." ogImage="/social/og-solutions.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Solutions · Operations" title="See where work waits — before the SLA tells you." lede="Operations runs across teams and tools that each see their own backlog. Panoptes follows work across all of them, so you can see where it waits, whether capacity matches demand, and which commitments will be missed while there is still time to act." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#projected">Reported vs projected</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/illustrations/operations-demand-capacity.svg" alt="Arrivals at verification exceed completion capacity from Tuesday, so the queue grows and breach risk appears from Thursday 10:00 (fictional data)" frame="verification · this week" zoom />
+    </Fragment>
+  </PageHero>
+
+  <!-- Problems -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="What operations leaders live with" title="Every team can see its own work. Nobody can see the flow." lede="Most operational problems are not inside a team; they are between teams, between systems and between the plan and the day. These are the patterns that make a well-run operation feel out of control." />
+      <div class="probs">
+        {problems.map((p, i) => (
+          <article class:list={['prob reveal', { wide: i === 3 }]}>
+            <span class="icon-tile"><Icon name={p.i} /></span>
+            <h3>{p.t}</h3>
+            <p class="muted">{p.d}</p>
+            <p class="prob-s"><span class="kpi-label">What you notice</span>{p.s}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive: reported vs projected -->
+  <section class="section section-alt" id="projected">
+    <div class="container">
+      <div class="split proj-wrap">
+        <div>
+          <p class="eyebrow">Reported vs projected</p>
+          <h2>The same SLA, read two ways.</h2>
+          <p class="lede">Reported attainment tells you how last month went. Projected attainment looks at every open case, its age and the capacity in front of it — and tells you how this week will go.</p>
+          <p class="muted">Switch between the two views of the same fictional onboarding SLA: “approve new accounts within 48 hours”, target 95%.</p>
+          <a href="/use-cases/sla-monitoring/" class="link-arrow">The SLA monitoring use case</a>
+        </div>
+        <div class="proj reveal" data-proj>
+          <div class="proj-tabs" role="group" aria-label="SLA view">
+            <button type="button" data-proj-btn="rep" aria-pressed="true">Reported · month to date</button>
+            <button type="button" data-proj-btn="pro" aria-pressed="false">Projected · open cases</button>
+          </div>
+          <div class="proj-panel" data-proj-panel="rep" aria-live="polite">
+            <div class="proj-kpi"><span class="kpi">96.4%</span><span class="badge badge-ok">Above target</span></div>
+            <p class="kpi-label">Closed cases inside 48h, by week · dashed line = 95% target</p>
+            <ul class="weeks" aria-label="Weekly attainment">
+              {[['Wk 40', 97.8], ['Wk 41', 96.9], ['Wk 42', 95.6], ['Wk 43 so far', 95.2]].map(([w, v]) => (
+                <li><span class="wk-bar"><i style={`height:${(Number(v) - 90) * 9}%`}></i></span><b>{v}%</b><small>{w}</small></li>
+              ))}
+            </ul>
+            <p class="proj-read"><Icon name="check" /> Reads as: on target, no action needed.</p>
+          </div>
+          <div class="proj-panel" data-proj-panel="pro" hidden aria-live="polite">
+            <div class="proj-kpi"><span class="kpi crit">91.8%</span><span class="badge badge-crit">Projected miss</span></div>
+            <p class="kpi-label">Open cases by time to breach</p>
+            <ul class="ttb">
+              {[['Enterprise', '< 8h', 22, 'crit'], ['Standard', '< 8h', 16, 'crit'], ['All tiers', '8–16h', 61, 'warn'], ['All tiers', '16–24h', 44, 'warn'], ['All tiers', '> 24h', 163, 'ok']].map(([t, h, n, s]) => (
+                <li><span class="ttb-l"><b>{h}</b><small>{t}</small></span><span class="ttb-bar"><i class={s} style={`width:${Math.min(100, Number(n) / 1.65)}%`}></i></span><span class="ttb-n">{n}</span></li>
+              ))}
+            </ul>
+            <p class="proj-read warn"><Icon name="alert" /> Reads as: breaches start Thursday 10:00, enterprise first, unless capacity moves.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Illustrative workflow" title="Follow one case across three teams." lede="Account onboarding passes through operations, compliance and risk. Mapped from real events, it shows where the 17 hours go: 2.6 hours of work, and the rest waiting — most of it at the hand-off into verification, plus a rework loop back from risk review." />
+      <div class="reveal">
+        <Diagram src="/diagrams/operations-handoff-map.svg" alt="Swimlane map of account onboarding: intake and triage in operations, verification in compliance with 212 waiting cases and a 9.6 hour wait, risk review returning 18% of cases to verification, then approval and activation in operations" frame="process intelligence · hand-off map" zoom class="hide-sm" />
+        <Diagram src="/diagrams/operations-handoff-map-vertical.svg" alt="Account onboarding stages with waiting cases and hand-off waits; verification is the bottleneck" frame class="show-sm" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshot -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="shot">
+        <div class="shot-copy">
+          <p class="eyebrow">Product concept</p>
+          <h2>A flow board for the whole operation.</h2>
+          <ol class="callouts">
+            <li><strong>Work in progress by stage</strong> — with the age of what is waiting, not just the count.</li>
+            <li><strong>Capacity vs demand</strong> — expected arrivals for the next 24 hours against what each team can complete.</li>
+            <li><strong>Projected SLA</strong> — open cases grouped by time to breach, next to the reported figure.</li>
+            <li><strong>Options to consider</strong> — candidate interventions with their expected effect, for an owner to decide.</li>
+          </ol>
+        </div>
+        <ProductScreen src="/screenshots/operations-flow-board.svg" alt="Fictional flow board: verification holds 212 cases against a limit of 120, compliance demand of 240 against capacity of 170, projected SLA of 91.8% against a 95% target, and three options to consider" title="panoptes / flow-board / account-onboarding" />
+      </div>
+    </div>
+  </section>
+
+  <!-- What becomes observable + indicators -->
+  <section class="section">
+    <div class="container">
+      <div class="split split-top obs">
+        <div>
+          <p class="eyebrow">What Panoptes makes observable</p>
+          <h2>Flow, not just activity.</h2>
+          <p class="lede">Panoptes connects the events your systems already record — case created, assigned, returned, approved — into processes with stages, queues and owners.</p>
+        </div>
+        <ul class="checklist">
+          <li>Every stage of a cross-team process, with work time and wait time separated</li>
+          <li>Hand-offs between teams and systems, and how long work sits at each one</li>
+          <li>Arrival patterns and the capacity available to meet them, per team and skill</li>
+          <li>Service commitments evaluated against open work, not only closed work</li>
+          <li>Rework loops and exceptions, with the reasons cases leave the standard path</li>
+          <li>Changes to rules, policies and releases, lined up against shifts in flow</li>
+        </ul>
+      </div>
+
+      <div class="mt-3">
+        <SectionHead eyebrow="Recommended indicators" title="Indicators an operations view should carry." lede="Grouped by the question each answers. Example values refer to the fictional onboarding scenario on this page." />
+        <Tabs uid="opsind" label="Indicator groups" tabs={tabs} class="reveal">
+          <TabPanel uid="opsind" id="flow" first>
+            <div class="table-wrap"><table class="table"><thead><tr><th>Indicator</th><th>What it tells you</th><th>Example signal</th></tr></thead><tbody>{indicators.flow.map(([a, b, c]) => <tr><td><strong>{a}</strong></td><td>{b}</td><td class="mono">{c}</td></tr>)}</tbody></table></div>
+          </TabPanel>
+          <TabPanel uid="opsind" id="capacity">
+            <div class="table-wrap"><table class="table"><thead><tr><th>Indicator</th><th>What it tells you</th><th>Example signal</th></tr></thead><tbody>{indicators.capacity.map(([a, b, c]) => <tr><td><strong>{a}</strong></td><td>{b}</td><td class="mono">{c}</td></tr>)}</tbody></table></div>
+          </TabPanel>
+          <TabPanel uid="opsind" id="commitments">
+            <div class="table-wrap"><table class="table"><thead><tr><th>Indicator</th><th>What it tells you</th><th>Example signal</th></tr></thead><tbody>{indicators.commitments.map(([a, b, c]) => <tr><td><strong>{a}</strong></td><td>{b}</td><td class="mono">{c}</td></tr>)}</tbody></table></div>
+          </TabPanel>
+          <TabPanel uid="opsind" id="quality">
+            <div class="table-wrap"><table class="table"><thead><tr><th>Indicator</th><th>What it tells you</th><th>Example signal</th></tr></thead><tbody>{indicators.quality.map(([a, b, c]) => <tr><td><strong>{a}</strong></td><td>{b}</td><td class="mono">{c}</td></tr>)}</tbody></table></div>
+          </TabPanel>
+        </Tabs>
+      </div>
+    </div>
+  </section>
+
+  <!-- Decisions -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Decisions it can support" title="When you see this, you can decide that." />
+      <ul class="trig">
+        {decisions.map(([a, b]) => (
+          <li class="reveal"><span class="trig-when"><span class="kpi-label">When</span>{a}</span><Icon name="arrow" class="trig-arrow" /><span class="trig-then"><span class="kpi-label">Decide</span>{b}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Capabilities & related -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Relevant capabilities" title="Built for flow, capacity and commitments." />
+      <div class="grid grid-3">
+        <FeatureCard title="Process Intelligence" text="Stages, hand-offs, waiting time and rework in your real workflows." href="/platform/process-intelligence/" icon="process" />
+        <FeatureCard title="Anomaly Detection" text="Arrivals, wait times and rework compared with expected patterns, so drift is caught early." href="/platform/anomaly-detection/" icon="anomaly" />
+        <FeatureCard title="Actions & Automation" text="Route signals to owners, coordinate the response and measure whether it worked." href="/platform/actions-automation/" icon="actions" />
+      </div>
+      <div class="split split-top mt-3">
+        <RelatedLinks eyebrow="Related use cases" title="Go deeper" items={[
+          { label: 'Operational bottlenecks', href: '/use-cases/operational-bottlenecks/', desc: 'See where work waits, and why', icon: 'clock' },
+          { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Watch commitments before they break', icon: 'target' },
+          { label: 'Operational efficiency', href: '/use-cases/operational-efficiency/', desc: 'Cost, effort and rework, in context', icon: 'spark' },
+          { label: 'Understanding business bottlenecks', href: '/resources/understanding-business-bottlenecks/', desc: 'Why utilisation lies', icon: 'book' },
+        ]} />
+        <div>
+          <p class="eyebrow">FAQ</p>
+          <h2 class="faq-title">Questions operations leaders ask</h2>
+          <FAQ items={faqs} />
+        </div>
+      </div>
+      <div class="mt-3"><RoleSwitcher current="/solutions/operations/" /></div>
+    </div>
+  </section>
+
+  <CTA title="Find out where your work is waiting." text="Pick one cross-team process — onboarding, claims, fulfilment, collections. We will show how Panoptes would map it, and what it would tell you this week." />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-proj]');
+  if (root) {
+    const btns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-proj-btn]'));
+    btns.forEach((b) => b.addEventListener('click', () => {
+      btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      root.querySelectorAll<HTMLElement>('[data-proj-panel]').forEach((p) => { p.hidden = p.dataset.projPanel !== b.dataset.projBtn; });
+    }));
+  }
+</script>
+
+<style>
+  .probs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+  .prob { grid-column: span 2; display: flex; flex-direction: column; padding: 24px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .prob:nth-child(4), .prob:nth-child(5) { grid-column: span 3; }
+  .prob h3 { font-size: 1.2rem; }
+  .prob .muted { font-size: .95rem; }
+  .prob-s { margin: auto 0 0; padding-top: 14px; border-top: 1px dashed var(--border-strong); font-size: .92rem; font-style: italic; display: grid; gap: 4px; }
+  .prob-s .kpi-label { font-style: normal; }
+  @media (max-width: 960px) { .probs { grid-template-columns: 1fr 1fr; } .prob, .prob:nth-child(4), .prob:nth-child(5) { grid-column: span 1; } .prob:nth-child(5) { grid-column: 1 / -1; } }
+  @media (max-width: 640px) { .probs { grid-template-columns: 1fr; } }
+
+  .proj-wrap { align-items: center; }
+  .proj { border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); padding: clamp(18px, 3vw, 28px); box-shadow: var(--shadow); min-height: 420px; }
+  .proj-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 22px; }
+  .proj-tabs button { border: 0; background: none; padding: 10px 8px; border-radius: 9px; font: 600 .88rem/1.2 var(--font-body); color: var(--text-2); cursor: pointer; }
+  .proj-tabs button[aria-pressed='true'] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+  :root[data-theme='dark'] .proj-tabs button[aria-pressed='true'] { background: var(--elevated); }
+  .proj-kpi { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .proj-kpi .kpi { font-size: clamp(2.2rem, 4vw, 3rem); }
+  .kpi.crit { color: var(--crit-text); }
+  .proj .kpi-label { margin-bottom: 12px; }
+  .weeks { list-style: none; padding: 0; margin: 0 0 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .weeks li { display: grid; gap: 6px; text-align: center; }
+  .wk-bar { height: 120px; display: flex; align-items: flex-end; background: var(--bg-2); border-radius: 8px; overflow: hidden; position: relative; }
+  .wk-bar::after { content: ''; position: absolute; z-index: 1; left: 0; right: 0; bottom: 45%; border-top: 2px dashed var(--text); opacity: .55; }
+  .wk-bar i { display: block; width: 100%; background: var(--ok); border-radius: 6px 6px 0 0; }
+  .weeks b { font: 600 .9rem/1 var(--font-mono); }
+  .weeks small { font-size: .78rem; color: var(--text-3); }
+  .ttb { list-style: none; padding: 0; margin: 0 0 18px; display: grid; gap: 10px; }
+  .ttb li { display: grid; grid-template-columns: 96px 1fr 40px; gap: 12px; align-items: center; }
+  .ttb-l { display: grid; line-height: 1.2; }
+  .ttb-l b { font: 600 .9rem/1.2 var(--font-mono); }
+  .ttb-l small { font-size: .78rem; color: var(--text-3); }
+  .ttb-bar { height: 12px; background: var(--bg-2); border-radius: 6px; overflow: hidden; }
+  .ttb-bar i { display: block; height: 100%; border-radius: 6px; }
+  .ttb-bar .crit { background: var(--crit); } .ttb-bar .warn { background: var(--warn); } .ttb-bar .ok { background: var(--ok); }
+  .ttb-n { font: 600 .9rem/1 var(--font-mono); text-align: right; }
+  .proj-read { display: flex; gap: 10px; align-items: flex-start; margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); color: var(--ok-text); font-size: .92rem; font-weight: 500; }
+  .proj-read.warn { background: var(--crit-bg); color: var(--crit-text); }
+  .proj-read :global(svg) { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+  .proj-panel[hidden] { display: none; }
+
+  .shot { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 4vw, 40px); }
+  .shot-copy h2 { max-width: 20ch; }
+  .callouts { margin: 1.4rem 0 0; padding-left: 1.3em; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem 2.2rem; color: var(--text-2); font-size: .94rem; }
+  @media (max-width: 960px) { .callouts { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .callouts { grid-template-columns: 1fr; } }
+  .callouts strong { color: var(--text); }
+  .callouts li::marker { color: var(--accent-text); font-weight: 600; font-family: var(--font-mono); }
+  
+  .trig { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .trig li { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1.2fr); gap: 16px; align-items: center; padding: 18px 22px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .trig-when, .trig-then { display: grid; gap: 4px; }
+  .trig-when { font-weight: 600; }
+  .trig-then { color: var(--text-2); }
+  .trig li :global(.trig-arrow) { width: 22px; height: 22px; color: var(--accent-text); }
+  @media (max-width: 760px) { .trig li { grid-template-columns: 1fr; gap: 10px; } .trig li :global(.trig-arrow) { transform: rotate(90deg); } }
+  .faq-title { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  :global(.frame-bar .illustrative) { white-space: nowrap; flex: none; }
+</style>

@@ -1,0 +1,310 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'Process Intelligence', href: '/platform/process-intelligence/' }];
+
+// Fictional capacities (cases per day) for the constraint explorer.
+const stages = [
+  { id: 'intake', name: 'Application intake', cap: 140 },
+  { id: 'docs', name: 'Document check', cap: 120 },
+  { id: 'idv', name: 'Identity verification', cap: 90 },
+  { id: 'risk', name: 'Risk review', cap: 110 },
+  { id: 'approve', name: 'Approval', cap: 130 },
+];
+const MAX = 160;
+const ARRIVALS = 100;
+
+const measures = [
+  { k: 'Throughput', d: 'Cases completed per period, per stage and end to end. The rate the process actually delivers, not the rate it was designed for.' },
+  { k: 'Waiting time', d: 'Time a case spends between stages or in a queue, separated from the time someone is working on it.' },
+  { k: 'Work time', d: 'Time between a stage starting and finishing. Usually a small share of the elapsed time, which is the point.' },
+  { k: 'Completion rate', d: 'The share of cases that finish, abandon or time out, and at which stage they leave.' },
+  { k: 'Rework', d: 'Cases sent back to an earlier stage, how often, from where and why: missing documents, failed checks, corrections.' },
+  { k: 'Work in progress', d: 'How many cases are inside the process, and inside each stage, right now. The quantity that queues are made of.' },
+];
+---
+<BaseLayout title="Process Intelligence" description="See stages, throughput, waiting time, completion rates and rework in real business workflows, and find the stage that is actually constraining flow." ogImage="/social/og-platform.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Platform · Process Intelligence" title="See where work <span class='gradient-text'>waits</span>, and why." lede="Process Intelligence follows cases through your real workflows (onboarding, claims, fulfilment, collections) stage by stage. It measures throughput, waiting time, completion and rework, and points to the stage that is actually limiting flow." breadcrumbs={crumbs}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#constraint">Find the constraint</a>
+    </div>
+  </PageHero>
+
+  <section class="section section-tight map-sec">
+    <div class="container container-wide">
+      <Diagram src="/diagrams/process-intelligence-stage-map.svg" alt="Stage map of a business-account onboarding process with six stages. Identity verification is marked as the constraint with a 19-hour wait. A rework loop sends cases from risk review back to document check. An elapsed-time bar shows most time is spent waiting rather than working. Fictional data." frame="process · business account onboarding" zoom class="hide-sm" />
+      <Diagram src="/diagrams/process-intelligence-stage-map-vertical.svg" alt="Stage map of a business-account onboarding process: six stages with wait and work times, a rework loop, and identity verification marked as the constraint. Fictional data." frame="process · onboarding" class="show-sm" />
+    </div>
+  </section>
+
+  <!-- What it measures -->
+  <section class="section">
+    <div class="container">
+      <div class="meas">
+        <div class="meas-intro">
+          <p class="eyebrow">What it does</p>
+          <h2>Six measures that describe how work actually flows.</h2>
+          <p class="muted">Process Intelligence builds these from business events already in the model: a case entering a stage, leaving it, being sent back, being completed. It does not rely on someone drawing the process first. The stages people believe exist are compared with the ones the events show.</p>
+          <p class="muted small">It observes cases and stages, not individuals. Process Intelligence is not designed to measure or rank employee performance.</p>
+        </div>
+        <dl class="meas-grid">
+          {measures.map((m) => <div class="reveal"><dt>{m.k}</dt><dd>{m.d}</dd></div>)}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why it matters + Little's law -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="split ll">
+        <div>
+          <p class="eyebrow">Why it matters</p>
+          <h2>Slow processes are mostly waiting, and queues follow simple rules.</h2>
+          <p class="lede">When a process feels slow, the instinct is to make the work faster. Usually the work is a small part of the elapsed time. Cases spend most of their life waiting for the next stage.</p>
+          <p class="muted">There is a useful rule of thumb from queueing theory, known as Little’s Law: on average, the time a case spends in a process is roughly the number of cases in progress divided by the rate at which cases finish. If three hundred applications are open and a hundred are finished each day, a typical application takes about three days.</p>
+          <p class="muted">The rule is simple, but its consequences are not obvious. You cannot shorten time in the process without either reducing work in progress or raising throughput, and throughput is set by the slowest stage, not the average one. That is why Process Intelligence focuses on finding the constraint.</p>
+        </div>
+        <div class="reveal">
+          <Diagram src="/diagrams/process-intelligence-littles-law.svg" alt="Little's Law intuition: cases arrive, accumulate as work in progress, and leave at the throughput rate. Average time in system is roughly work in progress divided by throughput; for example 300 open cases divided by 100 finished per day is about 3 days." frame="little's law, plainly" illustrative={false} zoom />
+          <p class="note mt-1">The rule holds for averages over a stable period. It says nothing about any single case, and it is a sense check, not a forecast.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Constraint explorer -->
+  <section id="constraint" class="section">
+    <div class="container">
+      <SectionHead eyebrow="Interactive" title="Where is the constraint?" lede="A five-stage onboarding process with 100 new applications a day. Change the arrival rate or add capacity to a stage and see which stage limits flow, and what happens to its queue. All numbers are fictional." />
+      <div class="cx" data-cx data-arrivals={ARRIVALS}>
+        <div class="cx-top">
+          <label for="cx-arr" class="cx-arr-l"><span class="kpi-label">Arrivals</span><strong><output id="cx-arr-out" data-arr-out>{ARRIVALS}</output> applications / day</strong></label>
+          <input id="cx-arr" type="range" min="60" max="150" step="5" value={ARRIVALS} data-arr aria-describedby="cx-summary" />
+          <button type="button" class="btn btn-sm" data-reset>Reset</button>
+        </div>
+        <ul class="cx-stages">
+          {stages.map((s) => (
+            <li class="cx-st" data-stage={s.id} data-cap={s.cap}>
+              <div class="cx-name">
+                <strong>{s.name}</strong>
+                <span class="cx-tag" data-tag></span>
+              </div>
+              <div class="cx-bar" aria-hidden="true">
+                <i class="cx-fill" data-fill style={`width:${(s.cap / MAX) * 100}%`}></i>
+                <i class="cx-arrline" data-arrline style={`left:${(ARRIVALS / MAX) * 100}%`}></i>
+              </div>
+              <div class="cx-ctl">
+                <span class="cx-cap"><b data-cap-out>{s.cap}</b>/day</span>
+                <button type="button" class="cx-btn" data-delta="-10" aria-label={`Remove 10 a day of capacity from ${s.name}`}>−</button>
+                <button type="button" class="cx-btn" data-delta="10" aria-label={`Add 10 a day of capacity to ${s.name}`}>+</button>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <div class="cx-legend" aria-hidden="true"><span><i class="lg-cap"></i>Stage capacity</span><span><i class="lg-arr"></i>Arrival rate</span><span><i class="lg-con"></i>Constraint</span></div>
+        <div class="cx-summary" id="cx-summary" aria-live="polite" data-summary></div>
+      </div>
+      <p class="note mt-1">A deliberately simple model: one arrival rate, fixed capacities and no rework. Real processes vary day to day, which is why Process Intelligence measures them continuously rather than assuming fixed numbers.</p>
+    </div>
+  </section>
+
+  <!-- Scenario -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="scen">
+        <div class="scen-q">
+          <p class="eyebrow">Scenario</p>
+          <h2>“Why does onboarding take three days when the work takes three hours?”</h2>
+        </div>
+        <div class="scen-steps">
+          <div class="ss reveal"><span>Signal</span><p>Time from application to activated account has been creeping up for a month. Every team reports that it is meeting its own targets.</p></div>
+          <div class="ss reveal"><span>What the stage map shows</span><p>Hands-on work is a small fraction of the elapsed time. Most of it is waiting, and the longest wait is in front of identity verification, where work in progress has been growing steadily.</p></div>
+          <div class="ss reveal"><span>Rework</span><p>Risk review is sending a share of cases back to document check for missing paperwork. Each returned case passes through the verification queue a second time, adding load to the constraint.</p></div>
+          <div class="ss reveal"><span>Possible actions</span><p>Ask for the missing documents at intake, so fewer cases are sent back. Add verification capacity at peak hours. Adding staff to approval would not help, because approval is not the constraint.</p></div>
+          <div class="ss ss-out reveal"><span>Outcome to measure</span><p>Verification queue age, rework rate and end-to-end time, each against its expected band, before and after the change.</p></div>
+        </div>
+      </div>
+      <p class="illustrative mt-1">Illustrative scenario</p>
+    </div>
+  </section>
+
+  <!-- Key functionality -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Key functionality" title="From event logs to a working picture of the process." />
+      <div class="kf">
+        {[
+          { i: 'workflow', t: 'Stage maps from events', d: 'Stages, transitions and loops discovered from business events, and compared with the intended process.' },
+          { i: 'clock', t: 'Wait and work separated', d: 'Every stage split into waiting and working time, with medians and long tails rather than averages alone.' },
+          { i: 'target', t: 'Constraint detection', d: 'The stage with the least spare capacity relative to demand, and how that changes through the day and week.' },
+          { i: 'flow', t: 'Rework loops', d: 'Where cases are sent back, how often and with what reason, and the extra load they add downstream.' },
+          { i: 'layers', t: 'Segment comparison', d: 'The same process compared across regions, products, customer tiers or channels.' },
+          { i: 'alert', t: 'Projected breaches', d: 'Open cases on track to miss a service expectation, while there is still time to act.' },
+        ].map((f) => <div class="kf-i reveal"><span class="icon-tile"><Icon name={f.i} /></span><h3>{f.t}</h3><p class="muted small">{f.d}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Connects -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="conn">
+        <div>
+          <p class="eyebrow">How it connects</p>
+          <h2>Process is one lens on the shared model.</h2>
+          <p class="muted">Cases are entities in the <a href="/platform/business-graph/">Business Graph</a>, so a delayed onboarding is also a delayed customer and deferred revenue. Flow indicators feed <a href="/platform/business-health/">Business Health</a>, unusual changes in waits or rework are picked up by <a href="/platform/anomaly-detection/">Anomaly Detection</a>, and <a href="/platform/journey-intelligence/">Journey Intelligence</a> follows the same customers across processes that Process Intelligence follows within one.</p>
+          <a href="/resources/understanding-business-bottlenecks/" class="link-arrow">Read: understanding business bottlenecks</a>
+        </div>
+        <RelatedLinks title="Related capabilities" items={[
+          { label: 'Journey Intelligence', href: '/platform/journey-intelligence/', desc: 'End-to-end paths across systems', icon: 'journey' },
+          { label: 'Business Health', href: '/platform/business-health/', desc: 'Service expectations and bands', icon: 'health' },
+          { label: 'Root Cause Analysis', href: '/platform/root-cause-analysis/', desc: 'Why a wait suddenly grew', icon: 'rootcause' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <RelatedLinks eyebrow="Use cases" title="Process Intelligence in practice" items={[
+        { label: 'Operational bottlenecks', href: '/use-cases/operational-bottlenecks/', desc: 'See where work waits, and why', icon: 'clock' },
+        { label: 'Operational efficiency', href: '/use-cases/operational-efficiency/', desc: 'Cost, effort and rework in context', icon: 'spark' },
+        { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Commitments before they break', icon: 'target' },
+        { label: 'For operations', href: '/solutions/operations/', desc: 'Flow, capacity and commitments', icon: 'operations' },
+      ]} />
+    </div>
+  </section>
+
+  <CTA title="Find the stage that is really holding you back." text="Pick a workflow that feels slower than it should. We will show how Panoptes would map it, measure it and locate the constraint." />
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cx]').forEach((root) => {
+    const MAX = 160;
+    const base = +root.dataset.arrivals!;
+    const arr = root.querySelector<HTMLInputElement>('[data-arr]')!;
+    const arrOut = root.querySelector<HTMLOutputElement>('[data-arr-out]')!;
+    const summary = root.querySelector<HTMLElement>('[data-summary]')!;
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-stage]'));
+    const initial = rows.map((r) => +r.dataset.cap!);
+    let timer: number | undefined;
+    const render = (announce = true) => {
+      const a = +arr.value;
+      arrOut.textContent = String(a);
+      const caps = rows.map((r) => +r.dataset.cap!);
+      const min = Math.min(...caps);
+      const ci = caps.indexOf(min);
+      rows.forEach((r, i) => {
+        const cap = caps[i];
+        r.querySelector<HTMLElement>('[data-fill]')!.style.width = `${Math.min(cap / MAX, 1) * 100}%`;
+        r.querySelector<HTMLElement>('[data-arrline]')!.style.left = `${(a / MAX) * 100}%`;
+        r.querySelector<HTMLElement>('[data-cap-out]')!.textContent = String(cap);
+        const isCon = i === ci;
+        const over = a > cap;
+        r.dataset.state = isCon ? (over ? 'con-over' : 'con') : over ? 'over' : 'ok';
+        const tag = r.querySelector<HTMLElement>('[data-tag]')!;
+        const spare = cap - Math.min(a, ...caps.slice(0, i));
+        tag.textContent = isCon ? (over ? 'Constraint · queue growing' : 'Constraint') : spare >= 0 ? `${spare}/day spare` : '';
+      });
+      const name = rows[ci].querySelector('strong')!.textContent;
+      const thr = Math.min(a, min);
+      const nextCaps = caps.filter((_, i) => i !== ci);
+      const next = Math.min(...nextCaps);
+      let msg: string;
+      if (a > min) {
+        msg = `${name} is the constraint at ${min} a day. ${a} applications arrive daily, so roughly ${a - min} more cases join its queue every day and waiting time keeps growing. Adding capacity anywhere else would not change throughput, which stays at ${thr} a day.`;
+      } else {
+        msg = `Every stage can keep up: arrivals (${a} a day) are below the tightest stage, ${name} at ${min} a day, so queues should not grow on average. ${name} still has the least spare capacity (${min - a} a day), so it is where queues would form first if arrivals rise or capacity dips.`;
+      }
+      if (nextCaps.length && next === min) msg += ' Two stages are now tied as the constraint: improving one alone moves nothing.';
+      if (announce) { window.clearTimeout(timer); timer = window.setTimeout(() => (summary.textContent = msg), 250); } else summary.textContent = msg;
+    };
+    rows.forEach((r) => r.querySelectorAll<HTMLButtonElement>('[data-delta]').forEach((b) => b.addEventListener('click', () => {
+      r.dataset.cap = String(Math.max(40, Math.min(MAX, +r.dataset.cap! + +b.dataset.delta!)));
+      render();
+    })));
+    arr.addEventListener('input', () => render());
+    root.querySelector('[data-reset]')!.addEventListener('click', () => { arr.value = String(base); rows.forEach((r, i) => (r.dataset.cap = String(initial[i]))); render(); });
+    render(false);
+  });
+</script>
+
+<style>
+  .map-sec { padding-top: clamp(32px, 4vw, 56px); }
+
+  .meas { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  @media (max-width: 960px) { .meas { grid-template-columns: 1fr; } }
+  .meas-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 0; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); }
+  .meas-grid > div { padding: 20px 22px; border-bottom: 1px solid var(--border); }
+  .meas-grid > div:nth-child(odd) { border-right: 1px solid var(--border); }
+  .meas-grid > div:nth-last-child(-n+2) { border-bottom: 0; }
+  .meas-grid dt { font: 600 1.05rem/1.2 var(--font-display); margin-bottom: .4rem; }
+  .meas-grid dd { margin: 0; color: var(--text-2); font-size: .92rem; }
+  @media (max-width: 560px) {
+    .meas-grid { grid-template-columns: 1fr; }
+    .meas-grid > div:nth-child(odd) { border-right: 0; }
+    .meas-grid > div:nth-last-child(2) { border-bottom: 1px solid var(--border); }
+  }
+
+  .ll { align-items: start; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); }
+  @media (max-width: 960px) { .ll { grid-template-columns: minmax(0, 1fr); } }
+
+  .cx { border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); padding: clamp(18px, 3vw, 32px); box-shadow: var(--shadow); }
+  .cx-top { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 20px; align-items: center; padding-bottom: 1.2rem; margin-bottom: 1rem; border-bottom: 1px dashed var(--border-strong); }
+  .cx-arr-l { display: grid; gap: 4px; }
+  .cx-arr-l strong { font: 600 1.05rem/1.2 var(--font-display); }
+  .cx-top input[type='range'] { width: 100%; accent-color: var(--purple); }
+  .cx-stages { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .cx-st { display: grid; grid-template-columns: 220px minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-2); transition: border-color .2s, background .2s; }
+  .cx-name { display: grid; gap: 4px; }
+  .cx-name strong { font-size: .95rem; }
+  .cx-tag { font: 500 .7rem/1.2 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--text-3); min-height: 1em; }
+  .cx-bar { position: relative; height: 14px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); }
+  .cx-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: var(--accent); opacity: .55; transition: width .3s var(--ease), background .2s; }
+  .cx-arrline { position: absolute; top: -6px; bottom: -6px; width: 2px; margin-left: -1px; background: var(--text); border-radius: 2px; transition: left .3s var(--ease); }
+  .cx-ctl { display: flex; align-items: center; gap: 6px; }
+  .cx-cap { font: 500 .85rem/1 var(--font-mono); color: var(--text-2); min-width: 72px; text-align: right; margin-right: 4px; }
+  .cx-cap b { color: var(--text); }
+  .cx-btn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); font: 600 1.1rem/1 var(--font-body); cursor: pointer; }
+  .cx-btn:hover { border-color: var(--accent); color: var(--accent-text); }
+  .cx-st[data-state^='con'] { border-color: var(--crit); background: var(--crit-bg); }
+  .cx-st[data-state^='con'] .cx-fill { background: var(--crit); opacity: .85; }
+  .cx-st[data-state^='con'] .cx-tag { color: var(--crit-text); font-weight: 600; }
+  .cx-legend { display: flex; flex-wrap: wrap; gap: 18px; margin: 1rem 0; font-size: .82rem; color: var(--text-3); }
+  .cx-legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .cx-legend i { display: inline-block; width: 16px; height: 8px; border-radius: 4px; }
+  .lg-cap { background: var(--accent); opacity: .55; } .lg-con { background: var(--crit); } .lg-arr { width: 2px !important; height: 14px !important; background: var(--text); }
+  .cx-summary { padding: 16px 18px; border-radius: var(--radius); background: var(--accent-soft); color: var(--text); font-size: .95rem; min-height: 4.5em; }
+  @media (max-width: 760px) {
+    .cx-top { grid-template-columns: 1fr auto; }
+    .cx-top input[type='range'] { grid-column: 1 / -1; grid-row: 2; }
+    .cx-st { grid-template-columns: minmax(0, 1fr) auto; gap: 10px 12px; }
+    .cx-bar { grid-column: 1 / -1; grid-row: 2; }
+  }
+
+  .scen { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  .scen-q h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  @media (max-width: 960px) { .scen { grid-template-columns: 1fr; } }
+  .scen-steps { display: grid; gap: 10px; }
+  .ss { padding: 18px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  .ss span { font: 500 .72rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--accent-text); }
+  .ss p { margin: .5rem 0 0; color: var(--text-2); }
+  .ss-out { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 9%, var(--surface)), var(--surface)); }
+
+  .kf { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 32px; }
+  .kf-i h3 { font-size: 1.1rem; margin-top: .9rem; }
+  @media (max-width: 860px) { .kf { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .kf { grid-template-columns: 1fr; } }
+
+  .conn { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 64px); align-items: start; }
+  .conn :global(.related-list) { grid-template-columns: 1fr; }
+  @media (max-width: 860px) { .conn { grid-template-columns: 1fr; } }
+</style>

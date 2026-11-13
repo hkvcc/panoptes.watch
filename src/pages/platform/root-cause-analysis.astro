@@ -1,0 +1,324 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import Tabs from '../../components/Tabs.astro';
+import TabPanel from '../../components/TabPanel.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'Root Cause Analysis', href: '/platform/root-cause-analysis/' }];
+
+const ladder = [
+  { n: 1, t: 'Co-occurrence', q: 'Did the change and the outcome move in the same window?', yes: 'Worth a look.', no: 'Many unrelated things happen in any given week. On its own this proves almost nothing.' },
+  { n: 2, t: 'Temporal precedence', q: 'Did the candidate change happen before the outcome moved?', yes: 'Rules out explanations that started afterwards.', no: 'Coming first is necessary, not sufficient. Something else may have changed at the same time.' },
+  { n: 3, t: 'Dependency path', q: 'Is there a real path in the business model from the change to the outcome?', yes: 'There is a mechanism by which it could matter.', no: 'A plausible path is still a hypothesis about mechanism, not evidence that it operated.' },
+  { n: 4, t: 'Segment concentration', q: 'Is the effect concentrated where the change applies, and absent where it does not?', yes: 'Strong circumstantial evidence; many alternatives fall away.', no: 'A hidden factor that shares the same segments could still be responsible.' },
+  { n: 5, t: 'Confirmed by intervention', q: 'When the change is reversed or withheld for a comparable group, does the outcome respond?', yes: 'Evidence of cause, within the limits of the test.', no: 'Even this can be confounded by poor comparison groups. Document how the test was run.' },
+];
+
+type Mark = 'yes' | 'no' | 'na';
+const hyps: { id: string; label: string; verdict: string; tone: string; marks: [Mark, string][]; summary: string }[] = [
+  { id: 'rule', label: 'Fraud rule v14', verdict: 'Confirmed by intervention', tone: 'ok',
+    marks: [['yes', 'Deployed the same morning completion fell'], ['yes', 'Deployed 40 minutes before onset'], ['yes', 'Rule evaluates card authorisations on route B'], ['yes', 'Only route B cards affected; route A and wallets normal'], ['yes', '10% holdout on previous rule recovered; others did not']],
+    summary: 'Every rung is satisfied, including a controlled holdout. The team can treat the rule change as the cause of the decline — and record exactly why.' },
+  { id: 'release', label: 'Checkout release 3.2', verdict: 'Unlikely', tone: 'warn',
+    marks: [['yes', 'Released the previous evening'], ['yes', 'Preceded the onset by about 12 hours'], ['yes', 'Checkout sits upstream of every payment'], ['no', 'Would affect all routes and wallets; only route B moved'], ['na', 'Not tested — no longer needed']],
+    summary: 'Timing and mechanism both fit, which is exactly why it is tempting. The segment pattern does not: a checkout fault would show up everywhere.' },
+  { id: 'issuer', label: 'Issuer maintenance', verdict: 'Ruled out', tone: 'crit',
+    marks: [['yes', 'Happened on the same day'], ['no', 'Began roughly five hours after onset'], ['yes', 'Issuers sit on the card authorisation path'], ['no', 'Would affect both acquirer routes'], ['na', 'Not tested']],
+    summary: 'It started after the problem did and would have hit both routes. It may have added noise later in the day, but it cannot explain the onset.' },
+  { id: 'campaign', label: 'Campaign email', verdict: 'Coincidence', tone: 'crit',
+    marks: [['yes', 'Sent the same morning'], ['yes', 'Sent before onset'], ['no', 'No path from email audience to authorisation outcome'], ['no', 'Recipients and non-recipients declined at the same rate'], ['na', 'Not tested']],
+    summary: 'A classic co-occurrence. Without a dependency path or a segment pattern, being nearby on the timeline is not evidence.' },
+];
+const markLabel: Record<Mark, string> = { yes: 'Satisfied', no: 'Not satisfied', na: 'Not tested' };
+
+const method = [
+  { i: 'layers', t: 'Decompose', d: 'Break the outcome into its drivers using the business model — volume, conversion, value, timing — and see which ones actually moved.' },
+  { i: 'search', t: 'Localise', d: 'Follow the moving driver down through segments and dependencies until the change is concentrated in one place.' },
+  { i: 'event', t: 'Align changes', d: 'Line up releases, rule updates, pricing, staffing and supplier events against the onset, on the dependency path.' },
+  { i: 'check', t: 'Test', d: 'Turn the strongest candidate into a check: a rollback, a holdout or a comparison that can confirm or reject it.' },
+];
+
+const feats = [
+  { t: 'Driver decomposition', d: 'Splits an outcome into the quantities that produce it, so “revenue is down” becomes “card completion on one route is down”.' },
+  { t: 'Dependency traversal', d: 'Walks the Business Graph upstream from a symptom to the processes, systems, suppliers and teams it depends on.' },
+  { t: 'Change timeline', d: 'A single timeline of business-relevant changes — releases, configuration, pricing, campaigns, staffing — that can be overlaid on any metric.' },
+  { t: 'Contribution analysis', d: 'Estimates how much of a gap each segment accounts for, so attention goes to the 71% before the 3%.' },
+  { t: 'Evidence record', d: 'Each hypothesis carries its evidence and its status on the ladder, visible to everyone working the investigation.' },
+  { t: 'Intervention hooks', d: 'A candidate cause can become a tracked intervention — with a comparison group — through Actions & Automation.' },
+];
+
+const schema = { '@type': 'WebPage', name: 'Root Cause Analysis — Panoptes', about: 'Business root cause analysis that connects outcomes to changes in dependent workflows and distinguishes correlation from verified causation.' };
+---
+<BaseLayout title="Root Cause Analysis" description="Trace a business outcome back through dependent workflows and recent changes — with an explicit evidence ladder separating correlation from verified causation." ogImage="/social/og-platform.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Platform · Root Cause Analysis" title="From symptom to cause — <span class='gradient-text'>and honest about the difference.</span>" lede="When a business outcome moves, Panoptes is designed to follow it back through the processes, segments and changes it depends on. It shows what is merely correlated, what is strongly supported, and what has been confirmed — so decisions rest on evidence, not the loudest theory in the room." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#ladder">See the evidence ladder</a>
+    </div>
+    <Fragment slot="visual">
+      <div class="hyp-card" role="figure" aria-label="Illustrative investigation summary card">
+        <div class="hc-bar"><span class="mono">investigation · collected revenue</span><span class="illustrative">Illustrative</span></div>
+        <div class="hc-body">
+          <p class="kpi-label">Symptom</p>
+          <p class="hc-sym"><span class="badge badge-crit">−6.1% vs expected</span> Collected revenue, Tuesday</p>
+          <p class="kpi-label">Localised to</p>
+          <p class="mono hc-path">Payment completion → Cards → Acquirer route B</p>
+          <p class="kpi-label">Leading hypothesis</p>
+          <p class="hc-h"><strong>Fraud rule v14</strong> deployed 40 min before onset</p>
+          <p class="kpi-label">Evidence ladder · 4 of 5 rungs</p>
+          <ol class="hc-ladder" aria-label="Evidence ladder status: four of five rungs reached">
+            {ladder.map((r) => <li class:list={{ on: r.n <= 4 }}><span>{r.t}</span></li>)}
+          </ol>
+          <p class="hc-status"><span class="badge badge-warn">Strongly correlated</span> <span class="muted small">Not yet confirmed — holdout proposed</span></p>
+        </div>
+      </div>
+    </Fragment>
+  </PageHero>
+
+  <!-- What it does -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="What it does" title="Connect business outcomes to the changes underneath them." lede="Business outcomes are produced by chains of dependent work: a payment depends on an authorisation, which depends on a route, a rule set and an issuer. Root Cause Analysis uses those chains, held in the Business Graph, to narrow a broad symptom to a specific, testable explanation." />
+      <ol class="method">
+        {method.map((m, i) => (
+          <li class="reveal">
+            <span class="icon-tile"><Icon name={m.i} /></span>
+            <p class="m-step mono">Step {i + 1}</p>
+            <h3>{m.t}</h3>
+            <p class="muted small">{m.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Investigation tree -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="tree-head">
+        <SectionHead eyebrow="Investigation tree" title="Every branch explored, every dead end recorded." />
+        <p class="muted reveal">An investigation is a tree, not a hunch. Drivers that stayed in their expected range are ruled out explicitly, so nobody spends the afternoon re-checking order volume. The path that remains leads to a specific route and a short list of changes on it.</p>
+      </div>
+      <div class="reveal">
+        <Diagram src="/diagrams/root-cause-investigation-tree.svg" alt="Investigation tree. Collected revenue is 6.1% below expected. Order volume and average order value are in band and ruled out. Payment completion is down 4.8 points; within it, card payments are down while bank transfer and wallets are in band. Within cards, acquirer route B is down 18 points and accounts for 71% of the gap. On route B, fraud rule v14 precedes the onset and is a correlated candidate, issuer maintenance started after onset, and checkout release 3.2 affects all routes so is unlikely." frame="investigation tree · collected revenue" zoom class="hide-sm" />
+        <Diagram src="/diagrams/root-cause-investigation-tree-vertical.svg" alt="Investigation tree from collected revenue down to acquirer route B and the candidate fraud rule change, with ruled-out branches listed." frame="investigation tree" class="show-sm" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Evidence ladder -->
+  <section class="section" id="ladder">
+    <div class="container">
+      <div class="lad-wrap">
+        <div class="lad-intro">
+          <p class="eyebrow">The evidence ladder</p>
+          <h2>Correlation is where an investigation starts — not where it ends.</h2>
+          <p class="muted">Panoptes can find patterns quickly. That makes it more important, not less, to be clear about how strong each pattern is. Every hypothesis in an investigation is placed on a five-rung ladder, and the rung it has reached is shown wherever the hypothesis appears.</p>
+          <p class="muted">The first four rungs build an increasingly strong <em>case</em>. Only the fifth — a deliberate intervention with a comparison — is evidence of cause. Panoptes is designed never to describe a rung-four finding as “the root cause”.</p>
+          <div class="lad-key">
+            <span><i class="k-corr"></i>Correlation (rungs 1–4)</span>
+            <span><i class="k-cause"></i>Evidence of cause (rung 5)</span>
+          </div>
+        </div>
+        <ol class="ladder">
+          {[...ladder].reverse().map((r) => (
+            <li class:list={['rung reveal', { cause: r.n === 5 }]}>
+              <span class="r-n">{r.n}</span>
+              <div>
+                <h3>{r.t}</h3>
+                <p class="r-q">{r.q}</p>
+                <dl>
+                  <dt>If yes</dt><dd>{r.yes}</dd>
+                  <dt>Caveat</dt><dd>{r.no}</dd>
+                </dl>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Worked example -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Worked example" title="Four plausible explanations. One survives." lede="The revenue investigation above produced four candidate changes. Select each to see how far up the ladder it gets — and why most good-sounding explanations stop early." />
+      <Tabs uid="hy" label="Candidate explanations" tabs={hyps.map((h) => ({ id: h.id, label: h.label }))} class="reveal">
+        {hyps.map((h, hi) => (
+          <TabPanel uid="hy" id={h.id} first={hi === 0}>
+            <div class="hp">
+              <div class="hp-head">
+                <h3>{h.label}</h3>
+                <span class={`badge badge-${h.tone}`}>{h.verdict}</span>
+              </div>
+              <ol class="hp-rungs">
+                {h.marks.map(([m, note], i) => (
+                  <li class={`m-${m}`}>
+                    <span class="hp-ic" aria-hidden="true">{m === 'yes' ? '✓' : m === 'no' ? '✕' : '–'}</span>
+                    <span class="hp-t"><strong>{ladder[i].t}</strong><span class="sr-only"> — {markLabel[m]}</span></span>
+                    <span class="hp-note">{note}</span>
+                  </li>
+                ))}
+              </ol>
+              <p class="hp-sum"><Icon name="compass" /><span>{h.summary}</span></p>
+            </div>
+          </TabPanel>
+        ))}
+      </Tabs>
+      <div class="mt-3 reveal tl-fig">
+        <Diagram src="/diagrams/root-cause-change-timeline.svg" alt="Timeline of route B card completion across two days. A campaign email and an issuer maintenance window are marked but do not line up with the drop. The drop begins forty minutes after fraud rule v14. A ten percent holdout on the previous rule recovers while the rest of route B stays low, and a full rollback restores completion." frame="worked example · change timeline" zoom />
+      </div>
+      <p class="note mt-1 text-center">All names, times and figures are fictional and simplified for illustration.</p>
+    </div>
+  </section>
+
+  <!-- Why it matters -->
+  <section class="section">
+    <div class="container split split-top">
+      <div>
+        <p class="eyebrow">Why it matters</p>
+        <h2>The wrong root cause is expensive twice.</h2>
+      </div>
+      <div>
+        <p class="lede">Fixing the wrong thing costs the effort of the fix — and the time the real problem keeps running while everyone believes it is solved.</p>
+        <p class="muted">In most organisations, root-cause discussions are settled by whoever has the most convincing chart or the most seniority. The checkout team rolls back a release that was never the problem; the payments team waits for an issuer to “recover”. Meanwhile the actual cause, a rule change on one route, keeps declining good customers.</p>
+        <p class="muted">A shared investigation tree and an explicit evidence ladder change the dynamic. Everyone can see what has been ruled out and why, which hypothesis is strongest, and what test would settle it. Disagreements become questions about evidence rather than about people.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key functionality -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Key functionality" title="The building blocks of a defensible investigation." />
+      <div class="feats">
+        {feats.map((f, i) => (
+          <div class="feat reveal"><span class="mono">{String(i + 1).padStart(2, '0')}</span><h3>{f.t}</h3><p class="muted small">{f.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform, use cases, related -->
+  <section class="section">
+    <div class="container">
+      <div class="conn">
+        <div class="conn-col">
+          <p class="eyebrow">Where investigations start</p>
+          <p class="muted">An alert from <a href="/platform/anomaly-detection/">Anomaly Detection</a>, a slipping objective in <a href="/platform/business-health/">Business Health</a>, or a slow step in <a href="/platform/journey-intelligence/">Journey Intelligence</a>.</p>
+        </div>
+        <div class="conn-col conn-mid">
+          <p class="eyebrow">What they run on</p>
+          <p class="muted">The <a href="/platform/business-graph/">Business Graph</a>: the entities, dependencies and changes that let a symptom be traced instead of guessed.</p>
+        </div>
+        <div class="conn-col">
+          <p class="eyebrow">Where they lead</p>
+          <p class="muted">A tracked intervention in <a href="/platform/actions-automation/">Actions &amp; Automation</a>, with a comparison group, so the top rung of the ladder can actually be reached.</p>
+        </div>
+      </div>
+      <div class="mt-3">
+        <div class="rel3"><RelatedLinks eyebrow="Use cases and capabilities" title="Related" items={[
+          { label: 'Business anomalies', href: '/use-cases/business-anomalies/', desc: 'Separate real change from noise', icon: 'anomaly' },
+          { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Find where earned revenue goes missing', icon: 'revenue' },
+          { label: 'Operational bottlenecks', href: '/use-cases/operational-bottlenecks/', desc: 'See where work waits, and why', icon: 'clock' },
+          { label: 'AI Intelligence', href: '/platform/ai-intelligence/', desc: 'Assisted investigation (product vision)', icon: 'ai' },
+          { label: 'Process Intelligence', href: '/platform/process-intelligence/', desc: 'Stages, throughput and bottlenecks', icon: 'process' },
+          { label: 'How events connect to outcomes', href: '/resources/how-business-events-connect-to-outcomes/', desc: 'Guide: from business events to results', icon: 'book' },
+        ]} /></div>
+      </div>
+    </div>
+  </section>
+
+  <CTA title="Investigate with evidence, not opinion." text="Bring a recent “why did this happen?” from your business and we will walk through how Panoptes would structure the investigation." />
+</BaseLayout>
+
+<style>
+  .rel3 :global(.related-list) { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .hyp-card { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-lg); overflow: hidden; max-width: 520px; margin-left: auto; }
+  .hc-bar { display: flex; justify-content: space-between; gap: 10px; padding: 10px 16px; background: var(--surface-2); border-bottom: 1px solid var(--border); font-size: .72rem; color: var(--text-3); }
+  .hc-body { padding: 20px 22px 22px; }
+  .hc-body p { margin: 0; }
+  .hc-body .kpi-label { margin: 1rem 0 .4rem; }
+  .hc-body .kpi-label:first-child { margin-top: 0; }
+  .hc-sym { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-weight: 600; }
+  .hc-path { font-size: .82rem; color: var(--text-2); }
+  .hc-h { font-size: .98rem; }
+  .hc-ladder { list-style: none; padding: 0; margin: 1rem 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .hc-ladder li { display: grid; gap: 6px; font-size: .66rem; line-height: 1.25; color: var(--text-3); }
+  .hc-ladder li::before { content: ''; height: 6px; border-radius: 3px; background: var(--border); }
+  .hc-ladder li.on::before { background: var(--accent); }
+  .hc-ladder li.on { color: var(--text-2); }
+  @media (max-width: 520px) { .hc-ladder li span { display: none; } }
+  .hc-status { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  @media (max-width: 960px) { .hyp-card { margin: 0; } }
+
+  .tl-fig { max-width: 880px; margin-inline: auto; }
+  .method { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: m; }
+  .method li { position: relative; padding: 24px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .method li:not(:last-child)::after { content: ''; position: absolute; right: -12px; top: 42px; width: 8px; height: 8px; border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); transform: rotate(45deg); }
+  .m-step { font-size: .74rem; color: var(--accent-text); margin: .8rem 0 .3rem; }
+  .method h3 { font-size: 1.2rem; }
+  .method p:last-child { margin: 0; }
+  @media (max-width: 960px) { .method { grid-template-columns: repeat(2, minmax(0, 1fr)); } .method li::after { display: none; } }
+  @media (max-width: 520px) { .method { grid-template-columns: 1fr; } }
+
+  .tree-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 5vw, 64px); align-items: end; margin-bottom: clamp(28px, 4vw, 44px); }
+  .tree-head :global(.section-head) { margin-bottom: 0; }
+  @media (max-width: 860px) { .tree-head { grid-template-columns: 1fr; } }
+
+  .lad-wrap { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(28px, 5vw, 72px); align-items: start; }
+  .lad-intro { position: sticky; top: calc(var(--header-h) + 24px); }
+  .lad-intro h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .lad-key { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .86rem; color: var(--text-2); margin-top: 1.4rem; }
+  .lad-key span { display: inline-flex; align-items: center; gap: 8px; }
+  .lad-key i { width: 14px; height: 14px; border-radius: 4px; }
+  .k-corr { background: var(--accent-soft); border: 1px solid var(--accent); }
+  .k-cause { background: var(--ok); }
+  .ladder { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .rung { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 18px; padding: 20px 22px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .rung:nth-child(1) { margin-left: 16%; } .rung:nth-child(2) { margin-left: 12%; } .rung:nth-child(3) { margin-left: 8%; } .rung:nth-child(4) { margin-left: 4%; }
+  .r-n { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--accent-soft); color: var(--accent-text); font: 600 1.2rem/1 var(--font-display); }
+  .rung h3 { font-size: 1.15rem; margin-bottom: .2em; }
+  .r-q { font-size: .94rem; margin-bottom: .7rem; }
+  .rung dl { display: grid; grid-template-columns: 64px 1fr; gap: 4px 12px; margin: 0; font-size: .86rem; }
+  .rung dt { font: 500 .68rem/1.9 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); }
+  .rung dd { margin: 0; color: var(--text-2); }
+  .rung.cause { border-color: var(--ok); background: linear-gradient(180deg, var(--ok-bg), var(--surface)); }
+  .rung.cause .r-n { background: var(--ok); color: #fff; }
+  @media (max-width: 960px) { .lad-wrap { grid-template-columns: 1fr; } .lad-intro { position: static; } }
+  @media (max-width: 560px) { .rung { grid-template-columns: 1fr; gap: 10px; } .rung:nth-child(n) { margin-left: 0; } }
+
+  .hp { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(18px, 3vw, 30px); }
+  .hp-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 1.2rem; }
+  .hp-head h3 { margin: 0; }
+  .hp-rungs { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--border); }
+  .hp-rungs li { display: grid; grid-template-columns: 32px 220px minmax(0, 1fr); gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: .93rem; }
+  .hp-ic { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-weight: 700; font-size: .85rem; }
+  .m-yes .hp-ic { background: var(--ok-bg); color: var(--ok-text); }
+  .m-no .hp-ic { background: var(--crit-bg); color: var(--crit-text); }
+  .m-na .hp-ic { background: var(--bg-2); color: var(--text-3); }
+  .hp-note { color: var(--text-2); }
+  .m-na .hp-t, .m-na .hp-note { color: var(--text-3); }
+  .hp-sum { display: flex; gap: 10px; align-items: flex-start; margin: 1.2rem 0 0; font-size: .97rem; }
+  .hp-sum :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 3px; }
+  @media (max-width: 700px) { .hp-rungs li { grid-template-columns: 32px minmax(0, 1fr); } .hp-note { grid-column: 2; font-size: .88rem; } }
+
+  .feats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--border); }
+  .feat { padding: 24px 24px 20px 0; border-bottom: 1px solid var(--border); }
+  .feat .mono { color: var(--accent-text); font-size: .78rem; }
+  .feat h3 { font-size: 1.12rem; margin: .5rem 0 .3rem; }
+  .feat p { margin: 0; }
+  @media (max-width: 860px) { .feats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .feats { grid-template-columns: 1fr; } }
+
+  .conn { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .conn-col { padding: 26px; background: var(--surface); }
+  .conn-mid { background: var(--accent-soft); }
+  .conn-col p:last-child { margin: 0; }
+  @media (max-width: 860px) { .conn { grid-template-columns: 1fr; } }
+</style>

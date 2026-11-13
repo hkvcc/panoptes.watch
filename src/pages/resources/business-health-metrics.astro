@@ -1,0 +1,134 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/resources-b/RbDiagram.astro';
+---
+<ArticleLayout
+  title="Business health metrics that matter"
+  metaTitle="Business Health Metrics That Matter: A Framework by Domain"
+  description="How to choose business health metrics: health versus performance, leading versus lagging, a domain framework, expected bands, and the hidden dangers of composite scores."
+  eyebrow="Business health metrics"
+  dek="Performance metrics tell you whether you hit the target. Health metrics tell you whether the business is functioning normally and is likely to keep hitting it. They are different questions, and most metric sets only answer the first."
+  related={['/resources/business-process-monitoring/', '/resources/building-a-business-operating-model/', '/resources/why-dashboards-miss-the-full-picture/']}
+>
+  <p>Ask a leadership team how the business is doing and you will usually get a performance answer: revenue against plan, margin against budget, net retention against last year. Those numbers matter. But they share a weakness. By the time they move, the cause has typically been operating for weeks or months, and the numbers say little about where it is.</p>
+  <p>Health metrics are designed for a different job. They describe whether each part of the business is behaving within its normal range right now, and whether the conditions that produce good performance are still in place. This guide sets out how to think about them, offers a framework for choosing them across five domains, explains why expected bands beat fixed thresholds, and spends some time on composite scores, which are both popular and quietly dangerous.</p>
+
+  <h2>Health is not performance</h2>
+  <p>A useful analogy is the difference between an athlete's race time and their vital signs. The race time is performance: an outcome measured against a goal, after the fact. Heart rate, blood pressure and temperature are health: they tell you whether the body is functioning normally, they are measured continuously, and they move before performance does. A rising resting heart rate does not mean the athlete lost. It means something is worth investigating before the next race.</p>
+  <table>
+    <thead><tr><th></th><th>Performance metric</th><th>Health metric</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Question</strong></td><td>Did we achieve what we set out to?</td><td>Is this part of the business functioning normally?</td></tr>
+      <tr><td><strong>Compared with</strong></td><td>A target or plan</td><td>An expected range for this time and context</td></tr>
+      <tr><td><strong>Cadence</strong></td><td>Monthly, quarterly</td><td>Hourly to daily, continuously</td></tr>
+      <tr><td><strong>Typical position</strong></td><td>End of a causal chain</td><td>Early or middle of a causal chain</td></tr>
+      <tr><td><strong>Natural use</strong></td><td>Accountability, planning, reporting</td><td>Early warning, investigation, intervention</td></tr>
+      <tr><td><strong>Example</strong></td><td>Quarterly new revenue vs plan</td><td>Share of signed deals provisioned within 5 days</td></tr>
+    </tbody>
+  </table>
+  <p>The two are complementary. A business with only performance metrics is flying on the fuel gauge: accurate, but late. A business with only health metrics risks optimising activity that does not connect to outcomes. The art is to choose health metrics that sit upstream of the performance metrics you care about, so a change in one is a credible early sign of a change in the other.</p>
+
+  <h2>Leading and lagging, and the chain between them</h2>
+  <p>A <a href="/resources/business-observability-glossary/#lagging-indicator">lagging indicator</a> confirms what has happened; a <a href="/resources/business-observability-glossary/#leading-indicator">leading indicator</a> tends to move before it. The distinction is relative, not absolute. Churn is lagging relative to product usage, but leading relative to annual recurring revenue. What matters is the chain: which measurements tend to move first, and through which mechanism.</p>
+  <p>Consider a subscription business. Revenue is lagging. Before it moves, renewals move. Before renewals, the share of accounts actively using the product moves. Before usage, onboarding completion moves: accounts that never finish setup rarely become heavy users. Before onboarding completion, the time it takes for a new account to be provisioned moves. Each step is a candidate health metric, and the earlier in the chain it sits, the more warning it gives and the less certain its link to the outcome becomes.</p>
+  <div class="callout">
+    <strong>Pair every leading indicator with the lagging one it predicts</strong>
+    A leading indicator on its own is a hypothesis. Tracking it alongside the outcome it is supposed to predict lets you check, over time, whether the relationship actually holds in your business. If provisioning time rises and renewals six months later do not budge, the indicator may not deserve its place.
+  </div>
+
+  <h2>A framework by domain</h2>
+  <p>A small set of health metrics in each of five domains covers most businesses. The aim is not completeness. It is to have at least one early, trustworthy signal for each way the business typically gets into trouble. The examples below are indicative; the right choices depend on your model and your history.</p>
+
+  <h3>Revenue: is demand turning into money at the usual rate?</h3>
+  <p>Revenue health is about conversion and flow, not totals. Watch the rate at which intent becomes commitment and commitment becomes cash: qualified pipeline created per week against its expected band, stage-to-stage conversion, deal cycle time, and the share of signed contracts that reach first billing on schedule. A drop in conversion at a single stage, for a single segment, is far more actionable than a miss on the quarterly number. The <a href="/solutions/revenue/">revenue</a> solution page goes deeper on pipeline-to-cash.</p>
+
+  <h3>Customers: are customers getting the value they came for?</h3>
+  <p>Customer health is about progress through the journey. Useful measures include time to first value for new customers, onboarding completion within the expected window, share of accounts showing the usage pattern that usually precedes renewal, repeat-contact rate (customers contacting support about the same issue twice), and complaint themes by volume. Satisfaction surveys are useful context but usually too slow and too sparse to serve as health signals on their own.</p>
+
+  <h3>Operations: is work flowing at the expected pace?</h3>
+  <p>Operational health is the territory of <a href="/resources/business-process-monitoring/">process monitoring</a>: arrivals against expected band, work in progress by stage, age of the oldest open items, flow efficiency and rework rate. These are among the most reliably leading indicators a business has, because almost every operational failure shows up first as work waiting somewhere it normally does not.</p>
+
+  <h3>Delivery: are we keeping the promises we have made?</h3>
+  <p>Delivery health concerns commitments: orders delivered on time and in full, service levels attained, and, most importantly, the number of open commitments projected to breach in the next day or week. Historical attainment says how you did. Projected breaches say what to do this morning. Concentration of commitments on a single supplier, carrier or team is also worth watching, because it determines how much a single failure would affect.</p>
+
+  <h3>Finance: is money moving as expected?</h3>
+  <p>Finance health watches the mechanics of money rather than the totals: payment success rate by method and route, invoices issued but uncollected beyond terms, the gap between billed and collected revenue, refunds and disputes as a share of revenue, and unit cost per transaction by process. Sudden shifts in any of these often reveal operational problems, such as a failed payment route or a billing error, well before they show up in month-end figures. See <a href="/solutions/finance/">finance</a> and <a href="/use-cases/revenue-leakage/">revenue leakage</a> for worked examples.</p>
+
+  <h2>Expected bands, not fixed thresholds</h2>
+  <p>A health metric is only useful if you know what "normal" looks like. The most common way of encoding normal is a fixed threshold: alert if completed orders fall below 65 a day, say. Fixed thresholds are simple and they fail in two predictable directions at once.</p>
+  <Diagram src="/diagrams/health-metrics-expected-band.svg" alt="Line chart of daily completed orders over four weeks with a strong weekly pattern: around 100 to 115 on weekdays and 55 to 70 at weekends. A shaded expected band follows the weekly pattern. A dashed static threshold at 65 is crossed every Sunday, producing four false alarms. In week three, Thursday and Friday drop to the mid-seventies, well outside the expected band but above the static threshold, so the static rule misses them." caption="A fixed line fires every Sunday and misses a real weekday drop. A band that follows the expected weekly pattern catches the drop and stays quiet at weekends. Fictional data." zoom />
+  <p>In the example, a fixed threshold low enough to stay quiet on weekdays is crossed every Sunday, when volumes are naturally lower, producing four false alarms in four weeks. Meanwhile, a genuine fall on a Thursday and Friday in week three, to levels that would be normal on a weekend but are badly wrong for a weekday, never reaches the threshold at all. People learn to ignore the alerts, and the one that mattered is never sent.</p>
+  <p>An <a href="/resources/business-observability-glossary/#expected-band">expected band</a> instead describes the range of values that would be unsurprising for this metric, at this time, in this context. Building a good one involves a few decisions:</p>
+  <ul>
+    <li><strong>Seasonality.</strong> Most business metrics have daily, weekly and annual patterns, plus known events such as month-end, payroll dates or holiday periods. The band should move with them.</li>
+    <li><strong>Segment.</strong> A band for the whole business can hide a collapse in one region or product. Bands per meaningful segment, with sensible minimum volumes, catch localised change.</li>
+    <li><strong>Width.</strong> Too narrow and the band is noisy; too wide and it misses real change. Width should reflect how variable the metric genuinely is, and it is reasonable for it to be wider when volumes are small.</li>
+    <li><strong>Persistence.</strong> A single value outside the band is often noise. Requiring two or three consecutive periods, or a sustained shift, trades a little speed for a lot of credibility.</li>
+    <li><strong>Known changes.</strong> If a price change, launch or policy change is expected to move a metric, the band should be adjusted deliberately, and the adjustment recorded.</li>
+  </ul>
+  <p>Targets do not disappear. A business still needs objectives. But objectives answer "where do we want to be?", while bands answer "is what is happening now surprising?". Health monitoring needs the second. The <a href="/platform/anomaly-detection/">anomaly detection</a> page describes how Panoptes is designed to build and apply expected bands.</p>
+
+  <h2>Composite scores and their dangers</h2>
+  <p>Sooner or later someone asks for a single number: one health score for the business, a domain or a customer. The appeal is understandable. A composite score is easy to put on a slide, easy to trend and easy to rank. Used carefully, composites can direct attention. Used carelessly, they hide exactly the problems health metrics exist to reveal.</p>
+  <Diagram src="/diagrams/health-metrics-composite-masking.svg" alt="A composite health score card shows 83 out of 100, down from 90, and labelled green because it is at least 80. Beside it, five weighted components: pipeline coverage 95 at 25 per cent weight, onboarding on time 90 at 20 per cent, delivered in full 88 at 20 per cent, support resolved in target 86 at 20 per cent, and collections on time 41 at 15 per cent, down from 88 and shown in red." caption="Collections on time more than halved, but its 15% weight means the composite fell only seven points and stayed green. Fictional data." zoom />
+  <p>The arithmetic is straightforward. With weights of 25%, 20%, 20%, 20% and 15%, a fall in collections from 88 to 41 removes about seven points from the composite. Every other component is healthy, so the score drops from 90 to 83, comfortably above the green threshold. A reader of the headline number sees mild softening. A reader of the components sees an urgent cash problem.</p>
+  <h3>Why composites mislead</h3>
+  <ul>
+    <li><strong>Masking.</strong> Averaging lets strong components offset weak ones. But businesses fail at their weakest point, not their average one. A business with excellent pipeline and failing collections is not 83% healthy; it has a cash problem.</li>
+    <li><strong>Arbitrary weights.</strong> Weights encode a judgement about relative importance that rarely survives scrutiny, and they become political: every team argues for a higher weight on the components it does well.</li>
+    <li><strong>Mixed units.</strong> To average a conversion rate, a cycle time and a satisfaction score, each must be normalised to a common scale. The choice of normalisation quietly decides what counts as good, and it is usually invisible to the reader.</li>
+    <li><strong>Lost direction.</strong> A composite that falls tells you something changed but not what, so the first step of every investigation is to undo the composite.</li>
+    <li><strong>Goodhart's law.</strong> When a measure becomes a target, it tends to stop being a good measure. Composite scores are especially easy to game, because the cheapest component to improve can be pushed up to compensate for the expensive one.</li>
+  </ul>
+  <h3>If you use a composite anyway</h3>
+  <ol>
+    <li><strong>Never show it without its components.</strong> The composite is a pointer; the components are the information.</li>
+    <li><strong>Apply a floor.</strong> If any component is outside its expected band, the composite cannot be green, whatever the average says. This single rule removes most masking.</li>
+    <li><strong>Show change, not just level.</strong> "Down seven points this month, driven by collections" is useful. "83" is not.</li>
+    <li><strong>Publish the weights and the normalisation</strong>, version them, and give them an owner.</li>
+    <li><strong>Use composites for ranking attention</strong>, such as which accounts or teams to look at first, rather than for judging performance.</li>
+  </ol>
+
+  <h2>Example indicators and what they detect</h2>
+  <p>The table below collects indicators that tend to work well as health signals, along with the kind of problem each one is good at surfacing early. It is a starting palette, not a prescription.</p>
+  <table>
+    <thead><tr><th>Domain</th><th>Indicator</th><th>What it tends to detect</th><th>Leads</th></tr></thead>
+    <tbody>
+      <tr><td>Revenue</td><td>Qualified pipeline created per week, vs band</td><td>Demand-generation problems weeks before bookings fall</td><td>Bookings</td></tr>
+      <tr><td>Revenue</td><td>Stage conversion by segment</td><td>Pricing, packaging or competitive changes affecting one segment</td><td>Win rate, revenue</td></tr>
+      <tr><td>Revenue</td><td>Signed-to-first-bill time</td><td>Provisioning or billing set-up delays deferring revenue</td><td>Recognised revenue</td></tr>
+      <tr><td>Customers</td><td>Time to first value</td><td>Onboarding friction before it becomes early churn</td><td>Activation, retention</td></tr>
+      <tr><td>Customers</td><td>Repeat-contact rate</td><td>Problems support is closing but not resolving</td><td>Satisfaction, churn</td></tr>
+      <tr><td>Customers</td><td>Share of accounts in renewal-predictive usage pattern</td><td>Declining engagement in a cohort or segment</td><td>Renewals</td></tr>
+      <tr><td>Operations</td><td>WIP and oldest-item age by stage</td><td>Queues forming at a constraint</td><td>Lead time, SLA attainment</td></tr>
+      <tr><td>Operations</td><td>Rework rate by reason</td><td>Upstream quality problems and policy mismatches</td><td>Unit cost, capacity</td></tr>
+      <tr><td>Operations</td><td>Arrivals vs band by work type</td><td>Demand surges from campaigns, partners or incidents</td><td>Queues, waiting time</td></tr>
+      <tr><td>Delivery</td><td>Commitments projected to breach (next 24–72h)</td><td>Promises at risk while there is still time to act</td><td>SLA attainment</td></tr>
+      <tr><td>Delivery</td><td>Commitments per shared dependency</td><td>Concentration risk on one supplier, carrier or team</td><td>Large correlated failures</td></tr>
+      <tr><td>Finance</td><td>Payment success rate by method and route</td><td>Failing payment routes, processor or configuration issues</td><td>Collected revenue, involuntary churn</td></tr>
+      <tr><td>Finance</td><td>Billed vs collected gap, aged</td><td>Collections slowing, billing errors, disputes</td><td>Cash flow</td></tr>
+      <tr><td>Finance</td><td>Unit cost per transaction by process</td><td>Rework, manual handling or supplier cost drift</td><td>Margin</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Tests for a good health metric</h2>
+  <p>Before adding a metric to a health view, it is worth putting it through five questions. Metrics that fail more than one tend to become wallpaper.</p>
+  <ol>
+    <li><strong>Does it sit upstream of an outcome we care about</strong>, through a mechanism we can explain? If not, it may be interesting, but it is not a health metric.</li>
+    <li><strong>Do we know what normal looks like?</strong> If nobody can describe its expected range, nobody will know when to worry.</li>
+    <li><strong>Is there an owner who can act on it?</strong> A metric that moves with nobody responsible for responding is a report, not a monitor.</li>
+    <li><strong>Can it be cut by the dimensions that matter?</strong> Segment, region, channel, product. Many problems are local, and a total hides them.</li>
+    <li><strong>Is it hard to game?</strong> Prefer measures of flow and outcome over measures of activity, which are easier to inflate without improving anything.</li>
+  </ol>
+  <p>A health metric set that passes these tests tends to be small. Five or six per domain is usually plenty, provided they are connected to each other and to the outcomes they predict. That connection is what an <a href="/resources/building-a-business-operating-model/">operating model</a> provides, and it is the difference between a health view and a long list of numbers.</p>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>Performance metrics measure outcomes against targets; health metrics measure whether the business is functioning normally, early enough to act.</li>
+    <li>Leading and lagging are relative positions in a causal chain. Pair each leading indicator with the outcome it should predict, and check that it does.</li>
+    <li>Cover each domain (revenue, customers, operations, delivery, finance) with a few early, owned, segmentable signals.</li>
+    <li>Compare against expected bands that follow seasonality and segment, not fixed thresholds that fire at the wrong times.</li>
+    <li>Composite scores hide failing components. If you use one, always show its components, apply a worst-component floor, and publish its weights.</li>
+  </ul>
+  <p>Panoptes' <a href="/platform/business-health/">Business Health</a> capability is designed around these principles: objectives and indicators attached to parts of the business model, each with an expected band and an owner.</p>
+</ArticleLayout>

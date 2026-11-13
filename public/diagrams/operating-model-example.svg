@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 440" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>Example operating model for a wholesale order-to-cash journey: objectives with owners, processes, entities, relationships and expectations</title>
+<g class="d-t">
+<text x="24" y="26" font-size="15" font-weight="600" class="d-td d-text">An operating model for one journey: order to cash</text>
+<text x="24" y="44" font-size="12" class="d-muted">Fictional wholesale distributor · objectives → processes → entities → dependencies</text>
+<!-- objectives -->
+<rect x="150" y="60" width="300" height="44" rx="10" class="d-surface"/><rect x="150" y="60" width="300" height="44" rx="10" class="d-ok-s" stroke-width="1.5"/>
+<text x="164" y="77" font-size="9.5" font-weight="600" class="d-tm d-muted">OBJECTIVE · OWNER: HEAD OF FULFILMENT</text>
+<text x="164" y="95" font-size="12.5" font-weight="600" class="d-text">Orders delivered on time, in full ≥ 95%</text>
+<rect x="470" y="60" width="290" height="44" rx="10" class="d-surface"/><rect x="470" y="60" width="290" height="44" rx="10" class="d-ok-s" stroke-width="1.5"/>
+<text x="484" y="77" font-size="9.5" font-weight="600" class="d-tm d-muted">OBJECTIVE · OWNER: CREDIT CONTROL LEAD</text>
+<text x="484" y="95" font-size="12.5" font-weight="600" class="d-text">Invoices collected within 45 days ≥ 90%</text>
+<path d="M300 104V116M615 104V116" class="d-line" stroke-width="1.5"/>
+<!-- processes -->
+<rect x="150" y="116" width="300" height="34" rx="8" class="d-soft"/>
+<text x="300" y="138" text-anchor="middle" font-size="12.5" font-weight="600" class="d-text">Process · Order fulfilment</text>
+<rect x="470" y="116" width="290" height="34" rx="8" class="d-soft"/>
+<text x="615" y="138" text-anchor="middle" font-size="12.5" font-weight="600" class="d-text">Process · Billing and collections</text>
+<g class="d-accent-2-s" stroke-width="1.3" stroke-dasharray="3 4"><path d="M210 150V222M360 150V222M530 150V222M680 150V222"/></g>
+<!-- relationships -->
+<g class="d-line" stroke-width="2"><path d="M96 250H182M236 250H332M556 250H652M346 274L314 344M374 274L414 344"/><path d="M228 232C300 186 450 186 512 232"/></g>
+<g font-size="11" class="d-muted" text-anchor="middle"><text x="139" y="242">places</text><text x="284" y="242">fulfilled by</text><text x="604" y="242">settled by</text></g>
+<rect x="340" y="186" width="66" height="18" rx="9" class="d-bg"/><text x="373" y="199" text-anchor="middle" font-size="11" class="d-muted">billed as</text>
+<text x="322" y="318" text-anchor="end" font-size="11" class="d-muted">picked at</text>
+<text x="404" y="318" font-size="11" class="d-muted">carried by</text>
+<!-- entities -->
+<g stroke-width="2">
+<circle cx="70" cy="250" r="26" class="d-surface"/><circle cx="70" cy="250" r="26" class="d-accent-s"/>
+<circle cx="210" cy="250" r="26" class="d-surface"/><circle cx="210" cy="250" r="26" class="d-accent-s"/>
+<circle cx="360" cy="250" r="26" class="d-surface"/><circle cx="360" cy="250" r="26" class="d-accent-s"/>
+<circle cx="530" cy="250" r="26" class="d-surface"/><circle cx="530" cy="250" r="26" class="d-accent-s"/>
+<circle cx="680" cy="250" r="26" class="d-surface"/><circle cx="680" cy="250" r="26" class="d-accent-s"/>
+<circle cx="300" cy="370" r="22" class="d-surface"/><circle cx="300" cy="370" r="22" class="d-accent-2-s"/>
+<circle cx="430" cy="370" r="22" class="d-surface"/><circle cx="430" cy="370" r="22" class="d-accent-2-s"/>
+</g>
+<g font-size="12.5" font-weight="600" class="d-text" text-anchor="middle"><text x="70" y="294">Customer</text><text x="210" y="294">Order</text><text x="360" y="294">Shipment</text><text x="530" y="294">Invoice</text><text x="680" y="294">Payment</text><text x="300" y="410">Warehouse</text><text x="430" y="410">Carrier</text></g>
+<g font-size="10" class="d-tm d-muted" text-anchor="middle"><text x="70" y="254">1.2k</text><text x="210" y="254">340/d</text><text x="360" y="254">410/d</text><text x="530" y="254">330/d</text><text x="680" y="254">300/d</text><text x="300" y="374">3</text><text x="430" y="374">2</text></g>
+<!-- expectations -->
+<rect x="40" y="350" width="216" height="42" rx="10" class="d-surface"/><rect x="40" y="350" width="216" height="42" rx="10" class="d-line" stroke-width="1.5"/>
+<text x="54" y="366" font-size="9.5" font-weight="600" class="d-tm d-muted">EXPECTATION</text>
+<text x="54" y="383" font-size="12" class="d-text">Picked within 4h of order cut-off</text>
+<path d="M256 370H278" class="d-line" stroke-width="1.5"/>
+<rect x="474" y="350" width="236" height="42" rx="10" class="d-surface"/><rect x="474" y="350" width="236" height="42" rx="10" class="d-line" stroke-width="1.5"/>
+<text x="488" y="366" font-size="9.5" font-weight="600" class="d-tm d-muted">EXPECTATION · DEPENDENCY</text>
+<text x="488" y="383" font-size="12" class="d-text">Collected by 17:00 on dispatch day</text>
+<path d="M452 370H474" class="d-line" stroke-width="1.5"/>
+</g>
+</svg>

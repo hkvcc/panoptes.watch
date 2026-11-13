@@ -1,0 +1,34 @@
+---
+/** Compact "scenario at a glance" summary card. Use in a sidebar (sticky) or inline. */
+interface Props { company: string; question: string; facts?: { k: string; v: string }[]; caps?: { label: string; href: string }[]; sticky?: boolean; title?: string }
+const { company, question, facts = [], caps = [], sticky = false, title = 'Scenario at a glance' } = Astro.props;
+---
+<aside class:list={['scard card card-raised', { sticky }]} aria-label={title}>
+  <div class="sc-top"><p class="kpi-label">{title}</p><span class="illustrative">Fictional</span></div>
+  <p class="sc-co">{company}</p>
+  <p class="sc-q">“{question}”</p>
+  {facts.length > 0 && (
+    <dl class="sc-facts">{facts.map((f) => (<><dt>{f.k}</dt><dd>{f.v}</dd></>))}</dl>
+  )}
+  {caps.length > 0 && (
+    <>
+      <p class="kpi-label mt-1">Capabilities involved</p>
+      <ul class="sc-caps">{caps.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>
+    </>
+  )}
+  <slot />
+</aside>
+<style>
+  .scard { display: grid; gap: .2rem; }
+  .sticky { position: sticky; top: calc(var(--header-h, 72px) + 24px); }
+  .sc-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: .6rem; }
+  .sc-co { font: 600 1.15rem/1.3 var(--font-display); margin: 0; }
+  .sc-q { color: var(--text-2); font-size: .95rem; margin: .3rem 0 1rem; }
+  .sc-facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .5rem 1rem; margin: 0; padding: 1rem 0; border-block: 1px dashed var(--border-strong); font-size: .88rem; }
+  .sc-facts dt { color: var(--text-3); font-family: var(--font-mono); font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; padding-top: .15em; }
+  .sc-facts dd { margin: 0; color: var(--text); }
+  .sc-caps { list-style: none; padding: 0; margin: .6rem 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .sc-caps a { display: inline-block; padding: .35em .75em; border-radius: 999px; border: 1px solid var(--border-strong); font-size: .82rem; color: var(--text-2); text-decoration: none; background: var(--surface); }
+  .sc-caps a:hover { border-color: var(--accent); color: var(--accent-text); }
+  @media (max-width: 960px) { .sticky { position: static; } }
+</style>

@@ -1,0 +1,105 @@
+---
+import DocPage from '../components/company/DocPage.astro';
+import { SITE } from '../data/site';
+import { LEGAL, lastUpdatedLabel, operatorHtml, missingIdentity } from '../data/legal';
+
+const crumbs = [{ label: 'Privacy notice', href: '/privacy/' }];
+const placeholders = missingIdentity.map((m) => `[${m}]`);
+---
+<DocPage
+  title="Privacy notice"
+  description="How the panoptes.watch website handles personal data: contact and demo form submissions, hosting request logs, no analytics or ad trackers, and your data rights."
+  eyebrow="Legal · Privacy"
+  lede="What this website collects, why, who processes it on our behalf and the rights you have. The short version: we collect what you choose to send us, our host processes standard request data, and we run no analytics or advertising trackers."
+  breadcrumbs={crumbs}
+  ogImage="/social/og-default.png"
+  updated={lastUpdatedLabel}
+  draft
+  placeholders={placeholders}
+>
+  <h2 id="summary">Summary</h2>
+  <ul>
+    <li><strong>Forms and email.</strong> If you use the contact or demo form, or email us, we receive the details you provide and use them to reply.</li>
+    <li><strong>Hosting.</strong> The site is hosted on Cloudflare, which processes technical request data (such as IP addresses) to deliver and protect the site.</li>
+    <li><strong>No tracking.</strong> This site does not use analytics, advertising, tracking pixels, social media plugins or other third-party scripts.</li>
+    <li><strong>Theme preference.</strong> If you switch between light and dark mode, that choice is stored in your own browser and never sent to us.</li>
+    <li><strong>Your rights.</strong> You can ask to access, correct or delete your personal data by emailing <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>.</li>
+  </ul>
+
+  <h2 id="who-we-are">Who we are</h2>
+  <p>This website, <a href="/">panoptes.watch</a>, is operated by <Fragment set:html={operatorHtml()} />.</p>
+  <p>For the personal data described in this notice, we are the controller. You can contact us about privacy at <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a>. Please put “Privacy” in the subject line so your message reaches the right person.</p>
+
+  <h2 id="scope">What this notice covers</h2>
+  <p>This notice covers the public marketing website at panoptes.watch only. It does not cover the Panoptes product. Personal data processed within the product on behalf of customers is governed by the agreements we hold with those customers, including any data processing terms.</p>
+
+  <h2 id="what-we-collect">What we collect</h2>
+  <h3>Information you send us</h3>
+  <p>When you submit the <a href="/contact/">contact form</a> or <a href="/demo/">demo request form</a>, we receive the information you enter. That is your name, work email address and message, and, depending on the form, your company name, job role, company size, the areas you are interested in or the topic of your enquiry, and whether you ticked the consent box. If you email us directly, we receive your email address, the content of your message and any details in your signature.</p>
+  <p>Form submissions are sent from your browser to a server-side function that runs on our hosting provider (a Cloudflare Pages Function). That function validates the submission, applies basic spam checks and forwards it to our team by email through our email delivery provider, {LEGAL.emailProvider}. The forwarded message also includes the time of submission and the approximate country of the request as determined by Cloudflare. The function does not keep its own copy of submissions.</p>
+  <p>If we enable Cloudflare Turnstile to filter automated form submissions, Cloudflare will also process technical information about your browser to decide whether the request is likely to come from a person.</p>
+  <h3>Technical data processed by our host</h3>
+  <p>Like any website, each request your browser makes to panoptes.watch includes technical information, such as your IP address, browser and device type (user agent), the page requested, the referring page and the time of the request. Our hosting provider, Cloudflare, processes this information to deliver pages, maintain request logs and protect the site against abuse such as automated attacks.</p>
+  <h3>Information stored on your device</h3>
+  <p>If you use the theme switch, the site saves your choice (“light” or “dark”) in your browser’s local storage under the key <code>panoptes-theme</code>. It stays on your device and is not sent to us. The <a href="/cookies/">cookie notice</a> explains this in more detail.</p>
+  <h3>What we do not collect</h3>
+  <p>This site does not use analytics tools, advertising or remarketing tags, tracking pixels, session recording, social media plugins or embedded third-party content. Fonts and images are served from our own domain. We do not use the site to build profiles of visitors.</p>
+
+  <h2 id="how-we-use-it">How we use it and our lawful bases</h2>
+  <table>
+    <thead><tr><th>Purpose</th><th>Data</th><th>Lawful basis (UK GDPR / EU GDPR)</th></tr></thead>
+    <tbody>
+      <tr><td>Responding to your enquiry or demo request, and following up on it</td><td>Form and email contents</td><td>Legitimate interests in responding to people who contact us; or steps taken at your request before entering into a contract</td></tr>
+      <tr><td>Operating, securing and troubleshooting the website</td><td>Technical request data</td><td>Legitimate interests in running a secure, available website</td></tr>
+      <tr><td>Remembering your theme preference</td><td>Local storage value</td><td>Stored at your request when you use the theme switch</td></tr>
+      <tr><td>Meeting legal obligations and handling legal claims</td><td>Any of the above, where relevant</td><td>Legal obligation; legitimate interests</td></tr>
+    </tbody>
+  </table>
+  <p>The checkbox on our forms confirms that you are happy for us to use your details to respond to your enquiry — that is its only purpose. We do not add form submissions to mailing lists or send marketing emails. If we ever offer a newsletter, it will be a separate, opt-in choice.</p>
+
+  <h2 id="sharing">Who we share it with</h2>
+  <p>We do not sell personal data. We share it only with:</p>
+  <ul>
+    <li><strong>Cloudflare</strong>, which hosts the website, runs the form-handling function and provides security services.</li>
+    <li><strong>{LEGAL.emailProvider}</strong>, which delivers form submissions to our team by email, and {LEGAL.mailboxProvider}, where we receive and answer them.</li>
+    <li><strong>Professional advisers</strong>, such as lawyers and accountants, where needed.</li>
+    <li><strong>Authorities</strong>, where we are required to by law.</li>
+    <li><strong>A successor organisation</strong>, if the business or its assets are transferred, subject to this notice.</li>
+  </ul>
+  <p>These service providers act on our instructions and are bound by contractual obligations to protect the data.</p>
+
+  <h2 id="international-transfers">International transfers</h2>
+  <p>Cloudflare operates a global network, so request data may be processed in data centres outside the UK and the European Economic Area. Where personal data is transferred internationally, we rely on UK adequacy regulations or EU adequacy decisions where they apply (including the EU–US Data Privacy Framework and its UK Extension, where the recipient is certified), and otherwise on the EU Standard Contractual Clauses together with the UK International Data Transfer Addendum.</p>
+
+  <h2 id="retention">How long we keep it</h2>
+  <ul>
+    <li><strong>Enquiries and related correspondence:</strong> {LEGAL.enquiryRetention} after our last contact, unless the enquiry leads to a customer relationship, in which case our customer records policy applies.</li>
+    <li><strong>Hosting request logs:</strong> retained by Cloudflare for the limited periods described in its own documentation.</li>
+    <li><strong>Theme preference:</strong> until you clear it from your browser.</li>
+  </ul>
+
+  <h2 id="your-rights">Your rights</h2>
+  <p>Under UK GDPR and EU GDPR you have rights over your personal data, subject to certain conditions and exceptions. These include the right to:</p>
+  <ul>
+    <li>access the personal data we hold about you;</li>
+    <li>have inaccurate data corrected;</li>
+    <li>have your data erased;</li>
+    <li>restrict or object to our processing, including processing based on legitimate interests;</li>
+    <li>receive your data in a portable format, where applicable;</li>
+    <li>withdraw consent at any time, where we rely on consent.</li>
+  </ul>
+  <p>To exercise any of these rights, email <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>. We may need to confirm your identity before acting on a request.</p>
+  <p>You also have the right to complain to a data protection supervisory authority. In the UK, this is the Information Commissioner’s Office (ICO). In the EU, you can contact the authority in the country where you live or work. We would appreciate the chance to address your concern first. We have not appointed a representative in the EU under Article 27 of the EU GDPR, because our processing of personal data from people in the EU through this website is occasional and small in scale. People in the EU can contact us directly at the address above.</p>
+
+  <h2 id="security">Security</h2>
+  <p>The site is served only over HTTPS and sets security headers that, among other things, restrict which scripts and resources a page is allowed to load. Form submissions are handled server-side, so no third-party code runs in your browser. No method of transmission or storage is completely secure, but we take appropriate measures to protect the data we handle.</p>
+
+  <h2 id="children">Children</h2>
+  <p>This website is intended for business audiences and is not directed at children. We do not knowingly collect personal data from children.</p>
+
+  <h2 id="changes">Changes to this notice</h2>
+  <p>We may update this notice as the website or our practices change. The “last updated” date at the top shows when it was last revised. Significant changes will be highlighted on this page.</p>
+
+  <h2 id="contact">Contact</h2>
+  <p>Questions about this notice or how we handle personal data: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>. See also our <a href="/cookies/">cookie notice</a> and <a href="/terms/">website terms of use</a>.</p>
+</DocPage>

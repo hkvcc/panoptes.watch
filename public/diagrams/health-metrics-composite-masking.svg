@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>A composite health score of 83 stays green while one component, collections on time, has fallen from 88 to 41</title>
+<g class="d-t">
+<text x="24" y="28" font-size="15" font-weight="600" class="d-td d-text">A green composite can hide a red component</text>
+<text x="24" y="46" font-size="12" class="d-muted">Weighted health score and its inputs (fictional example)</text>
+<rect x="24" y="66" width="196" height="204" rx="14" class="d-surface"/><rect x="24" y="66" width="196" height="204" rx="14" class="d-line" stroke-width="1.5"/>
+<text x="44" y="94" font-size="10.5" font-weight="600" class="d-tm d-muted">HEALTH SCORE</text>
+<text x="44" y="166" font-size="64" font-weight="700" class="d-td d-text">83</text>
+<text x="128" y="166" font-size="16" class="d-muted">/ 100</text>
+<text x="44" y="192" font-size="12" class="d-muted">was 90 last month</text>
+<rect x="44" y="214" width="112" height="28" rx="14" class="d-surface"/><rect x="44" y="214" width="112" height="28" rx="14" class="d-ok-s" stroke-width="1.5"/>
+<circle cx="60" cy="228" r="5" class="d-ok"/><text x="72" y="232" font-size="12" font-weight="600" class="d-text">Green ≥ 80</text>
+<g class="d-line" stroke-width="1"><path d="M430 70V268M560 70V268M690 70V268"/></g>
+<g font-size="10" class="d-tm d-muted" text-anchor="middle"><text x="430" y="284">0</text><text x="560" y="284">50</text><text x="690" y="284">100</text></g>
+<g font-size="12" class="d-text">
+<text x="250" y="91" font-weight="600">Pipeline coverage</text><text x="250" y="105" font-size="10.5" class="d-muted">weight 25%</text>
+<rect x="430" y="82" width="247" height="18" rx="3" class="d-accent-2"/><text x="700" y="96" font-size="11" font-weight="600" class="d-tm d-text">95</text>
+<text x="250" y="131" font-weight="600">Onboarding on time</text><text x="250" y="145" font-size="10.5" class="d-muted">weight 20%</text>
+<rect x="430" y="122" width="234" height="18" rx="3" class="d-accent-2"/><text x="700" y="136" font-size="11" font-weight="600" class="d-tm d-text">90</text>
+<text x="250" y="171" font-weight="600">Delivered in full</text><text x="250" y="185" font-size="10.5" class="d-muted">weight 20%</text>
+<rect x="430" y="162" width="229" height="18" rx="3" class="d-accent-2"/><text x="700" y="176" font-size="11" font-weight="600" class="d-tm d-text">88</text>
+<text x="250" y="211" font-weight="600">Support resolved in target</text><text x="250" y="225" font-size="10.5" class="d-muted">weight 20%</text>
+<rect x="430" y="202" width="224" height="18" rx="3" class="d-accent-2"/><text x="700" y="216" font-size="11" font-weight="600" class="d-tm d-text">86</text>
+<text x="250" y="251" font-weight="600">Collections on time</text><text x="250" y="265" font-size="10.5" class="d-muted">weight 15%</text>
+<rect x="430" y="242" width="229" height="18" rx="3" class="d-line" stroke-dasharray="4 3"/>
+<rect x="430" y="242" width="107" height="18" rx="3" class="d-crit"/><text x="530" y="256" text-anchor="end" font-size="11" font-weight="600" fill="#fff" class="d-tm">41</text>
+<text x="546" y="256" font-size="10.5" class="d-muted">was 88</text>
+</g>
+<text x="24" y="308" font-size="12" class="d-text">Collections more than halved. The weighted score moved 7 points and stayed green.</text>
+</g>
+</svg>

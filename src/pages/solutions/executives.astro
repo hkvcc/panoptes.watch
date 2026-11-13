@@ -1,0 +1,250 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import ProductScreen from '../../components/solutions/ProductScreen.astro';
+import RoleSwitcher from '../../components/solutions/RoleSwitcher.astro';
+
+const crumbs = [{ label: 'Solutions', href: '/solutions/' }, { label: 'Executives', href: '/solutions/executives/' }];
+
+const problems = [
+  { t: 'Every function reports green. The business still misses.',
+    pack: 'Operations: 96% of cases inside SLA this month. Sales: bookings ahead of plan. Finance: revenue in line with forecast.',
+    real: 'Enterprise customers are waiting three weeks to go live, because the 4% of cases outside SLA are the large ones. Each number is accurate; together they hide the one thing that matters this quarter.' },
+  { t: 'Commitments are made at the top and tracked nowhere.',
+    pack: '“Enterprise go-live within ten days.” “Same-day payouts.” “Net revenue retention above 105%.” They appear in board decks and customer contracts.',
+    real: 'Each depends on three or four teams and a handful of systems. Nobody watches the commitment itself, so it is discovered as broken at quarter end — or by the customer.' },
+  { t: 'Strategy lands — or doesn’t — two quarters later.',
+    pack: 'The self-serve push, the move to annual billing, the partner channel: progress is reported as project milestones and, eventually, as revenue.',
+    real: 'The operational signals that would show whether a bet is working — activation without manual review, plan mix at checkout, partner-sourced pipeline — exist in different systems and are rarely put next to the initiative.' },
+  { t: 'The meeting reconciles numbers instead of deciding.',
+    pack: 'Finance’s revenue figure differs from sales’. Customer success counts “active customers” differently from product. The first part of the meeting goes on agreeing which is right.',
+    real: 'Definitions live in dashboard logic and spreadsheets. By the time the numbers agree, the decision has slipped to next week.' },
+];
+
+const observable = [
+  { i: 'health', t: 'Health by domain', d: 'Revenue, customers, operations, finance and delivery, each scored against expectations the leadership team agreed — not against last month.' },
+  { i: 'target', t: 'Commitments as objects', d: 'Each promise to customers or the board is modelled with its dependencies, so its projected attainment is visible before it is missed.' },
+  { i: 'graph', t: 'Exposure', d: 'Revenue, customers and contracts that depend on a struggling process or supplier, sized in money and accounts rather than in red cells.' },
+  { i: 'spark', t: 'Leading indicators for bets', d: 'The operational signals that should move first if a strategic initiative is working, tracked alongside the initiative.' },
+  { i: 'event', t: 'What changed', d: 'Releases, pricing changes, policy changes and incidents on one timeline, so a shift in an outcome can be lined up with what preceded it.' },
+  { i: 'actions', t: 'Ownership and follow-through', d: 'Who owns each open issue, what was decided and whether the outcome moved afterwards.' },
+];
+
+const indicators = [
+  { g: 'Health', items: [['Business health score', 'Weighted health across domains, with the weakest domain called out'], ['Objectives at risk', 'Count and value of objectives projected to miss'], ['Signals open > 7 days', 'Issues detected but not yet owned or resolved']] },
+  { g: 'Commitments', items: [['Projected attainment', 'Per commitment, against its target, for the current period'], ['Time to breach', 'How long before an at-risk commitment is actually missed'], ['Exposure', 'Revenue and customers tied to commitments at risk']] },
+  { g: 'Strategy', items: [['Leading indicator per bet', 'E.g. share of accounts activated without manual review'], ['Mix shift', 'E.g. annual vs monthly plans in new bookings'], ['Adoption of change', 'Share of volume flowing through a new process']] },
+  { g: 'Concentration', items: [['Dependency concentration', 'Commitments resting on one supplier, team or system'], ['Customer concentration', 'Revenue share of the largest accounts and their health'], ['Key-process risk', 'Processes with rising delay and no spare capacity']] },
+];
+
+const decisions = [
+  ['Fund capacity or reset the promise?', 'When a commitment is projected to miss, see what it would take to recover it and what is exposed if you do not.'],
+  ['Double down, adjust or stop a strategic bet', 'Decide on leading indicators in month two, rather than on revenue in month nine.'],
+  ['Where the next hire goes', 'Compare where work waits and what that waiting costs across functions, not which team argues loudest.'],
+  ['Which dependency to de-risk first', 'Rank suppliers, systems and teams by the revenue and commitments that rest on them.'],
+  ['What to tell the board', 'Report commitments with their projected attainment and the actions already under way.'],
+  ['Whether a fix worked', 'Check that the outcome moved after the decision, not just that the action was completed.'],
+];
+
+const faqs = [
+  { q: 'Is this another executive dashboard?', a: 'A dashboard shows numbers somebody chose to put on it. Panoptes is designed to observe the business model underneath — so an executive view can explain why a number moved, what depends on it and who owns the response, using the same facts the operating teams see.' },
+  { q: 'How are business health scores defined?', a: 'With you. Health is built from objectives and expectations the leadership team agrees for each domain, and every definition is explicit and owned. See <a href="/platform/business-health/">Business Health</a> and the guide to <a href="/resources/business-health-metrics/">business health metrics</a>.' },
+  { q: 'Will it tell us why something happened?', a: 'It helps trace a change through dependencies and line it up with what changed beforehand. It distinguishes correlation from verified cause, and shows its evidence, so you can judge it. See <a href="/platform/root-cause-analysis/">Root Cause Analysis</a>.' },
+  { q: 'How long before an executive view is useful?', a: 'It depends on which systems are connected and how much of the model is defined. Most evaluations start with one cross-functional problem, such as onboarding or collections, rather than the whole business at once.' },
+];
+---
+<BaseLayout title="Business observability for executives" description="One honest picture of whether the business is working: health by domain, commitments at risk, exposure and whether strategy is landing — from one shared model." ogImage="/social/og-solutions.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Solutions · Executives" title="One honest picture of whether the business is working." lede="Board packs are assembled from five functions’ numbers, each true on its own terms. Panoptes gives the executive team a continuously updated model of the whole business — health, commitments at risk and whether strategy is landing — so the meeting starts with what to do, not whose number is right." breadcrumbs={crumbs} center>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/platform/command-center/">The Command Center</a>
+    </div>
+    <Fragment slot="visual">
+      <div class="container-wide ex-screen">
+        <ProductScreen src="/screenshots/executive-brief.svg" alt="Fictional executive brief: business health of 78 with operations lowest, four commitments at risk led by enterprise go-live projected at 62%, $1.9M revenue exposure, three strategic bets with leading indicators, and a timeline of what changed this week" title="panoptes / executive-brief" tone="dark" caption="An executive brief built from the shared model. All names and figures are fictional." />
+      </div>
+    </Fragment>
+  </PageHero>
+
+  <!-- Problems -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="The view from the top" title="An executive picture is usually assembled, not observed." lede="Leadership teams are rarely short of numbers. What they lack is a single view that connects those numbers to the commitments they made and the operations underneath. These are the gaps we hear most often." />
+      <div class="pairs">
+        {problems.map((p, i) => (
+          <article class="pair reveal">
+            <h3><span class="pair-n">0{i + 1}</span>{p.t}</h3>
+            <div class="pair-cols">
+              <div class="pair-pack"><p class="kpi-label">What the pack says</p><p>{p.pack}</p></div>
+              <div class="pair-real"><p class="kpi-label">What is actually happening</p><p>{p.real}</p></div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Observable -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="obs">
+        <div class="obs-head">
+          <p class="eyebrow">What becomes observable</p>
+          <h2>The whole business, at the altitude you work at.</h2>
+          <p class="lede">The executive view is not a separate dataset. It is the top of the same model operations, finance and revenue use — so you can go from “operations health is 66” to the queue, the team and the change behind it in a few steps.</p>
+          <a href="/platform/business-graph/" class="link-arrow">How the Business Graph connects it</a>
+        </div>
+        <ul class="obs-grid">
+          {observable.map((o) => (
+            <li class="reveal"><span class="icon-tile"><Icon name={o.i} /></span><h3>{o.t}</h3><p class="muted small">{o.d}</p></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Indicators -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Recommended indicators" title="Fewer numbers, each with a reason to exist." lede="A starting set for an executive view, grouped by the question each group answers. Every indicator links down to the processes and entities that drive it." />
+      <div class="ind">
+        {indicators.map((g) => (
+          <section class="ind-col reveal" aria-label={g.g}>
+            <p class="ind-g">{g.g}</p>
+            <dl>{g.items.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="wf-head">
+        <div>
+          <p class="eyebrow">Illustrative workflow</p>
+          <h2>From a drifting signal to a decision you can check.</h2>
+        </div>
+        <p class="lede">The weekly operating review, run on the shared model. In this fictional example, enterprise go-live time drifts, the commitment it supports is sized, an owner is clear, a decision is taken — and the following week shows whether it worked.</p>
+      </div>
+      <div class="reveal">
+        <Diagram src="/diagrams/executive-operating-review-loop.svg" alt="Operating review loop: signal (go-live drifting from 9 to 16 days), size (commitment projected at 62%, $1.1M exposed), trace (wait sits in verification, correlation not yet verified), decide (re-assign reviewer capacity), measure (watch go-live time and queue depth)" frame="weekly operating review" zoom class="hide-sm" />
+        <Diagram src="/diagrams/executive-operating-review-loop-vertical.svg" alt="Operating review loop: signal, size, trace, decide, measure" frame class="show-sm" />
+      </div>
+      <p class="note mt-1">Step three is deliberately cautious: a change that coincides with a delay is a lead to verify, not a conclusion.</p>
+    </div>
+  </section>
+
+  <!-- Decisions -->
+  <section class="section">
+    <div class="container">
+      <div class="split split-top">
+        <div class="dec-intro">
+          <p class="eyebrow">Decisions it can support</p>
+          <h2>Settle it in the meeting, with the evidence on the table.</h2>
+          <p class="lede">The value of an honest picture is the decisions it makes possible earlier — and the ability to check afterwards whether they worked.</p>
+        </div>
+        <ol class="dec">
+          {decisions.map(([t, d]) => <li class="reveal"><strong>{t}</strong><span>{d}</span></li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities + related -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Relevant capabilities" title="What the executive view is built on." />
+      <div class="grid grid-4">
+        <FeatureCard title="Command Center" text="A ranked view of what needs attention across the business, with open investigations and owners." href="/platform/command-center/" icon="command" />
+        <FeatureCard title="Business Health" text="Objectives and expectations per domain, defined once and owned." href="/platform/business-health/" icon="health" />
+        <FeatureCard title="Business Graph" text="The dependencies that connect a commitment to the processes and suppliers beneath it." href="/platform/business-graph/" icon="graph" />
+        <FeatureCard title="AI Intelligence" text="Ask questions of the business in plain language and get investigations that show their working." href="/platform/ai-intelligence/" icon="ai" tag="Vision" />
+      </div>
+      <div class="mt-3">
+        <RelatedLinks eyebrow="Related use cases" title="Where executives usually start" items={[
+          { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Commitments watched before they break', icon: 'target' },
+          { label: 'Business anomalies', href: '/use-cases/business-anomalies/', desc: 'Separate real change from noise', icon: 'anomaly' },
+          { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Where earned revenue goes missing', icon: 'revenue' },
+          { label: 'From dashboards to decisions', href: '/resources/from-dashboards-to-decisions/', desc: 'Why more dashboards rarely help', icon: 'book' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split split-top">
+        <div>
+          <p class="eyebrow">FAQ</p>
+          <h2 class="faq-title">Questions executives ask</h2>
+        </div>
+        <FAQ items={faqs} />
+      </div>
+      <div class="mt-3"><RoleSwitcher current="/solutions/executives/" /></div>
+    </div>
+  </section>
+
+  <CTA title="See the business as one system." text="Bring the commitments your leadership team is accountable for. We will show how Panoptes would model them, watch them and tell you early when one is at risk." />
+</BaseLayout>
+
+<style>
+  .ex-screen { margin-top: clamp(8px, 2vw, 24px); padding-inline: 0; }
+  .ex-screen :global(.pscreen-note) { justify-content: center; }
+
+  .pairs { display: grid; gap: 18px; }
+  .pair { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(20px, 3vw, 32px); display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.6fr); gap: clamp(18px, 3vw, 40px); align-items: start; }
+  .pair h3 { font-size: clamp(1.25rem, 2vw, 1.55rem); margin: 0; }
+  .pair-n { display: block; font: 600 .78rem/1 var(--font-mono); color: var(--accent-text); margin-bottom: .8rem; letter-spacing: .06em; }
+  .pair-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pair-cols > div { border-radius: var(--radius); padding: 16px 18px; }
+  .pair-cols p:last-child { margin: 0; font-size: .95rem; }
+  .pair-cols .kpi-label { margin-bottom: .6rem; }
+  .pair-pack { background: var(--bg-2); color: var(--text-2); }
+  .pair-real { background: var(--accent-soft); }
+  .pair-real .kpi-label { color: var(--accent-text); }
+  @media (max-width: 960px) { .pair { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .pair-cols { grid-template-columns: 1fr; } }
+
+  .obs { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.4fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .obs-head { position: sticky; top: calc(var(--header-h, 72px) + 24px); }
+  .obs-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .obs-grid li { padding: 22px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .obs-grid h3 { font-size: 1.12rem; }
+  .obs-grid p { margin: 0; }
+  @media (max-width: 960px) { .obs { grid-template-columns: 1fr; } .obs-head { position: static; } }
+  @media (max-width: 560px) { .obs-grid { grid-template-columns: 1fr; } }
+
+  .ind { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); overflow: hidden; }
+  .ind-col { padding: 22px; }
+  .ind-col + .ind-col { border-left: 1px solid var(--border); }
+  .ind-g { font: 600 1.15rem/1.2 var(--font-display); margin: 0 0 1rem; padding-bottom: .9rem; border-bottom: 2px solid var(--accent); }
+  .ind dl { margin: 0; display: grid; gap: 1rem; }
+  .ind dt { font-weight: 600; font-size: .95rem; }
+  .ind dd { margin: 2px 0 0; color: var(--text-2); font-size: .87rem; line-height: 1.5; }
+  @media (max-width: 960px) { .ind { grid-template-columns: 1fr 1fr; } .ind-col:nth-child(3) { border-left: 0; } .ind-col:nth-child(n+3) { border-top: 1px solid var(--border); } }
+  @media (max-width: 560px) { .ind { grid-template-columns: 1fr; } .ind-col + .ind-col { border-left: 0; border-top: 1px solid var(--border); } }
+
+  .wf-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 64px); align-items: end; margin-bottom: clamp(28px, 4vw, 44px); }
+  .wf-head h2 { color: #fff; margin: 0; }
+  .wf-head .lede { margin: 0; }
+  @media (max-width: 860px) { .wf-head { grid-template-columns: 1fr; } }
+
+  .dec { list-style: none; margin: 0; padding: 0; counter-reset: d; display: grid; gap: 0; border-top: 1px solid var(--border); }
+  .dec li { counter-increment: d; display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .dec li::before { content: counter(d, decimal-leading-zero); grid-row: span 2; font: 600 .8rem/1.8 var(--font-mono); color: var(--accent-text); }
+  .dec strong { font: 600 1.08rem/1.35 var(--font-display); }
+  .dec span { color: var(--text-2); font-size: .94rem; margin-top: 4px; }
+  .dec-intro { position: sticky; top: calc(var(--header-h, 72px) + 24px); }
+  @media (max-width: 960px) { .dec-intro { position: static; } }
+  .faq-title { font-size: clamp(1.6rem, 2.6vw, 2.2rem); }
+  :global(.frame-bar .illustrative) { white-space: nowrap; flex: none; }
+</style>

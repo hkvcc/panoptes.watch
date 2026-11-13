@@ -1,0 +1,268 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import IntegrationIcon from '../../components/integrations/IntegrationIcon.astro';
+
+const crumbs = [{ label: 'Integrations', href: '/integrations/' }, { label: 'Data Sources', href: '/integrations/data-sources/' }];
+
+const types = [
+  {
+    icon: 'finance-erp', name: 'Systems of record', tag: 'State',
+    lede: 'CRM, ERP, billing, support and your own application databases. They hold the current, authoritative version of each business object.',
+    gives: 'What is true now: the stage of each deal, the status of each invoice, who owns each case.',
+    strengths: 'Authoritative; rich attributes; the language teams already use.',
+    limits: 'Often overwrite history, so “when did this change?” has to be reconstructed from snapshots or change logs.',
+    examples: 'CRM, ERP, billing, helpdesk, operational databases',
+  },
+  {
+    icon: 'event-streams', name: 'Event streams', tag: 'Events',
+    lede: 'Messages your services publish as things happen: order placed, verification completed, payment failed, shipment dispatched.',
+    gives: 'What happened, to which entity, and exactly when — in the order it happened.',
+    strengths: 'Precise timing; ideal for stage durations, waiting time and early detection.',
+    limits: 'Thin on context. An event says a payment failed; joining it to the account, order and route gives it meaning.',
+    examples: 'Events API, webhooks, Kafka-style topics, change data capture',
+  },
+  {
+    icon: 'data-warehouses', name: 'Warehouses and lakehouses', tag: 'History',
+    lede: 'The curated, joined tables your data team already maintains for reporting and analysis.',
+    gives: 'Long history and agreed definitions — the context needed for baselines and seasonality.',
+    strengths: 'Already cleaned and joined; years of history; one place to read many systems.',
+    limits: 'Usually refreshed in batches, so it is better for context and backfill than for spotting a problem this morning.',
+    examples: 'Cloud warehouses, lakehouse tables, scheduled extracts',
+  },
+];
+
+const modelled = [
+  { icon: 'graph', t: 'Entities', d: 'The things the business runs on, each with one identity across systems.', ex: ['Customer and account', 'Order and subscription', 'Payment and invoice', 'Case, shipment, supplier'] },
+  { icon: 'event', t: 'Events', d: 'Timestamped facts about an entity. Events are what make durations, sequences and change visible.', ex: ['order.placed', 'verification.completed', 'payment.failed', 'invoice.overdue'] },
+  { icon: 'process', t: 'States', d: 'Where each entity is in its lifecycle, mapped from source statuses into shared, agreed stages.', ex: ['Awaiting payment', 'In review', 'Ready to ship', 'Collected'] },
+];
+
+const freshness = [
+  { mode: 'Streaming / push', how: 'Events arrive as they happen (API, webhooks, topics).', latency: 'Seconds to minutes', fit: 'Live queues, payment completion, time-to-breach on commitments', watch: 'Duplicates and out-of-order delivery; design events to be idempotent.' },
+  { mode: 'Incremental pull', how: 'Changed records are read on a schedule using an updated-at cursor or change log.', latency: 'Minutes to an hour', fit: 'Deal stages, ticket states, invoice status', watch: 'Source rate limits; deletes and backdated changes need explicit handling.' },
+  { mode: 'Batch / warehouse', how: 'Curated tables or files are read after they are refreshed.', latency: 'Hours to a day', fit: 'Baselines, cost and margin, history and backfill', watch: 'Not suited to same-day detection on its own; label freshness clearly.' },
+];
+
+const privilege = [
+  'Read-only access wherever the source supports it; no write scopes unless an agreed action needs one.',
+  'Scoped to the objects and fields that feed the agreed questions — not “all tables”.',
+  'Dedicated service credentials per source, never a person’s login, so access can be rotated or revoked cleanly.',
+  'Credentials held server-side and never exposed to browsers or shared in configuration files.',
+  'Personal data minimised: identifiers and business attributes where needed, free-text and sensitive fields excluded by default.',
+  'Read replicas or warehouses preferred over production databases where load is a concern.',
+];
+
+const mapSteps = [
+  { n: '01', t: 'Identify the entity', d: 'Decide which source record represents which business entity, and which field is its stable key.' },
+  { n: '02', t: 'Resolve identity', d: 'Link the different keys each system uses — account_id, customer_ref, org_external_id — to one entity.' },
+  { n: '03', t: 'Map states', d: 'Translate source statuses into shared lifecycle states, so “Closed Won” and “paid” mean the same thing everywhere.' },
+  { n: '04', t: 'Derive events', d: 'Turn status changes and timestamps into events, so durations and sequences can be measured.' },
+  { n: '05', t: 'Version the mapping', d: 'Keep mappings explicit, owned and versioned, so a change in a source does not silently change a metric.' },
+];
+
+const faqs = [
+  { q: 'Do we need a data warehouse before using Panoptes?', a: 'No. A warehouse is useful for history and agreed definitions, but systems of record and business events can be connected directly. Many organisations use a mix: the warehouse for baselines, direct sources for freshness.' },
+  { q: 'How fresh does the data need to be?', a: 'It depends on the question. Watching a payment route or a queue approaching its service commitment needs minutes; tracking unit cost or margin can work with daily data. Freshness is agreed per source during evaluation and shown alongside each signal.' },
+  { q: 'Does Panoptes write back to our systems?', a: 'Connections are designed to be read-oriented. Where an agreed action needs to create a task or update a record, that is scoped separately and explicitly, rather than granted by default.' },
+  { q: 'What if our data is messy or inconsistent between systems?', a: 'That is normal, and it is part of why a shared model helps. Mapping makes inconsistencies visible — two systems disagreeing about an account’s status is itself a useful signal — and validation with your teams happens before anyone relies on the result.' },
+];
+---
+<BaseLayout
+  title="Data Sources"
+  description="How Panoptes models systems of record, event streams and warehouses as entities, events and states, with freshness trade-offs and least-privilege access."
+  ogImage="/social/og-integrations.png"
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Integrations · Data Sources"
+    title="Three kinds of source. <span class='gradient-text'>One model of the business.</span>"
+    lede="Systems of record tell you what is true now. Event streams tell you what happened and when. Warehouses tell you what normal looks like. Panoptes is designed to combine all three into entities, events and states that every team reads the same way."
+    breadcrumbs={crumbs}
+    split
+  >
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#mapping">See how fields are mapped</a>
+    </div>
+    <Fragment slot="visual"><Diagram src="/illustrations/data-source-types.svg" alt="Systems of record, event streams and warehouses all feeding one business model of customers, orders, payments and cases" /></Fragment>
+  </PageHero>
+
+  <!-- Source types -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Source types" title="Each kind of source answers a different question." lede="No single source is enough. State without events cannot show where time is lost; events without state lack context; neither shows whether today is unusual without history." />
+      <div class="grid grid-3">
+        {types.map((t) => (
+          <article class="card src reveal">
+            <div class="src-top">
+              <span class="icon-tile"><IntegrationIcon name={t.icon} /></span>
+              <span class="badge badge-outline">{t.tag}</span>
+            </div>
+            <h3>{t.name}</h3>
+            <p class="muted">{t.lede}</p>
+            <dl class="src-dl">
+              <dt>Contributes</dt><dd>{t.gives}</dd>
+              <dt>Strengths</dt><dd>{t.strengths}</dd>
+              <dt>Watch for</dt><dd>{t.limits}</dd>
+              <dt>Typical examples</dt><dd>{t.examples}</dd>
+            </dl>
+          </article>
+        ))}
+      </div>
+      <p class="mt-2"><a class="link-arrow" href="/integrations/#directory">Browse example systems by category</a></p>
+    </div>
+  </section>
+
+  <!-- What gets modelled -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="What gets modelled" title="Entities, events and states — not tables." lede="Source data is translated into a small vocabulary that describes how the business operates. That vocabulary is what the Business Graph, health indicators and investigations all read from." />
+      <div class="grid grid-3">
+        {modelled.map((m) => (
+          <article class="card reveal">
+            <span class="icon-tile"><Icon name={m.icon} /></span>
+            <h3>{m.t}</h3>
+            <p class="muted">{m.d}</p>
+            <ul class="pill-list mt-1">{m.ex.map((e) => <li class={m.t === 'Events' ? 'mono' : ''}>{e}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+      <div class="model-note reveal">
+        <Icon name="compass" />
+        <p><strong>Why this matters:</strong> once an invoice, a payment and a support case are all linked to the same account, a question like “which customers are both overdue and waiting on us?” stops being a spreadsheet exercise. See <a href="/platform/business-graph/">Business Graph</a> for how relationships are modelled.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Freshness -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Freshness and latency" title="Choose freshness per question, not per platform." lede="Fresher is not always better: it costs more to run, puts more load on sources and is unnecessary for slow-moving measures. The right latency is the one that leaves enough time to act." />
+      <div class="table-wrap reveal">
+        <table class="table fresh">
+          <caption class="sr-only">Freshness trade-offs by ingestion mode</caption>
+          <thead><tr><th scope="col">Mode</th><th scope="col">How it works</th><th scope="col">Typical latency</th><th scope="col">Good for</th><th scope="col">Watch for</th></tr></thead>
+          <tbody>
+            {freshness.map((f) => (
+              <tr>
+                <th scope="row">{f.mode}</th>
+                <td data-label="How it works">{f.how}</td>
+                <td data-label="Typical latency"><span class="badge">{f.latency}</span></td>
+                <td data-label="Good for">{f.fit}</td>
+                <td data-label="Watch for">{f.watch}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="note mt-1">Latency ranges are typical patterns for each mode, not service commitments. Actual freshness depends on the source system and is agreed per deployment.</p>
+    </div>
+  </section>
+
+  <!-- Least privilege -->
+  <section class="section section-alt">
+    <div class="container split split-top">
+      <div>
+        <p class="eyebrow">Access principles</p>
+        <h2>Read-oriented. Least privilege. Agreed up front.</h2>
+        <p class="lede">Observing the business should never require broad access to it. Each connection is scoped to the data that answers the agreed questions, and nothing more.</p>
+        <p class="muted">Panoptes observes business processes and outcomes — orders, cases, payments, commitments — not individual employees. Fields that identify staff are excluded unless they are needed to route ownership, and even then are used for routing, not for monitoring people.</p>
+        <a class="link-arrow" href="/integrations/security-governance/">Security and governance principles</a>
+      </div>
+      <div class="card card-raised reveal">
+        <p class="kpi-label">Design commitments for every connection</p>
+        <ul class="checklist mt-1">{privilege.map((p) => <li>{p}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mapping -->
+  <section class="section" id="mapping">
+    <div class="container">
+      <SectionHead eyebrow="Mapping" title="From source fields to business entities." lede="Three systems describe the same customer with three different keys and three different status vocabularies. Mapping turns them into one account with an opportunity, a failed payment and an urgent case — which is when the risk becomes obvious." />
+      <div class="reveal">
+        <Diagram class="hide-sm" src="/diagrams/source-field-entity-mapping.svg" alt="CRM opportunity, payment charge and support ticket fields are mapped to Opportunity, Payment and Case entities. Their keys account_id, customer_ref and org_external_id all resolve to Account ACC-1042, whose health is at risk." frame="field mapping · account ACC-1042" zoom />
+        <Diagram class="show-sm" src="/diagrams/source-field-entity-mapping-vertical.svg" alt="Each source record maps to an entity, and all three resolve to one Account whose health is at risk." frame="field mapping" />
+      </div>
+      <ol class="map-steps">
+        {mapSteps.map((s) => (
+          <li class="reveal">
+            <span class="ms-n">{s.n}</span>
+            <div><h3>{s.t}</h3><p class="muted">{s.d}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container container-narrow">
+      <SectionHead eyebrow="Questions" title="Common questions about data sources." />
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <RelatedLinks
+        eyebrow="Keep exploring"
+        title="Related pages"
+        items={[
+          { label: 'Integrations overview', href: '/integrations/', desc: 'Ecosystem directory and architecture', icon: 'plug' },
+          { label: 'API & events', href: '/integrations/api/', desc: 'Designing and sending business events', icon: 'api' },
+          { label: 'Security & governance', href: '/integrations/security-governance/', desc: 'Access, ownership and auditability', icon: 'shield' },
+          { label: 'Business Graph', href: '/platform/business-graph/', desc: 'Entities, relationships and dependencies', icon: 'graph' },
+          { label: 'How business events connect to outcomes', href: '/resources/how-business-events-connect-to-outcomes/', desc: 'From raw events to business results', icon: 'event' },
+          { label: 'Building a business operating model', href: '/resources/building-a-business-operating-model/', desc: 'Designing the model itself', icon: 'layers' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <CTA title="Start with one question and the sources behind it." text="We will help you decide which systems matter, how fresh each needs to be, and how they map to the model." secondary={{ label: 'Integrations overview', href: '/integrations/' }} />
+</BaseLayout>
+
+<style>
+  .src { display: flex; flex-direction: column; }
+  .src-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .src-dl { margin: auto 0 0; padding-top: 1rem; border-top: 1px solid var(--border); display: grid; gap: .25rem; font-size: .9rem; }
+  .src-dl dt { font: 500 .7rem/1.3 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin-top: .6rem; }
+  .src-dl dt:first-child { margin-top: 0; }
+  .src-dl dd { margin: 0; color: var(--text-2); }
+  .src > .muted { margin-bottom: 1.2rem; }
+
+  .model-note { display: flex; gap: 14px; align-items: flex-start; margin-top: clamp(24px, 3vw, 36px); padding: 18px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  .model-note :global(svg) { width: 22px; height: 22px; color: var(--accent-text); flex: none; margin-top: 2px; }
+  .model-note p { margin: 0; color: var(--text-2); }
+  .model-note a { color: var(--accent-text); }
+
+  .fresh { min-width: 900px; }
+  .fresh th[scope='row'] { font: 600 .95rem/1.3 var(--font-body); text-transform: none; letter-spacing: 0; color: var(--text); background: transparent; }
+  .fresh td { color: var(--text-2); }
+  .fresh .badge { white-space: normal; }
+  @media (max-width: 760px) {
+    .fresh { min-width: 0; }
+    .fresh thead { display: none; }
+    .fresh tr { display: block; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+    .fresh tr:last-child { border-bottom: 0; }
+    .fresh th[scope='row'], .fresh td { display: block; padding: 0; border: 0; }
+    .fresh td { margin-top: .6rem; font-size: .9rem; }
+    .fresh td::before { content: attr(data-label); display: block; font: 500 .68rem/1.3 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 2px; }
+  }
+
+  .map-steps { list-style: none; padding: 0; margin: clamp(28px, 4vw, 44px) 0 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+  .map-steps li { display: grid; gap: 10px; align-content: start; padding-top: 16px; border-top: 2px solid var(--border); }
+  .map-steps li:first-child { border-top-color: var(--accent); }
+  .ms-n { font: 600 .78rem/1 var(--font-mono); color: var(--accent-text); }
+  .map-steps h3 { font-size: 1.02rem; margin-bottom: .3em; }
+  .map-steps p { font-size: .9rem; margin: 0; }
+  @media (max-width: 960px) { .map-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .map-steps { grid-template-columns: 1fr; } }
+</style>

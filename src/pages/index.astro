@@ -1,0 +1,386 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DemoDashboard from '../components/DemoDashboard.astro';
+import BusinessGraph from '../components/BusinessGraph.astro';
+import SectionHead from '../components/SectionHead.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import Diagram from '../components/Diagram.astro';
+import Tabs from '../components/Tabs.astro';
+import TabPanel from '../components/TabPanel.astro';
+import Icon from '../components/Icon.astro';
+import CTA from '../components/CTA.astro';
+import { PLATFORM, SITE } from '../data/site';
+
+const capabilityText: Record<string, string> = {
+  'Business Graph': 'Model customers, orders, payments, workflows and teams as one connected graph, so a change in one place can be traced to its consequences elsewhere.',
+  'Command Center': 'A single operating view that ranks what needs attention now — health, exceptions and open investigations — instead of forty dashboards.',
+  'Business Health': 'Define what “working” means for each part of the business, then watch objectives and service expectations continuously.',
+  'Process Intelligence': 'See stages, hand-offs, waiting time and rework in your real workflows, and where throughput is constrained.',
+  'Journey Intelligence': 'Follow customers and transactions end to end across systems to find exactly where they slow down or drop out.',
+  'Anomaly Detection': 'Compare actual behaviour with expected patterns and surface meaningful change early, with the context to judge it.',
+  'Root Cause Analysis': 'Trace a symptom back through dependent workflows and recent changes — and be explicit about correlation versus cause.',
+  'AI Intelligence': 'Ask questions of your business in plain language and get investigations that show their working. (Product vision.)',
+  'Actions & Automation': 'Route findings to owners, coordinate interventions and measure whether they worked — closing the loop.',
+};
+
+const steps = [
+  { n: '01', t: 'Connect', d: 'Bring in signals from the systems the business already runs on: CRM, payments, finance, support, product events and data warehouses.', img: '/illustrations/step-connect.svg' },
+  { n: '02', t: 'Model', d: 'Describe the business as entities, relationships, processes and objectives — a living model rather than a pile of tables.', img: '/illustrations/step-model.svg' },
+  { n: '03', t: 'Observe', d: 'Continuously compare what is happening with what should be happening, at the level of business outcomes.', img: '/illustrations/step-observe.svg' },
+  { n: '04', t: 'Understand', d: 'When something changes, follow dependencies to see what moved first and what it is affecting downstream.', img: '/illustrations/step-understand.svg' },
+  { n: '05', t: 'Act', d: 'Assign ownership, coordinate the response and measure whether the intervention actually improved the outcome.', img: '/illustrations/step-act.svg' },
+];
+
+const questions = [
+  { id: 'leak', q: 'Where is revenue leaking?', area: 'Revenue',
+    story: 'Payment attempts are growing, but collected revenue is flat. The gap is not in demand — it is somewhere between “customer intends to pay” and “cash arrives”.',
+    signals: ['Attempted vs completed payments by method and region', 'Invoices issued but not collected within terms', 'Refunds and disputes as a share of new revenue'],
+    connect: 'Customer → Order → Payment → Invoice → Ledger', next: 'Segment the gap by payment route, then check what changed in that route recently.',
+    bars: [92, 90, 91, 84, 78, 77], href: '/use-cases/revenue-leakage/' },
+  { id: 'onb', q: 'Why is customer onboarding slowing down?', area: 'Customers',
+    story: 'Time-to-first-value for new accounts has crept up by over a day. No single dashboard shows it, because the delay is spread across three teams.',
+    signals: ['Median and 90th-percentile time per onboarding stage', 'Cases waiting on customer input versus internal work', 'Queue depth against available capacity'],
+    connect: 'Application → Verification → Approval → Activation', next: 'Find the stage where waiting time grew, then compare its capacity and arrival rate.',
+    bars: [40, 42, 47, 55, 61, 66], href: '/use-cases/operational-bottlenecks/' },
+  { id: 'sla', q: 'Which workflows are missing their targets?', area: 'Operations',
+    story: 'Most SLAs report green at month end — but some commitments are breached early in the week and recovered later, hiding real customer impact.',
+    signals: ['Projected attainment, not just historical attainment', 'Cases approaching breach in the next few hours', 'Breaches clustered by team, customer tier or channel'],
+    connect: 'Commitment → Case → Queue → Team', next: 'Watch time-to-breach on open cases and intervene before the target is missed.',
+    bars: [97, 96, 93, 91, 94, 89], href: '/use-cases/sla-monitoring/' },
+  { id: 'conv', q: 'What changed before conversion dropped?', area: 'Revenue',
+    story: 'Trial-to-paid conversion fell four points. Marketing, product and pricing all shipped changes that fortnight. Which one matters?',
+    signals: ['Conversion by cohort, aligned to change events', 'Step-level drop-off in the upgrade journey', 'Changes to pricing, releases and campaigns on one timeline'],
+    connect: 'Release / Campaign / Pricing → Trial → Upgrade', next: 'Line up change events against the cohorts that converted worse, and test the strongest correlation.',
+    bars: [24, 25, 24, 22, 20, 20], href: '/use-cases/customer-journey-friction/' },
+  { id: 'dep', q: 'Which operational dependencies are creating risk?', area: 'Delivery',
+    story: 'A single supplier, team or system can sit underneath dozens of customer commitments. That concentration is rarely visible until it fails.',
+    signals: ['Commitments that share an upstream dependency', 'Dependencies with rising error or delay rates', 'Revenue and customers exposed to each dependency'],
+    connect: 'Supplier / System → Process → Commitment → Customer', next: 'Rank dependencies by the revenue and commitments that rely on them.',
+    bars: [30, 34, 33, 41, 48, 57], href: '/platform/business-graph/' },
+  { id: 'cost', q: 'Where are business costs increasing unexpectedly?', area: 'Finance',
+    story: 'Cost per order rose 9% while volume was flat. The finance view shows the total; it does not show that rework in one process doubled.',
+    signals: ['Cost per transaction by process and channel', 'Rework and manual touches per case', 'Spend that moved without a matching change in volume'],
+    connect: 'Process → Effort → Cost centre → Margin', next: 'Break unit cost into process steps and look for rework loops or manual exceptions.',
+    bars: [50, 51, 53, 57, 60, 63], href: '/use-cases/operational-efficiency/' },
+];
+
+const roles = [
+  { r: 'CEO', h: '/solutions/executives/', q: 'Is the business actually working — and where should I look first?', o: ['Business health across every domain', 'Commitments at risk, ranked by impact', 'Early signs that a strategy is or is not landing'] },
+  { r: 'COO', h: '/solutions/operations/', q: 'Where is work waiting, and what is it costing us?', o: ['Throughput and wait time by process stage', 'Capacity versus demand by team', 'SLA attainment, projected rather than reported'] },
+  { r: 'CFO', h: '/solutions/finance/', q: 'Why did the numbers move — operationally?', o: ['Expected vs collected revenue', 'Unit cost by process and channel', 'Leakage between billing, payment and ledger'] },
+  { r: 'CRO', h: '/solutions/revenue/', q: 'Where is revenue stalling between intent and cash?', o: ['Pipeline-to-cash conversion by stage', 'Onboarding delays that defer first revenue', 'Expansion and churn signals in context'] },
+  { r: 'CX', h: '/solutions/customer-experience/', q: 'Where do customers struggle, and are we keeping our promises?', o: ['End-to-end journey completion', 'Friction points across channels', 'Service commitments kept and broken'] },
+];
+
+const trust = [
+  { i: 'key', t: 'Access control', d: 'Role-based access designed so people see the parts of the business model relevant to their responsibilities.' },
+  { i: 'database', t: 'Data ownership', d: 'Your business data remains yours. Panoptes is designed to model and observe it, not to repurpose it.' },
+  { i: 'layers', t: 'Governance', d: 'Definitions of metrics, entities and objectives are explicit, versioned and owned — not hidden in dashboard logic.' },
+  { i: 'audit', t: 'Auditability', d: 'Investigations, decisions and actions leave a trail, so you can see who concluded what, and on which evidence.' },
+  { i: 'plug', t: 'Secure integrations', d: 'Least-privilege, read-oriented connections to source systems, with credentials kept server-side.' },
+  { i: 'lock', t: 'Data protection', d: 'Encryption in transit and at rest, data minimisation and clear retention are core design principles.' },
+];
+
+const schema = [
+  { '@type': 'Organization', '@id': `${SITE.origin}/#org`, name: 'Panoptes', url: SITE.origin, logo: `${SITE.origin}/logos/png/panoptes-symbol-purple-512.png`, email: SITE.salesEmail,
+    contactPoint: { '@type': 'ContactPoint', contactType: 'sales', email: SITE.salesEmail } },
+  { '@type': 'WebSite', '@id': `${SITE.origin}/#website`, name: 'Panoptes', url: SITE.origin, publisher: { '@id': `${SITE.origin}/#org` } },
+  { '@type': 'SoftwareApplication', name: 'Panoptes', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: SITE.origin,
+    description: 'Business Observability platform that models and observes how a business actually operates.' },
+];
+---
+<BaseLayout title="Panoptes — Observability for your entire business" description="Panoptes is the Business Observability platform: see how your business actually operates — revenue, customer journeys, workflows and risks, connected and explained." schema={schema}>
+
+  <!-- 1 · Hero -->
+  <section class="hero bg-glow">
+    <div class="hero-grid bg-grid" aria-hidden="true"></div>
+    <div class="container hero-copy">
+      <p class="eyebrow">The Business Observability Platform</p>
+      <h1>You monitor your systems. <span class="gradient-text">Now monitor your business.</span></h1>
+      <p class="lede">Panoptes gives you a connected view of how your business actually operates. Understand critical workflows, uncover hidden friction, identify emerging risks, and turn business signals into better decisions.</p>
+      <div class="btn-row">
+        <a href="/platform/" class="btn btn-primary btn-lg">Explore the Platform<Icon name="arrow" class="arrow" /></a>
+        <a href="/demo/" class="btn btn-lg">Book a Demo</a>
+      </div>
+    </div>
+    <div class="container container-wide hero-visual">
+      <DemoDashboard />
+      <p class="hero-note note">Interactive concept of the Panoptes Command Center. Switch the time range or select a signal to open its investigation. All data is fictional.</p>
+    </div>
+  </section>
+
+  <!-- 2 · Visibility problem -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="The visibility gap" title="Every system has a dashboard. Your business still has blind spots." lede="Engineering knows whether the servers are up. Finance knows last month's numbers. But the question leaders actually need answered — is the business working right now, and if not, why — falls between the tools." />
+      <div class="compare">
+        <article class="cmp reveal">
+          <p class="cmp-k">System Observability</p>
+          <h3>Is the technology working?</h3>
+          <p class="muted">Logs, metrics and traces for servers, services and applications.</p>
+          <dl><dt>Sees</dt><dd>Latency, errors, uptime, saturation</dd><dt>Misses</dt><dd>A checkout that is “up” but converting 7 points worse</dd></dl>
+        </article>
+        <article class="cmp reveal">
+          <p class="cmp-k">Business Intelligence</p>
+          <h3>What happened?</h3>
+          <p class="muted">Reports and dashboards over historical, aggregated business data.</p>
+          <dl><dt>Sees</dt><dd>Monthly revenue, pipeline, cohort totals</dd><dt>Misses</dt><dd>Which process change caused the dip, while there is still time to act</dd></dl>
+        </article>
+        <article class="cmp cmp-hl reveal">
+          <p class="cmp-k">Business Observability</p>
+          <h3>What is happening, why, and what should happen next?</h3>
+          <p>A continuously updated model of the business itself — its entities, processes, dependencies and objectives.</p>
+          <dl><dt>Sees</dt><dd>Business outcomes against expectations, in context</dd><dt>Adds</dt><dd>Investigation, ownership and follow-through</dd></dl>
+          <a href="/business-observability/" class="link-arrow">What is Business Observability?</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Connected view -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="The business graph" title="One operating picture of your entire business." lede="Revenue, customers, finance, operations, workflows and delivery are not separate departments with separate dashboards. They are one system. Panoptes models them that way." />
+      <div class="reveal"><BusinessGraph /></div>
+    </div>
+  </section>
+
+  <!-- 4 · How it works -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="How Panoptes works" title="Connect → Model → Observe → Understand → Act" lede="A continuous loop from raw business signals to coordinated, measurable action." />
+      <ol class="steps">
+        {steps.map((s) => (
+          <li class="step reveal">
+            <div class="step-art"><Diagram src={s.img} alt={`${s.t} stage illustration`} /></div>
+            <p class="step-n">{s.n}</p>
+            <h3>{s.t}</h3>
+            <p class="muted">{s.d}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="text-center mt-2"><a href="/how-it-works/" class="link-arrow">A detailed walkthrough of each stage</a></p>
+    </div>
+  </section>
+
+  <!-- 5 · Capabilities -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Platform capabilities" title="Built to observe the business, not the servers." lede="Nine capabilities that work on one shared model of how your business operates." />
+      <div class="grid grid-3 caps">
+        {PLATFORM.map((p, i) => (
+          <FeatureCard title={p.label} text={capabilityText[p.label]} href={p.href} icon={p.icon} class={i === 0 ? 'cap-wide' : ''} tag={p.label === 'AI Intelligence' ? 'Vision' : undefined} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Observe what matters -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Observe what matters" title="Questions your dashboards can't answer on their own." lede="Pick a question to see how Panoptes would approach it — the signals it watches, the relationships it follows and where an investigation would go next." />
+      <Tabs uid="q" label="Example business questions" tabs={questions.map((q) => ({ id: q.id, label: q.q }))} class="tabs-vertical reveal">
+        {questions.map((q, qi) => (
+          <TabPanel uid="q" id={q.id} first={qi === 0}><div class="qa">
+            <div class="qa-head">
+              <span class="badge">{q.area}</span><span class="illustrative">Illustrative scenario</span>
+            </div>
+            <h3>{q.q}</h3>
+            <p class="muted">{q.story}</p>
+            <div class="qa-grid">
+              <div>
+                <p class="kpi-label">Signals Panoptes watches</p>
+                <ul class="checklist small">{q.signals.map((s) => <li>{s}</li>)}</ul>
+              </div>
+              <div class="qa-side">
+                <p class="kpi-label">Trend (fictional)</p>
+                <div class="mini-bars" aria-hidden="true">{q.bars.map((b, i) => { const lo = Math.min(...q.bars), hi = Math.max(...q.bars); return <span style={`height:${20 + ((b - lo) / (hi - lo || 1)) * 80}%`} class={i >= 3 ? 'late' : ''}></span>; })}</div>
+                <p class="kpi-label mt-1">Relationships followed</p>
+                <p class="mono qa-chain">{q.connect}</p>
+              </div>
+            </div>
+            <p class="qa-next"><Icon name="compass" /> <span><strong>Where to look next:</strong> {q.next}</span></p>
+            <a href={q.href} class="link-arrow">Explore the full scenario</a>
+          </div></TabPanel>
+        ))}
+      </Tabs>
+    </div>
+  </section>
+
+  <!-- 7 · BOS vision -->
+  <section class="section section-dark bos">
+    <div class="container">
+      <div class="bos-head">
+        <div>
+          <p class="eyebrow">The vision</p>
+          <h2>Observability is the foundation of a Business Operating System.</h2>
+        </div>
+        <div>
+          <p class="lede">You cannot coordinate what you cannot see. Business observability gives every team the same, trustworthy picture of how the business is running — and that shared picture is what makes coordinated decisions and actions possible.</p>
+          <p class="muted">Panoptes starts by making the business observable. From there, the same model becomes the place where priorities are set, interventions are owned and their effect is measured.</p>
+          <a href="/company/vision/" class="btn btn-ghost mt-1">Read the vision</a>
+        </div>
+      </div>
+      <div class="reveal mt-3">
+        <Diagram src="/diagrams/business-operating-system-evolution.svg" alt="Five-stage evolution: disconnected systems, connected business model, continuous observability, decision intelligence, coordinated actions" frame="from fragmented systems to a business operating system" illustrative={false} zoom />
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Roles -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Solutions by role" title="Different seats. One shared picture." lede="Every leader asks a different first question. Panoptes answers each from the same underlying model, so the answers agree." />
+      <div class="roles">
+        {roles.map((r) => (
+          <a href={r.h} class="role card card-link reveal">
+            <span class="role-k">{r.r}</span>
+            <p class="role-q">“{r.q}”</p>
+            <ul>{r.o.map((o) => <li>{o}</li>)}</ul>
+            <span class="link-arrow">See how</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Integrations -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="int-head">
+        <SectionHead eyebrow="Integrations" title="From fragmented systems to operational clarity." lede="Panoptes is designed to connect to the categories of systems a business already depends on, and to accept business events directly through an API." />
+        <div class="int-side reveal">
+          <ul class="pill-list">
+            {['CRM', 'Payments', 'Finance & ERP', 'Data warehouses', 'Databases', 'Customer support', 'Product analytics', 'Workflow automation', 'APIs & event streams'].map((c) => <li>{c}</li>)}
+          </ul>
+          <p class="note mt-1">Example systems such as Salesforce, HubSpot, Stripe, Snowflake and PostgreSQL illustrate the ecosystem. Connector availability is confirmed during evaluation.</p>
+          <a href="/integrations/" class="btn mt-1">Browse the integration directory</a>
+        </div>
+      </div>
+      <div class="reveal">
+        <Diagram src="/diagrams/integration-architecture.svg" alt="Architecture: business systems flow through data connectivity into business modeling, the observability engine, and intelligence and actions" frame="panoptes architecture" illustrative={false} zoom class="hide-sm" />
+        <Diagram src="/diagrams/integration-architecture-vertical.svg" alt="Architecture: business systems flow through data connectivity into business modeling, the observability engine, and intelligence and actions" frame class="show-sm" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · Trust -->
+  <section class="section">
+    <div class="container">
+      <div class="split split-top trust">
+        <div>
+          <p class="eyebrow">Trust</p>
+          <h2>Observing a business is a responsibility.</h2>
+          <p class="lede">A model of how your business runs is among the most sensitive things you own. Panoptes is designed around control, ownership and accountability from the start.</p>
+          <p class="muted small">Panoptes observes business processes and outcomes — not individuals. We describe design principles here; specific certifications and contractual commitments are discussed directly during evaluation.</p>
+          <a href="/integrations/security-governance/" class="link-arrow">Security &amp; governance</a>
+        </div>
+        <div class="grid grid-2">
+          {trust.map((t) => (
+            <div class="trust-item reveal">
+              <span class="icon-tile"><Icon name={t.i} /></span>
+              <h3>{t.t}</h3>
+              <p class="muted small">{t.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · Resources -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Resources" title="Learn the discipline." lede="Business observability is a new category. These guides explain the ideas behind it — no product pitch required." />
+      <div class="grid grid-4">
+        {[
+          { h: '/resources/what-is-business-observability/', t: 'What is Business Observability?', d: 'The definitive introduction: what it is, what it is not, and the building blocks.', i: 'book' },
+          { h: '/resources/business-observability-vs-bi/', t: 'Business Observability vs BI', d: 'Why reporting on what happened is different from understanding what is happening.', i: 'chart' },
+          { h: '/resources/understanding-business-bottlenecks/', t: 'Understanding business bottlenecks', d: 'How work queues form, why utilisation lies, and how to find the true constraint.', i: 'clock' },
+          { h: '/resources/from-dashboards-to-decisions/', t: 'From dashboards to decisions', d: 'Why more dashboards rarely produce better decisions — and what does.', i: 'target' },
+        ].map((r) => <FeatureCard title={r.t} text={r.d} href={r.h} icon={r.i} cta="Read the guide" />)}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>
+
+<style>
+  .hero { padding-top: clamp(56px, 8vw, 104px); padding-bottom: clamp(56px, 7vw, 96px); overflow: hidden; position: relative; }
+  .hero::before { inset: -20% auto auto 50%; transform: translateX(-50%); width: min(1100px, 120vw); }
+  .hero-grid { position: absolute; inset: 0; z-index: -1; -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, #000 20%, transparent 75%); }
+  .hero-copy { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .hero-copy h1 { max-width: 19ch; font-size: clamp(2.5rem, 5.8vw, 4.6rem); }
+  .hero-copy .lede { max-width: 60ch; }
+  .hero-copy .btn-row { justify-content: center; margin-top: 1.4rem; }
+  .hero-visual { margin-top: clamp(40px, 6vw, 72px); }
+  .hero-note { text-align: center; margin-top: 1rem; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 16px; align-items: stretch; }
+  .cmp { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; background: var(--surface); display: flex; flex-direction: column; }
+  .cmp h3 { font-size: 1.35rem; }
+  .cmp-k { font: 500 .74rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 1.2rem; }
+  .cmp dl { display: grid; grid-template-columns: 64px 1fr; gap: 8px 12px; margin: auto 0 0; padding-top: 1.2rem; border-top: 1px dashed var(--border-strong); font-size: .9rem; }
+  .cmp dt { font: 500 .72rem/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
+  .cmp dd { margin: 0; }
+  .cmp-hl { background: linear-gradient(160deg, var(--purple) 0%, var(--purple-rich) 100%); border-color: transparent; color: #fff; box-shadow: 0 30px 60px -30px rgba(113, 38, 232, .7); }
+  .cmp-hl h3, .cmp-hl .cmp-k { color: #fff; } .cmp-hl .cmp-k { opacity: .8; }
+  .cmp-hl dl { border-color: rgba(255, 255, 255, .3); } .cmp-hl dt { color: rgba(255, 255, 255, .7); }
+  .cmp-hl .link-arrow { color: #fff; margin-top: 1.2rem; }
+  @media (max-width: 960px) { .compare { grid-template-columns: 1fr; } }
+
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; counter-reset: s; }
+  .step { position: relative; }
+  .step-art { border: 1px solid var(--border); border-radius: var(--radius); background: var(--d-bg); padding: 10px; margin-bottom: 1.1rem; }
+  .step-n { font: 600 .78rem/1 var(--font-mono); color: var(--accent-text); margin-bottom: .5rem; }
+  .step h3 { font-size: 1.25rem; }
+  .step p.muted { font-size: .92rem; }
+  .step:not(:last-child)::after { content: ''; position: absolute; top: 50px; right: -14px; width: 12px; height: 12px; border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); transform: rotate(45deg); opacity: .6; }
+  @media (max-width: 1080px) { .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } .step::after { display: none; } }
+  @media (max-width: 640px) { .steps { grid-template-columns: 1fr; } }
+
+  .caps :global(.cap-wide) { grid-column: span 1; }
+
+  :global(.tabs-vertical) { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); gap: 28px; align-items: start; }
+  :global(.tabs-vertical) :global([role='tablist']) { flex-direction: column; width: 100%; border-radius: var(--radius-lg); padding: 6px; gap: 2px; }
+  :global(.tabs-vertical) :global([role='tab']) { text-align: left; white-space: normal; border-radius: 12px; padding: 14px 16px; line-height: 1.35; font-size: .95rem; }
+  :global(.tabs-vertical) :global([role='tabpanel']) { margin-top: 0; }
+  :global(.tabs-vertical) :global(.tab-panels) { min-width: 0; }
+  .qa { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(20px, 3vw, 32px); }
+  .qa-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .qa h3 { font-size: clamp(1.4rem, 2.2vw, 1.8rem); }
+  .qa-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; margin: 1.4rem 0; padding: 1.4rem 0; border-block: 1px solid var(--border); }
+  .qa-grid .kpi-label { margin-bottom: .8rem; }
+  .mini-bars { display: flex; align-items: flex-end; gap: 6px; height: 64px; }
+  .mini-bars span { flex: 1; background: var(--accent-soft); border-radius: 4px 4px 0 0; }
+  .mini-bars span.late { background: var(--accent); }
+  .qa-chain { font-size: .8rem; color: var(--text-2); margin: 0; }
+  .qa-next { display: flex; gap: 10px; align-items: flex-start; font-size: .95rem; }
+  .qa-next :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  @media (max-width: 960px) { :global(.tabs-vertical) { grid-template-columns: 1fr; } :global(.tabs-vertical) :global([role='tablist']) { flex-direction: row; overflow-x: auto; } :global(.tabs-vertical) :global([role='tab']) { white-space: nowrap; } }
+  @media (max-width: 640px) { .qa-grid { grid-template-columns: 1fr; } }
+
+  .bos { overflow: hidden; background: radial-gradient(ellipse 60% 80% at 90% 50%, rgba(113, 38, 232, .28), transparent 70%), #0A0710; }
+  .bos h2 { color: #fff; }
+  .bos-head { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 5vw, 72px); align-items: end; }
+  .bos .btn-ghost { --b-fg: #F7F3FF; --b-bd: #382B48; }
+  @media (max-width: 860px) { .bos-head { grid-template-columns: 1fr; } }
+
+  .roles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+  .role { display: flex; flex-direction: column; padding: 22px; }
+  .role-k { font: 600 1.6rem/1 var(--font-display); color: var(--accent-text); letter-spacing: -.02em; }
+  .role-q { font-weight: 600; margin: 1rem 0; line-height: 1.4; font-size: .98rem; }
+  .role ul { padding-left: 1.05em; margin: 0 0 1.2rem; color: var(--text-2); font-size: .88rem; display: grid; gap: 6px; }
+  .role ul li::marker { color: var(--accent); }
+  .role .link-arrow { margin-top: auto; font-size: .9rem; }
+  @media (max-width: 1080px) { .roles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 760px) { .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 480px) { .roles { grid-template-columns: 1fr; } }
+
+  .int-head { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(24px, 5vw, 64px); align-items: end; margin-bottom: clamp(32px, 4vw, 48px); }
+  .int-head :global(.section-head) { margin-bottom: 0; }
+  @media (max-width: 860px) { .int-head { grid-template-columns: 1fr; } }
+  .trust-item { padding: 4px 0; }
+  .trust-item h3 { font-size: 1.1rem; }
+</style>

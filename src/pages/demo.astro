@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import CopyEmail from '../components/CopyEmail.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
+import DemoForm from '../components/forms/DemoForm.astro';
+
+const crumbs = [{ label: 'Book a Demo', href: '/demo/' }];
+
+const covers = [
+  { i: 'compass', t: 'Your questions first', d: 'We start from one or two business questions you cannot answer easily today — a stalled onboarding queue, cash that arrives later than invoices suggest.' },
+  { i: 'graph', t: 'How your business would be modelled', d: 'The entities, processes and objectives involved, and how they connect across your systems.' },
+  { i: 'command', t: 'The platform, end to end', d: 'Command Center, health, investigations and actions on a realistic scenario, with fictional data.' },
+  { i: 'plug', t: 'What connecting would take', d: 'Which sources matter, how fresh they need to be, and the security topics to agree.' },
+];
+
+const audience = ['Executives who want one honest picture of the business', 'Operations leaders responsible for flow, capacity and commitments', 'Finance and revenue leaders chasing leakage between intent and cash', 'Customer experience leaders tracking journeys and promises kept', 'Data and engineering leads who would own the integration'];
+
+const prepare = ['One business question you would like answered', 'The main systems involved (CRM, billing, support, warehouse…)', 'Who else should join: owners of the process, data or security', 'Any security or data residency requirements to raise early'];
+---
+<BaseLayout
+  title="Book a Demo"
+  description="Book a Panoptes demo: a working session built around your business questions, showing how your operations would be modelled, observed and explained."
+  ogImage="/social/og-demo.png"
+  breadcrumbs={crumbs}
+>
+  <section class="demo bg-glow">
+    <div class="bg-grid-layer bg-grid" aria-hidden="true"></div>
+    <div class="container demo-grid">
+      <div class="demo-intro">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Book a Demo</span></li></ol></nav>
+        <p class="eyebrow">Book a Demo</p>
+        <h1>See your business <span class="gradient-text">the way it actually runs.</span></h1>
+        <p class="lede">A working session, not a slide deck. Bring a question your dashboards cannot answer, and we will show how Panoptes would model it, watch it and explain what changes.</p>
+      </div>
+      <div class="demo-copy">
+
+        <h2 class="demo-h">What the session covers</h2>
+        <ul class="covers">
+          {covers.map((c) => (
+            <li>
+              <span class="icon-tile"><Icon name={c.i} /></span>
+              <div><strong>{c.t}</strong><p class="muted small">{c.d}</p></div>
+            </li>
+          ))}
+        </ul>
+
+        <div class="demo-cols">
+          <div>
+            <h2 class="demo-h">Who it is for</h2>
+            <ul class="checklist small">{audience.map((a) => <li>{a}</li>)}</ul>
+          </div>
+          <div>
+            <h2 class="demo-h">Useful to prepare</h2>
+            <ul class="checklist small">{prepare.map((a) => <li>{a}</li>)}</ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-form-wrap">
+        <div class="card card-raised demo-card">
+          <h2 class="form-title">Request a demo</h2>
+          <p class="muted small">Tell us a little about you and what you want to explore. We reply by email to arrange a time.</p>
+          <DemoForm />
+        </div>
+        <div class="demo-alt">
+          <p class="small muted">Prefer to write? Email us and mention “demo”.</p>
+          <CopyEmail />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight section-alt">
+    <div class="container">
+      <RelatedLinks
+        eyebrow="Before the session"
+        title="Useful background"
+        items={[
+          { label: 'How it works', href: '/how-it-works/', desc: 'Connect → Model → Observe → Understand → Act', icon: 'flow' },
+          { label: 'Use cases', href: '/use-cases/', desc: 'Problems told as investigations', icon: 'target' },
+          { label: 'Integrations', href: '/integrations/', desc: 'Systems Panoptes is designed to connect to', icon: 'plug' },
+          { label: 'Security & governance', href: '/integrations/security-governance/', desc: 'Principles and topics to agree', icon: 'shield' },
+        ]}
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .demo { padding-block: clamp(40px, 6vw, 88px) clamp(56px, 8vw, 104px); position: relative; overflow: hidden; }
+  .demo .bg-grid-layer { position: absolute; inset: 0; z-index: -1; -webkit-mask-image: radial-gradient(ellipse 70% 60% at 20% 0%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 70% 60% at 20% 0%, #000 20%, transparent 75%); }
+  .demo-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); grid-template-areas: 'intro form' 'copy form'; column-gap: clamp(32px, 5vw, 72px); align-items: start; }
+  .demo-intro { grid-area: intro; }
+  .demo-copy { grid-area: copy; }
+  .demo-form-wrap { grid-area: form; }
+  .demo-intro h1 { max-width: 15ch; font-size: clamp(2.3rem, 4.6vw, 3.6rem); }
+  .demo-intro .lede { max-width: 54ch; }
+  .demo-h { font-size: 1.05rem; font-family: var(--font-body); font-weight: 700; margin: 2.2rem 0 1rem; }
+  .covers { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+  .covers li { display: flex; gap: 14px; align-items: flex-start; }
+  .covers .icon-tile { margin: 0; width: 40px; height: 40px; }
+  .covers .icon-tile :global(svg) { width: 20px; height: 20px; }
+  .covers strong { display: block; margin-bottom: 2px; }
+  .covers p { margin: 0; }
+  .demo-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .demo-form-wrap { position: sticky; top: calc(var(--header-h) + 20px); display: grid; gap: 18px; }
+  .demo-card { padding: clamp(20px, 3vw, 36px); }
+  .form-title { font-size: 1.5rem; margin-bottom: .3rem; }
+  .demo-card > .muted { margin-bottom: 1.4rem; }
+  .demo-alt { display: grid; gap: 8px; justify-items: start; padding-inline: 4px; }
+  .demo-alt p { margin: 0; }
+  @media (max-width: 960px) {
+    .demo-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'intro' 'form' 'copy'; row-gap: 28px; }
+    .demo-form-wrap { position: static; }
+  }
+  @media (max-width: 640px) { .demo-cols { grid-template-columns: 1fr; gap: 0; } }
+</style>

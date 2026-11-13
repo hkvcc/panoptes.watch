@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Diagram from '../components/Diagram.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
+import FAQ from '../components/FAQ.astro';
+import Icon from '../components/Icon.astro';
+import CTA from '../components/CTA.astro';
+
+const crumbs = [{ label: 'Business Observability', href: '/business-observability/' }];
+
+const questions = [
+  { k: 'Observe', q: 'What is happening?', d: 'Business outcomes compared continuously with what should be happening right now — not last month’s report.', needs: ['Business events from source systems', 'Expected behaviour for each signal', 'Objectives and commitments'], href: '/platform/anomaly-detection/', l: 'Anomaly Detection' },
+  { k: 'Understand', q: 'Why is it happening?', d: 'Changes traced through the dependencies that connect customers, processes, systems, suppliers and teams.', needs: ['Relationships between entities', 'A timeline of business changes', 'Segment-level comparison'], href: '/platform/root-cause-analysis/', l: 'Root Cause Analysis' },
+  { k: 'Act', q: 'What should happen next?', d: 'Findings routed to accountable owners, interventions coordinated, and their effect measured.', needs: ['Ownership in the model', 'Playbooks and approvals', 'Comparison groups to measure effect'], href: '/platform/actions-automation/', l: 'Actions & Automation' },
+];
+
+const rows = [
+  { r: 'Core question', s: 'Is the technology working?', b: 'What happened?', o: 'Is the business working — and if not, why, and what next?' },
+  { r: 'What it watches', s: 'Servers, services, logs, metrics, traces', b: 'Aggregated historical business data', o: 'Business entities, events, processes and outcomes' },
+  { r: 'Unit of analysis', s: 'Request, service, host', b: 'Report, dashboard, table', o: 'Customer, order, payment, case, commitment' },
+  { r: 'Time horizon', s: 'Seconds to hours', b: 'Days to quarters, after the fact', o: 'Continuous, as business events happen' },
+  { r: 'Relationships', s: 'Service dependencies', b: 'Joins defined per report', o: 'A living model of how the business connects' },
+  { r: 'Typical output', s: 'Incident and on-call alert', b: 'Chart for a review meeting', o: 'Owned finding with evidence and a measured response' },
+  { r: 'Blind spot', s: 'A checkout that is “up” but losing customers', b: 'Why a number moved, while there is still time to act', o: 'Not a replacement for either — it uses both as inputs' },
+];
+
+const blocks = [
+  { n: 1, t: 'Entities', d: 'The things your business is made of: customers, orders, payments, invoices, cases, products, suppliers, teams.' },
+  { n: 2, t: 'Relationships', d: 'How those things connect: a customer places orders, an order is settled by payments, a team fulfils orders.' },
+  { n: 3, t: 'Events', d: 'What happens to them over time: order placed, payment failed, case escalated, invoice disputed.' },
+  { n: 4, t: 'Processes', d: 'The ordered stages work moves through — and the time it spends waiting between them.' },
+  { n: 5, t: 'Objectives', d: 'What “working” means, with an owner: ship 95% of orders the same day; activate new accounts within three days.' },
+  { n: 6, t: 'Expectations', d: 'What each signal should look like right now, given its normal rhythm, seasonality and trend.' },
+];
+
+const signs = [
+  'Leadership meetings start with arguing about whose numbers are right.',
+  'You learn about operational problems from customers before your own reports.',
+  'Your systems are all green, yet revenue, conversion or service levels are slipping.',
+  'Questions like “why did this drop?” take days and several analysts to answer.',
+  'Important journeys cross three or more teams, and nobody owns the whole thing.',
+  'Alerts exist, but most are ignored because few of them matter.',
+  'You make changes but rarely measure whether they actually worked.',
+  'Dashboards keep multiplying, but decisions are not getting faster.',
+];
+
+const faqs = [
+  { q: 'What is business observability?', a: 'Business observability is the ability to understand how a business is actually operating — what is happening, why, and what should happen next — from the signals its systems and processes produce. It models the business itself (entities, relationships, processes, objectives) rather than its technology or its historical reports.' },
+  { q: 'How is it different from system observability?', a: 'System observability (logs, metrics and traces) tells you whether software and infrastructure are healthy. Business observability tells you whether the business is healthy. A service can be fast and error-free while a rule change quietly declines good customers; only a business-level view catches that. See <a href="/resources/business-observability-vs-system-observability/">business vs system observability</a>.' },
+  { q: 'Is it just a better BI tool?', a: 'No. BI is very good at reporting on what happened, usually in aggregate and after the fact. Business observability is continuous, works at the level of individual entities and processes, compares against expectations, and is built for investigation and action. Many organisations use both. See <a href="/resources/business-observability-vs-bi/">business observability vs BI</a>.' },
+  { q: 'What data does it need?', a: 'Business events and records from the systems you already run — CRM, payments, finance and ERP, support, product analytics, data warehouses and databases — plus definitions of what matters: objectives, owners and expected behaviour. See <a href="/integrations/data-sources/">data sources</a>.' },
+  { q: 'Does it monitor employees?', a: 'Panoptes is designed to observe business processes and outcomes — orders, payments, queues, journeys, commitments — not individual people. Ownership is assigned to roles and teams so that problems have an accountable owner.' },
+  { q: 'Where does a “business operating system” come in?', a: 'Observability is the foundation. Once the whole business is modelled and observable, the same model can become the place where priorities are set, interventions are owned and their effect is measured. That broader direction is described on our <a href="/company/vision/">vision</a> page.' },
+];
+
+const schema = [
+  { '@type': 'WebPage', name: 'What is Business Observability?', about: { '@type': 'Thing', name: 'Business Observability' }, description: 'An overview of business observability: definition, the three questions, comparison with system observability and BI, building blocks and signs you need it.' },
+  { '@type': 'DefinedTerm', name: 'Business Observability', description: 'The ability to understand how a business is actually operating — what is happening, why, and what should happen next — from the signals its systems and processes produce.' },
+];
+---
+<BaseLayout title="What is Business Observability?" description="Business observability explained: see what is happening in your business, why, and what to do next. How it differs from system observability and BI, and its building blocks." ogImage="/social/og-default.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="The category" title="What is <span class='gradient-text'>Business Observability?</span>" lede="Your systems tell you they’re running. Business observability tells you whether your business is working — what is happening right now, why it is happening, and what should happen next." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/resources/what-is-business-observability/">Read the full guide<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/platform/">Explore the platform</a>
+    </div>
+    <Fragment slot="visual"><Diagram src="/diagrams/business-observability-three-questions.svg" alt="Three questions stacked on top of one business model: Observe, what is happening; Understand, why is it happening; Act, what should happen next. Underneath, the business model links customer, order, payment, process and commitment." illustrative={false} /></Fragment>
+  </PageHero>
+
+  <!-- Definition -->
+  <section class="section">
+    <div class="container">
+      <div class="def">
+        <p class="eyebrow">Definition</p>
+        <blockquote class="def-q reveal">
+          <p><strong>Business observability</strong> is the ability to understand how a business is actually operating — from the signals its systems, processes and people already produce — by modelling the business itself and continuously comparing what is happening with what should be happening.</p>
+        </blockquote>
+        <div class="def-points">
+          <div class="reveal"><Icon name="graph" /><p><strong>It models the business, not the technology.</strong> Customers, orders, payments, processes and commitments — and how they depend on each other.</p></div>
+          <div class="reveal"><Icon name="signal" /><p><strong>It is continuous, not periodic.</strong> It watches outcomes as business events happen, not after the month closes.</p></div>
+          <div class="reveal"><Icon name="actions" /><p><strong>It ends in action.</strong> Findings have owners, interventions are coordinated, and their effect is measured.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Three questions -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="The three questions" title="What is happening? Why? What next?" lede="Every business observability practice comes down to answering three questions quickly and credibly. Each needs different ingredients." center />
+      <div class="qs">
+        {questions.map((q, i) => (
+          <article class="q reveal">
+            <p class="q-k mono">0{i + 1} · {q.k}</p>
+            <h3>{q.q}</h3>
+            <p class="muted">{q.d}</p>
+            <p class="kpi-label">It needs</p>
+            <ul class="checklist small">{q.needs.map((n) => <li>{n}</li>)}</ul>
+            <a href={q.href} class="link-arrow">{q.l}</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="How it compares" title="Not another monitoring tool. Not another dashboard." lede="System observability, business intelligence and business observability answer different questions. Most organisations need all three — they just should not expect one to do the job of another." />
+      <div class="table-wrap cmp reveal">
+        <table class="table">
+          <caption class="sr-only">Comparison of system observability, business intelligence and business observability</caption>
+          <thead><tr><th scope="col"><span class="sr-only">Dimension</span></th><th scope="col">System observability</th><th scope="col">Business intelligence</th><th scope="col" class="hl">Business observability</th></tr></thead>
+          <tbody>
+            {rows.map((r) => (<tr><th scope="row">{r.r}</th><td>{r.s}</td><td>{r.b}</td><td class="hl">{r.o}</td></tr>))}
+          </tbody>
+        </table>
+      </div>
+      <div class="cmp-links">
+        <a href="/resources/business-observability-vs-system-observability/" class="link-arrow">Business vs system observability</a>
+        <a href="/resources/business-observability-vs-bi/" class="link-arrow">Business observability vs BI</a>
+        <a href="/resources/why-dashboards-miss-the-full-picture/" class="link-arrow">Why dashboards miss the full picture</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Building blocks -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="The building blocks" title="Six ingredients of an observable business." lede="Together they form a model of how the business works — the thing that makes “why?” answerable." />
+      <div class="bb">
+        <div class="reveal bb-fig">
+          <Diagram src="/diagrams/business-observability-building-blocks.svg" alt="Six building blocks illustrated: entities and relationships as a small graph of customer, order, payment and fulfilment team; business events on a timeline; a process of placed, picked, packed and shipped; an objective to ship 95% of orders the same day at 92.4% this week; and an expectation band for picking time with a reading below it." frame="building blocks" zoom />
+        </div>
+        <ol class="bb-list">
+          {blocks.map((b) => (
+            <li class="reveal"><span class="bb-n">{b.n}</span><div><h3>{b.t}</h3><p class="muted small">{b.d}</p></div></li>
+          ))}
+        </ol>
+      </div>
+      <p class="text-center mt-2"><a href="/how-it-works/" class="link-arrow">How Panoptes turns these into Connect → Model → Observe → Understand → Act</a></p>
+    </div>
+  </section>
+
+  <!-- Signs -->
+  <section class="section">
+    <div class="container">
+      <div class="signs">
+        <div class="signs-intro">
+          <p class="eyebrow">Self-check</p>
+          <h2>Signs you need business observability.</h2>
+          <p class="muted">Tick the statements that sound familiar. There is no score to chase — but if several apply, the gap is probably not another dashboard.</p>
+          <div class="signs-out" aria-live="polite" data-signs-out>
+            <span class="kpi" data-signs-n>0</span><span class="kpi-label">of {signs.length} apply</span>
+            <p class="small" data-signs-msg>Start ticking to see what it suggests.</p>
+          </div>
+        </div>
+        <fieldset class="signs-list" data-signs>
+          <legend class="sr-only">Statements that apply to your organisation</legend>
+          {signs.map((s, i) => (
+            <label class="sign"><input type="checkbox" value={i} /><span>{s}</span></label>
+          ))}
+        </fieldset>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="faq-wrap">
+        <div>
+          <p class="eyebrow">FAQ</p>
+          <h2>Common questions.</h2>
+          <p class="muted">Want the long version? The full guide covers the history of the idea, worked examples and how to get started.</p>
+          <a href="/resources/what-is-business-observability/" class="btn mt-1">Read the full guide</a>
+        </div>
+        <FAQ items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="rel3"><RelatedLinks eyebrow="Keep learning" title="Where to go next" items={[
+        { label: 'What is Business Observability? (full guide)', href: '/resources/what-is-business-observability/', desc: 'The long-form introduction', icon: 'book' },
+        { label: 'How Panoptes works', href: '/how-it-works/', desc: 'Connect, model, observe, understand, act', icon: 'flow' },
+        { label: 'The Panoptes platform', href: '/platform/', desc: 'Nine capabilities on one business model', icon: 'layers' },
+        { label: 'Business health metrics', href: '/resources/business-health-metrics/', desc: 'Choosing signals that mean something', icon: 'health' },
+        { label: 'Glossary', href: '/resources/business-observability-glossary/', desc: 'Terms used across the discipline', icon: 'list' },
+        { label: 'Use cases', href: '/use-cases/', desc: 'Concrete problems, told as investigations', icon: 'compass' },
+      ]} /></div>
+    </div>
+  </section>
+
+  <CTA title="See your business as a system." text="Discover what becomes possible when your entire business is observable — not just your servers or last month’s numbers." />
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-signs]').forEach((list) => {
+    const out = document.querySelector<HTMLElement>('[data-signs-out]')!;
+    const n = out.querySelector<HTMLElement>('[data-signs-n]')!;
+    const msg = out.querySelector<HTMLElement>('[data-signs-msg]')!;
+    const boxes = list.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
+    const update = () => {
+      const c = [...boxes].filter((b) => b.checked).length;
+      n.textContent = String(c);
+      out.dataset.level = c >= 5 ? 'high' : c >= 3 ? 'mid' : c > 0 ? 'low' : '';
+      msg.textContent = c === 0 ? 'Start ticking to see what it suggests.'
+        : c <= 2 ? 'A few gaps. Worth watching, especially if they cluster around one journey or process.'
+        : c <= 4 ? 'A pattern is forming: problems are crossing team boundaries faster than your tools can follow.'
+        : 'Your business is producing the signals — it just is not observable yet. This is exactly the gap business observability closes.';
+    };
+    boxes.forEach((b) => b.addEventListener('change', update));
+  });
+</script>
+
+<style>
+  .rel3 :global(.related-list) { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .def { max-width: 980px; }
+  .def-q { margin: 0 0 clamp(28px, 4vw, 44px); padding: 0 0 0 clamp(18px, 3vw, 32px); border-left: 4px solid var(--accent); }
+  .def-q p { font: 500 clamp(1.3rem, 2.5vw, 1.9rem)/1.4 var(--font-display); letter-spacing: -.01em; margin: 0; color: var(--text); }
+  .def-points { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .def-points > div { display: grid; gap: 10px; }
+  .def-points :global(svg) { width: 26px; height: 26px; color: var(--accent-text); }
+  .def-points p { margin: 0; color: var(--text-2); font-size: .95rem; }
+  .def-points strong { color: var(--text); display: block; margin-bottom: 2px; }
+  @media (max-width: 760px) { .def-points { grid-template-columns: 1fr; } }
+
+  .qs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: q; }
+  .q { padding: 28px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; }
+  .q:first-child { border-color: var(--accent); }
+  .q-k { font-size: .76rem; color: var(--accent-text); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .8rem; }
+  .q h3 { font-size: clamp(1.35rem, 2vw, 1.6rem); }
+  .q .kpi-label { margin: .4rem 0 .8rem; }
+  .q .checklist { margin-bottom: 1.2rem; }
+  .q .link-arrow { margin-top: auto; font-size: .92rem; }
+  @media (max-width: 900px) { .qs { grid-template-columns: 1fr; } }
+
+  .cmp .table { min-width: 720px; }
+  .cmp tbody th { font: 600 .82rem/1.4 var(--font-body); text-transform: none; letter-spacing: 0; color: var(--text); background: var(--surface-2); width: 16%; }
+  .cmp td { color: var(--text-2); }
+  .cmp .hl { background: var(--accent-soft); color: var(--text); }
+  .cmp thead .hl { color: var(--accent-text); }
+  .cmp-links { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 1.4rem; font-size: .93rem; }
+
+  .bb { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); align-items: center; }
+  .bb-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .bb-list li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; }
+  .bb-n { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--purple); color: #fff; font: 700 .85rem/1 var(--font-mono); }
+  .bb-list h3 { font-size: 1.08rem; margin-bottom: .15em; }
+  .bb-list p { margin: 0; }
+  @media (max-width: 960px) { .bb { grid-template-columns: 1fr; } }
+
+  .signs { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(24px, 5vw, 64px); align-items: start; }
+  .signs-intro h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .signs-out { margin-top: 1.4rem; padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--surface); display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline; transition: border-color .2s, background .2s; }
+  .signs-out p { grid-column: 1 / -1; margin: .6rem 0 0; color: var(--text-2); }
+  .signs-out[data-level='mid'] { border-color: var(--warn); }
+  .signs-out[data-level='high'] { border-color: var(--accent); background: var(--accent-soft); }
+  .signs-list { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-width: 0; }
+  .sign { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); cursor: pointer; transition: border-color .2s, background .2s; font-size: .96rem; }
+  .sign input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--purple); flex: none; }
+  .sign:hover { border-color: var(--border-strong); }
+  .sign:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+  @media (max-width: 860px) { .signs { grid-template-columns: 1fr; } }
+
+  .faq-wrap { display: grid; grid-template-columns: 1fr 2fr; gap: clamp(24px, 5vw, 64px); }
+  @media (max-width: 860px) { .faq-wrap { grid-template-columns: 1fr; } }
+</style>

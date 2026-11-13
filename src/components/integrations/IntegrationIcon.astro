@@ -1,0 +1,8 @@
+---
+/** Inlines one of our platform-neutral integration category icons from /public/icons/integrations/. */
+import { readSvg, svgWithA11y } from '../../lib/svg';
+interface Props { name: string; class?: string; label?: string }
+const { name, class: cls = '', label } = Astro.props;
+const svg = svgWithA11y(readSvg(`/icons/integrations/${name}.svg`), label, cls);
+---
+<Fragment set:html={svg} />

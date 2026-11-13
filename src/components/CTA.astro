@@ -1,0 +1,39 @@
+---
+import CopyEmail from './CopyEmail.astro';
+import Icon from './Icon.astro';
+interface Props { title?: string; text?: string; primary?: { label: string; href: string }; secondary?: { label: string; href: string } }
+const {
+  title = 'See your business in a new light.',
+  text = 'Discover what becomes possible when your entire business is observable.',
+  primary = { label: 'Book a Demo', href: '/demo/' },
+  secondary = { label: 'Explore the Platform', href: '/platform/' },
+} = Astro.props;
+---
+<section class="section cta-band section-dark">
+  <div class="cta-rings" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="container cta-inner">
+    <h2 set:html={title} />
+    <p class="lede">{text}</p>
+    <div class="btn-row">
+      <a href={primary.href} class="btn btn-primary btn-lg">{primary.label}<Icon name="arrow" class="arrow" /></a>
+      <a href={secondary.href} class="btn btn-ghost btn-lg">{secondary.label}</a>
+    </div>
+    <div class="cta-mail"><span class="muted small">Or write to us directly</span><CopyEmail /></div>
+  </div>
+</section>
+<style>
+  .cta-band { overflow: hidden; isolation: isolate; text-align: center; background: radial-gradient(ellipse 70% 90% at 50% 110%, rgba(113, 38, 232, .45), transparent 70%), #0A0710; }
+  .cta-inner { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .cta-inner h2 { max-width: 18ch; font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
+  .cta-inner .lede { max-width: 52ch; }
+  .cta-inner .btn-row { justify-content: center; margin-top: 1rem; }
+  .cta-inner .btn-ghost { --b-fg: #F7F3FF; --b-bd: #382B48; }
+  .cta-mail { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 2.2rem; }
+  .cta-mail :global(.copy-email) { background: #15101F; border-color: #382B48; }
+  .cta-mail :global(.ce-btn) { background: #1A1326; border-color: #382B48; }
+  .cta-rings { position: absolute; inset: auto 0 -60% 0; height: 140%; display: grid; place-items: center; z-index: -1; pointer-events: none; }
+  .cta-rings span { position: absolute; border: 1px solid rgba(153, 101, 255, .22); border-radius: 50%; aspect-ratio: 1; }
+  .cta-rings span:nth-child(1) { width: min(520px, 90vw); }
+  .cta-rings span:nth-child(2) { width: min(820px, 140vw); border-color: rgba(153, 101, 255, .13); }
+  .cta-rings span:nth-child(3) { width: min(1140px, 190vw); border-color: rgba(153, 101, 255, .07); }
+</style>

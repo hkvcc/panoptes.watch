@@ -1,0 +1,212 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import CTA from '../../components/CTA.astro';
+import { SITE } from '../../data/site';
+
+type Term = { id: string; term: string; def: string; see?: string[] };
+
+// Definitions may contain internal links. Keep ids stable: other pages link to them.
+const TERMS: Term[] = [
+  { id: 'anomaly', term: 'Anomaly', def: 'A value or pattern that falls outside what was expected for that metric, at that time, in that context. An anomaly is a prompt to look, not a conclusion: some are noise, some reflect known events, and some are the first sign of a real problem. See <a href="/use-cases/business-anomalies/">business anomalies</a>.', see: ['expected-band', 'baseline', 'signal'] },
+  { id: 'arrival-rate', term: 'Arrival rate', def: 'How much work enters a process or stage per unit of time, such as applications per hour or claims per day. Changes in arrival rate, often caused by another team\'s decisions, are behind a large share of queue problems.', see: ['queue', 'utilisation', 'throughput'] },
+  { id: 'attribution', term: 'Attribution', def: 'Assigning an observed change in an outcome to one or more causes, ideally with an estimate of how much each contributed. Honest attribution states the strength of evidence and the competing explanations that were considered.', see: ['causal-chain', 'correlation-vs-causation', 'confounder'] },
+  { id: 'backlog', term: 'Backlog', def: 'Work that has arrived but not yet been completed. In process terms it is the waiting part of work in progress. Backlogs drain only at the rate of spare capacity, so they usually take far longer to clear than to build.', see: ['wip', 'queue'] },
+  { id: 'baseline', term: 'Baseline', def: 'The reference behaviour a metric is compared against, typically derived from its own history with allowance for seasonality and known changes. An expected band is a baseline with a tolerance around it.', see: ['expected-band', 'seasonality'] },
+  { id: 'bottleneck', term: 'Bottleneck', def: 'A stage whose capacity limits the throughput of the process it belongs to, so that work queues in front of it. Often used interchangeably with constraint. See <a href="/resources/understanding-business-bottlenecks/">understanding business bottlenecks</a>.', see: ['constraint', 'utilisation', 'queue'] },
+  { id: 'breach-risk', term: 'Breach risk', def: 'For an open item under a commitment, the likelihood that it will miss that commitment given its age and the current pace of the stages ahead. Breach risk is forward-looking, which makes it one of the most actionable delivery signals.', see: ['commitment', 'sla'] },
+  { id: 'business-event', term: 'Business event', def: 'A timestamped fact that something meaningful happened to a business entity: an order placed, a payment failed, a case escalated. Events carry the identifiers of the entities they concern and are the raw material from which metrics are computed. See <a href="/resources/how-business-events-connect-to-outcomes/">how business events connect to outcomes</a>.', see: ['entity', 'change-event', 'signal'] },
+  { id: 'business-graph', term: 'Business graph', def: 'A connected representation of a business\'s entities and the relationships between them, such as customers, orders, shipments, suppliers and teams. It lets the consequences of a change be traced along dependencies. See <a href="/platform/business-graph/">Business Graph</a>.', see: ['entity', 'dependency', 'operating-model'] },
+  { id: 'business-health', term: 'Business health', def: 'Whether each part of the business is functioning within its expected range, now, and is therefore likely to keep delivering its objectives. Distinct from performance, which measures outcomes against targets after the fact. See <a href="/resources/business-health-metrics/">business health metrics</a>.', see: ['expected-band', 'leading-indicator', 'objective'] },
+  { id: 'business-observability', term: 'Business observability', def: 'The ability to understand what is happening across a business, why it is happening and what to do about it, by continuously observing its revenue flows, customer journeys, processes, dependencies and commitments against a model of how it should work. See <a href="/resources/what-is-business-observability/">what is business observability</a>.', see: ['observability', 'operating-model'] },
+  { id: 'business-operating-system', term: 'Business operating system', def: 'A broader vision in which a connected model of the business, continuous observation, explanation and coordinated action form one system through which the business is run. Business observability is its foundation. See <a href="/company/vision/">vision</a>.', see: ['business-observability'] },
+  { id: 'cardinality', term: 'Cardinality', def: 'The number of distinct values a dimension can take. Customer ID has very high cardinality; region has low cardinality. High-cardinality dimensions are what let you find the specific customers or orders affected, but they make aggregate dashboards impractical, which is one reason events are kept at full detail.', see: ['segment', 'business-event'] },
+  { id: 'causal-chain', term: 'Causal chain', def: 'A hypothesis linking a change to an outcome through a sequence of mechanisms, each of which can be checked. A chain is only as strong as its weakest link, so each link should carry its own grade of evidence.', see: ['attribution', 'root-cause', 'correlation-vs-causation'] },
+  { id: 'change-event', term: 'Change event', def: 'A business event recording a deliberate change: a release, price change, policy update, configuration change or campaign launch. Keeping change events on the same timeline as operational events makes the question "what changed?" answerable.', see: ['business-event', 'root-cause'] },
+  { id: 'cohort', term: 'Cohort', def: 'A group of entities that share a starting point, such as customers who signed up in the same month. Comparing cohorts separates changes in behaviour from changes in mix.', see: ['segment'] },
+  { id: 'commitment', term: 'Commitment', def: 'A promise the business has made about an outcome, to a customer or internally: delivery by a date, resolution within a time, availability of a service. Commitments are what service levels formalise and what breach risk is measured against.', see: ['sla', 'slo', 'expectation'] },
+  { id: 'composite-score', term: 'Composite score', def: 'A single number combining several metrics, usually as a weighted average. Composites are convenient for ranking attention but can hide a failing component behind healthy ones. If used, they should always be shown with their components and a worst-component floor.', see: ['business-health', 'goodharts-law'] },
+  { id: 'confounder', term: 'Confounder', def: 'A third factor that influences both a suspected cause and an observed effect, creating a correlation between them that is not causal. A price change and a seasonal dip landing in the same week is a typical example.', see: ['correlation-vs-causation', 'attribution'] },
+  { id: 'constraint', term: 'Constraint', def: 'The single stage or resource that limits the throughput of an entire chain of dependent work. Time lost at the constraint is lost for the whole system; time saved elsewhere often is not. Fixing a constraint moves it somewhere else.', see: ['bottleneck', 'theory-of-constraints', 'utilisation'] },
+  { id: 'correlation-vs-causation', term: 'Correlation vs causation', def: 'Two things moving together (correlation) does not show that one causes the other (causation). Stronger evidence for causation comes from a known mechanism, consistency across segments, comparison groups that did not experience the change, and interventions that reverse the effect.', see: ['causal-chain', 'confounder', 'root-cause'] },
+  { id: 'cycle-time', term: 'Cycle time', def: 'The time from when work on an item actually starts to when it is finished. Usually shorter than lead time, which also includes the waiting before work begins. Usage varies between organisations, so it is worth defining explicitly.', see: ['lead-time', 'wait-time'] },
+  { id: 'dependency', term: 'Dependency', def: 'A relationship in which one part of the business relies on another to function: a process on a system, a commitment on a supplier, a team on another team\'s output. Shared dependencies concentrate risk, because one failure affects everything that relies on them.', see: ['business-graph', 'entity'] },
+  { id: 'entity', term: 'Entity', def: 'A thing the business is made of or acts upon, with an identity that persists over time: a customer, order, invoice, claim, supplier or warehouse. Entities are the nodes of the business graph and the subjects of business events.', see: ['business-graph', 'identity-resolution', 'operating-model'] },
+  { id: 'expectation', term: 'Expectation', def: 'A statement of normal operational behaviour that supports an objective, such as "picked within four hours of cut-off" or "carrier collects by 17:00". Expectations are more granular than objectives and are checked continuously.', see: ['objective', 'expected-band', 'commitment'] },
+  { id: 'expected-band', term: 'Expected band', def: 'The range of values that would be unsurprising for a metric at a given time and in a given context, accounting for seasonality, segment and known changes. Bands catch genuine deviations that fixed thresholds miss and avoid alarms that fixed thresholds raise at predictable quiet times.', see: ['baseline', 'anomaly', 'static-threshold'] },
+  { id: 'flow-efficiency', term: 'Flow efficiency', def: 'The share of an item\'s elapsed time that is spent being actively worked on, rather than waiting. In many business processes it is well under half, which means most improvement potential lies in the waiting, not the work.', see: ['wait-time', 'lead-time', 'cycle-time'] },
+  { id: 'golden-signals', term: 'Golden signals (business)', def: 'A small, general set of signals that describe the health of almost any business process, by analogy with the core signals used in system reliability: flow (arrivals and throughput), time (lead time and waiting), failure (errors, rework, failed payments) and saturation (utilisation and work in progress).', see: ['throughput', 'lead-time', 'rework', 'utilisation'] },
+  { id: 'goodharts-law', term: 'Goodhart\'s law', def: 'The observation that when a measure becomes a target, it tends to stop being a good measure, because people optimise the number rather than what it was meant to reflect. A reason to prefer measures of flow and outcome over measures of activity.', see: ['composite-score', 'objective'] },
+  { id: 'hand-off', term: 'Hand-off', def: 'The point at which work passes from one team, system or stage to another. Hand-offs are where waiting accumulates and where ownership is most often unclear, so they are prime candidates for expectations.', see: ['stage', 'wait-time', 'owner'] },
+  { id: 'identity-resolution', term: 'Identity resolution', def: 'Establishing that records in different systems refer to the same entity, such as the same customer in billing, support and email. Without it, events cannot be assembled into end-to-end histories.', see: ['entity', 'journey'] },
+  { id: 'intervention', term: 'Intervention', def: 'A deliberate action taken to change an outcome, with an expected effect that can be measured. Treating actions as interventions, with a stated hypothesis and success measure, is how a business learns whether its decisions worked.', see: ['owner', 'causal-chain'] },
+  { id: 'journey', term: 'Journey', def: 'The end-to-end path an entity takes through the business, usually across several processes, teams and systems: a customer from sign-up to first value, or an order from placement to cash. See <a href="/platform/journey-intelligence/">Journey Intelligence</a>.', see: ['process', 'time-to-value'] },
+  { id: 'lagging-indicator', term: 'Lagging indicator', def: 'A measure that confirms what has already happened, such as revenue, churn or lead time of completed items. Lagging indicators are reliable but late. Whether a measure is leading or lagging depends on what it is compared with.', see: ['leading-indicator', 'business-health'] },
+  { id: 'lead-time', term: 'Lead time', def: 'The total elapsed time from when an item enters a process (or stage) to when it leaves, including waiting and work. It is what the customer experiences.', see: ['cycle-time', 'wait-time', 'littles-law'] },
+  { id: 'leading-indicator', term: 'Leading indicator', def: 'A measure that tends to move before the outcome it predicts, such as onboarding completion before renewal, or work in progress before lead time. Leading indicators give earlier warning with less certainty, so they should be tracked alongside the outcome they are meant to predict.', see: ['lagging-indicator', 'signal'] },
+  { id: 'littles-law', term: 'Little\'s Law', def: 'In a stable system, average work in progress equals average throughput multiplied by average time in the system. Rearranged, time in system equals WIP divided by throughput, which lets you estimate lead time today from two numbers you already have.', see: ['wip', 'throughput', 'lead-time'] },
+  { id: 'model', term: 'Model', def: 'In business observability, an explicit representation of how the business works, connecting entities, relationships, processes, objectives, owners and expectations. Not a statistical model or a data schema, though it may use both.', see: ['operating-model', 'business-graph'] },
+  { id: 'objective', term: 'Objective', def: 'A measurable statement of what a part of the business is for, such as "orders delivered on time and in full at least 95% of the time". Objectives give the model direction and each should have an owner.', see: ['owner', 'expectation', 'business-health'] },
+  { id: 'observability', term: 'Observability', def: 'The degree to which the internal state of a system can be understood from what it emits. In software, that means logs, metrics and traces; in business observability, business events and the model they are attached to. See <a href="/resources/business-observability-vs-system-observability/">business vs system observability</a>.', see: ['business-observability'] },
+  { id: 'operating-model', term: 'Operating model', def: 'A description of how the business works, precise enough to observe: its entities, relationships, processes, objectives, owners and expectations. Best built one critical journey at a time. See <a href="/resources/building-a-business-operating-model/">the business operating model explained</a>.', see: ['model', 'entity', 'objective'] },
+  { id: 'outcome', term: 'Outcome', def: 'A result the business cares about in its own right, such as revenue booked, a customer retained or a promise kept. Outcomes sit at the end of causal chains and are usually measured by lagging indicators.', see: ['lagging-indicator', 'causal-chain'] },
+  { id: 'owner', term: 'Owner', def: 'The role accountable for an objective, process or expectation, and therefore the role that should be told when it drifts. Owners are best named as roles, not individuals, so the model survives reorganisations.', see: ['objective', 'intervention'] },
+  { id: 'process', term: 'Process', def: 'A sequence of stages through which work moves, changing the state of entities along the way: onboarding, fulfilment, claims handling, billing. Processes are defined by their stages and the events that mark entry to and exit from each.', see: ['stage', 'process-monitoring', 'journey'] },
+  { id: 'process-monitoring', term: 'Process monitoring', def: 'Continuously measuring how work flows through a process (arrivals, waiting, work, WIP, completions, rework and breach risk) as opposed to whether individual tasks were completed. See <a href="/resources/business-process-monitoring/">business process monitoring</a>.', see: ['process', 'golden-signals'] },
+  { id: 'queue', term: 'Queue', def: 'Work waiting for a stage to become available. Queues form whenever arrivals temporarily exceed capacity, and grow sharply as utilisation approaches 100%, especially when arrivals and work are variable.', see: ['utilisation', 'backlog', 'wait-time'] },
+  { id: 'rework', term: 'Rework', def: 'Work that has to be done again because it was incomplete or incorrect, often after being sent back from a later stage. Rework consumes capacity twice and adds to queues, so a rising rework rate quietly reduces effective capacity.', see: ['process-monitoring', 'flow-efficiency'] },
+  { id: 'root-cause', term: 'Root cause', def: 'The underlying change or condition that, if addressed, would prevent a problem from recurring. In practice, most investigations find contributing causes with varying strength of evidence, and should say so rather than naming a single root cause with false certainty. See <a href="/platform/root-cause-analysis/">Root Cause Analysis</a>.', see: ['causal-chain', 'correlation-vs-causation'] },
+  { id: 'seasonality', term: 'Seasonality', def: 'Regular, predictable patterns in a metric by time of day, day of week, month or year, such as month-end peaks or weekend lows. Expected bands must account for seasonality or they will raise false alarms at predictable times.', see: ['expected-band', 'baseline'] },
+  { id: 'segment', term: 'Segment', def: 'A subset of entities sharing an attribute, such as region, product, channel or customer tier. Many problems are local to a segment and invisible in totals, which is why health metrics should be segmentable.', see: ['cohort', 'cardinality'] },
+  { id: 'signal', term: 'Signal', def: 'Any observation that carries information about the state of the business: an event, a metric, a change in a metric. The art of monitoring is separating signal that warrants attention from the noise of normal variation.', see: ['anomaly', 'leading-indicator'] },
+  { id: 'sla', term: 'SLA (service level agreement)', def: 'A formal commitment, often contractual, about the level of service to be provided, such as response or resolution times. SLAs report historical attainment; breach risk shows which open items are likely to miss them. See <a href="/use-cases/sla-monitoring/">SLA monitoring</a>.', see: ['slo', 'commitment', 'breach-risk'] },
+  { id: 'slo', term: 'SLO (service level objective)', def: 'An internal target for a level of service, usually stricter than the SLA it supports, so that the business is warned before the external commitment is at risk.', see: ['sla', 'objective'] },
+  { id: 'stage', term: 'Stage', def: 'A step in a process where work arrives, waits, is worked on and leaves. Every stage has the same anatomy, which is what makes a common set of process measurements possible.', see: ['process', 'hand-off', 'wip'] },
+  { id: 'static-threshold', term: 'Static threshold', def: 'A fixed alert limit, such as "alert if orders fall below 65 a day". Simple to set, but blind to seasonality, so it tends to fire at predictable quiet times and miss real deviations at busy ones.', see: ['expected-band'] },
+  { id: 'theory-of-constraints', term: 'Theory of constraints', def: 'A management approach built on the idea that every system has one constraint limiting its output. It suggests identifying the constraint, exploiting it fully, subordinating everything else to it, elevating its capacity only then, and repeating as the constraint moves.', see: ['constraint', 'bottleneck'] },
+  { id: 'throughput', term: 'Throughput', def: 'The rate at which completed work leaves a process or stage, such as claims paid per day. In a chain of stages, throughput is set by the constraint.', see: ['arrival-rate', 'littles-law', 'constraint'] },
+  { id: 'time-to-value', term: 'Time-to-value', def: 'How long it takes a new customer to receive the first meaningful benefit from what they bought. A strong leading indicator for retention and expansion, and a common journey to model first.', see: ['journey', 'leading-indicator'] },
+  { id: 'utilisation', term: 'Utilisation', def: 'The share of time a stage or resource is busy, roughly demand divided by capacity. Waiting time grows slowly at moderate utilisation and very steeply above about 80–85%, so high utilisation is fragile rather than efficient.', see: ['queue', 'constraint', 'arrival-rate'] },
+  { id: 'wait-time', term: 'Wait time', def: 'Time an item spends in a process without being worked on: queued, paused, or blocked on a customer or another team. Usually the largest component of lead time, and the first to grow when a stage nears capacity.', see: ['flow-efficiency', 'queue', 'lead-time'] },
+  { id: 'wip', term: 'WIP (work in progress)', def: 'The number of items that have entered a process or stage but not yet left it, whether waiting or being worked on. Rising WIP with flat throughput means lead time is about to rise, by Little\'s Law.', see: ['littles-law', 'backlog', 'stage'] },
+];
+
+const byId = new Map(TERMS.map((t) => [t.id, t]));
+const sorted = [...TERMS].sort((a, b) => a.term.localeCompare(b.term, 'en-GB'));
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const groups = LETTERS.map((l) => ({ l, items: sorted.filter((t) => t.term[0].toUpperCase() === l) }));
+const strip = (s: string) => s.replace(/<[^>]+>/g, '');
+const pageUrl = new URL('/resources/business-observability-glossary/', SITE.origin).href;
+
+const crumbs = [{ label: 'Resources', href: '/resources/' }, { label: 'Glossary', href: '/resources/business-observability-glossary/' }];
+const schema = {
+  '@type': 'DefinedTermSet', '@id': `${pageUrl}#terms`, name: 'Business observability glossary', url: pageUrl,
+  description: 'Definitions of the key terms used in business observability, process monitoring and operational analysis.',
+  hasDefinedTerm: sorted.map((t) => ({ '@type': 'DefinedTerm', '@id': `${pageUrl}#${t.id}`, name: t.term, description: strip(t.def), url: `${pageUrl}#${t.id}`, inDefinedTermSet: `${pageUrl}#terms` })),
+};
+---
+<BaseLayout title="Business Observability Glossary" description={`Plain-English definitions of ${TERMS.length} business observability terms, from anomaly and business event to Little's Law, utilisation and WIP, with cross-links.`} ogImage="/social/og-resources.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Resources · Glossary" title="Business observability glossary" lede={`${TERMS.length} terms used across business observability, process monitoring and operational analysis, defined in plain English and linked to each other and to the guides that go deeper.`} breadcrumbs={crumbs} />
+
+  <section class="section-tight gl">
+    <div class="container">
+      <div class="gl-tools">
+        <div class="gl-search">
+          <label for="gl-q" class="gl-label">Filter terms</label>
+          <input id="gl-q" class="input" type="search" placeholder="e.g. queue, band, causation" autocomplete="off" aria-describedby="gl-count" aria-controls="gl-list" data-gl-q />
+          <p id="gl-count" class="gl-count" aria-live="polite" data-gl-count>{TERMS.length} terms</p>
+        </div>
+        <nav class="gl-az" aria-label="Glossary, A to Z">
+          <ul>
+            {groups.map((g) => (
+              <li>{g.items.length ? <a href={`#letter-${g.l.toLowerCase()}`} data-gl-letter={g.l}>{g.l}</a> : <span aria-hidden="true">{g.l}</span>}</li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+
+      <div id="gl-list" class="gl-list">
+        {groups.filter((g) => g.items.length).map((g) => (
+          <section class="gl-group" id={`letter-${g.l.toLowerCase()}`} aria-labelledby={`h-letter-${g.l.toLowerCase()}`} data-gl-group={g.l}>
+            <h2 id={`h-letter-${g.l.toLowerCase()}`} class="gl-letter">{g.l}</h2>
+            <dl>
+              {g.items.map((t) => (
+                <div class="gl-item" id={t.id} data-gl-item data-gl-text={`${t.term} ${strip(t.def)}`.toLowerCase()}>
+                  <dt><a href={`#${t.id}`} class="gl-anchor">{t.term}</a></dt>
+                  <dd>
+                    <p set:html={t.def} />
+                    {t.see && t.see.length > 0 && (
+                      <p class="gl-see"><span>See also</span> {t.see.filter((s) => byId.has(s)).map((s, i, arr) => <><a href={`#${s}`}>{byId.get(s)!.term}</a>{i < arr.length - 1 ? ', ' : ''}</>)}</p>
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ))}
+        <p class="gl-empty" hidden data-gl-empty>No terms match that filter. Try a shorter word, or <a href="/contact/">tell us</a> which term you expected to find.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight section-alt">
+    <div class="container">
+      <RelatedLinks eyebrow="Go deeper" title="Guides that use these terms" items={[
+        { label: 'Business process monitoring', href: '/resources/business-process-monitoring/', desc: 'Arrivals, waiting, WIP, rework and breach risk', icon: 'process' },
+        { label: 'Understanding business bottlenecks', href: '/resources/understanding-business-bottlenecks/', desc: 'Queues, utilisation and constraints', icon: 'clock' },
+        { label: 'Business health metrics that matter', href: '/resources/business-health-metrics/', desc: 'Leading indicators, bands and composites', icon: 'health' },
+        { label: 'The business operating model, explained', href: '/resources/building-a-business-operating-model/', desc: 'Entities, objectives, owners, expectations', icon: 'graph' },
+        { label: 'How business events connect to outcomes', href: '/resources/how-business-events-connect-to-outcomes/', desc: 'Event design and causal chains', icon: 'event' },
+        { label: 'What is business observability?', href: '/resources/what-is-business-observability/', desc: 'The category in one page', icon: 'book' },
+      ]} />
+    </div>
+  </section>
+
+  <CTA title="Make your business observable." text="See how Panoptes models, observes and explains the way your business actually operates." />
+</BaseLayout>
+
+<script>
+  const q = document.querySelector<HTMLInputElement>('[data-gl-q]');
+  if (q) {
+    const items = [...document.querySelectorAll<HTMLElement>('[data-gl-item]')];
+    const groups = [...document.querySelectorAll<HTMLElement>('[data-gl-group]')];
+    const count = document.querySelector<HTMLElement>('[data-gl-count]')!;
+    const empty = document.querySelector<HTMLElement>('[data-gl-empty]')!;
+    const total = items.length;
+    let t: number | undefined;
+    const apply = () => {
+      const terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const el of items) {
+        const hit = terms.every((w) => (el.dataset.glText ?? '').includes(w));
+        el.hidden = !hit;
+        if (hit) shown++;
+      }
+      for (const g of groups) {
+        const any = g.querySelector('[data-gl-item]:not([hidden])');
+        g.hidden = !any;
+        const link = document.querySelector<HTMLElement>(`[data-gl-letter="${g.dataset.glGroup}"]`);
+        link?.classList.toggle('is-dim', !any);
+      }
+      empty.hidden = shown > 0;
+      count.textContent = terms.length ? `${shown} of ${total} terms match` : `${total} terms`;
+    };
+    q.addEventListener('input', () => { window.clearTimeout(t); t = window.setTimeout(apply, 120); });
+    q.addEventListener('keydown', (e) => { if (e.key === 'Escape' && q.value) { q.value = ''; apply(); } });
+  }
+</script>
+
+<style>
+  .gl-tools { position: sticky; top: var(--header-h); z-index: 5; background: var(--bg); padding: 14px 0 12px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: minmax(240px, 360px) 1fr; gap: 12px 28px; align-items: end; }
+  .gl-label { display: block; font: 500 .72rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+  .gl-count { margin: 6px 0 0; font-size: .82rem; color: var(--text-3); }
+  .gl-az ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+  .gl-az a, .gl-az span { display: inline-grid; place-items: center; min-width: 32px; height: 32px; border-radius: 8px; font: 600 .86rem/1 var(--font-mono); text-decoration: none; }
+  .gl-az a { color: var(--text); border: 1px solid var(--border); background: var(--surface); }
+  .gl-az a:hover, .gl-az a:focus-visible { border-color: var(--accent); color: var(--accent-text); }
+  .gl-az a.is-dim { opacity: .4; }
+  .gl-az span { color: var(--text-3); opacity: .45; }
+  .gl-list { max-width: 860px; padding-top: 12px; }
+  .gl-group { scroll-margin-top: calc(var(--header-h) + 140px); padding-top: 28px; }
+  .gl-letter { font-size: 2rem; color: var(--accent-text); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin: 0 0 8px; }
+  .gl dl { margin: 0; }
+  .gl-item { scroll-margin-top: calc(var(--header-h) + 140px); padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .gl-item:last-child { border-bottom: 0; }
+  .gl-item:target { background: var(--accent-soft); border-radius: var(--radius); padding-inline: 14px; margin-inline: -14px; }
+  .gl-item dt { font: 600 1.15rem/1.3 var(--font-display); }
+  .gl-anchor { color: var(--text); text-decoration: none; }
+  .gl-anchor:hover { color: var(--accent-text); text-decoration: underline; }
+  .gl-item dd { margin: 6px 0 0; color: var(--text-2); line-height: 1.65; }
+  .gl-item dd p { margin: 0; }
+  .gl-item dd a { color: var(--accent-text); }
+  .gl-see { margin-top: 8px !important; font-size: .9rem; }
+  .gl-see span { font: 500 .7rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); margin-right: 6px; }
+  .gl-empty { padding: 32px 0; color: var(--text-2); }
+  @media (max-width: 760px) {
+    .gl-tools { grid-template-columns: minmax(0, 1fr); position: static; }
+    .gl-az ul { gap: 3px; }
+    .gl-az a, .gl-az span { min-width: 28px; height: 28px; font-size: .8rem; }
+    .gl-group, .gl-item { scroll-margin-top: calc(var(--header-h) + 16px); }
+  }
+</style>

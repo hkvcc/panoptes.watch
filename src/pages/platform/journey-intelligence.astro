@@ -1,0 +1,316 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import Tabs from '../../components/Tabs.astro';
+import TabPanel from '../../components/TabPanel.astro';
+import FeatureCard from '../../components/FeatureCard.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+
+const crumbs = [{ label: 'Platform', href: '/platform/' }, { label: 'Journey Intelligence', href: '/platform/journey-intelligence/' }];
+
+type Stage = { n: string; sys: string; pct: number; next?: string; drop?: string; hot?: boolean };
+const journeys: { id: string; label: string; who: string; unit: string; stages: Stage[]; friction: { h: string; d: string }[]; next: string }[] = [
+  {
+    id: 'onb', label: 'Customer onboarding', who: 'A new business customer, from sign-up to first value', unit: 'of sign-up starts',
+    stages: [
+      { n: 'Start sign-up', sys: 'Marketing site', pct: 100, next: '6 min', drop: '−12 pts' },
+      { n: 'Verify email', sys: 'Product', pct: 88, next: '1.2 h', drop: '−7 pts' },
+      { n: 'Create workspace', sys: 'Product', pct: 81, next: '25 min', drop: '−7 pts' },
+      { n: 'Connect data', sys: 'Product', pct: 74, next: '1.6 days', drop: '−22 pts', hot: true },
+      { n: 'Add payment', sys: 'Billing', pct: 52, next: '3.1 h', drop: '−5 pts' },
+      { n: 'First report', sys: 'Product', pct: 47 },
+    ],
+    friction: [
+      { h: 'The longest wait sits between two systems', d: 'Customers who connect data wait a median 1.6 days before adding payment. Product analytics sees the first half; billing sees the second. Neither sees the gap.' },
+      { h: 'A support detour hides inside the journey', d: 'Nearly a third of customers who reach “Connect data” open an import help ticket. Those who do take far longer to activate — a hand-off between product and support.' },
+      { h: 'Segments behave differently', d: 'Sign-ups that start on mobile take roughly twice as long to connect data as desktop sign-ups. Averages blend the two and understate the problem.' },
+    ],
+    next: 'Compare activation for customers who opened an import ticket with those who did not, and check what changed in the import flow recently.',
+  },
+  {
+    id: 'o2c', label: 'Order-to-cash', who: 'A B2B order, from purchase order to reconciled cash', unit: 'of orders reaching each step on time',
+    stages: [
+      { n: 'Order placed', sys: 'Commerce', pct: 100, next: '2 h', drop: '−3 pts' },
+      { n: 'Credit check', sys: 'ERP', pct: 97, next: '1.1 days', drop: '−2 pts' },
+      { n: 'Fulfilled', sys: 'Warehouse', pct: 95, next: '2.4 days', drop: '0 pts', hot: true },
+      { n: 'Invoiced', sys: 'Billing', pct: 95, next: '31 days', drop: '−7 pts' },
+      { n: 'Paid', sys: 'Payments', pct: 88, next: '3 days', drop: '−2 pts' },
+      { n: 'Reconciled', sys: 'Finance', pct: 86 },
+    ],
+    friction: [
+      { h: 'Invoices wait days after delivery', d: 'Fulfilment completes, then invoices are raised in a twice-weekly batch. Every day of delay pushes the payment due date — and cash — out by a day.' },
+      { h: 'Disputes cluster on one cause', d: 'Of the invoices paid late, most were disputed for a missing purchase-order reference. The data exists at order time; it is lost before billing.' },
+      { h: 'Manual reconciliation at the end', d: 'A small share of payments cannot be matched automatically and wait for a person. Small in count, but large in days outstanding.' },
+    ],
+    next: 'Measure the gap between fulfilment and invoice by billing run, and trace where the purchase-order reference is dropped between order and invoice.',
+  },
+  {
+    id: 'claim', label: 'Claim-to-resolution', who: 'A customer claim, from submission to payment and close', unit: 'of claims submitted',
+    stages: [
+      { n: 'Claim submitted', sys: 'Customer portal', pct: 100, next: '2.8 days', drop: '−22 pts', hot: true },
+      { n: 'Documents complete', sys: 'Customer portal', pct: 78, next: '4.1 days', drop: '−2 pts' },
+      { n: 'Assessed', sys: 'Claims system', pct: 76, next: '1.3 days', drop: '−1 pt' },
+      { n: 'Decision sent', sys: 'Claims system', pct: 75, next: '2.2 days', drop: '−5 pts' },
+      { n: 'Paid', sys: 'Payments', pct: 70, next: '1 day', drop: '−6 pts' },
+      { n: 'Closed', sys: 'Support & CRM', pct: 64 },
+    ],
+    friction: [
+      { h: 'Waiting on the customer, not the team', d: 'More than a fifth of claims stall waiting for documents. The first reminder goes out after five days — long after most customers have stopped looking.' },
+      { h: 'Assessment queues peak on Mondays', d: 'Weekend submissions land at once. Time to assessment depends far more on the day a claim arrives than on its complexity.' },
+      { h: 'Repeat contact before a decision', d: 'Around one in three claimants contacts support before receiving a decision. Each contact is a cost and a signal that the customer cannot see progress.' },
+    ],
+    next: 'Test an earlier document reminder for one claim type and compare time to “documents complete” with a similar group that keeps the current timing.',
+  },
+];
+
+const caps = [
+  { i: 'link', t: 'Journey stitching', d: 'Connect events from different systems to the same customer, order or case using the identifiers your business already has — account IDs, order numbers, email, case references.' },
+  { i: 'journey', t: 'Stage and transition timing', d: 'Median and slow-tail time between every pair of steps, so waiting between systems is as visible as work inside them.' },
+  { i: 'flow', t: 'Variant paths', d: 'See every real route through a journey — detours, loops, rework and exits — and how much volume and time each one carries.' },
+  { i: 'users', t: 'Segment comparison', d: 'Compare journeys by channel, plan, region, customer tier or cohort to find where friction is concentrated, not averaged.' },
+  { i: 'target', t: 'Journey commitments', d: 'Attach expectations to a journey — “90% of new accounts active within three days” — and watch attainment as it happens.' },
+  { i: 'alert', t: 'Friction alerts', d: 'Changes in drop-off or time between steps can feed Anomaly Detection, so a newly broken step surfaces before the monthly funnel review.' },
+];
+
+const schema = { '@type': 'WebPage', name: 'Journey Intelligence — Panoptes', about: 'End-to-end customer and transaction journeys across systems: drop-off, time between steps, variant paths and friction.' };
+---
+<BaseLayout title="Journey Intelligence" description="Follow customers, orders and claims end to end across marketing, product, billing and support. Panoptes shows where journeys slow down, branch and drop out." ogImage="/social/og-platform.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Platform · Journey Intelligence" title="Follow every journey <span class='gradient-text'>across every system.</span>" lede="Your customers do not experience your org chart. A single sign-up crosses the marketing site, the product, billing and support. Journey Intelligence is designed to stitch those steps into one path, so you can see exactly where people and transactions wait, detour or give up." breadcrumbs={crumbs} center>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#journeys">Explore three journeys</a>
+    </div>
+    <Fragment slot="visual">
+      <div class="hero-map">
+        <Diagram src="/diagrams/journey-intelligence-onboarding-map.svg" alt="Onboarding journey map across four systems: start sign-up on the marketing site, verify email, create workspace and connect data in the product, add payment in billing, and first report. The longest wait, 1.6 days with 22 points lost, sits between connect data and add payment, with a support ticket detour." frame="journey · customer onboarding" zoom class="hide-sm" />
+        <Diagram src="/diagrams/journey-intelligence-onboarding-map-vertical.svg" alt="Onboarding journey, six steps with system, share remaining and the time and drop-off between steps. The largest drop is between connect data and add payment." frame="journey · onboarding" class="show-sm" />
+      </div>
+    </Fragment>
+  </PageHero>
+
+  <!-- What it does -->
+  <section class="section">
+    <div class="container split split-top">
+      <div>
+        <SectionHead eyebrow="What it does" title="One path, stitched from many systems." />
+        <p class="muted">Each system records its own slice of a journey. The marketing site knows a visitor started signing up. The product knows they created a workspace. Billing knows when a card was added. Support knows they asked for help. None of them knows the whole story — or how long the customer waited between one slice and the next.</p>
+        <p class="muted">Journey Intelligence uses the Business Graph to link those events to the same customer, order or case, and lays them out as an ordered journey with timing, volume and outcome at every step. Instead of four partial funnels, you get one end-to-end view that can be compared by segment and over time.</p>
+      </div>
+      <div class="jsteps reveal">
+        <div class="jstep"><span class="badge badge-outline">Marketing site</span><p><strong>Intent</strong> — pricing viewed, sign-up started, campaign source</p></div>
+        <div class="jstep"><span class="badge badge-outline">Product</span><p><strong>Progress</strong> — account verified, workspace created, data connected</p></div>
+        <div class="jstep"><span class="badge badge-outline">Billing</span><p><strong>Commitment</strong> — payment method added, first invoice raised</p></div>
+        <div class="jstep"><span class="badge badge-outline">Support</span><p><strong>Friction</strong> — tickets, contacts and their reasons, linked to the step they interrupt</p></div>
+        <div class="jstep jstep-out"><Icon name="journey" /><p><strong>One journey</strong> per customer, with time between every step and the path actually taken</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why it matters -->
+  <section class="section section-dark why">
+    <div class="container">
+      <div class="why-grid">
+        <div>
+          <p class="eyebrow">Why it matters</p>
+          <h2>Friction lives in the gaps between teams.</h2>
+        </div>
+        <div class="why-list">
+          <div><h3>Funnels stop at the edge of a tool</h3><p>Product funnels end when the customer leaves the product. The days they spend waiting on billing or support never appear in anyone’s report.</p></div>
+          <div><h3>Averages hide the slow tail</h3><p>A median of two days can conceal a large group taking two weeks. Those customers are often the ones who churn or complain.</p></div>
+          <div><h3>No one owns the whole journey</h3><p>Each team optimises its own step. Without a shared view, improvements in one place can simply move the queue somewhere else.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive journeys -->
+  <section class="section" id="journeys">
+    <div class="container">
+      <SectionHead eyebrow="Interactive" title="Pick a journey to see its stages and friction points." lede="Three illustrative journeys from different kinds of business. Each shows the systems involved, how many reach each step, how long the wait is before the next one, and where an investigation would start." />
+      <Tabs uid="jr" label="Example journeys" tabs={journeys.map((j) => ({ id: j.id, label: j.label }))} class="reveal">
+        {journeys.map((j, ji) => (
+          <TabPanel uid="jr" id={j.id} first={ji === 0}>
+            <div class="jp">
+              <div class="jp-head">
+                <div><h3>{j.label}</h3><p class="muted small">{j.who}. Percentages show share {j.unit}.</p></div>
+                <span class="illustrative">Illustrative · fictional data</span>
+              </div>
+              <ol class="stages">
+                {j.stages.map((s, i) => (
+                  <li class:list={['stage', { hot: s.hot }]}>
+                    <span class="st-n mono">{String(i + 1).padStart(2, '0')}</span>
+                    <strong>{s.n}</strong>
+                    <span class="st-sys">{s.sys}</span>
+                    <span class="st-bar" aria-hidden="true"><i style={`width:${s.pct}%`}></i></span>
+                    <span class="st-pct mono">{s.pct}%</span>
+                    {s.next ? <span class="st-next mono"><span class="sr-only">Then </span>→ {s.next} · {s.drop}</span> : <span class="st-next st-end mono">journey complete</span>}
+                  </li>
+                ))}
+              </ol>
+              <div class="jp-grid">
+                <div>
+                  <p class="kpi-label">Friction points</p>
+                  <ul class="fr">
+                    {j.friction.map((f) => <li><strong>{f.h}</strong><span>{f.d}</span></li>)}
+                  </ul>
+                </div>
+                <div class="jp-next">
+                  <Icon name="compass" />
+                  <p class="kpi-label">Where to look next</p>
+                  <p>{j.next}</p>
+                </div>
+              </div>
+            </div>
+          </TabPanel>
+        ))}
+      </Tabs>
+    </div>
+  </section>
+
+  <!-- Variant paths -->
+  <section class="section section-alt">
+    <div class="container split">
+      <div class="reveal">
+        <Diagram src="/illustrations/journey-intelligence-variant-paths.svg" alt="Order-to-cash variant paths from order placed to cash collected: straight-through for 68% of orders in a median 3 days, credit hold for 19% in 9 days, dispute and reissue for 9% in 21 days, manual reconciliation for 4% in 14 days" frame="variant paths · order-to-cash" zoom />
+      </div>
+      <div>
+        <p class="eyebrow">Variant paths</p>
+        <h2>The journey you designed is not the only one customers take.</h2>
+        <p class="muted">Real journeys branch. Some orders sail straight through; others stop for a credit hold, bounce through a dispute and a reissued invoice, or end in manual reconciliation. Each variant carries a share of volume and a typical duration.</p>
+        <p class="muted">Seeing variants side by side changes the conversation. A path taken by only one order in ten can still account for most of the cash that arrives late. That is where an intervention earns its keep — and where Process Intelligence can take over to examine the work inside each stage.</p>
+        <a href="/platform/process-intelligence/" class="link-arrow">How Process Intelligence complements journeys</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scenario -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Scenario" title="“Our sign-ups are up. Why isn’t revenue?”" lede="An illustrative example of how a revenue question becomes a journey question." />
+      <div class="scen">
+        <article class="card reveal">
+          <p class="kpi-label">The question</p>
+          <p>A software company sees sign-ups rising month on month, but new monthly revenue is flat. Marketing points to healthy top-of-funnel numbers; product points to strong feature usage among active customers.</p>
+        </article>
+        <article class="card reveal">
+          <p class="kpi-label">What the journey shows</p>
+          <p>Stitching sign-ups through to first payment shows that the drop is not at the start or the end, but between connecting data in the product and adding payment in billing — a step owned by neither team. Customers who hit an import problem wait days for support and many never return.</p>
+        </article>
+        <article class="card card-accent reveal">
+          <p class="kpi-label">What happens next</p>
+          <p>The journey gets an owner and an expectation: most new accounts activated within three days. Changes to the import flow are tracked as interventions, and Panoptes compares activation for affected cohorts before and after — the outcome to measure, not a promise.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key functionality -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Key functionality" title="What Journey Intelligence is designed to do." />
+      <div class="grid grid-3">
+        {caps.map((c) => <FeatureCard title={c.t} text={c.d} icon={c.i} />)}
+      </div>
+      <p class="note mt-2">Journeys describe customers, orders and cases moving through business steps. Panoptes is designed to observe processes and outcomes, not to monitor individual employees.</p>
+    </div>
+  </section>
+
+  <!-- Platform + use cases -->
+  <section class="section">
+    <div class="container">
+      <div class="plat">
+        <div>
+          <p class="eyebrow">Across the platform</p>
+          <h2>Journeys run on the same model as everything else.</h2>
+          <p class="muted">Because a journey is built from the Business Graph, its steps already know which customers, orders, teams and commitments they touch. A slow step can raise an anomaly, become the starting point of a root-cause investigation, or be assigned to an owner with a measurable expectation.</p>
+        </div>
+        <div class="plat-links">
+          <a href="/use-cases/customer-journey-friction/" class="card card-link"><span class="kpi-label">Use case</span><strong>Customer journey friction</strong><span class="muted small">Locate the step where customers stall.</span></a>
+          <a href="/use-cases/revenue-leakage/" class="card card-link"><span class="kpi-label">Use case</span><strong>Revenue leakage</strong><span class="muted small">Follow money from intent to cash.</span></a>
+          <a href="/solutions/customer-experience/" class="card card-link"><span class="kpi-label">Solution</span><strong>Customer experience</strong><span class="muted small">Journeys, friction and promises kept.</span></a>
+          <a href="/use-cases/sla-monitoring/" class="card card-link"><span class="kpi-label">Use case</span><strong>SLA monitoring</strong><span class="muted small">Watch commitments before they break.</span></a>
+        </div>
+      </div>
+      <div class="mt-3">
+        <RelatedLinks eyebrow="Related capabilities" title="Keep exploring the platform" items={[
+          { label: 'Process Intelligence', href: '/platform/process-intelligence/', desc: 'Stages, throughput and bottlenecks', icon: 'process' },
+          { label: 'Business Graph', href: '/platform/business-graph/', desc: 'Entities, relationships and dependencies', icon: 'graph' },
+          { label: 'Anomaly Detection', href: '/platform/anomaly-detection/', desc: 'Meaningful change, surfaced early', icon: 'anomaly' },
+          { label: 'Root Cause Analysis', href: '/platform/root-cause-analysis/', desc: 'From symptom to contributing change', icon: 'rootcause' },
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <CTA title="See one of your journeys end to end." text="Pick a journey that crosses teams — onboarding, order-to-cash, claims — and we will show how Panoptes would stitch it together." />
+</BaseLayout>
+
+<style>
+  .hero-map { max-width: 1100px; margin-inline: auto; text-align: left; }
+
+  .jsteps { display: grid; gap: 10px; }
+  .jstep { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 14px; align-items: center; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  .jstep p { margin: 0; font-size: .93rem; color: var(--text-2); }
+  .jstep strong { color: var(--text); }
+  .jstep .badge { justify-self: start; }
+  .jstep-out { background: linear-gradient(120deg, var(--purple), var(--purple-rich)); border-color: transparent; color: #fff; }
+  .jstep-out p, .jstep-out strong { color: #fff; }
+  .jstep-out :global(svg) { width: 26px; height: 26px; color: #fff; justify-self: start; }
+  @media (max-width: 520px) { .jstep { grid-template-columns: 1fr; gap: 6px; } }
+
+  .why { background: radial-gradient(ellipse 60% 80% at 10% 0%, rgba(113, 38, 232, .3), transparent 70%), #0A0710; }
+  .why-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(28px, 5vw, 72px); }
+  .why h2 { color: #fff; font-size: clamp(1.9rem, 3.6vw, 2.8rem); }
+  .why-list { display: grid; gap: 0; }
+  .why-list > div { padding: 22px 0; border-top: 1px solid var(--border-strong); }
+  .why-list > div:first-child { border-top: 0; padding-top: 0; }
+  .why-list h3 { color: #fff; font-size: 1.2rem; }
+  .why-list p { color: var(--text-2); margin: 0; }
+  @media (max-width: 860px) { .why-grid { grid-template-columns: 1fr; } }
+
+  .jp { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); padding: clamp(18px, 3vw, 32px); }
+  .jp-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 1.4rem; }
+  .jp-head h3 { margin-bottom: .2em; }
+  .jp-head p { margin: 0; }
+  .stages { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+  .stage { display: grid; gap: 6px; align-content: start; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-2); position: relative; }
+  .stage strong { font-size: .95rem; line-height: 1.25; }
+  .st-n { font-size: .72rem; color: var(--text-3); }
+  .st-sys { font-size: .78rem; color: var(--text-3); }
+  .st-bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; margin-top: 4px; }
+  .st-bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+  .st-pct { font-weight: 600; font-size: .95rem; }
+  .st-next { font-size: .74rem; color: var(--text-2); padding-top: 8px; border-top: 1px dashed var(--border-strong); }
+  .st-end { color: var(--ok-text); }
+  .stage.hot { border-color: var(--crit); background: var(--crit-bg); }
+  .stage.hot .st-next { color: var(--crit-text); font-weight: 600; border-color: color-mix(in srgb, var(--crit) 40%, transparent); }
+  .stage.hot .st-bar i { background: var(--crit); }
+  @media (max-width: 1000px) { .stages { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .jp-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; margin-top: 1.6rem; padding-top: 1.6rem; border-top: 1px solid var(--border); }
+  .fr { list-style: none; padding: 0; margin: .8rem 0 0; display: grid; gap: 14px; }
+  .fr li { display: grid; gap: 4px; padding-left: 16px; border-left: 2px solid var(--warn); }
+  .fr strong { font-size: .97rem; }
+  .fr span { font-size: .9rem; color: var(--text-2); }
+  .jp-next { border-radius: var(--radius); background: var(--accent-soft); padding: 20px; align-self: start; }
+  .jp-next :global(svg) { width: 24px; height: 24px; color: var(--accent-text); margin-bottom: .6rem; }
+  .jp-next p:last-child { margin: .4rem 0 0; font-size: .95rem; }
+  @media (max-width: 760px) { .jp-grid { grid-template-columns: 1fr; } }
+
+  .scen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .scen .card p:last-child { color: var(--text-2); font-size: .95rem; }
+  .scen .kpi-label { margin-bottom: .8rem; }
+  @media (max-width: 900px) { .scen { grid-template-columns: 1fr; } }
+
+  .plat { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
+  .plat h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .plat-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .plat-links a { display: grid; gap: 6px; padding: 18px; }
+  .plat-links strong { color: var(--text); }
+  @media (max-width: 860px) { .plat { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .plat-links { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,40 @@
+---
+/** Closing block for a use-case page: capabilities involved, related roles and related use cases. */
+import Icon from '../Icon.astro';
+import RelatedLinks from '../RelatedLinks.astro';
+import { cap, role, useCase } from './data';
+interface Item { slug: string; why: string }
+interface Props { caps: Item[]; roles: Item[]; related: Item[]; alt?: boolean }
+const { caps, roles, related, alt = true } = Astro.props;
+---
+<section class:list={['section', { 'section-alt': alt }]} aria-labelledby="ucl-caps">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Capabilities involved</p>
+      <h2 id="ucl-caps">The parts of Panoptes this investigation draws on.</h2>
+    </div>
+    <div class="ucl-caps">
+      {caps.map((c) => { const p = cap(c.slug); return (
+        <a class="ucl-cap card card-link reveal" href={p.href}>
+          <span class="icon-tile"><Icon name={p.icon!} /></span>
+          <h3>{p.label}{c.slug === 'ai-intelligence' && <span class="badge badge-outline">Vision</span>}</h3>
+          <p class="muted">{c.why}</p>
+          <span class="link-arrow">Explore {p.label}</span>
+        </a>
+      ); })}
+    </div>
+    <div class="ucl-rel">
+      <RelatedLinks eyebrow="Who this is for" title="Related roles" items={roles.map((r) => { const s = role(r.slug); return { label: s.label, href: s.href, desc: r.why, icon: s.icon }; })} />
+      <RelatedLinks eyebrow="Keep exploring" title="Related use cases" items={related.map((r) => { const u = useCase(r.slug); return { label: u.label, href: u.href, desc: r.why, icon: u.icon }; })} />
+    </div>
+  </div>
+</section>
+<style>
+  .ucl-caps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: clamp(14px, 2vw, 20px); }
+  .ucl-cap { display: flex; flex-direction: column; }
+  .ucl-cap h3 { font-size: 1.12rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ucl-cap p { font-size: .92rem; }
+  .ucl-cap .link-arrow { margin-top: auto; padding-top: .8rem; font-size: .88rem; }
+  .ucl-rel { display: grid; gap: clamp(40px, 5vw, 56px); margin-top: clamp(48px, 6vw, 72px); }
+  .ucl-rel :global(.related-list) { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+</style>

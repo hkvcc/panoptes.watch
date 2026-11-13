@@ -1,0 +1,16 @@
+---
+/**
+ * Accessible tabs (WAI-ARIA tabs pattern, keyboard support in site.ts).
+ * Usage: <Tabs uid="x" tabs={[{id,label}]} label="..."> <TabPanel uid="x" id="a" first>…</TabPanel> … </Tabs>
+ */
+interface Props { tabs: { id: string; label: string }[]; label: string; uid: string; class?: string }
+const { tabs, label, uid, class: cls } = Astro.props;
+---
+<div class:list={['tabs', cls]} data-tabs>
+  <div role="tablist" aria-label={label}>
+    {tabs.map((t, i) => (
+      <button type="button" role="tab" id={`${uid}-tab-${t.id}`} aria-controls={`${uid}-panel-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{t.label}</button>
+    ))}
+  </div>
+  <div class="tab-panels"><slot /></div>
+</div>

@@ -1,0 +1,131 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/resources-b/RbDiagram.astro';
+---
+<ArticleLayout
+  title="The business operating model, explained"
+  metaTitle="The Business Operating Model Explained: How to Build One Incrementally"
+  description="What a business operating model is, its six building blocks (entities, relationships, processes, objectives, owners, expectations) and how to build one from a single journey."
+  eyebrow="Operating model"
+  dek="Every business already runs on a model of itself. It is just scattered across org charts, process maps, spreadsheets and people's heads. Writing it down, precisely enough to observe, is the foundation of business observability, and it is best done one journey at a time."
+  related={['/resources/how-business-events-connect-to-outcomes/', '/resources/business-health-metrics/', '/resources/what-is-business-observability/']}
+>
+  <p>Ask five senior people in the same company how an order becomes cash and you will get five different answers. Each will be accurate about the part they own and vague about the rest. That is not a failing of the people; it is a natural consequence of how organisations divide work. But it means that when something goes wrong between their parts, nobody has the whole picture, and the investigation starts by assembling one from scratch.</p>
+  <p>A business operating model, in the sense used here, is that whole picture made explicit: what the business is made of, how the parts relate, how work flows between them, what each part is supposed to achieve, who is responsible, and what "normal" looks like. It is precise enough that software can observe it, and simple enough that the people who run the business recognise it as true.</p>
+
+  <h2>What an operating model is, and is not</h2>
+  <p>The term "operating model" is used loosely, so it is worth being specific about what it means in this context and how it differs from familiar artefacts.</p>
+  <table>
+    <thead><tr><th>Artefact</th><th>What it describes</th><th>What it leaves out</th></tr></thead>
+    <tbody>
+      <tr><td>Org chart</td><td>Who reports to whom</td><td>How work actually flows across teams</td></tr>
+      <tr><td>Process map</td><td>The intended sequence of steps</td><td>The real entities involved, their volumes and what "on track" means</td></tr>
+      <tr><td>Data model</td><td>How systems store records</td><td>Business meaning, objectives and ownership; usually one system at a time</td></tr>
+      <tr><td>KPI framework</td><td>What is measured</td><td>The structure that connects measures to each other and to causes</td></tr>
+      <tr><td><strong>Operating model</strong></td><td>The business's entities, relationships, processes, objectives, owners and expectations, connected</td><td>Detail that does not change a decision</td></tr>
+    </tbody>
+  </table>
+  <p>An operating model borrows from all of these but is none of them. Its test is practical: when something changes, can you use the model to see what it affects, who should know, and whether it matters? If yes, the model is doing its job, however incomplete it is.</p>
+
+  <h2>The six building blocks</h2>
+  <p>Almost every useful operating model is built from six kinds of thing. Each has a simple definition, and each has a modelling question that keeps it honest.</p>
+
+  <h3>1. Entities</h3>
+  <p>The things the business is made of and acts upon: customers, accounts, orders, shipments, invoices, payments, cases, claims, suppliers, warehouses, products. An entity has an identity that persists over time, and it is something people in the business would name without prompting. <em>Modelling question: if this thing went missing, would someone notice and care?</em></p>
+
+  <h3>2. Relationships</h3>
+  <p>How entities connect: a customer <em>places</em> orders; an order <em>is fulfilled by</em> one or more shipments; a shipment <em>is carried by</em> a carrier; an invoice <em>is settled by</em> payments. Relationships are what make the model a graph rather than a list, and they are what let you trace the consequences of a change. When a carrier fails, relationships tell you which shipments, which orders, which customers and which revenue are exposed. <em>Modelling question: if this entity has a problem, which others would feel it?</em></p>
+
+  <h3>3. Processes</h3>
+  <p>The sequences of stages through which work moves, changing the state of entities along the way: order fulfilment, onboarding, claims handling, billing and collections. A process is defined by its stages and the events that mark entry and exit from each. <em>Modelling question: where does work wait, change hands, or come back?</em> The <a href="/resources/business-process-monitoring/">business process monitoring</a> guide covers how to instrument stages.</p>
+
+  <h3>4. Objectives</h3>
+  <p>What each part of the business is for, stated as something measurable: orders delivered on time and in full at least 95% of the time; invoices collected within 45 days for at least 90% of value; claims paid within ten working days. Objectives give the model direction. Without them, it can describe what is happening but not whether it is good. <em>Modelling question: how would we know this part of the business is working?</em></p>
+
+  <h3>5. Owners</h3>
+  <p>The role accountable for each objective and each process, and therefore the role that should be told when something drifts. Owners are roles, not individuals, so the model survives reorganisations and holidays. An objective with no owner is a wish. <em>Modelling question: when this goes wrong at 9am on a Tuesday, who is expected to act?</em></p>
+
+  <h3>6. Expectations</h3>
+  <p>What "normal" looks like for the behaviour of entities and processes: an order should be picked within four hours of the daily cut-off; a carrier should collect by 17:00 on dispatch day; payment success for card renewals is normally between 92% and 96%. Expectations are more granular than objectives. They are the operational promises that, if kept, make the objective achievable, and they are what <a href="/resources/business-health-metrics/">health monitoring</a> compares reality against. <em>Modelling question: what would surprise us?</em></p>
+
+  <div class="callout">
+    <strong>Why expectations are separate from objectives</strong>
+    Objectives are usually set at the level of an outcome and reviewed monthly. Expectations live at the level of a hand-off or a dependency and are checked continuously. Separating them lets you say "the objective is still on track, but three of the expectations that support it are slipping", which is exactly the early warning most businesses lack.
+  </div>
+
+  <h2>An example: order to cash in a wholesale business</h2>
+  <p>Consider a fictional wholesale distributor that sells to around 1,200 trade customers. Its most important journey runs from a customer placing an order to the business collecting the cash for it. Here is what a first operating model for that journey might contain.</p>
+  <Diagram src="/diagrams/operating-model-example.svg" alt="Operating model diagram. Two objectives at the top, each with an owner: orders delivered on time and in full at least 95 per cent, owned by the head of fulfilment; and invoices collected within 45 days at least 90 per cent, owned by the credit control lead. Beneath them, two processes: order fulfilment and billing and collections. Entities in a row: customer places order, order fulfilled by shipment, order billed as invoice, invoice settled by payment. Shipment is picked at a warehouse and carried by a carrier. Expectations are attached to the warehouse (picked within four hours of order cut-off) and carrier (collected by 17:00 on dispatch day)." caption="A first operating model for one journey: two objectives with owners, two processes, seven entity types, their relationships, and the expectations on key dependencies. Figures inside nodes are fictional daily volumes or counts." zoom />
+  <ul>
+    <li><strong>Entities:</strong> customer, order, shipment, invoice, payment, plus two dependency entities, warehouse (three sites) and carrier (two contracted carriers).</li>
+    <li><strong>Relationships:</strong> customer places order; order is fulfilled by shipments (sometimes several, which is why there are more shipments than orders); shipment is picked at a warehouse and carried by a carrier; order is billed as an invoice; invoice is settled by payments.</li>
+    <li><strong>Processes:</strong> order fulfilment (order accepted → picked → packed → collected → delivered) and billing and collections (invoice issued → due → paid, with reminders and disputes as side paths).</li>
+    <li><strong>Objectives and owners:</strong> on time in full at 95%, owned by the head of fulfilment; collection within 45 days at 90% of value, owned by the credit control lead.</li>
+    <li><strong>Expectations:</strong> pick within four hours of the order cut-off at each warehouse; carrier collection by 17:00; invoice issued within one day of delivery; payment success for direct debits within its normal band.</li>
+  </ul>
+  <p>That is a small model, perhaps a page of definitions. But consider what it already makes possible. If one carrier starts missing its 17:00 collection, the model shows which shipments are affected, which orders and customers they belong to, which on-time-in-full objective is at risk, who owns it, and, because delivery triggers invoicing, that some invoices will be issued late and collected late. One expectation slipping is connected to two objectives and two owners. Without the model, those connections live in people's heads, and are made, if at all, after the month-end numbers come in.</p>
+
+  <h2>Start from one critical journey</h2>
+  <p>The most common way operating-model initiatives fail is by trying to model the whole business before using any of it. The model becomes a documentation project, it is out of date before it is finished, and nobody's decisions change. The alternative is to start with a single journey and make it genuinely useful before expanding.</p>
+  <p>A good first journey usually has four properties:</p>
+  <ol>
+    <li><strong>It matters commercially.</strong> Revenue, cash, or a customer promise depends on it.</li>
+    <li><strong>It crosses teams.</strong> If one team owns it end to end, it probably does not need a cross-team model yet.</li>
+    <li><strong>Something about it is currently painful or uncertain.</strong> A model that answers a live question earns attention and sponsorship.</li>
+    <li><strong>Its key events are observable.</strong> The systems involved record when the important things happen, even if the data is messy.</li>
+  </ol>
+  <p>Order to cash, lead to first revenue, application to approval, claim to payment and signed contract to live account are typical candidates.</p>
+
+  <h2>Building it, step by step</h2>
+  <p>The sequence below is one that tends to work. Each step produces something useful on its own, which matters because momentum is what keeps a model alive.</p>
+  <h3>Step 1: name the outcome and the promise</h3>
+  <p>Write down, in one sentence, what the journey delivers and what the business promises about it. "A trade customer's order arrives complete by the promised date, and we collect payment within terms." This sentence becomes the anchor for the objectives.</p>
+  <h3>Step 2: walk the journey with the people who run it</h3>
+  <p>Not the documented process: the real one. Follow a handful of recent examples from start to finish, including the ones that went wrong. Note every place work changes hands, waits, or comes back. This is where most of the modelling insight comes from, and where you will find the stages that matter.</p>
+  <h3>Step 3: identify the entities and how they are identified</h3>
+  <p>List the things that move or change state along the journey, and, critically, how each one is identified in each system. The order number in the ordering system, the delivery reference in the warehouse system and the invoice number in finance need to be linkable. Gaps in identity are the most common obstacle to observing a journey, and finding them early is valuable in itself.</p>
+  <h3>Step 4: define stages and the events that mark them</h3>
+  <p>Agree what event marks entry to and exit from each stage, and write the definitions down. These become the <a href="/resources/how-business-events-connect-to-outcomes/">business events</a> that feed the model. Keep stages coarse at first; you can always split a stage later.</p>
+  <h3>Step 5: attach objectives, owners and expectations</h3>
+  <p>Turn the promise from step 1 into one or two objectives, each with an owner. Then add expectations for the hand-offs and dependencies that most often cause trouble. You will know which those are from step 2.</p>
+  <h3>Step 6: connect the data and check the model against reality</h3>
+  <p>Load real events and look at real journeys through the model. Do the volumes match what people expect? Do the stage times look right? Are there entities that cannot be linked? Every discrepancy is either a data problem or a misunderstanding of the business, and both are worth knowing about. Only when the model matches reality closely enough that its owners trust it is it ready to monitor.</p>
+  <h3>Step 7: use it, then expand</h3>
+  <p>Put the model to work on the question that made the journey painful. Then expand outward, adding the dependencies that the first journey relies on and then the adjacent journeys that share its entities.</p>
+  <Diagram src="/diagrams/operating-model-incremental-growth.svg" alt="Three panels showing a model growing. Phase 1, one critical journey: a chain of five connected entities with one process and two objectives with owners. Phase 2, its dependencies: the same chain with four additional dependency nodes for systems, teams and suppliers, and expectations on each hand-off. Phase 3, adjacent journeys: a second chain shares entities with the first, so they are reused rather than redefined." caption="Each phase reuses what came before. The second journey is far cheaper to model than the first, because customers, orders and invoices are already defined." zoom />
+  <p>The economics of this approach are favourable. The first journey is the expensive one, because it establishes entity definitions, identity links and conventions. The second journey reuses most of them. By the third or fourth, much of the business's core vocabulary is already modelled, and each addition is mostly about the stages and expectations specific to that journey.</p>
+
+  <h2>What the model lets you ask</h2>
+  <p>A model is justified by the questions it lets you answer quickly. With the order-to-cash model above, connected to live events, questions like these become routine rather than projects:</p>
+  <ul>
+    <li>Which orders due for delivery this week depend on a carrier that is currently missing its collection expectation, and which customers do they belong to?</li>
+    <li>On-time-in-full fell two points last week. Which stage's expectation slipped first, and at which warehouse?</li>
+    <li>How much revenue is currently invoiced but uncollected beyond terms, and how much of that traces back to late or incomplete deliveries?</li>
+    <li>If the second warehouse closes for a day, which commitments are exposed, and who owns them?</li>
+    <li>Which expectations have been breached most often in the last quarter, and are they the ones with owners?</li>
+  </ul>
+  <p>Each of these is a traversal of the model: start at one entity or expectation, follow relationships, and read the objectives and owners you reach. That is what the <a href="/platform/business-graph/">Business Graph</a> in Panoptes is designed to support.</p>
+
+  <h2>Anti-patterns to avoid</h2>
+  <ul>
+    <li><strong>Boiling the ocean.</strong> Modelling every entity in every system before answering a single question. Start with one journey.</li>
+    <li><strong>Modelling systems instead of the business.</strong> Tables and API objects are not entities. "Customer" may be spread across four systems; the model should have one customer, linked to all four.</li>
+    <li><strong>Modelling the org chart.</strong> Teams belong in the model as owners and sometimes as capacity, but the structure should follow how work flows, not how people report.</li>
+    <li><strong>Objectives without owners</strong>, or owners named as individuals. Use roles, and make sure every objective has one.</li>
+    <li><strong>Precision theatre.</strong> Twenty stages and forty expectations on day one. Coarse and correct beats detailed and wrong.</li>
+    <li><strong>A model nobody uses.</strong> If the model is not consulted when something goes wrong, it will quietly decay. Tie it to a live question from the start.</li>
+  </ul>
+
+  <h2>Keeping the model alive</h2>
+  <p>Businesses change, and a model that does not change with them becomes misleading. A few habits keep it current. Version the definitions of entities, stages, objectives and expectations, so a change in a metric can be distinguished from a change in how it is defined. Give each part of the model an owner, the same roles that own the objectives. Review expectations when the business changes something deliberately, such as a new carrier, a new policy or a new product, rather than waiting for them to fire. And treat discrepancies between model and reality as findings, not nuisances. The <a href="/integrations/security-governance/">security and governance</a> page describes how ownership and versioning are approached in Panoptes.</p>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>An operating model makes explicit how the business works: entities, relationships, processes, objectives, owners and expectations, connected.</li>
+    <li>It differs from an org chart, process map or data model in that it joins structure, flow, purpose and responsibility in one place that can be observed.</li>
+    <li>Expectations, the operational promises behind each objective, are what make early warning possible.</li>
+    <li>Start with one commercially important, cross-team, observable journey. Walk the real process, fix identity gaps, define stages by events, and attach objectives and owners.</li>
+    <li>Expand outward through dependencies and adjacent journeys. Each addition reuses what came before, so the model gets cheaper to extend as it grows.</li>
+  </ul>
+  <p>For how this model fits into the wider loop of connecting, observing, understanding and acting, see <a href="/how-it-works/">how Panoptes works</a> and <a href="/resources/what-is-business-observability/">what is business observability</a>.</p>
+</ArticleLayout>

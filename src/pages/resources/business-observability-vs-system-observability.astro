@@ -1,0 +1,108 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/Diagram.astro';
+---
+<ArticleLayout
+  title="Business observability vs system observability"
+  metaTitle="Business Observability vs System Observability"
+  description="Which ideas carry over from software observability — signals, SLOs, tracing, cardinality — where the analogy breaks down, and how system and business views connect."
+  eyebrow="Comparison"
+  dek="Software teams spent a decade learning how to understand complex systems from their outputs. Many of those ideas translate remarkably well to a business. Some do not. And the most interesting failures happen where the two views meet."
+  related={['/resources/what-is-business-observability/', '/resources/how-business-events-connect-to-outcomes/', '/resources/business-process-monitoring/']}
+>
+  <p>If you work near an engineering team, you have probably heard the word <em>observability</em> used about software: the practice of instrumenting systems so that engineers can understand their behaviour — including failures nobody predicted — from the telemetry they emit. Business observability borrows the word deliberately. The question is how much of the substance comes with it.</p>
+  <p>This article takes the core ideas of system observability one at a time, shows what each looks like when applied to a business, and is candid about where the translation fails. It ends with the case that matters most in practice: when the systems are healthy but the business is not.</p>
+
+  <h2>The short version</h2>
+  <p>System observability watches <strong>software</strong>: services, requests, queues, databases. Its unit is the request; its timescale is milliseconds to minutes; its question is "is the system working, and if not, why?"</p>
+  <p>Business observability watches <strong>the business</strong>: orders, cases, payments, customers, commitments. Its unit is the business entity moving through a process; its timescale is minutes to weeks; its question is "is the business working as intended, and if not, why — and who should act?"</p>
+  <p>Five ideas map across. Two translate almost directly; three need real adaptation.</p>
+  <Diagram src="/diagrams/bo-vs-sysobs-concept-map.svg" alt="Mapping of software observability concepts to business observability: telemetry to business events, SLOs to business objectives, distributed tracing to journey tracing, high cardinality to segments, incidents to interventions — with fit rated strong or adapt" caption="Five concepts that carry over. Tracing and cardinality translate almost directly; signals, objectives and incident practice need adapting." zoom class="hide-sm" />
+  <Diagram src="/diagrams/bo-vs-sysobs-concept-map-vertical.svg" alt="Mapping of software observability concepts to business observability: telemetry to business events, SLOs to business objectives, distributed tracing to journey tracing, high cardinality to segments, incidents to interventions — with fit rated strong or adapt" caption="Five concepts that carry over. Tracing and cardinality translate almost directly; signals, objectives and incident practice need adapting." class="show-sm" />
+
+  <h2>Signals: from telemetry to business events</h2>
+  <p>Software observability is often described in terms of three kinds of telemetry: <strong>metrics</strong> (numeric measurements over time), <strong>logs</strong> (records of discrete events) and <strong>traces</strong> (the path of a single request through many services). Each answers a different kind of question, and the real power comes from moving between them.</p>
+  <p>A business has close equivalents, but they look different:</p>
+  <table>
+    <thead><tr><th>Software signal</th><th>Business equivalent</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>Metric</td><td>Business indicator, evaluated against expectation</td><td>Share of invoices paid within terms, by customer tier</td></tr>
+      <tr><td>Log event</td><td>Business event — a state change of a business entity</td><td>"Invoice 8812 moved from <em>issued</em> to <em>overdue</em>"</td></tr>
+      <tr><td>Trace</td><td>Journey — all events for one entity across systems</td><td>One merchant from application to first transaction</td></tr>
+      <tr><td>(implicit) state</td><td>Business state — balances, open work, commitments</td><td>412 open onboarding cases, 37 within six hours of breach</td></tr>
+    </tbody>
+  </table>
+  <p>The last row is the first adaptation. Software telemetry is mostly about <em>things that happened</em>. Business observability also needs <em>things that are currently true</em>: how many cases are open, how much cash is outstanding, which commitments are at risk. Much of the useful business signal is in the inventory of open work, not in the stream of completed events.</p>
+  <p>The second adaptation is semantic. A log line from a web server has a fairly fixed meaning. A business event like "customer activated" may be defined differently by product, sales and finance. Before business signals can be trusted, their definitions have to be made explicit and owned — a problem software teams rarely face to the same degree.</p>
+
+  <h2>From SLOs to business-level objectives</h2>
+  <p>One of the most useful ideas in modern operations practice is the <strong>service level objective</strong>: a target for the reliability users actually experience (say, 99.9% of checkout requests succeed within 300 milliseconds over 28 days), with an <strong>error budget</strong> — the amount of failure the target allows — used to decide when to slow down and fix things.</p>
+  <p>The idea translates well, and it is underused in business operations. A business-level objective has the same shape:</p>
+  <ul>
+    <li>a <strong>population</strong> — approved merchants, first orders, priority support cases;</li>
+    <li>a <strong>good event</strong> — activated within 48 hours, delivered within the promise, resolved within four business hours;</li>
+    <li>a <strong>target</strong> and a <strong>window</strong> — 95% over a rolling 28 days.</li>
+  </ul>
+  <p>The budget follows naturally. Here is a worked example with invented numbers. A hypothetical payments company expects about 2,000 merchant approvals over 28 days, with an objective that 95% are activated within 48 hours. Its <em>commitment budget</em> is therefore around 100 late activations in the window. Ten days in, 60 activations have been late. At an even pace, about 36 would have been used by now (100 × 10 ÷ 28), so the budget is burning at roughly 1.7 times the sustainable rate. Without intervention, it will be exhausted around day 17.</p>
+  <p>That framing changes the conversation. Instead of "activation SLA is 97% this month, fine", the onboarding lead sees "we are on course to break our commitment in a week". The <a href="/use-cases/sla-monitoring/">SLA monitoring use case</a> walks through this pattern in more detail.</p>
+  <div class="callout">
+    <strong>Where the analogy needs care</strong>
+    Software error budgets work partly because engineering teams can trade reliability against release speed within their own control. Business commitment budgets often depend on other teams, suppliers and customers. A burning budget should trigger a conversation with the people who influence the outcome, not just the team that reports it.
+  </div>
+
+  <h2>From distributed tracing to journey tracing</h2>
+  <p>Distributed tracing follows a single request as it passes through many services, recording each step as a timed span. It made a class of problem visible that metrics alone hid: a request that is slow not because any service is slow, but because it waits in an unexpected place.</p>
+  <p>This is the most direct translation of all. A business journey is a trace with a longer clock. Replace the request ID with a business key — order number, case reference, application ID — and the spans with stage transitions recorded by different systems, and you can see one entity's path end to end.</p>
+  <Diagram src="/diagrams/bo-vs-sysobs-journey-trace.svg" alt="Waterfall of one hypothetical order across web, payments, risk queue, warehouse, logistics and carrier: about 17 hours waiting in fraud review for 30 minutes of work, delivered at 50 hours against a 48-hour promise" caption="A journey trace for one hypothetical order. The work took minutes; the waiting took most of a day — and broke the promise." zoom />
+  <p>The waterfall makes the same point a software trace makes, translated into business terms. The order was not late because any team was slow at its work. It was late because it waited for 17 hours in a fraud review queue for about 30 minutes of actual review. No single system's dashboard would show that: the payments system saw a fast authorisation, the warehouse saw a normal pick time, the carrier delivered within its own window.</p>
+  <p>Two adaptations matter. First, business journeys rarely share a single ID across systems; joining the web order, the payment reference, the warehouse pick and the carrier tracking number is a modelling task in its own right. Second, journeys include human steps and waiting, which tracing tools were never designed to treat as first-class. In business terms, the waiting is usually the story. <a href="/platform/journey-intelligence/">Journey Intelligence</a> describes how this is approached.</p>
+
+  <h2>From cardinality to segments</h2>
+  <p>Software observability practitioners talk about <strong>high cardinality</strong>: the ability to slice telemetry by dimensions with many distinct values — user ID, build version, endpoint, region — because rare failures hide in specific combinations. An error rate of 0.1% overall might be 30% for one customer on one app version.</p>
+  <p>The business equivalent is segmentation, and the lesson is identical: averages hide the problem. A collections rate that looks stable overall can be falling sharply for one customer tier paying by one method in one country. The dimensions are different — cohort, channel, product, payment route, region, account manager, supplier — but the principle that you must be able to cut by any meaningful combination, quickly, carries over intact.</p>
+  <p>The adaptation is about volume. A web service may handle millions of requests an hour; a business process may handle a few hundred cases a day. Slice that too finely and every segment is noise. Business observability needs statistical humility that high-volume telemetry can sometimes ignore: wider expectation bands for small segments, minimum sample sizes before raising a signal, and a preference for segments that correspond to real operational differences.</p>
+
+  <h2>Where the analogy breaks down</h2>
+  <p>It is tempting to treat business observability as "the same thing, pointed at business metrics". Several differences are deep enough to make that a mistake.</p>
+  <table>
+    <thead><tr><th>Difference</th><th>In software</th><th>In a business</th><th>Consequence</th></tr></thead>
+    <tbody>
+      <tr><td>Feedback speed</td><td>Seconds to minutes</td><td>Hours to months</td><td>Leading indicators matter more; projections replace instant confirmation.</td></tr>
+      <tr><td>Volume</td><td>Very high</td><td>Often modest</td><td>Noise is a real risk; expectations need to account for sample size.</td></tr>
+      <tr><td>Definitions</td><td>Mostly fixed by code</td><td>Contested between teams</td><td>Definitions must be explicit, versioned and owned.</td></tr>
+      <tr><td>Actors</td><td>Machines</td><td>People, partners, customers</td><td>Remediation is a coordination problem, not a deploy.</td></tr>
+      <tr><td>Causality</td><td>Often reproducible</td><td>Confounded by season, mix and behaviour</td><td>Root cause claims need explicit evidence and care.</td></tr>
+      <tr><td>Objectives</td><td>Stable for long periods</td><td>Change with strategy</td><td>Objectives need owners and periodic review.</td></tr>
+      <tr><td>Ethics</td><td>Observing machines</td><td>Risk of observing people</td><td>Observe processes and outcomes, not individuals.</td></tr>
+    </tbody>
+  </table>
+  <p>Two of these deserve emphasis. On causality: when a software error rate spikes after a deploy, rolling back usually confirms the cause within minutes. When conversion falls after a price change, the drop might also coincide with a competitor's promotion, a school holiday and a shift in channel mix. Business observability should surface the price change as a strong candidate and be honest that confirmation requires comparison or experiment. <a href="/platform/root-cause-analysis/">Root Cause Analysis</a> is designed around that distinction.</p>
+  <p>On actors: a software incident ends when the service is restored. A business deviation often ends only when several teams change what they are doing, and the outcome may take weeks to recover. That is why business observability puts as much weight on ownership and follow-through as on detection.</p>
+
+  <h2>How the two connect: up, but converting worse</h2>
+  <p>The two disciplines are not rivals. They watch adjacent layers of the same organisation, and the most expensive problems are often visible only when you look at both.</p>
+  <p>Consider a hypothetical retailer that ships a checkout release on a Wednesday. The release replaces the address form with an autocomplete field. From the engineering team's perspective, everything is fine: checkout availability stays above its 99.9% objective, latency is unchanged, there are no new errors. Every system-level signal is green.</p>
+  <Diagram src="/diagrams/bo-vs-sysobs-two-layers.svg" alt="Two panels: the system view shows checkout API availability steady above its SLO; the business view shows checkout conversion falling below its expected band after release 7.3, concentrated in mobile new customers" caption="Healthy systems, unhealthy outcome. Neither view alone tells the story; together they point straight at the release." zoom />
+  <p>From the business perspective, checkout conversion drops below its expected range the same afternoon. Segmenting shows the drop is concentrated among new customers on mobile — people with no saved address, typing on a small screen, for whom the autocomplete often suggests the wrong match. Returning customers, who use saved addresses, are unaffected, which is why the blended number moved only modestly.</p>
+  <p>No system is down, so no technical alert fires. Without a business-level objective on conversion, the drop shows up days later in a weekly report, diluted by returning-customer traffic. With both views on a shared timeline — release events visible alongside conversion by segment — the connection is obvious within hours, and the decision (revert the field for new mobile customers while the autocomplete is fixed) belongs to someone specific.</p>
+  <p>The general lesson: system observability tells you whether the machinery is working; business observability tells you whether the machinery is doing its job. A green system dashboard is a necessary condition for a healthy business, not a sufficient one.</p>
+
+  <h2>Practices worth sharing between teams</h2>
+  <p>Organisations that already run mature system observability have a head start. Several practices transfer with little modification:</p>
+  <ul>
+    <li><strong>One change timeline.</strong> Put software releases, feature flags, pricing changes, rule updates, campaigns and supplier changes on the same timeline. The single most useful question in any investigation is "what changed?", and it is only answerable if changes from every team are recorded in one place.</li>
+    <li><strong>Shared keys.</strong> Agree that business keys — order, case, invoice, account — are propagated through systems and events, just as request IDs are propagated through services. It makes journey tracing possible later. The <a href="/integrations/api/">API &amp; events</a> page sketches what such events can look like.</li>
+    <li><strong>Joint reviews.</strong> When a business deviation turns out to have a technical cause, or a technical incident has a business impact, review it together. Engineers learn which failures matter commercially; operators learn which signals precede technical trouble.</li>
+    <li><strong>Blameless framing.</strong> The postmortem culture that serves engineering well — focus on systems and conditions, not on individuals — matters even more when the system includes people's daily work.</li>
+  </ul>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>Business observability borrows its core idea from software: understand a complex system from its outputs, including failures nobody predicted.</li>
+    <li>Tracing and cardinality translate almost directly into journey tracing and segmentation. Signals, objectives and incident practice translate with adaptation.</li>
+    <li>Commitment budgets — the business version of error budgets — turn "attainment is fine this month" into "we will break our promise next week unless we act".</li>
+    <li>The analogy breaks on feedback speed, volume, contested definitions, human actors, confounded causality and ethics. Treat those differences as design requirements.</li>
+    <li>The two views connect at the boundary: healthy systems can still produce unhealthy outcomes. Shared timelines and shared keys make that boundary visible.</li>
+  </ul>
+  <p>For how individual events add up to outcomes, read <a href="/resources/how-business-events-connect-to-outcomes/">how business events connect to outcomes</a>. For the broader definition, start with <a href="/resources/what-is-business-observability/">what is business observability?</a></p>
+</ArticleLayout>

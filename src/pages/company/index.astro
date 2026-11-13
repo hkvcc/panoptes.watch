@@ -1,0 +1,286 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import CopyEmail from '../../components/CopyEmail.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import { SITE } from '../../data/site';
+
+const crumbs = [{ label: 'Company', href: '/company/' }];
+
+const mission = [
+  { k: 'Visible', i: 'eye', d: 'How work actually flows — from first contact to cash collected, from order to delivery — shown as it happens, across every system involved, not reassembled from exports at month end.' },
+  { k: 'Understandable', i: 'rootcause', d: 'When an outcome moves, the reasons should be traceable: which process changed first, which dependency it rests on, and how confident anyone can be about the link.' },
+  { k: 'Actionable', i: 'actions', d: 'A finding is only useful once someone owns it. Visibility should lead to a named owner, a coordinated response and a measured result.' },
+];
+
+const beliefs = [
+  { t: 'Observe the business, not the people', d: 'Panoptes watches processes, commitments and outcomes — an onboarding queue, a payment route, a fulfilment cut-off. It is not designed to monitor individual employees, and we will not build it to.' },
+  { t: 'Explain, don’t just alert', d: 'An alert that says “conversion is down” starts a meeting. An explanation that shows what moved first, and what depends on it, starts the fix. Every signal should arrive with its context.' },
+  { t: 'Correlation is not causation', d: 'Two things changing together is a lead, not a verdict. We label evidence for what it is and keep the difference between “related to” and “caused by” visible to the people deciding.' },
+  { t: 'Humans own decisions', d: 'Software can rank, trace and suggest. Choosing what to do — and being accountable for it — stays with the people who run the business.' },
+  { t: 'Definitions belong to the business', d: 'What counts as an “active customer” or a “late order” is a business decision. Definitions should be explicit, versioned and owned, not buried in dashboard logic.' },
+  { t: 'Start with what already exists', d: 'Businesses already generate the signals they need, in the systems they already run. Observability should connect those, not demand a new system of record.' },
+];
+
+const logos = [
+  { name: 'Horizontal logo', note: 'Primary logo for light backgrounds.', file: 'panoptes-horizontal-light', tile: 'light', wide: true },
+  { name: 'Horizontal logo, reversed', note: 'For dark or near-black backgrounds.', file: 'panoptes-horizontal-dark', tile: 'dark', wide: true },
+  { name: 'Stacked logo', note: 'For square or constrained spaces.', file: 'panoptes-stacked', tile: 'light' },
+  { name: 'Symbol', note: 'The P-shaped aperture and signal node.', file: 'panoptes-symbol-purple', tile: 'light' },
+  { name: 'Symbol, white', note: 'For use on purple or dark backgrounds.', file: 'panoptes-symbol-white', tile: 'purple' },
+  { name: 'App icon', note: 'Rounded tile for avatars and app contexts.', file: 'panoptes-app-icon', tile: 'soft' },
+];
+const more = ['panoptes-horizontal-mono-black', 'panoptes-horizontal-mono-white', 'panoptes-horizontal-purple', 'panoptes-stacked-dark', 'panoptes-symbol-black'];
+
+const schema = [
+  {
+    '@type': 'Organization', '@id': `${SITE.origin}/#org`, name: 'Panoptes', url: SITE.origin,
+    logo: `${SITE.origin}/logos/png/panoptes-symbol-purple-512.png`, email: SITE.salesEmail, slogan: SITE.tagline,
+    description: 'Panoptes builds Business Observability software: a connected, continuously updated view of how a business actually operates.',
+    contactPoint: { '@type': 'ContactPoint', contactType: 'sales', email: SITE.salesEmail },
+  },
+  { '@type': 'AboutPage', name: 'About Panoptes', url: `${SITE.origin}/company/`, about: { '@id': `${SITE.origin}/#org` } },
+];
+---
+<BaseLayout title="About Panoptes" description="Panoptes exists to make the real workings of every business visible, understandable and actionable. Our mission, the idea behind the name, what we believe and our brand assets." ogImage="/social/og-company.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="About Panoptes" title="Making the real workings of every business <span class='gradient-text'>visible</span>." lede="Software teams can see inside their systems at any moment. The people who run the business usually cannot see inside the business itself. Panoptes exists to close that gap." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/company/vision/">Read the vision<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/platform/">Explore the platform</a>
+    </div>
+    <Fragment slot="visual">
+      <div class="mission-card">
+        <p class="eyebrow">Our mission</p>
+        <p class="mission-text">To make the real workings of every business <em>visible</em>, <em>understandable</em>, and <em>actionable</em>.</p>
+        <div class="mission-foot">
+          <span class="badge">Observability for your entire business</span>
+        </div>
+      </div>
+    </Fragment>
+  </PageHero>
+
+  <!-- Mission, unpacked -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="The mission, unpacked" title="Three words, each doing real work." lede="Most businesses are not short of data. They are short of a connected, current picture of how the business operates — and a way to act on what it shows." />
+      <div class="grid grid-3">
+        {mission.map((m, i) => (
+          <article class="card mission-step reveal">
+            <div class="ms-top"><span class="icon-tile"><Icon name={m.i} /></span><span class="ms-n mono">0{i + 1}</span></div>
+            <h3>{m.k}</h3>
+            <p class="muted">{m.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- The name -->
+  <section class="section section-alt" id="the-name">
+    <div class="container split">
+      <div class="reveal">
+        <p class="eyebrow">The idea behind the name</p>
+        <h2>Many eyes, one watchful picture.</h2>
+        <p>In Greek myth, Argus Panoptes was a giant with a hundred eyes — a watchman who never fully slept, because some of his eyes were always open. <em>Panoptes</em> means “all-seeing”.</p>
+        <p>We take the name as a description of a kind of awareness: comprehensive and continuous. Not a single report reviewed once a month, but many points of observation across orders, payments, cases and commitments, brought together into one picture that stays current.</p>
+        <div class="name-note">
+          <Icon name="shield" />
+          <div>
+            <strong>Awareness, not surveillance.</strong>
+            <p>“All-seeing” describes how much of the business Panoptes can observe — not who it watches. Panoptes observes processes and outcomes, not individuals. Its unit of attention is an onboarding stage or a payment route, never a person’s keystrokes or calendar.</p>
+          </div>
+        </div>
+        <p class="small muted mt-1">The symbol follows the same idea: a P-shaped aperture, with a detached node for the signal it has just picked up.</p>
+      </div>
+      <div class="reveal name-art">
+        <Diagram src="/illustrations/panoptes-many-eyes-aperture.svg" alt="Illustration: the Panoptes aperture at the centre, surrounded by many watchful points on business processes — orders, payments, invoices, fulfilment, support cases, onboarding and renewals — with one point highlighted as an emerging signal" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Beliefs -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="What we believe" title="Principles we build by." lede="These shape what Panoptes does — and, just as often, what it deliberately does not do." />
+      <ol class="beliefs">
+        {beliefs.map((b, i) => (
+          <li class="belief reveal">
+            <span class="b-n mono">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{b.t}</h3>
+            <p class="muted">{b.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Vision in brief -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="vis-head">
+        <div>
+          <p class="eyebrow">The vision, in brief</p>
+          <h2>Observability is where a Business Operating System starts.</h2>
+        </div>
+        <div>
+          <p class="lede">We think business observability will become as fundamental to running a business as technical observability is to running software.</p>
+          <p class="muted">Once the business is observable, the same connected model can become the place where priorities are set, decisions are reasoned through and actions are coordinated. Panoptes is building the observability foundation first; the later stages are where we are heading, not what exists today.</p>
+          <a href="/company/vision/" class="btn btn-ghost mt-1">Read: Toward a Business Operating System</a>
+        </div>
+      </div>
+      <div class="mt-3 reveal">
+        <div class="hide-sm"><Diagram src="/diagrams/business-operating-system-evolution.svg" alt="Five-stage evolution: disconnected systems, connected business model, continuous observability, decision intelligence, coordinated actions" frame="from fragmented systems to a business operating system" illustrative={false} zoom /></div>
+        <div class="show-sm"><Diagram src="/diagrams/business-operating-system-evolution-vertical.svg" alt="Five-stage evolution: disconnected systems, connected business model, continuous observability, decision intelligence, coordinated actions" frame="toward a business operating system" illustrative={false} /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand -->
+  <section class="section" id="brand">
+    <div class="container">
+      <SectionHead eyebrow="Brand assets" title="Logo and symbol." lede="Writing about Panoptes or linking to us? Use these files rather than recreating the mark. Please keep clear space around the logo, don’t recolour, stretch or rotate it, and don’t use it in a way that implies partnership or endorsement." />
+      <div class="logo-grid">
+        {logos.map((l) => (
+          <figure class:list={['logo-card reveal', { wide: l.wide }]}>
+            <div class:list={['logo-tile', `tile-${l.tile}`]}>
+              <img src={`/logos/${l.file}.svg`} alt={`Panoptes ${l.name.toLowerCase()}`} decoding="async" />
+            </div>
+            <figcaption>
+              <span class="lc-name">{l.name}</span>
+              <span class="lc-note">{l.note}</span>
+              <span class="lc-dl">
+                <a href={`/logos/${l.file}.svg`} download>SVG</a>
+                <a href={`/logos/png/${l.file}-1024.png`} download>PNG 1024</a>
+                <a href={`/logos/png/${l.file}-512.png`} download>PNG 512</a>
+              </span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <details class="more-logos">
+        <summary>More variants (mono, purple, reversed stacked)</summary>
+        <ul>
+          {more.map((f) => (
+            <li><span class="mono">{f}</span><span class="lc-dl"><a href={`/logos/${f}.svg`} download>SVG</a><a href={`/logos/png/${f}-1024.png`} download>PNG 1024</a><a href={`/logos/png/${f}-256.png`} download>PNG 256</a></span></li>
+          ))}
+        </ul>
+      </details>
+      <dl class="brand-colours">
+        <div><dt><span class="sw" style="background:#7126E8" aria-hidden="true"></span>Panoptes purple</dt><dd class="mono">#7126E8</dd></div>
+        <div><dt><span class="sw" style="background:#9965FF" aria-hidden="true"></span>Signal violet</dt><dd class="mono">#9965FF</dd></div>
+        <div><dt><span class="sw" style="background:#1E0F3D" aria-hidden="true"></span>Deep ink</dt><dd class="mono">#1E0F3D</dd></div>
+        <div><dt><span class="sw" style="background:#0A0710" aria-hidden="true"></span>Near black</dt><dd class="mono">#0A0710</dd></div>
+      </dl>
+      <p class="note mt-1">For other formats or press enquiries, write to {SITE.salesEmail}.</p>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section section-alt">
+    <div class="container contact-split">
+      <div class="reveal">
+        <p class="eyebrow">Get in touch</p>
+        <h2>Talk to the team.</h2>
+        <p class="lede">Questions about the product, a conversation about how your business could be made observable, or something else entirely — email reaches a person.</p>
+        <CopyEmail large />
+        <div class="btn-row mt-2">
+          <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+          <a class="btn" href="/company/contact/">Contact options</a>
+        </div>
+      </div>
+      <div class="reveal">
+        <RelatedLinks title="Keep exploring" items={[
+          { label: 'Vision', href: '/company/vision/', desc: 'Toward a Business Operating System', icon: 'compass' },
+          { label: 'What is Business Observability?', href: '/business-observability/', desc: 'The category, in one page', icon: 'book' },
+          { label: 'How Panoptes works', href: '/how-it-works/', desc: 'Connect → Model → Observe → Understand → Act', icon: 'flow' },
+          { label: 'Security & Governance', href: '/integrations/security-governance/', desc: 'Access, ownership and auditability', icon: 'shield' },
+        ]} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .mission-card { position: relative; padding: clamp(28px, 4vw, 44px); border-radius: var(--radius-xl); border: 1px solid var(--border); background: linear-gradient(160deg, var(--surface) 0%, var(--surface-2) 100%); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .mission-card::after { content: ''; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%; border: 1px solid var(--border-strong); box-shadow: 0 0 0 40px color-mix(in srgb, var(--accent) 6%, transparent), 0 0 0 80px color-mix(in srgb, var(--accent) 3%, transparent); pointer-events: none; }
+  .mission-text { position: relative; font: 600 clamp(1.5rem, 2.6vw, 2.1rem)/1.25 var(--font-display); letter-spacing: -0.02em; margin: 0; color: var(--text); text-wrap: balance; }
+  .mission-text em { font-style: normal; color: var(--accent-text); }
+  .mission-foot { margin-top: 1.6rem; position: relative; }
+  @media (max-width: 600px) { .mission-card::after { right: -150px; top: -150px; } }
+  .ms-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .ms-n { color: var(--text-3); font-size: .8rem; }
+  .mission-step h3 { margin-top: .4rem; }
+
+  .name-note { display: flex; gap: 14px; margin-top: 1.4rem; padding: 1.1rem 1.2rem; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); background: var(--surface); }
+  .name-note :global(svg) { width: 22px; height: 22px; color: var(--accent-text); flex: none; margin-top: 2px; }
+  .name-note p { margin: .3rem 0 0; color: var(--text-2); font-size: .95rem; }
+  .name-art { max-width: 560px; justify-self: center; width: 100%; }
+
+  .beliefs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--border); }
+  .belief { padding: 1.8rem 1.6rem 1.8rem 0; border-bottom: 1px solid var(--border); }
+  .belief:not(:nth-child(3n + 1)) { padding-left: 1.6rem; border-left: 1px solid var(--border); }
+  .b-n { display: block; color: var(--accent-text); font-size: .8rem; margin-bottom: .9rem; }
+  .belief h3 { font-size: 1.2rem; }
+  .belief p { margin: 0; }
+  @media (max-width: 900px) {
+    .beliefs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .belief, .belief:not(:nth-child(3n + 1)) { padding: 1.5rem 1.2rem 1.5rem 0; border-left: 0; }
+    .belief:nth-child(2n) { padding-left: 1.2rem; border-left: 1px solid var(--border); }
+  }
+  @media (max-width: 600px) {
+    .beliefs { grid-template-columns: minmax(0, 1fr); }
+    .belief, .belief:nth-child(2n) { padding: 1.4rem 0; border-left: 0; }
+  }
+
+  .vis-head { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(24px, 5vw, 72px); align-items: end; }
+  .vis-head h2 { margin: 0; }
+  @media (max-width: 860px) { .vis-head { grid-template-columns: 1fr; } }
+
+  .logo-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .logo-card { margin: 0; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; }
+  .logo-card.wide { grid-column: span 2; }
+  .logo-tile { display: grid; place-items: center; height: 170px; padding: 28px; border-bottom: 1px solid var(--border); }
+  .logo-tile img { max-height: 100%; max-width: min(100%, 300px); width: auto; height: auto; }
+  .wide .logo-tile img { width: min(100%, 300px); }
+  .logo-card:not(.wide) .logo-tile img { height: 96px; }
+  .tile-light { background: #FFFFFF; }
+  .tile-dark { background: #0A0710; }
+  .tile-purple { background: #7126E8; }
+  .tile-soft { background: #F8F5FF; }
+  .logo-card figcaption { display: grid; gap: 4px; padding: 14px 16px 16px; }
+  .lc-name { font-weight: 600; font-size: .95rem; }
+  .lc-note { font-size: .84rem; color: var(--text-2); }
+  .lc-dl { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .lc-dl a { font: 500 .74rem/1 var(--font-mono); padding: 6px 9px; border: 1px solid var(--border-strong); border-radius: 999px; color: var(--text-2); text-decoration: none; }
+  .lc-dl a:hover { border-color: var(--accent); color: var(--accent-text); }
+  @media (max-width: 1000px) { .logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) {
+    .logo-grid { gap: 12px; }
+    .logo-card.wide { grid-column: 1 / -1; }
+    .logo-tile { height: 120px; padding: 20px; }
+    .logo-card:not(.wide) .logo-tile img { height: 64px; }
+    .logo-card figcaption { padding: 12px; }
+    .lc-note { display: none; }
+  }
+
+  .more-logos { margin-top: 1.4rem; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; background: var(--surface); }
+  .more-logos summary { cursor: pointer; font-weight: 600; font-size: .95rem; }
+  .more-logos ul { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 10px; }
+  .more-logos li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .more-logos li .mono { font-size: .84rem; color: var(--text-2); overflow-wrap: anywhere; }
+  .more-logos .lc-dl { margin: 0; }
+
+  .brand-colours { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 1.6rem 0 0; }
+  .brand-colours > div { position: relative; padding: 12px 14px 12px 62px; min-height: 62px; display: flex; flex-direction: column; justify-content: center; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  .sw { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); }
+  .brand-colours dt { font-weight: 600; font-size: .9rem; }
+  .brand-colours dd { margin: 0; color: var(--text-2); font-size: .8rem; }
+  @media (max-width: 860px) { .brand-colours { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .contact-split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .contact-split :global(.related-list) { grid-template-columns: minmax(0, 1fr); }
+  @media (max-width: 900px) { .contact-split { grid-template-columns: minmax(0, 1fr); } }
+</style>

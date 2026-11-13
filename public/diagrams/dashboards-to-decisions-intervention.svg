@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" fill="none">
+<!--STYLE-->
+<title>Measuring an intervention: invoices paid within terms rose six points after a change to reminders, but a comparison group also recovered, so the estimated effect is about three points</title>
+<g class="d-t">
+<text x="60" y="20" font-size="12" font-weight="600" class="d-text">Invoices paid within terms, % (hypothetical)</text>
+<g class="d-line" stroke-width="1"><path d="M60 50H588M60 123.3H588M60 196.7H588M60 270H588"/></g>
+<g font-size="10" class="d-tm d-muted" text-anchor="end"><text x="52" y="54">90</text><text x="52" y="127">85</text><text x="52" y="200">80</text><text x="52" y="274">75</text></g>
+<g font-size="10" class="d-tm d-muted" text-anchor="middle"><text x="60" y="290">WEEK 0</text><text x="324" y="290">WEEK 8</text><text x="588" y="290">WEEK 16</text></g>
+<path d="M324 211.3L357 189.3L390 167.3L423 152.7L456 140.9L489 133.6L522 129.2L555 126.3L588 124.7L588 167.3L555 168.7L522 171.7L489 176.1L456 182L423 189.3L390 196.7L357 205.4Z" class="d-soft"/>
+<path d="M324 211.3H588" class="d-line" stroke-width="1.5" stroke-dasharray="2 4"/>
+<path d="M324 40V270" class="d-accent-s" stroke-width="1.5" stroke-dasharray="4 4"/>
+<text x="330" y="44" font-size="11" class="d-accent" font-weight="600">Reminder sequence changed</text>
+<path d="M60 108.7L93 116L126 129.2L159 140.9L192 160L225 173.2L258 187.9L291 199.6L324 211.3" class="d-accent-s" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M324 211.3L357 205.4L390 196.7L423 189.3L456 182L489 176.1L522 171.7L555 168.7L588 167.3" class="d-accent-2-s" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round"/>
+<path d="M324 211.3L357 189.3L390 167.3L423 152.7L456 140.9L489 133.6L522 129.2L555 126.3L588 124.7" class="d-accent-s" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="588" cy="124.7" r="4" class="d-accent"/><circle cx="588" cy="167.3" r="4" class="d-accent-2"/>
+<g font-size="11"><text x="598" y="128" class="d-accent" font-weight="600">Actual 85%</text><text x="598" y="171" class="d-text">Comparison 82%</text><text x="598" y="215" class="d-muted">Week-8 level 79%</text></g>
+<text x="372" y="104" font-size="11" class="d-text" font-weight="600">Estimated effect ≈ 3 pts</text>
+<text x="372" y="240" font-size="11" class="d-muted">Naive before/after would claim ≈ 6 pts</text>
+</g>
+</svg>

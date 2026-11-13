@@ -1,0 +1,109 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/Diagram.astro';
+---
+<ArticleLayout
+  title="Business observability vs business intelligence"
+  metaTitle="Business Observability vs BI: Differences and How They Fit"
+  description="How business observability differs from business intelligence — questions, latency, grain, models versus reports, users — with a detailed comparison and when BI is the right tool."
+  eyebrow="Comparison"
+  dek="They draw on the same data and are often confused. They answer different questions, at different speeds, for different moments in a decision. Here is a careful comparison — including when BI is simply the better tool."
+  related={['/resources/what-is-business-observability/', '/resources/why-dashboards-miss-the-full-picture/', '/resources/business-health-metrics/']}
+>
+  <p>Ask an operations leader whether they need "business observability" and a reasonable first response is: <em>we already have BI.</em> They have a warehouse, a semantic layer, a set of well-used dashboards and an analytics team that can answer almost any question given a few days. What, exactly, would be different?</p>
+  <p>This article answers that question directly. It does not argue that BI is obsolete — it is not, and for many questions it remains the right tool. It argues that the two disciplines are built for different moments: BI for understanding and explaining periods that have closed, observability for understanding work that is still in flight. Most organisations need both, and the interesting design questions are about how they share data and definitions.</p>
+
+  <h2>Two questions on a Monday morning</h2>
+  <p>Consider a hypothetical online homeware retailer. On Monday morning, two people open their laptops with two different questions.</p>
+  <p>The finance director wants to know <strong>why gross margin last quarter came in 1.4 points below plan.</strong> The answer requires reconciled revenue, settled returns, final carrier invoices and a careful decomposition by category, channel and promotion. It does not need to be answered in the next hour; it needs to be answered correctly. This is a BI question, and a good BI stack handles it well.</p>
+  <p>The head of fulfilment wants to know <strong>whether this week's orders will meet the two-day delivery promise.</strong> The answer depends on orders placed in the last few hours, the depth of the picking queue in each warehouse, a carrier that started collecting late on Saturday, and a promotion that went live this morning. By the time a reconciled report could answer it, the promise will already have been kept or broken. This is an observability question.</p>
+  <p>Both questions are about the same business, drawing on many of the same systems. The difference is not the data. It is the relationship between the question and time.</p>
+  <Diagram src="/diagrams/bo-vs-bi-time-horizon.svg" alt="BI covers closed, reconciled months; business observability covers open work at the present moment, compared with an expected band and projected forward" caption="BI looks back over closed periods. Observability watches open work and projects where it is heading." zoom />
+
+  <h2>Six dimensions of difference</h2>
+  <p>The two approaches differ along six dimensions. Each one is a matter of design emphasis rather than a hard boundary — a BI tool can be refreshed often, and an observability model can be queried historically — but the defaults shape what each is good at.</p>
+
+  <h3>1. The questions they answer</h3>
+  <p>BI is optimised for <em>descriptive and explanatory</em> questions about defined periods: what happened, how much, compared with what, broken down by which dimensions. Its natural output is a report or an analysis.</p>
+  <p>Observability is optimised for <em>situational</em> questions about the present: is the business behaving as expected right now, where is it not, what changed, what is affected downstream, and who needs to act. Its natural output is a prioritised deviation with context attached.</p>
+
+  <h3>2. Latency and completeness</h3>
+  <p>BI generally trades speed for completeness. It waits for data to settle — refunds to clear, invoices to post, late events to arrive — because a report that changes after publication undermines trust. That is a virtue for finance and planning.</p>
+  <p>Observability makes the opposite trade. It accepts that the picture of open work is provisional, because a provisional picture of an order that is still in a queue is far more useful than a complete picture of one that has already missed its promise. The design challenge is to be honest about that provisionality: showing confidence, data freshness and expected late arrivals rather than pretending to precision.</p>
+
+  <h3>3. Grain</h3>
+  <p>BI usually works at the grain of <em>aggregates over periods</em>: revenue by month, conversion by week, cases by team. Detail exists underneath, but the primary objects are summaries.</p>
+  <p>Observability works at the grain of <em>individual entities in motion</em> — this order, this case, this invoice, this merchant application — and then aggregates upwards. That is what makes it possible to see that 30 specific cases will breach their SLA in the next four hours, rather than that SLA attainment was 94% last week.</p>
+
+  <h3>4. Model versus reports</h3>
+  <p>A BI estate is, in practice, a collection of reports and the transformations behind them. Knowledge about how the business works — that a payment settles an invoice, that verification must precede activation, that a supplier serves these customers — tends to live implicitly in SQL joins and in analysts' heads.</p>
+  <p>Observability needs that knowledge to be explicit. It relies on a model of entities, relationships, processes and objectives that can be evaluated continuously and traversed during an investigation: start from a symptom, follow dependencies, see what moved first. This is the role of a <a href="/platform/business-graph/">business graph</a>. The model is the product; individual views are just ways of looking at it.</p>
+
+  <h3>5. Expectations</h3>
+  <p>A BI report shows actuals, often alongside a plan or a prior period. The interpretation — is this good or bad? — is left to the reader.</p>
+  <p>Observability builds the interpretation in. Every important signal is compared with an expectation: an explicit commitment, a forecast, or a learned seasonal pattern for that segment and time of week. What gets surfaced is not "the number" but "the gap between the number and what it should be", which is what turns a wall of charts into a short list of things worth looking at. <a href="/platform/anomaly-detection/">Anomaly detection</a> covers how such expectations can be formed.</p>
+
+  <h3>6. Who uses it, and what happens next</h3>
+  <p>BI's primary users are analysts, finance teams and leaders preparing for planned conversations: a monthly business review, a board pack, a budget. The output informs a decision that will be made at a scheduled moment.</p>
+  <p>Observability's primary users are the people who run processes day to day — operations, revenue operations, customer experience, collections — plus leaders who need an honest view of where attention is needed. The output is meant to trigger an <em>unscheduled</em> decision: re-route a queue, pause a rule, call a customer. That is why ownership and follow-through are part of the design rather than an afterthought.</p>
+
+  <h2>A detailed comparison</h2>
+  <table>
+    <thead><tr><th>Dimension</th><th>Business intelligence</th><th>Business observability</th></tr></thead>
+    <tbody>
+      <tr><td>Core question</td><td>What happened, and why, over a period?</td><td>What is happening now, why, and what needs attention?</td></tr>
+      <tr><td>Time orientation</td><td>Closed periods; historical trends</td><td>Open work; present state; short-range projection</td></tr>
+      <tr><td>Data posture</td><td>Settled, reconciled, complete</td><td>Provisional, fresh, with explicit confidence</td></tr>
+      <tr><td>Primary grain</td><td>Aggregates by period and dimension</td><td>Individual entities and events, rolled up</td></tr>
+      <tr><td>Business knowledge</td><td>Implicit in transformations and reports</td><td>Explicit model of entities, flows and dependencies</td></tr>
+      <tr><td>Interpretation</td><td>Reader compares actual with plan</td><td>System compares actual with expectation and ranks gaps</td></tr>
+      <tr><td>Typical trigger</td><td>Scheduled review or ad hoc question</td><td>A deviation from expected behaviour</td></tr>
+      <tr><td>Typical output</td><td>Report, dashboard, analysis</td><td>Prioritised signal with context, owner and next step</td></tr>
+      <tr><td>Primary users</td><td>Analysts, finance, leadership for planned reviews</td><td>Process owners, operators, leaders for live attention</td></tr>
+      <tr><td>Investigation style</td><td>Slice and dice a dataset</td><td>Traverse relationships and changes from a symptom</td></tr>
+      <tr><td>Definition of done</td><td>Question answered accurately</td><td>Outcome restored, intervention measured</td></tr>
+      <tr><td>Main failure mode</td><td>Insight arrives after the decision window</td><td>Noise, or signals with no owner</td></tr>
+    </tbody>
+  </table>
+  <p>The last row is worth dwelling on. Each discipline has a characteristic way of failing, and they are opposites. BI tends to be right but late. Observability, done badly, tends to be early but noisy, or early but ignored. A well-designed approach to either one is mostly an effort to avoid its own failure mode.</p>
+
+  <h2>When BI is the right tool</h2>
+  <p>It would be a disservice to suggest that observability should replace BI. There are many questions where BI is simply better, and where adding live observation would add cost and confusion without improving the decision.</p>
+  <ul>
+    <li><strong>Financial reporting and close.</strong> Anything that must reconcile to the ledger, be audited, or be published externally belongs in a governed, settled reporting process.</li>
+    <li><strong>Strategic analysis over long horizons.</strong> Cohort economics, pricing studies, market sizing, multi-year trends: these benefit from complete data and careful method, not freshness.</li>
+    <li><strong>Planning and budgeting.</strong> Plans are built from history and assumptions, and reviewed on a cadence. That is BI's home ground.</li>
+    <li><strong>Exploratory, one-off questions.</strong> "Did customers who bought X last year also buy Y?" is an analysis, not something that needs to be watched continuously.</li>
+    <li><strong>Slow-moving outcomes.</strong> If a metric genuinely changes over quarters and nothing can be done about it within a week, watching it hourly only creates anxiety.</li>
+  </ul>
+  <div class="callout">
+    <strong>A quick test</strong>
+    For any metric someone wants to "observe", ask: if this moved meaningfully today, is there a decision someone could make this week that would change the outcome? If not, it probably belongs in a report. If yes — and you can name the person — it is a candidate for observation.
+  </div>
+
+  <h2>How they complement each other</h2>
+  <p>The most productive way to think about the relationship is as two uses of a shared foundation. Both draw on the same systems of record. Both need the same definitions — a "churned customer" or a "settled payment" should mean the same thing in a board report and in a live alert. And each improves the other.</p>
+  <Diagram src="/diagrams/bo-vs-bi-architecture.svg" alt="Sources feed both a warehouse that serves BI and a business model that serves observation and action; definitions and history flow between the warehouse and the model, and interventions flow back to annotate reports" caption="One set of sources, two uses. Shared definitions and history flow one way; interventions and context flow back." zoom />
+  <p>Concretely, the flows between them look like this:</p>
+  <ul>
+    <li><strong>History for baselines.</strong> Observability needs to know what normal looks like for each segment and time of week. Years of clean history in the warehouse are the natural source for those expectations.</li>
+    <li><strong>Shared definitions.</strong> The metric definitions agreed for reporting should be the same ones evaluated live. When they diverge, people stop trusting both. The point is not that one tool owns the definitions, but that the definitions are explicit, versioned and owned.</li>
+    <li><strong>Interventions annotate reports.</strong> When an operations team re-routes a payment provider for a week, the quarter's numbers will carry the effect. If the intervention is recorded in the observability layer, BI can explain the quarter instead of rediscovering the event months later.</li>
+    <li><strong>Questions graduate between them.</strong> A pattern spotted live ("conversion keeps dipping on the first Monday of the month") often deserves a proper analysis. A finding from analysis ("customers who wait more than three days in onboarding churn more") often deserves to be watched continuously.</li>
+  </ul>
+  <p>The <a href="/integrations/">integrations overview</a> describes how warehouses and operational systems can both serve as sources in practice.</p>
+
+  <h2>A worked example: the same problem, both lenses</h2>
+  <p>Back to the hypothetical retailer. In the quarterly review, BI shows that repeat purchase rate among first-time customers fell from 31% to 27%. A careful analysis attributes much of the drop to customers whose first order arrived late. That is a valuable, well-founded finding — and by the time it is presented, the customers in question have already formed their view.</p>
+  <p>The finding becomes more valuable when it is turned into something observed. The retailer defines an objective — "95% of first orders delivered within the promise" — and watches it continuously, by warehouse, carrier and region. Three weeks later, first-order on-time delivery for one region drops to 86% on a Tuesday. The model shows the drop is concentrated in orders passing through one carrier's Saturday collection, which was moved to a later slot. The fulfilment lead can reroute affected first orders to an alternative carrier while the collection slot is renegotiated.</p>
+  <p>Was that worth it? That question goes back to BI. A quarter later, an analysis compares repeat rates for first-time customers in the affected region against similar regions. If the intervention helped, the comparison should show it; if it did not, that is worth knowing too. Each lens did the job it is suited for: BI found the relationship and later checked the result, observability caught the live instance and put it in front of someone who could act.</p>
+
+  <h2>Summary</h2>
+  <ul>
+    <li>BI explains closed periods with settled data; business observability watches open work with fresh, provisional data. The difference is the relationship between the question and time.</li>
+    <li>They differ in grain (aggregates versus entities in motion), in where business knowledge lives (implicit in reports versus an explicit model), in interpretation (reader versus built-in expectations) and in users (planned reviews versus live operations).</li>
+    <li>BI remains the right tool for financial reporting, strategic analysis, planning, one-off exploration and slow-moving outcomes.</li>
+    <li>The two work best on a shared foundation: shared definitions, history feeding baselines, interventions annotating reports, and questions graduating from one to the other.</li>
+  </ul>
+  <p>For a closer look at why reports and dashboards alone leave gaps, read <a href="/resources/why-dashboards-miss-the-full-picture/">why dashboards miss the full picture</a>. For the role-specific view, see the <a href="/solutions/finance/">finance</a> and <a href="/solutions/operations/">operations</a> solution pages.</p>
+</ArticleLayout>

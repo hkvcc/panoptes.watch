@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import StoryFlow from '../../components/StoryFlow.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import SignalTable from '../../components/use-cases/SignalTable.astro';
+import ReportVsObserve from '../../components/use-cases/ReportVsObserve.astro';
+import ScenarioCard from '../../components/use-cases/ScenarioCard.astro';
+import UseCaseLinks from '../../components/use-cases/UseCaseLinks.astro';
+import { cap } from '../../components/use-cases/data';
+
+const crumbs = [{ label: 'Use Cases', href: '/use-cases/' }, { label: 'Revenue Leakage', href: '/use-cases/revenue-leakage/' }];
+
+const signals = [
+  { signal: 'Attempted vs successful payments', tells: 'Whether the gap is in demand or in conversion of intent into cash. Rising attempts with flat success points at the payment path, not the market.', source: 'Payments' },
+  { signal: 'Authorisation rate by route', tells: 'Which processor, acquirer or payment method is converting worse than its own baseline — leakage is rarely uniform.', source: 'Payments' },
+  { signal: 'Authentication challenge and completion', tells: 'How often customers are asked to authenticate, and how often they finish. Off-session renewals cannot complete a challenge.', source: 'Payments · events' },
+  { signal: 'Retry outcomes', tells: 'Whether automatic retries recover failed payments or simply add attempts that inflate volume.', source: 'Billing' },
+  { signal: 'Invoices past terms', tells: 'Revenue that was billed but not collected — the slow leak behind a healthy bookings figure.', source: 'Finance & ERP' },
+  { signal: 'Unmatched settlements', tells: 'Money that arrived but was never reconciled to an invoice, so it looks missing in the ledger.', source: 'Ledger · bank' },
+  { signal: 'Involuntary churn', tells: 'Subscriptions cancelled because payment failed, not because the customer chose to leave.', source: 'Billing · CRM' },
+];
+---
+<BaseLayout title="Revenue Leakage" description="How business observability traces revenue leakage: follow payments from attempt to ledger, segment failures by route and journey, and find where conversion changed." ogImage="/social/og-use-cases.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Use case · Revenue leakage" title="Find where earned revenue <span class='gradient-text'>goes missing.</span>" lede="Customers intend to pay. Payment attempts are rising. Yet collected revenue is not keeping pace. Revenue leakage hides in the gaps between checkout, payment processor, billing system and ledger — exactly where no single report looks." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#story">Follow the investigation</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/diagrams/uc-revenue-leakage-flow.svg" alt="Payment flow leak map from attempt to ledger. Losses at each step; the 3-D Secure drop-off is more than double its four-week average. Illustrative data." frame="payment leak map" zoom />
+    </Fragment>
+  </PageHero>
+
+  <section class="section" id="story">
+    <div class="container uc-layout">
+      <div class="uc-main">
+        <SectionHead eyebrow="The investigation" title="From a flat revenue line to a specific, testable cause." lede="An illustrative scenario. The company, figures and timeline are fictional; they show the shape of the reasoning, not a real-world result." />
+        <StoryFlow>
+          <Fragment slot="problem">
+            <h3>Payment volume is up. Revenue is not.</h3>
+            <p>A subscription software company bills most customers monthly by card. Over six weeks, payment attempts grow roughly in line with the customer base. Collected revenue grows for the first five weeks, then flattens. Bookings look healthy. Finance notices only at month end, when cash collected is several points below forecast.</p>
+            <p>Nobody is wrong. Sales reports new subscriptions. The payments dashboard reports processor uptime. The finance report reports revenue. Each view is accurate; none of them shows the gap between them.</p>
+          </Fragment>
+          <Fragment slot="signals">
+            <h3>Attempts and collections diverge in week six.</h3>
+            <p>Indexed against the same starting week, the two lines tell the story faster than any table: attempts keep climbing while collected revenue stalls. Rising attempts with flat success means the problem is not demand — it is somewhere on the path from intent to cash.</p>
+            <Diagram src="/diagrams/uc-revenue-leakage-signal-chart.svg" alt="Line chart: payment attempts keep rising after a routing rule change in week 6, while collected revenue flattens. Illustrative data." frame="attempts vs collected revenue" zoom class="uc-fig" />
+          </Fragment>
+          <Fragment slot="investigation">
+            <h3>Segment the gap until it stops being an average.</h3>
+            <p>Panoptes would follow each payment through the <a href={cap('business-graph').href}>Business Graph</a> — customer, subscription, invoice, payment attempt, processor response, settlement, ledger entry — and break the gap down along the dimensions that matter:</p>
+            <ul class="checklist">
+              <li><strong>By journey:</strong> new sign-ups convert normally; <em>renewals</em> account for most of the shortfall.</li>
+              <li><strong>By route:</strong> renewals sent to the secondary processor authorise noticeably worse than those on the primary route.</li>
+              <li><strong>By step:</strong> the loss sits at authentication, not at issuer decline — off-session renewals are being challenged and nobody is present to respond.</li>
+              <li><strong>By time:</strong> the change begins in the same week a payment routing rule was updated.</li>
+            </ul>
+          </Fragment>
+          <Fragment slot="insight">
+            <h3>A routing change coincides with a new authentication drop-off.</h3>
+            <p>The strongest candidate explanation: the routing update moved a share of renewals to a route that requests authentication on off-session payments. Those payments fail silently and enter retry, which inflates attempts without recovering revenue.</p>
+            <p class="uc-caveat"><Icon name="rootcause" /> <span>This is a <strong>correlation with a plausible mechanism</strong>, not a proven cause. <a href={cap('root-cause-analysis').href}>Root Cause Analysis</a> in Panoptes keeps that distinction explicit until the hypothesis is tested.</span></p>
+          </Fragment>
+          <Fragment slot="action">
+            <h3>Test the hypothesis on the affected segment.</h3>
+            <p>The finding is routed to the payments owner with its evidence attached. Options they might weigh: revert the routing rule for renewals only, flag renewals as merchant-initiated so they are handled correctly, or adjust retry timing so failed renewals are not retried into the same outcome. Recovering already-failed renewals — asking those customers to update or confirm payment — is a separate, parallel step for the billing team.</p>
+          </Fragment>
+          <Fragment slot="outcome">
+            <h3>Measure the gap closing, not just the rule changing.</h3>
+            <p>Changing the rule is not the outcome. What to measure afterwards, against the pre-change baseline:</p>
+            <ul class="checklist">
+              <li>Authorisation rate for renewals on each route</li>
+              <li>Collected revenue against expected revenue for the renewal cohort</li>
+              <li>Involuntary churn from failed renewals</li>
+              <li>Retries per successful payment — fewer is better</li>
+            </ul>
+          </Fragment>
+        </StoryFlow>
+      </div>
+      <div class="uc-side">
+        <ScenarioCard sticky company="A subscription software company" question="Why is cash collected flat when payment attempts keep rising?" facts={[
+          { k: 'Billing', v: 'Monthly card renewals, two processors' },
+          { k: 'Symptom', v: 'Collected revenue flat from week 6' },
+          { k: 'Where', v: 'Renewals, authentication step' },
+          { k: 'Candidate', v: 'Payment routing rule update' },
+          { k: 'Confidence', v: 'Correlated — to be tested' },
+        ]} caps={['journey-intelligence', 'anomaly-detection', 'root-cause-analysis', 'actions-automation'].map(cap)} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Example signals" title="What Panoptes would watch, and what each signal tells you." lede="Leakage is a chain problem: a single metric rarely shows it. These signals, connected through one model, show where along the chain revenue stops." />
+      <SignalTable rows={signals} caption="Example revenue leakage signals" />
+      <p class="note mt-1">Signals and sources are examples. Which ones apply depends on how your business bills and collects.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Reporting vs observability" title="The report shows the decline. Observability shows where it started." />
+      <ReportVsObserve
+        report={[
+          'Conversion from attempt to payment is down this month',
+          'Revenue is below forecast at month end',
+          'Processor uptime was normal throughout',
+          'Totals by payment method, without the route or journey behind them',
+        ]}
+        observe={[
+          'The gap, located at a specific step: authentication on renewals',
+          'The segment affected, rather than an all-customer average',
+          'Change events on the same timeline — the routing rule update',
+          'An owner, a testable hypothesis and the measures that will confirm it',
+        ]} />
+      <div class="uc-why mt-2 reveal">
+        <div>
+          <h3>Why leakage hides between systems</h3>
+          <p class="muted">Every system in the payment chain reports its own success. The processor processed. The billing system billed. The ledger recorded what it received. Leakage lives in the hand-offs — and the hand-offs belong to no one's dashboard. Modelling the chain end to end is what makes the gap visible.</p>
+        </div>
+        <div>
+          <h3>Where else revenue leaks</h3>
+          <ul class="pill-list">
+            {['Failed renewals', 'Invoices past terms', 'Unbilled usage', 'Discounts beyond policy', 'Unreconciled settlements', 'Refunds and disputes', 'Delayed activation'].map((p) => <li>{p}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <UseCaseLinks
+    caps={[
+      { slug: 'journey-intelligence', why: 'Follow each payment from attempt through authentication, capture, settlement and ledger.' },
+      { slug: 'anomaly-detection', why: 'Notice when authorisation or collection departs from its expected pattern, by segment.' },
+      { slug: 'root-cause-analysis', why: 'Line up change events against the affected segment and keep correlation and cause apart.' },
+      { slug: 'actions-automation', why: 'Route the finding to the payments owner and track whether the gap closes.' },
+    ]}
+    roles={[
+      { slug: 'finance', why: 'Expected versus collected revenue, explained operationally' },
+      { slug: 'revenue', why: 'Pipeline-to-cash conversion, beyond the booking' },
+      { slug: 'executives', why: 'Revenue risk in context, ranked by impact' },
+    ]}
+    related={[
+      { slug: 'customer-journey-friction', why: 'When customers stall before they ever pay' },
+      { slug: 'business-anomalies', why: 'Separating a real shift from noise' },
+      { slug: 'operational-efficiency', why: 'When the cost to collect rises too' },
+    ]} />
+
+  <CTA title="Find out where your revenue stops." text="Walk through your payment, billing and collection chain with us and see how Panoptes would model it end to end." />
+</BaseLayout>
+
+<style>
+  .uc-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .uc-side { padding-top: 8px; height: 100%; }
+  .uc-main :global(.uc-fig) { margin: 1.4rem 0 .4rem; }
+  .uc-main :global(.checklist) { margin: 1rem 0; color: var(--text-2); }
+  .uc-caveat { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--border); font-size: .95rem; }
+  .uc-caveat :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .uc-why { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); padding-top: clamp(28px, 4vw, 44px); border-top: 1px solid var(--border); }
+  .uc-why h3 { font-size: 1.2rem; }
+  @media (max-width: 960px) {
+    .uc-layout { grid-template-columns: minmax(0, 1fr); }
+    .uc-side { order: -1; height: auto; }
+    .uc-why { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 290" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>Growing an operating model incrementally: one critical journey, then its dependencies, then adjacent journeys that share entities</title>
+<g class="d-t">
+<text x="24" y="26" font-size="15" font-weight="600" class="d-td d-text">Model outward from one journey</text>
+<text x="24" y="44" font-size="12" class="d-muted">Each phase earns the next by answering a question the business actually asked</text>
+<g transform="translate(16 60)">
+<rect width="228" height="210" rx="14" class="d-surface"/><rect width="228" height="210" rx="14" class="d-accent-s" stroke-width="1.5"/>
+<text x="18" y="26" font-size="10" font-weight="600" class="d-tm d-muted">PHASE 1</text>
+<text x="18" y="46" font-size="14" font-weight="600" class="d-text">One critical journey</text>
+<path d="M34 110H194" class="d-accent-s" stroke-width="2"/>
+<g class="d-accent"><circle cx="34" cy="110" r="10"/><circle cx="74" cy="110" r="10"/><circle cx="114" cy="110" r="10"/><circle cx="154" cy="110" r="10"/><circle cx="194" cy="110" r="10"/></g>
+<text x="18" y="176" font-size="11.5" class="d-text">5 entities · 1 process</text>
+<text x="18" y="193" font-size="11.5" class="d-muted">2 objectives, each with an owner</text>
+</g>
+<path d="M252 165H268M262 159L268 165L262 171" class="d-line" stroke-width="2"/>
+<g transform="translate(274 60)">
+<rect width="228" height="210" rx="14" class="d-surface"/><rect width="228" height="210" rx="14" class="d-line" stroke-width="1.5"/>
+<text x="18" y="26" font-size="10" font-weight="600" class="d-tm d-muted">PHASE 2</text>
+<text x="18" y="46" font-size="14" font-weight="600" class="d-text">Its dependencies</text>
+<path d="M34 110H194" class="d-accent-s" stroke-width="2"/>
+<path d="M74 110L54 146M114 110L114 72M154 110L174 146M194 110L210 76" class="d-accent-2-s" stroke-width="1.5"/>
+<g class="d-accent"><circle cx="34" cy="110" r="10"/><circle cx="74" cy="110" r="10"/><circle cx="114" cy="110" r="10"/><circle cx="154" cy="110" r="10"/><circle cx="194" cy="110" r="10"/></g>
+<g class="d-surface-2"><circle cx="54" cy="146" r="8"/><circle cx="114" cy="72" r="8"/><circle cx="174" cy="146" r="8"/><circle cx="210" cy="76" r="8"/></g>
+<g class="d-accent-2-s" stroke-width="1.5"><circle cx="54" cy="146" r="8"/><circle cx="114" cy="72" r="8"/><circle cx="174" cy="146" r="8"/><circle cx="210" cy="76" r="8"/></g>
+<text x="18" y="176" font-size="11.5" class="d-text">+ systems, teams, suppliers</text>
+<text x="18" y="193" font-size="11.5" class="d-muted">expectations on each hand-off</text>
+</g>
+<path d="M510 165H526M520 159L526 165L520 171" class="d-line" stroke-width="2"/>
+<g transform="translate(532 60)">
+<rect width="212" height="210" rx="14" class="d-surface"/><rect width="212" height="210" rx="14" class="d-line" stroke-width="1.5"/>
+<text x="18" y="26" font-size="10" font-weight="600" class="d-tm d-muted">PHASE 3</text>
+<text x="18" y="46" font-size="14" font-weight="600" class="d-text">Adjacent journeys</text>
+<path d="M30 100H150" class="d-accent-s" stroke-width="2"/>
+<path d="M60 100L70 140H180M120 100L120 140" class="d-accent-2-s" stroke-width="1.5"/>
+<path d="M60 100L46 70M150 100L172 72" class="d-accent-2-s" stroke-width="1.5"/>
+<g class="d-accent"><circle cx="30" cy="100" r="9"/><circle cx="60" cy="100" r="9"/><circle cx="90" cy="100" r="9"/><circle cx="120" cy="100" r="9"/><circle cx="150" cy="100" r="9"/></g>
+<g class="d-accent-2"><circle cx="70" cy="140" r="8"/><circle cx="120" cy="140" r="8"/><circle cx="150" cy="140" r="8"/><circle cx="180" cy="140" r="8"/></g>
+<g class="d-surface-2"><circle cx="46" cy="70" r="7"/><circle cx="172" cy="72" r="7"/></g>
+<g class="d-accent-2-s" stroke-width="1.5"><circle cx="46" cy="70" r="7"/><circle cx="172" cy="72" r="7"/></g>
+<text x="18" y="176" font-size="11.5" class="d-text">Journeys that share entities</text>
+<text x="18" y="193" font-size="11.5" class="d-muted">reuse, rather than redefine</text>
+</g>
+</g>
+</svg>

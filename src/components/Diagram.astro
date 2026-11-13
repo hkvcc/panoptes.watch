@@ -1,0 +1,42 @@
+---
+/**
+ * Inlines an SVG diagram/illustration from /public so it follows the active theme
+ * through the --d-* CSS variables. Optional frame chrome and click-to-zoom lightbox.
+ */
+import { readSvg, svgWithA11y } from '../lib/svg';
+interface Props {
+  src: string;            // e.g. /diagrams/business-graph-dependencies.svg
+  alt: string;            // accessible description
+  caption?: string;
+  frame?: string | boolean; // frame title (window chrome) or true for plain frame
+  zoom?: boolean;           // enable lightbox
+  illustrative?: boolean;   // show "Illustrative data" tag in frame
+  pad?: boolean;
+  class?: string;
+}
+const { src, alt, caption, frame, zoom = false, illustrative = true, pad = true, class: cls = '' } = Astro.props;
+const svg = svgWithA11y(readSvg(src), alt);
+const id = 'lb-' + src.replace(/[^a-z0-9]/gi, '');
+---
+<figure class:list={['diagram', cls]}>
+  {frame ? (
+    <div class="frame">
+      {typeof frame === 'string' && (
+        <div class="frame-bar"><i></i><i></i><i></i><span>{frame}</span>{illustrative && <em class="illustrative">Illustrative data</em>}</div>
+      )}
+      {zoom ? (
+        <button type="button" class:list={['lightbox-trigger', { 'diagram-pad': pad }]} data-lightbox={id}><Fragment set:html={svg} /><span class="sr-only"> (enlarge)</span></button>
+      ) : (
+        <div class:list={[{ 'diagram-pad': pad }]}><Fragment set:html={svg} /></div>
+      )}
+    </div>
+  ) : zoom ? (
+    <button type="button" class="lightbox-trigger" data-lightbox={id}><Fragment set:html={svg} /><span class="sr-only"> (enlarge)</span></button>
+  ) : (
+    <Fragment set:html={svg} />
+  )}
+  {caption && <figcaption>{caption}</figcaption>}
+  {zoom && (
+    <template id={id} data-title={typeof frame === 'string' ? frame : alt}><Fragment set:html={svg} /></template>
+  )}
+</figure>

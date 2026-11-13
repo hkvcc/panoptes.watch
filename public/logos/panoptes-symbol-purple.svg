@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Panoptes symbol">
+  <title>Panoptes</title>
+  
+  <g transform="translate(0 0) scale(1)">
+    <rect x="9" y="9" width="10" height="46" rx="5" fill="#7126E8"/>
+    <path d="M37.95 45.74 A17 17 0 1 1 51.74 31.95" fill="none" stroke="#7126E8" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="35" cy="29" r="6" fill="#5920BC"/>
+    <circle cx="47.6" cy="41.6" r="4.2" fill="#9965FF"/>
+  </g>
+</svg>

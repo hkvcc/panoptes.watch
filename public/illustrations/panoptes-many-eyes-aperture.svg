@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="34 14 532 472" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>The idea behind the name: one aperture at the centre, many watchful points on the processes around it — orders, payments, invoices, fulfilment, support cases, onboarding and renewals</title>
+<circle cx="300" cy="250" r="215" class="d-line" stroke-width="1" stroke-dasharray="2 6"/>
+<circle cx="300" cy="250" r="152" class="d-line" stroke-width="1.2"/>
+<circle cx="300" cy="250" r="98" class="d-soft"/>
+<circle cx="300" cy="250" r="98" class="d-accent-2-s" stroke-width="1" stroke-opacity=".5"/>
+<circle cx="209.14" cy="55.14" r="3.2" class="d-accent-2"/>
+<circle cx="390.86" cy="55.14" r="3.2" class="d-accent-2"/>
+<circle cx="507.67" cy="194.35" r="3.2" class="d-accent-2"/>
+<circle cx="476.12" cy="373.32" r="3.2" class="d-accent-2"/>
+<circle cx="300" cy="465" r="3.2" class="d-accent-2"/>
+<circle cx="123.88" cy="373.32" r="3.2" class="d-accent-2"/>
+<circle cx="92.33" cy="194.35" r="3.2" class="d-accent-2"/>
+<circle cx="209.14" cy="55.14" r="3.2" class="d-accent-2"/>
+<path d="M300 152L300 107" class="d-accent-2-s d-flow" stroke-width="1.4"/>
+<path d="M377.23 189.67L412.69 161.96" class="d-accent-2-s d-flow" stroke-width="1.4"/>
+<path d="M395.86 270.38L439.88 279.73" class="d-accent-2-s d-flow" stroke-width="1.4"/>
+<path d="M346.01 336.53L367.13 376.26" class="d-accent-2-s d-flow" stroke-width="1.4"/>
+<path d="M253.99 336.53L232.87 376.26" class="d-accent-2-s d-flow" stroke-width="1.4"/>
+<path d="M204.14 270.38L160.12 279.73" class="d-accent-2-s d-flow" stroke-width="1.4"/>
+<path d="M222.77 189.67L187.31 161.96" class="d-accent-2-s d-flow" stroke-width="1.4"/>
+<circle cx="300" cy="98" r="9" class="d-bg"/><circle cx="300" cy="98" r="9" class="d-accent-s" stroke-width="2"/><circle cx="300" cy="98" r="3.6" class="d-accent"/>
+<circle cx="419.78" cy="156.42" r="14" class="d-warn d-pulse" fill-opacity=".25"/>
+<circle cx="419.78" cy="156.42" r="9" class="d-bg"/><circle cx="419.78" cy="156.42" r="9" class="d-warn-s" stroke-width="2"/><circle cx="419.78" cy="156.42" r="3.6" class="d-warn"/>
+<circle cx="448.68" cy="281.6" r="9" class="d-bg"/><circle cx="448.68" cy="281.6" r="9" class="d-accent-s" stroke-width="2"/><circle cx="448.68" cy="281.6" r="3.6" class="d-accent"/>
+<circle cx="371.36" cy="384.21" r="9" class="d-bg"/><circle cx="371.36" cy="384.21" r="9" class="d-accent-s" stroke-width="2"/><circle cx="371.36" cy="384.21" r="3.6" class="d-accent"/>
+<circle cx="228.64" cy="384.21" r="9" class="d-bg"/><circle cx="228.64" cy="384.21" r="9" class="d-accent-s" stroke-width="2"/><circle cx="228.64" cy="384.21" r="3.6" class="d-accent"/>
+<circle cx="151.32" cy="281.6" r="9" class="d-bg"/><circle cx="151.32" cy="281.6" r="9" class="d-accent-s" stroke-width="2"/><circle cx="151.32" cy="281.6" r="3.6" class="d-accent"/>
+<circle cx="180.22" cy="156.42" r="9" class="d-bg"/><circle cx="180.22" cy="156.42" r="9" class="d-accent-s" stroke-width="2"/><circle cx="180.22" cy="156.42" r="3.6" class="d-accent"/>
+<g class="d-t"><rect x="264.48" y="29" width="71.04" height="28" rx="14" class="d-bg"/><rect x="264.48" y="29" width="71.04" height="28" rx="14" class="d-line" stroke-width="1.2"/><text x="300" y="48" text-anchor="middle" font-size="14" font-weight="500" class="d-text">Orders</text></g>
+<g class="d-t"><rect x="419.76" y="108.56" width="86.72" height="28" rx="14" class="d-bg"/><rect x="419.76" y="108.56" width="86.72" height="28" rx="14" class="d-warn-s" stroke-width="1.2"/><text x="463.12" y="127.56" text-anchor="middle" font-size="14" font-weight="500" class="d-text">Payments</text></g>
+<g class="d-t"><rect x="459.12" y="279.04" width="86.72" height="28" rx="14" class="d-bg"/><rect x="459.12" y="279.04" width="86.72" height="28" rx="14" class="d-line" stroke-width="1.2"/><text x="502.48" y="298.04" text-anchor="middle" font-size="14" font-weight="500" class="d-text">Invoices</text></g>
+<g class="d-t"><rect x="345.98" y="418.77" width="102.4" height="28" rx="14" class="d-bg"/><rect x="345.98" y="418.77" width="102.4" height="28" rx="14" class="d-line" stroke-width="1.2"/><text x="397.18" y="437.77" text-anchor="middle" font-size="14" font-weight="500" class="d-text">Fulfilment</text></g>
+<g class="d-t"><rect x="139.86" y="418.77" width="125.92" height="28" rx="14" class="d-bg"/><rect x="139.86" y="418.77" width="125.92" height="28" rx="14" class="d-line" stroke-width="1.2"/><text x="202.82" y="437.77" text-anchor="middle" font-size="14" font-weight="500" class="d-text">Support cases</text></g>
+<g class="d-t"><rect x="46.32" y="279.04" width="102.4" height="28" rx="14" class="d-bg"/><rect x="46.32" y="279.04" width="102.4" height="28" rx="14" class="d-line" stroke-width="1.2"/><text x="97.52" y="298.04" text-anchor="middle" font-size="14" font-weight="500" class="d-text">Onboarding</text></g>
+<g class="d-t"><rect x="93.52" y="108.56" width="86.72" height="28" rx="14" class="d-bg"/><rect x="93.52" y="108.56" width="86.72" height="28" rx="14" class="d-line" stroke-width="1.2"/><text x="136.88" y="127.56" text-anchor="middle" font-size="14" font-weight="500" class="d-text">Renewals</text></g>
+<g transform="translate(218.75 170) scale(2.5)"><rect x="9" y="9" width="10" height="46" rx="5" class="d-accent"/><path d="M37.95 45.74 A17 17 0 1 1 51.74 31.95" class="d-accent-s" stroke-width="8" stroke-linecap="round"/><circle cx="35" cy="29" r="6" class="d-text"/><circle cx="47.6" cy="41.6" r="4.2" class="d-accent-2"/></g>
+</svg>

@@ -1,0 +1,22 @@
+---
+/**
+ * Diagram wrapper for long-form resources: on narrow screens the diagram keeps a
+ * legible minimum width and scrolls sideways instead of shrinking text below ~8px.
+ */
+import Diagram from '../Diagram.astro';
+interface Props { src: string; alt: string; caption?: string; zoom?: boolean; min?: number }
+const { min = 620, ...rest } = Astro.props;
+---
+<div class="rb-scroll" style={`--rb-min:${min}px`}>
+  <p class="rb-hint" aria-hidden="true">Swipe sideways to see the whole diagram{rest.zoom ? ', or tap it to enlarge' : ''}.</p>
+  <Diagram {...rest} />
+</div>
+<style is:global>
+  .rb-hint { display: none; }
+  @media (max-width: 680px) {
+    .rb-scroll > figure { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+    .rb-scroll > figure > .lightbox-trigger, .rb-scroll > figure > svg { min-width: var(--rb-min); }
+    .rb-scroll > figure > figcaption { position: sticky; left: 0; }
+    .prose .rb-hint { display: block; margin: 2em 0 -1.6em; font: 500 .72rem/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+  }
+</style>

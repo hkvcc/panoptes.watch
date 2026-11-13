@@ -1,0 +1,76 @@
+---
+import DocPage from '../components/company/DocPage.astro';
+import { SITE } from '../data/site';
+import { LEGAL, lastUpdatedLabel, operatorHtml, missingIdentity } from '../data/legal';
+
+const crumbs = [{ label: 'Website terms of use', href: '/terms/' }];
+const placeholders = missingIdentity.map((m) => `[${m}]`);
+---
+<DocPage
+  title="Website terms of use"
+  description="Terms of use for the panoptes.watch website: how you may use the site and its content, our brand assets, illustrative data and product vision, and liability."
+  eyebrow="Legal · Terms"
+  lede="The rules for using the panoptes.watch website. These terms cover the website only — use of the Panoptes product is governed by a separate customer agreement."
+  breadcrumbs={crumbs}
+  ogImage="/social/og-default.png"
+  updated={lastUpdatedLabel}
+  draft
+  placeholders={placeholders}
+>
+  <h2 id="about-these-terms">About these terms</h2>
+  <p>These terms of use apply to your use of the website at panoptes.watch (the “site”). By using the site you agree to them. If you do not agree, please do not use the site.</p>
+  <p>The site is operated by <Fragment set:html={operatorHtml()} />. You can contact us at <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>.</p>
+
+  <h2 id="product-terms">The product is covered separately</h2>
+  <p>These terms are not a subscription, licence or services agreement. Access to and use of the Panoptes product is governed only by a written agreement between Panoptes and the customer. Nothing on this site forms part of such an agreement unless that agreement expressly says so.</p>
+
+  <h2 id="using-the-site">Using the site</h2>
+  <p>You may view, download and print pages from the site for your own information, including to evaluate Panoptes for your organisation. The site is made available free of charge. We may change, suspend or withdraw any part of it without notice, and we do not guarantee that it will always be available or free of errors.</p>
+
+  <h2 id="information-on-the-site">Information on the site</h2>
+  <p>The content on the site is provided for general information. In particular:</p>
+  <ul>
+    <li><strong>Illustrative data.</strong> Dashboards, diagrams, scenarios and figures shown on the site use fictional data to illustrate how Panoptes is designed to work. They do not describe real organisations or real results.</li>
+    <li><strong>Product vision.</strong> Some capabilities are described as vision or direction, such as AI-assisted investigation and automated execution. These describe intentions, not commitments, and may change or never become available.</li>
+    <li><strong>Third-party products.</strong> Names of other software products appear only as examples of the systems a business may use. Their mention does not imply partnership, certification or endorsement.</li>
+    <li><strong>Not professional advice.</strong> Guides and articles are general in nature and are not legal, financial or other professional advice for your circumstances.</li>
+  </ul>
+  <p>We try to keep the site accurate and up to date, but we make no promise that it is complete or current.</p>
+
+  <h2 id="intellectual-property">Intellectual property</h2>
+  <p>We, or our licensors, own the intellectual property rights in the site and its content, including text, diagrams, illustrations, software and design. Except as allowed by these terms or by law, you may not copy, adapt, republish or commercially exploit that content without our written permission.</p>
+  <p>“Panoptes” and the Panoptes logo and symbol are our brand assets. You may use the files offered on the <a href="/company/#brand">About page</a> to refer to Panoptes accurately — for example, in an article or a list of tools — provided you do not alter them or use them in a way that suggests a partnership, sponsorship or endorsement that does not exist.</p>
+
+  <h2 id="acceptable-use">Acceptable use</h2>
+  <p>When using the site, you must not:</p>
+  <ul>
+    <li>use it in any way that breaks the law or is fraudulent;</li>
+    <li>attempt to gain unauthorised access to the site, the server it is hosted on or any connected system;</li>
+    <li>interfere with the site’s operation, including through denial-of-service attacks, excessive automated requests or deliberately introducing malicious code;</li>
+    <li>submit forms with false information about someone else, or use them to send spam or unsolicited promotions;</li>
+    <li>scrape or copy the site’s content at scale for commercial reuse without our permission.</li>
+  </ul>
+
+  <h2 id="what-you-send-us">What you send us</h2>
+  <p>If you contact us through the site’s forms or by email, please do not include confidential or sensitive information that we have not asked for. We use what you send in line with our <a href="/privacy/">privacy notice</a>. Sending an enquiry does not create a contract or any obligation on either side.</p>
+
+  <h2 id="links">Links</h2>
+  <p>Where the site links to other websites or resources, the links are provided for convenience only. We have no control over their content and are not responsible for them. You may link to our home page or any public page of the site, as long as you do so fairly and lawfully and do not suggest any association or endorsement that does not exist.</p>
+
+  <h2 id="liability">Our liability</h2>
+  <p>Nothing in these terms excludes or limits any liability that cannot be excluded or limited by law, including liability for death or personal injury caused by negligence, or for fraud or fraudulent misrepresentation.</p>
+  <p>Subject to that, and to the extent permitted by law, the site is provided “as is”, and we are not liable for any loss or damage arising from use of, or inability to use, the site or reliance on its content — including loss of profits, revenue, business, data or goodwill, or any indirect or consequential loss.</p>
+  <p>If you use the site as a consumer, you may have additional statutory rights. Nothing in these terms affects them.</p>
+
+  <h2 id="privacy-and-cookies">Privacy and cookies</h2>
+  <p>How we handle personal data is described in our <a href="/privacy/">privacy notice</a>. How the site uses cookies and browser storage is described in our <a href="/cookies/">cookie notice</a>.</p>
+
+  <h2 id="changes">Changes to these terms</h2>
+  <p>We may revise these terms from time to time. The version on this page at the time you use the site applies. The “last updated” date at the top shows when they last changed.</p>
+
+  <h2 id="law">Governing law</h2>
+  <p>These terms, and any dispute arising from them or from your use of the site, are governed by the law of {LEGAL.governingLaw}. {LEGAL.courts.charAt(0).toUpperCase() + LEGAL.courts.slice(1)} have jurisdiction, subject to any mandatory rights you may have to bring proceedings where you live.</p>
+
+  <h2 id="contact">Contact</h2>
+  <p>Questions about these terms: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>.</p>
+</DocPage>

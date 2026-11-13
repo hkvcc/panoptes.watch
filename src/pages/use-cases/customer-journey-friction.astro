@@ -1,0 +1,165 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import StoryFlow from '../../components/StoryFlow.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import ReportVsObserve from '../../components/use-cases/ReportVsObserve.astro';
+import ScenarioCard from '../../components/use-cases/ScenarioCard.astro';
+import UseCaseLinks from '../../components/use-cases/UseCaseLinks.astro';
+import { cap } from '../../components/use-cases/data';
+
+const crumbs = [{ label: 'Use Cases', href: '/use-cases/' }, { label: 'Customer Journey Friction', href: '/use-cases/customer-journey-friction/' }];
+
+const signals = [
+  { i: 'journey', t: 'Step completion rate', d: 'Of the customers who reach a step, how many finish it. Pinpoints the step, rather than the funnel, that changed.' },
+  { i: 'clock', t: 'Time spent per step', d: 'A step that takes longer before abandonment often signals confusion or a failing dependency, not lack of intent.' },
+  { i: 'layers', t: 'Completion by segment', d: 'Channel, device, region, product and acquisition source. Friction is usually concentrated, and averages hide it.' },
+  { i: 'event', t: 'Retries and repeated attempts', d: 'Customers who try a step several times before succeeding or leaving are experiencing friction, even if some get through.' },
+  { i: 'ticket', t: 'Support contacts linked to a step', d: 'Contacts that mention or follow a specific step connect the quantitative drop to what customers are saying.' },
+  { i: 'plug', t: 'Dependency health behind a step', d: 'Response and error patterns from the third-party or internal service a step relies on, joined to the journey.' },
+  { i: 'calendar', t: 'Change events', d: 'Releases, form changes, provider switches and campaigns on the same timeline as the journey.' },
+  { i: 'revenue', t: 'Downstream value', d: 'Policies issued, first payments and early cancellations — so friction is measured in outcomes, not clicks.' },
+];
+---
+<BaseLayout title="Customer Journey Friction" description="Locate customer journey friction with business observability: find the step and segment where customers stall, connect it to changes, and measure the outcome." ogImage="/social/og-use-cases.png" breadcrumbs={crumbs}>
+  <PageHero eyebrow="Use case · Customer journey friction" title="Find the exact step where <span class='gradient-text'>customers stall.</span>" lede="Overall conversion drops a few points. Marketing, product and operations each shipped something that fortnight. The answer is rarely in the funnel total — it is in one step, for one group of customers, after one change." breadcrumbs={crumbs} split>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/platform/journey-intelligence/">Journey Intelligence</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram src="/diagrams/uc-journey-friction-steps.svg" alt="Step completion chart for a quote-to-policy journey: the identity check step fell from 88% to 74% while other steps held steady. Illustrative data." frame="quote-to-policy journey" zoom />
+    </Fragment>
+  </PageHero>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="scen-grid">
+        <ScenarioCard company="A direct-to-consumer insurance provider" question="Why did quote-to-policy conversion fall three points in a fortnight?" title="The scenario" facts={[
+          { k: 'Journey', v: 'Quote → details → identity → payment → policy' },
+          { k: 'Channels', v: 'Apps, mobile and desktop web, partner referrals' },
+          { k: 'Symptom', v: 'Fewer policies issued per quote started' },
+          { k: 'Changes', v: 'App release, new campaign, identity provider update' },
+        ]} />
+        <div class="scen-copy reveal">
+          <p class="eyebrow">Where it concentrates</p>
+          <h2>The drop is not spread across the journey. It sits in one cell.</h2>
+          <p class="muted">Breaking the change in completion down by step and channel turns a vague decline into a precise location: the identity check, on the Android app. Mobile web shows a smaller effect; everything else is flat.</p>
+          <Diagram src="/diagrams/uc-journey-friction-segments.svg" alt="Heatmap of change in step completion by channel: the drop is concentrated at the identity step on the Android app (−31 points), with a smaller effect on mobile web. Illustrative data." frame="step × channel" zoom />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container story-wrap">
+      <SectionHead eyebrow="The investigation" title="From “conversion is down” to “this step, these customers, since this change”." lede="Illustrative and fictional throughout. The value is in the method: narrow the problem until it can be tested." />
+      <StoryFlow>
+        <Fragment slot="problem">
+          <h3>Fewer quotes become policies, and three teams have a theory.</h3>
+          <p>The insurer's weekly report shows quote-to-policy conversion down about three points. Marketing launched a campaign that brought in new traffic. Product released a new app version. The identity verification provider rolled out an update. Each team can tell a plausible story; the funnel report cannot tell them apart.</p>
+        </Fragment>
+        <Fragment slot="signals">
+          <h3>One step moved; the others did not.</h3>
+          <p>Measured as step completion rather than funnel totals, the picture sharpens. Details, payment and issuance complete at their usual rates. The identity check fell sharply. Time spent at that step before abandonment also rose, and retries increased — customers were trying, not leaving casually.</p>
+        </Fragment>
+        <Fragment slot="investigation">
+          <h3>Segment, then line up changes.</h3>
+          <p><a href={cap('journey-intelligence').href}>Journey Intelligence</a> would break the step down by channel, device, source and region. The drop is concentrated on the Android app, with a smaller effect on mobile web. Campaign traffic converts at the identity step like other traffic, which weakens the campaign theory.</p>
+          <p>Placing change events on the same timeline, the drop starts within hours of the identity provider's update — not the app release, which went out four days earlier without any change in completion. <a href={cap('anomaly-detection').href}>Anomaly Detection</a> would have flagged the step's departure from its expected range on the first day.</p>
+        </Fragment>
+        <Fragment slot="insight">
+          <h3>A dependency changed underneath one channel.</h3>
+          <p>The most likely explanation is a compatibility problem between the provider's updated flow and the Android app's document capture. The servers were up. The provider's status page was green. The failure was only visible from the customer's side of the journey.</p>
+          <p class="uc-caveat"><Icon name="rootcause" /> <span>Timing and segment point strongly at the provider update; the mechanism still needs confirming with the provider and the app team. <a href={cap('root-cause-analysis').href}>Root Cause Analysis</a> records it as a leading hypothesis, not a verdict.</span></p>
+        </Fragment>
+        <Fragment slot="action">
+          <h3>Contain the impact while the cause is fixed.</h3>
+          <p>Options the journey owner might take: temporarily route Android users to the previous verification flow or to web capture, raise the issue with the provider with segment-level evidence attached, and follow up with customers who abandoned at that step. Each action is owned and its timing recorded, so its effect can be read later.</p>
+        </Fragment>
+        <Fragment slot="outcome">
+          <h3>Measure recovery in policies, not just in clicks.</h3>
+          <ul class="checklist">
+            <li>Identity step completion on Android, back to its expected range</li>
+            <li>Quote-to-policy conversion by channel</li>
+            <li>Recovered applications from customers who were followed up</li>
+            <li>Support contacts mentioning identity verification</li>
+          </ul>
+        </Fragment>
+      </StoryFlow>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Example signals" title="Signals that make a journey observable." lede="Each one answers a narrower question than “is conversion down?”. Together they say where, for whom, since when and at what cost." />
+      <ul class="sig-cards">
+        {signals.map((s) => (
+          <li class="card reveal">
+            <span class="icon-tile"><Icon name={s.i} /></span>
+            <h3>{s.t}</h3>
+            <p class="muted small">{s.d}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Reporting vs observability" title="The funnel shows the drop. The journey shows the step." />
+      <ReportVsObserve
+        report={[
+          'Overall conversion, down three points',
+          'Traffic by campaign and channel',
+          'Product analytics events, inside one channel at a time',
+          'Provider uptime, reported as healthy',
+        ]}
+        observe={[
+          'Step-level completion across every channel and system involved',
+          'The segment where friction concentrates',
+          'Releases, campaigns and provider changes aligned to the drop',
+          'The business outcome affected: policies issued, not page views',
+        ]} />
+    </div>
+  </section>
+
+  <UseCaseLinks
+    caps={[
+      { slug: 'journey-intelligence', why: 'Follow customers end to end across apps, providers and back-office systems.' },
+      { slug: 'anomaly-detection', why: 'Notice a step leaving its expected range on the first day.' },
+      { slug: 'root-cause-analysis', why: 'Align change events with the affected segment, and say how sure you are.' },
+      { slug: 'business-graph', why: 'Know which providers and services each journey step depends on.' },
+    ]}
+    roles={[
+      { slug: 'customer-experience', why: 'Journeys, friction and promises kept' },
+      { slug: 'revenue', why: 'Conversion between interest and revenue' },
+      { slug: 'executives', why: 'Growth risk, located precisely' },
+    ]}
+    related={[
+      { slug: 'revenue-leakage', why: 'When the friction is at the payment step' },
+      { slug: 'business-anomalies', why: 'Telling real change from noise' },
+      { slug: 'operational-bottlenecks', why: 'When customers wait on internal work' },
+    ]} />
+
+  <CTA title="Find the step where your customers stall." text="Walk us through one journey that matters. We will show how Panoptes would follow it end to end and locate the friction." />
+</BaseLayout>
+
+<style>
+  .scen-grid { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .scen-copy h2 { font-size: clamp(1.6rem, 2.8vw, 2.2rem); max-width: 22ch; }
+  .scen-copy > p.muted { max-width: 60ch; margin-bottom: 1.6rem; }
+  .story-wrap { max-width: 900px; }
+  .story-wrap :global(.checklist) { margin: 1rem 0; color: var(--text-2); }
+  .uc-caveat { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--border); font-size: .95rem; }
+  .uc-caveat :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .sig-cards { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.8vw, 18px); }
+  .sig-cards h3 { font-size: 1.05rem; }
+  .sig-cards .icon-tile { width: 38px; height: 38px; margin-bottom: .8rem; }
+  @media (max-width: 1080px) { .sig-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 960px) { .scen-grid { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 560px) { .sig-cards { grid-template-columns: minmax(0, 1fr); } }
+</style>

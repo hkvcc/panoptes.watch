@@ -1,0 +1,327 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Tabs from '../../components/Tabs.astro';
+import TabPanel from '../../components/TabPanel.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import CodeBlock from '../../components/integrations/CodeBlock.astro';
+
+const crumbs = [{ label: 'Integrations', href: '/integrations/' }, { label: 'API & Events', href: '/integrations/api/' }];
+const ENDPOINT = 'https://api.panoptes.watch/v1/events';
+
+const eventJson = `{
+  "idempotency_key": "payments-svc:pay_88213:failed:2",
+  "type": "payment.failed",
+  "schema_version": "1",
+  "occurred_at": "2026-10-28T09:42:17.204Z",
+  "source": "payments-service",
+  "entity": { "type": "payment", "id": "pay_88213" },
+  "related": [
+    { "type": "order", "id": "ord_55102",
+      "relationship": "pays_for" },
+    { "type": "account", "id": "ACC-1042",
+      "relationship": "belongs_to" }
+  ],
+  "attributes": {
+    "amount": { "value": "480.00", "currency": "EUR" },
+    "method": "card",
+    "route": "eu-acquirer-b",
+    "failure_reason": "insufficient_funds",
+    "attempt": 2
+  }
+}`;
+
+const curl = `curl -X POST ${ENDPOINT} \\
+  -H "Authorization: Bearer $PANOPTES_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  --data @payment-failed.json
+
+# 202 Accepted
+# { "status": "accepted", "duplicate": false }`;
+
+const js = `// Node.js 18+ (built-in fetch)
+const res = await fetch('${ENDPOINT}', {
+  method: 'POST',
+  headers: {
+    Authorization: \`Bearer \${process.env.PANOPTES_API_KEY}\`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    idempotency_key: \`payments-svc:\${payment.id}:failed:\${payment.attempt}\`,
+    type: 'payment.failed',
+    schema_version: '1',
+    occurred_at: payment.failedAt.toISOString(),
+    entity: { type: 'payment', id: payment.id },
+    related: [
+      { type: 'order', id: payment.orderId, relationship: 'pays_for' },
+      { type: 'account', id: payment.accountId, relationship: 'belongs_to' },
+    ],
+    attributes: { route: payment.route, failure_reason: payment.reason },
+  }),
+});
+
+// Retrying with the same idempotency_key is safe.
+if (!res.ok) throw new Error(\`Event rejected: \${res.status}\`);`;
+
+const py = `import os
+import requests
+
+resp = requests.post(
+    "${ENDPOINT}",
+    headers={"Authorization": f"Bearer {os.environ['PANOPTES_API_KEY']}"},
+    json={
+        "idempotency_key": f"payments-svc:{payment.id}:failed:{payment.attempt}",
+        "type": "payment.failed",
+        "schema_version": "1",
+        "occurred_at": payment.failed_at.isoformat(),
+        "entity": {"type": "payment", "id": payment.id},
+        "related": [
+            {"type": "order", "id": payment.order_id, "relationship": "pays_for"},
+            {"type": "account", "id": payment.account_id, "relationship": "belongs_to"},
+        ],
+        "attributes": {"route": payment.route, "failure_reason": payment.reason},
+    },
+    timeout=10,
+)
+resp.raise_for_status()  # retrying with the same idempotency_key is safe`;
+
+const queryReq = `GET /v1/entities/account/ACC-1042
+    ?include=health,signals
+Host: api.panoptes.watch
+Authorization: Bearer $PANOPTES_API_KEY`;
+
+const queryRes = `{
+  "entity": {
+    "type": "account", "id": "ACC-1042", "state": "active"
+  },
+  "health": {
+    "status": "at_risk",
+    "objectives": [
+      { "id": "collect-within-terms", "status": "at_risk" },
+      { "id": "first-response-4h", "status": "breach_projected" }
+    ]
+  },
+  "related_counts": {
+    "opportunity": 1, "payment": 14, "case": 3
+  },
+  "open_signals": [
+    {
+      "id": "sig_7Y2",
+      "type": "payment_failures_above_expected",
+      "scope": { "route": "eu-acquirer-b" },
+      "opened_at": "2026-10-28T10:05:00Z"
+    }
+  ]
+}`;
+
+const webhook = `POST https://hooks.example.com/panoptes
+Content-Type: application/json
+Panoptes-Signature: t=1761645900,v1=5f2c0e…
+
+{
+  "id": "whk_01JC8X4T9R",
+  "type": "signal.opened",
+  "created_at": "2026-10-28T10:05:00Z",
+  "data": {
+    "signal": {
+      "id": "sig_7Y2",
+      "title": "Card failures above expected: eu-acquirer-b",
+      "severity": "high"
+    },
+    "affected": {
+      "process": "order-to-cash",
+      "accounts": 214,
+      "value_at_risk": { "value": "18400.00", "currency": "EUR" }
+    },
+    "owner": { "team": "payments-operations" }
+  }
+}`;
+
+const verify = `import crypto from 'node:crypto';
+
+// HMAC-SHA256 over "<t>.<raw body>", compared in
+// constant time; reject stale timestamps (replay).
+export function verify(rawBody, header, secret) {
+  const parts = Object.fromEntries(
+    header.split(',').map((p) => p.split('=')),
+  );
+  const age = Date.now() / 1000 - Number(parts.t);
+  if (Math.abs(age) > 300) return false;
+
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(\`\${parts.t}.\${rawBody}\`)
+    .digest('hex');
+  const a = Buffer.from(expected);
+  const b = Buffer.from(parts.v1 ?? '');
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}`;
+
+const guidance = [
+  { i: 'key', t: 'Idempotency keys', d: 'Give every event a deterministic key built from the source, the entity and the transition — for example payments-svc:pay_88213:failed:2. Retries then become safe: a duplicate is acknowledged, never double-counted.' },
+  { i: 'clock', t: 'Business time, not send time', d: 'Send occurred_at as an ISO 8601 timestamp with a UTC offset, taken from when the fact happened. Receipt time is recorded separately, so late or replayed events land in the right place on the timeline.' },
+  { i: 'link', t: 'Reference entities by stable IDs', d: 'Identify the entity an event is about, and related entities with a named relationship, using the IDs your systems already use. Never use display names or email addresses as keys.' },
+  { i: 'event', t: 'Name facts, in the past tense', d: 'invoice.overdue and verification.completed describe the business. update_row and sync_job do not. One event per fact; version the shape with schema_version.' },
+  { i: 'layers', t: 'Additive, compact attributes', d: 'Include the attributes needed to segment and explain — route, method, region, reason. Add new attributes without removing old ones, so consumers do not break.' },
+  { i: 'lock', t: 'Minimise personal data', d: 'Send identifiers and business attributes, not free text, card numbers or contact details. Events describe processes and outcomes, not the activity of individual employees.' },
+];
+---
+<BaseLayout
+  title="API & Events"
+  description="The designed Panoptes API approach: send business events with idempotency keys and entity references, query the business model and receive signed webhooks."
+  ogImage="/social/og-integrations.png"
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Integrations · API & Events"
+    title="Send business events. <span class='gradient-text'>Query the business model.</span>"
+    lede="For workflows that no off-the-shelf system records, your services can describe what happened as business events. Panoptes is designed to place each event on the right entity, in the right order, and make the resulting model queryable — with webhooks when something needs attention."
+    breadcrumbs={crumbs}
+    split
+  >
+    <p class="preview-flag"><span class="badge badge-warn">Preview</span> Illustrative design, not a published specification.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/contact/">Discuss API access<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#examples">See code examples</a>
+    </div>
+    <Fragment slot="visual"><CodeBlock code={eventJson} lang="json" title="payment-failed.json — example business event" /></Fragment>
+  </PageHero>
+
+  <!-- Status -->
+  <section class="section section-tight">
+    <div class="container">
+      <div class="status-note reveal" role="note" aria-label="API status">
+        <span class="icon-tile"><Icon name="alert" /></span>
+        <div>
+          <h2 class="h-sm">About this page</h2>
+          <p class="muted">This page describes how the Panoptes API is designed to work, so engineering teams can judge the integration effort early. Endpoints such as <code>{ENDPOINT}</code>, field names, headers and responses are <strong>illustrative examples</strong>. They are not a published specification and may change. API access and documentation are discussed as part of an evaluation — write to <a href="mailto:sales@panoptes.watch">sales@panoptes.watch</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flow -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="How it fits together" title="Events in. Answers and alerts out." lede="Three directions, one model: your systems send events, applications query the model, and Panoptes pushes signals to the tools where work already happens." />
+      <div class="reveal">
+        <Diagram class="hide-sm" src="/diagrams/api-events-query-webhooks.svg" alt="Your systems post business events to an ingest step that validates the schema, deduplicates by idempotency key, resolves entity references and orders events by occurred_at. Events update the business model, which can be queried through the API and which sends outbound webhooks such as signal.opened." frame="api · events, queries and webhooks" illustrative={false} zoom />
+        <Diagram class="show-sm" src="/diagrams/api-events-query-webhooks-vertical.svg" alt="Your systems post events to ingest, which feeds the business model; the model can be queried and sends outbound webhooks." frame="api flow" illustrative={false} />
+      </div>
+      <div class="grid grid-3 mt-3">
+        <article class="card reveal"><span class="icon-tile"><Icon name="event" /></span><h3>Send events</h3><p class="muted"><code>POST /v1/events</code> accepts one business fact at a time (or small batches), acknowledged with <code>202 Accepted</code> once validated.</p></article>
+        <article class="card reveal"><span class="icon-tile"><Icon name="search" /></span><h3>Query the model</h3><p class="muted">Read an entity with its state, related entities, objective health and open signals — the same view the Command Center uses.</p></article>
+        <article class="card reveal"><span class="icon-tile"><Icon name="signal" /></span><h3>Receive webhooks</h3><p class="muted">Subscribe an endpoint to events such as <code>signal.opened</code> or <code>objective.at_risk</code>, signed so you can verify they came from Panoptes.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Examples -->
+  <section class="section" id="examples">
+    <div class="container">
+      <SectionHead eyebrow="Sending an event" title="One request per business fact." lede="The same payment.failed event, sent three ways. Authentication uses a server-side API key; never call the API from a browser." />
+      <Tabs uid="send" label="Code examples for sending an event" tabs={[{ id: 'curl', label: 'cURL' }, { id: 'js', label: 'JavaScript' }, { id: 'py', label: 'Python' }]} class="reveal">
+        <TabPanel uid="send" id="curl" first><CodeBlock code={curl} lang="shell" title="Send an event with cURL" /></TabPanel>
+        <TabPanel uid="send" id="js"><CodeBlock code={js} lang="javascript" title="Send an event from Node.js" /></TabPanel>
+        <TabPanel uid="send" id="py"><CodeBlock code={py} lang="python" title="Send an event from Python" /></TabPanel>
+      </Tabs>
+      <p class="note mt-1">Example endpoint and payloads for illustration only. <code>payment</code> stands for an object in your own code.</p>
+    </div>
+  </section>
+
+  <!-- Guidance -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Event design" title="Well-designed events make the model trustworthy." lede="Most integration problems come from events that cannot be deduplicated, ordered or joined. Six rules avoid nearly all of them." />
+      <div class="grid grid-3">
+        {guidance.map((g) => (
+          <article class="card reveal">
+            <span class="icon-tile"><Icon name={g.i} /></span>
+            <h3>{g.t}</h3>
+            <p class="muted">{g.d}</p>
+          </article>
+        ))}
+      </div>
+      <div class="anatomy reveal">
+        <p class="kpi-label">Anatomy of an event</p>
+        <dl class="dl-grid">
+          <dt><code>idempotency_key</code></dt><dd>Deterministic, unique per business fact. Safe to resend.</dd>
+          <dt><code>type</code></dt><dd>A past-tense business fact, namespaced by entity: <code>payment.failed</code>.</dd>
+          <dt><code>occurred_at</code></dt><dd>When it happened in the business, ISO 8601 with offset.</dd>
+          <dt><code>entity</code></dt><dd>The entity the fact is about: type plus your stable ID.</dd>
+          <dt><code>related</code></dt><dd>Other entities it touches, each with a named relationship.</dd>
+          <dt><code>attributes</code></dt><dd>Dimensions used to segment and explain: route, region, reason.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- Query -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Querying the model" title="Ask about an entity, get its context." lede="Instead of reconstructing an account from five systems, query it once and get its state, the health of the objectives it affects and any open signals." />
+      <div class="grid grid-2 code-pair">
+        <CodeBlock code={queryReq} lang="http" title="Request" class="reveal" />
+        <CodeBlock code={queryRes} lang="json" title="Response — 200 OK" class="reveal" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Webhooks -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Outbound webhooks" title="Push signals to where work already happens." lede="When a signal opens or an objective moves to at-risk, Panoptes is designed to POST a signed event to your endpoint — an incident tool, a workflow automation, a chat channel or your own service." />
+      <div class="grid grid-2 code-pair">
+        <CodeBlock code={webhook} lang="http" title="Example delivery: signal.opened" class="reveal" />
+        <div class="stack reveal">
+          <CodeBlock code={verify} lang="javascript" title="Verify the signature (Node.js)" />
+          <ul class="checklist small">
+            <li>Respond with a 2xx quickly and process asynchronously; failed deliveries are designed to be retried with backoff.</li>
+            <li>Use the event <code>id</code> to ignore duplicate deliveries.</li>
+            <li>Reject signatures older than a few minutes to prevent replay.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight">
+    <div class="container">
+      <RelatedLinks
+        eyebrow="Keep exploring"
+        title="Related pages"
+        items={[
+          { label: 'Integrations overview', href: '/integrations/', desc: 'Ecosystem directory and architecture', icon: 'plug' },
+          { label: 'Data sources', href: '/integrations/data-sources/', desc: 'Entities, events, states and freshness', icon: 'database' },
+          { label: 'Security & governance', href: '/integrations/security-governance/', desc: 'Keys, access and auditability', icon: 'shield' },
+          { label: 'Actions & Automation', href: '/platform/actions-automation/', desc: 'Routing findings to owners', icon: 'actions' },
+          { label: 'How business events connect to outcomes', href: '/resources/how-business-events-connect-to-outcomes/', desc: 'Why event design matters', icon: 'event' },
+          { label: 'Business anomalies', href: '/use-cases/business-anomalies/', desc: 'What events make detectable', icon: 'anomaly' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <CTA title="Planning an events integration?" text="Tell us which workflows you want to observe and how your services publish events today. We will share the current API design and walk through the effort involved." primary={{ label: 'Discuss API access', href: '/contact/' }} secondary={{ label: 'Book a Demo', href: '/demo/' }} />
+</BaseLayout>
+
+<style>
+  .preview-flag { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 1.2rem 0 0; font-size: .9rem; color: var(--text-2); }
+  .status-note { display: flex; gap: 18px; align-items: flex-start; padding: clamp(20px, 3vw, 28px); border: 1px solid color-mix(in srgb, var(--warn) 45%, var(--border)); border-radius: var(--radius-lg); background: var(--warn-bg); }
+  .status-note .icon-tile { margin: 0; background: var(--surface); color: var(--warn-text); }
+  .status-note .h-sm { font-size: 1.15rem; margin-bottom: .4em; }
+  .status-note p { margin: 0; color: var(--text); }
+  .status-note a { color: var(--accent-text); font-weight: 600; }
+  .status-note code { overflow-wrap: anywhere; }
+  .anatomy { margin-top: clamp(28px, 4vw, 44px); padding: clamp(20px, 3vw, 28px); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .anatomy .dl-grid { margin-top: 1rem; }
+  .anatomy code { color: var(--accent-text); }
+  .code-pair { align-items: start; }
+  .card code, .muted code { overflow-wrap: anywhere; }
+  @media (max-width: 640px) { .anatomy .dl-grid { grid-template-columns: 1fr; gap: .2rem; } .anatomy .dl-grid dd { margin-bottom: .6rem; } }
+  @media (max-width: 960px) { .code-pair { grid-template-columns: minmax(0, 1fr); } }
+</style>

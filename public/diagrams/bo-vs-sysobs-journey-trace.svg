@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 350" fill="none">
+<!--STYLE-->
+<title>A journey trace for one hypothetical order: most of the elapsed time is waiting in a fraud review queue, and the 48-hour delivery promise is missed by two hours</title>
+<g class="d-t">
+<text x="20" y="24" font-size="13" font-weight="600" class="d-td d-text">Order A-1042 (hypothetical) · one journey across five systems</text>
+<g font-size="11" class="d-muted"><rect x="20" y="38" width="12" height="12" rx="3" class="d-soft"/><rect x="20" y="38" width="12" height="12" rx="3" class="d-warn-s"/><text x="38" y="48">Waiting</text>
+<rect x="100" y="38" width="12" height="12" rx="3" class="d-accent"/><text x="118" y="48">Active work</text>
+<rect x="200" y="38" width="12" height="12" rx="3" class="d-accent-2"/><text x="218" y="48">In transit</text></g>
+<g class="d-line" stroke-width="1"><path d="M200 66V306M300 66V306M400 66V306M500 66V306M600 66V306M700 66V306" stroke-dasharray="2 4"/></g>
+<path d="M600 60V306" class="d-crit-s" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="596" y="58" font-size="10" text-anchor="end" class="d-crit" font-weight="600">Promise · 48 h</text>
+<g font-size="12" class="d-text">
+<text x="20" y="84">Checkout</text><text x="20" y="120">Payment authorised</text><text x="20" y="156">Fraud review</text><text x="20" y="192">Pick &amp; pack</text><text x="20" y="228">Carrier collection</text><text x="20" y="264">In transit</text><text x="20" y="300">Delivered</text>
+</g>
+<g font-size="9" class="d-tm d-muted">
+<text x="20" y="96">WEB</text><text x="20" y="132">PAYMENTS</text><text x="20" y="168">RISK QUEUE</text><text x="20" y="204">WAREHOUSE</text><text x="20" y="240">LOGISTICS</text><text x="20" y="276">CARRIER</text><text x="20" y="312">CARRIER</text>
+</g>
+<rect x="200" y="74" width="4" height="18" rx="2" class="d-accent"/>
+<rect x="203" y="110" width="4" height="18" rx="2" class="d-accent"/>
+<rect x="206" y="146" width="136" height="18" rx="3" class="d-soft"/><rect x="206" y="146" width="136" height="18" rx="3" class="d-warn-s"/><rect x="342" y="146" width="5" height="18" rx="2" class="d-accent"/>
+<text x="356" y="159" font-size="11" class="d-text" font-weight="600">≈17 h waiting · ≈30 min of work</text>
+<rect x="347" y="182" width="20" height="18" rx="3" class="d-soft"/><rect x="347" y="182" width="20" height="18" rx="3" class="d-warn-s"/><rect x="367" y="182" width="16" height="18" rx="2" class="d-accent"/>
+<rect x="383" y="218" width="67" height="18" rx="3" class="d-soft"/><rect x="383" y="218" width="67" height="18" rx="3" class="d-warn-s"/>
+<rect x="450" y="254" width="167" height="18" rx="3" class="d-accent-2"/>
+<circle cx="617" cy="299" r="6" class="d-crit"/><text x="630" y="303" font-size="11" class="d-crit" font-weight="600">50 h · late</text>
+<path d="M200 316H700" class="d-line" stroke-width="1.5"/>
+<g font-size="10" class="d-tm d-muted" text-anchor="middle"><text x="200" y="334">0 h</text><text x="300" y="334">12 h</text><text x="400" y="334">24 h</text><text x="500" y="334">36 h</text><text x="600" y="334">48 h</text><text x="690" y="334">60 h</text></g>
+</g>
+</svg>

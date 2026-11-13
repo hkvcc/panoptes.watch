@@ -1,0 +1,121 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/Diagram.astro';
+---
+<ArticleLayout
+  title="What is business observability?"
+  metaTitle="What Is Business Observability? A Complete Introduction"
+  description="A long-form introduction to business observability: where the idea comes from, a working definition, its building blocks, what it is not, maturity stages and how to start."
+  eyebrow="Foundations"
+  dek="Where the idea comes from, what it means when applied to a whole business, what it is built from, what it is not — and a practical way to begin without boiling the ocean."
+  related={['/resources/business-observability-vs-bi/', '/resources/business-observability-vs-system-observability/', '/resources/building-a-business-operating-model/']}
+>
+  <p>Most organisations can tell you, with great precision, what happened last quarter. Far fewer can tell you what is happening right now in the parts of the business that matter most — whether this week's new customers are getting through onboarding on time, whether money is moving from invoice to cash as expected, whether a change shipped on Tuesday is quietly making a journey worse for one segment of customers.</p>
+  <p>That gap, between knowing what happened and understanding what is happening, is what business observability sets out to close. This guide is the long version. If you want the one-page summary first, read the <a href="/business-observability/">business observability overview</a>; then come back here for the origins of the idea, a working definition, the building blocks, the common misunderstandings, a maturity model, and a practical starting plan.</p>
+
+  <h2>Where observability thinking comes from</h2>
+  <p>The word has a precise origin. In control theory, a system is called <em>observable</em> if you can work out its internal state from its external outputs. A thermostat that only knows the room is "too cold" can still act, but an engineer who can infer the temperature of every part of the building from a handful of sensors understands the system. Observability, in that original sense, is not about the number of sensors. It is about whether the outputs you collect are enough to explain what is going on inside.</p>
+  <p>Software engineering borrowed the idea when distributed systems became too complex to understand by watching a few health checks. Monitoring, in the older sense, asked predefined questions: is the server up, is the disk full, is response time under a threshold? Observability asked a harder one: when something unexpected happens, can we explore the system's outputs well enough to explain it, even if we never anticipated this particular failure? That shift — from checking known conditions to being able to investigate unknown ones — is the core of the idea, and it is what carries over to the business.</p>
+  <p>A business is, if anything, a harder system to observe than software. Its "components" are people, teams, suppliers, customers, contracts and money as well as applications. Its state is spread across dozens of systems of record, each built for a different purpose. Its behaviour is shaped by decisions, incentives and seasonality, not just code. And most of its outputs — reports, dashboards, spreadsheets — were designed to summarise, not to explain.</p>
+
+  <div class="callout">
+    <strong>The useful question</strong>
+    Could someone in your organisation, starting from a surprising number on a Tuesday morning, work out what changed, where, and what it is affecting — before the end of the day, without commissioning a new analysis? If the honest answer is "rarely", the business is not yet observable.
+  </div>
+
+  <h2>A working definition</h2>
+  <p>Here is the definition this site uses:</p>
+  <blockquote><p>Business observability is the ability to understand what is happening inside a business — across its revenue flows, customer journeys, workflows, dependencies and commitments — continuously, and in enough connected detail to explain why it is happening and decide what to do next.</p></blockquote>
+  <p>Three phrases in that sentence do most of the work.</p>
+  <ul>
+    <li><strong>"Inside a business."</strong> The subject is the business itself — orders, cases, payments, customers, commitments — not the infrastructure underneath it, and not a report about it. Technical observability watches servers, logs and traces. Business intelligence reports what happened. Business observability watches the operation as it runs.</li>
+    <li><strong>"Continuously."</strong> Not at month end, not when someone remembers to refresh a report. The aim is a live picture of open work and money in motion, compared against what <em>should</em> be happening.</li>
+    <li><strong>"Connected detail."</strong> A number on its own rarely explains anything. Explanation comes from relationships: this customer placed these orders, which created these payments, which depend on this provider, which changed its behaviour yesterday. Without the connections, you can see symptoms but not causes.</li>
+  </ul>
+  <p>It is worth being explicit about what the definition does <em>not</em> say. It does not say "real-time dashboards", "AI insights" or "a single source of truth". Those can be useful, but none of them is the point. The point is the ability to explain — and an explanation is only valuable if it leads to a decision someone owns.</p>
+
+  <h2>The building blocks</h2>
+  <p>In practice, an observable business rests on five layers, each built on the systems of record the business already runs. None of them is exotic. What matters is that they are connected to each other rather than living in separate tools.</p>
+  <Diagram src="/diagrams/what-is-bo-building-blocks.svg" alt="Five layers of business observability built on existing sources: entities and relationships, processes and journeys, change and context, expectations, and ownership and action" caption="The five building blocks. Each layer depends on the one beneath it; the value comes from the connections between them." zoom />
+
+  <h3>1. Entities and relationships</h3>
+  <p>The foundation is a model of what the business is made of: customers, accounts, orders, subscriptions, payments, invoices, cases, products, suppliers, teams. More important than the entities themselves are the relationships between them — which customer owns which contract, which payment settles which invoice, which supplier sits beneath which commitment. This is what makes it possible to follow a problem from one part of the business to another. On this site we call that model the <a href="/platform/business-graph/">Business Graph</a>.</p>
+
+  <h3>2. Processes and journeys</h3>
+  <p>Entities move. An application becomes a verified merchant; an order becomes a delivery; an invoice becomes cash. Business observability treats these flows as first-class: stages, hand-offs, waiting time, rework, abandonment. Most operational problems live here — not in any one system, but in the gaps between them. See <a href="/platform/process-intelligence/">Process Intelligence</a> and <a href="/platform/journey-intelligence/">Journey Intelligence</a> for how those flows can be modelled.</p>
+
+  <h3>3. Change and context</h3>
+  <p>Businesses change constantly: releases, price changes, campaigns, policy updates, new suppliers, staffing rotas. When an outcome moves, the first useful question is almost always "what changed just before this?" A shared, timestamped record of changes — attached to the parts of the model they touch — turns a guessing game into a short list of candidates.</p>
+
+  <h3>4. Expectations</h3>
+  <p>A number means nothing without a sense of what it should be. Expectations come in two forms. Explicit ones are objectives and commitments: "95% of approved merchants activated within 48 hours." Implicit ones are learned patterns: what Monday morning payment volume normally looks like for this region and this route. Observing a business means continuously comparing actual behaviour against both, so that drift is noticed while it is still small. The <a href="/platform/business-health/">Business Health</a> page goes deeper on how objectives and indicators fit together.</p>
+
+  <h3>5. Ownership and action</h3>
+  <p>The top layer is where most monitoring efforts quietly fail. Every objective, process and commitment needs an owner; every meaningful deviation needs to reach that owner with enough context to act; and every intervention needs to be measured afterwards to see whether it worked. Without this layer, observability produces interesting charts and very little change. <a href="/platform/actions-automation/">Actions &amp; Automation</a> describes how that follow-through is designed to work.</p>
+
+  <h2>A worked example: one Tuesday, two views</h2>
+  <p>To make this concrete, consider a hypothetical payments company that onboards small merchants. Every figure below is invented for illustration.</p>
+  <p>The company's weekly dashboard shows new merchant sign-ups up 6% week on week, and the month-to-date revenue line is on plan. On the evidence of the dashboard, things are fine.</p>
+  <p>An observable version of the same business would show something different. Its model knows that sign-up is only the first stage of a journey — application, identity verification, risk approval, activation, first transaction — and it holds an explicit objective: 95% of approved merchants should process their first transaction within 72 hours. On Tuesday morning that objective is drifting. Only 88% of last week's cohort have transacted, against an expected range of 93–97%.</p>
+  <p>Because the stages are connected, the drift can be localised. Time in identity verification has roughly doubled for merchants in one country, while every other stage looks normal. Because changes are recorded against the model, the timeline shows that a document-checking rule was updated for that country the previous Thursday. Because the model links merchants to expected revenue, the exposure can be estimated: a few hundred merchants whose first-month processing volume is now at risk of slipping into next month.</p>
+  <p>None of that requires a breakthrough in analytics. It requires the five layers to exist and to be connected. The result is not a prettier dashboard; it is a specific, owned question — "did Thursday's rule change cause the verification slowdown in this country, and should we roll it back?" — put in front of the person who can answer it, days before the revenue line would have shown anything.</p>
+
+  <div class="callout">
+    <strong>Correlation is not yet cause</strong>
+    In the example, the rule change is the leading candidate, not a proven cause. An observable business makes candidates visible quickly; it still takes a deliberate check — compare against countries without the change, or revert for a subset — to confirm. Treat the model as a way to shorten investigations, not to skip them.
+  </div>
+
+  <h2>What business observability is not</h2>
+  <p>New categories attract loose definitions. It is as useful to say what business observability is not as what it is.</p>
+  <ul>
+    <li><strong>It is not BI with a faster refresh.</strong> Business intelligence answers questions about closed periods with reconciled data, and it does that very well. Refreshing a report every five minutes does not give it a model of processes, expectations or ownership. The full comparison is in <a href="/resources/business-observability-vs-bi/">Business observability vs BI</a>.</li>
+    <li><strong>It is not application performance monitoring for business metrics.</strong> Technical observability tools are excellent at telemetry from software. Pointing them at revenue figures misses the parts that make business problems hard: long-running work, human steps, contested definitions and slow feedback. See <a href="/resources/business-observability-vs-system-observability/">Business vs system observability</a>.</li>
+    <li><strong>It is not process mining alone.</strong> Reconstructing process maps from event logs is valuable, and it is one input. Observability also needs expectations, money, dependencies and ownership around those processes.</li>
+    <li><strong>It is not a data warehouse project.</strong> A warehouse is often a useful source. But a pile of well-modelled tables is not the same as a continuously evaluated model of how the business should behave.</li>
+    <li><strong>It is not surveillance of people.</strong> The unit of observation is the process and its outcomes — queues, stages, commitments — not individual employees' keystrokes or productivity. An approach that drifts into watching people rather than work will lose trust and, usually, accuracy.</li>
+    <li><strong>It is not a single source of truth.</strong> Different systems will continue to hold different facts. The aim is a connected, explicit view of how those facts relate, with definitions that are owned and visible — not a promise that every disagreement disappears.</li>
+  </ul>
+
+  <h2>Maturity stages</h2>
+  <p>Organisations do not become observable in one step. It is more useful to describe stages by the questions a business can answer reliably than by the tools it owns.</p>
+  <Diagram src="/diagrams/what-is-bo-maturity.svg" alt="Five maturity stages: reporting, monitoring, connected, observable and operating, each defined by the question the organisation can answer" caption="Maturity is defined by the questions you can answer reliably, not by the tools you own." zoom class="hide-sm" />
+  <Diagram src="/diagrams/what-is-bo-maturity-vertical.svg" alt="Five maturity stages: reporting, monitoring, connected, observable and operating, each defined by the question the organisation can answer" caption="Maturity is defined by the questions you can answer reliably, not by the tools you own." class="show-sm" />
+  <table>
+    <thead><tr><th>Stage</th><th>Question answered reliably</th><th>Typical signs</th><th>What moves you forward</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Reporting</strong></td><td>What happened last period?</td><td>Monthly packs; numbers argued about in meetings; problems discovered at month end.</td><td>Agree a handful of definitions and look at them more often than monthly.</td></tr>
+      <tr><td><strong>2. Monitoring</strong></td><td>Is this number in range?</td><td>Threshold alerts on key metrics; many false alarms; alerts without context.</td><td>Replace fixed thresholds with expectations that account for seasonality and segment.</td></tr>
+      <tr><td><strong>3. Connected</strong></td><td>How do the parts relate?</td><td>Core entities linked across systems; a customer or order can be followed end to end.</td><td>Model processes and attach objectives to them, not just to totals.</td></tr>
+      <tr><td><strong>4. Observable</strong></td><td>What is happening, and why?</td><td>Drift is noticed early and localised to a stage, segment or dependency; changes are on the same timeline.</td><td>Give every objective an owner and route deviations to them.</td></tr>
+      <tr><td><strong>5. Operating</strong></td><td>What do we do, and did it work?</td><td>Interventions are owned, time-bound and measured against an expected path; learning is recorded.</td><td>Keep the loop honest: retire stale objectives, review interventions that did not work.</td></tr>
+    </tbody>
+  </table>
+  <p>Two cautions. First, stages are per domain, not per company: a business can be "observable" in order fulfilment and still at "reporting" in collections. Second, skipping stages rarely works. An organisation that buys anomaly detection before it has agreed what an active customer is will mostly detect disagreements about definitions.</p>
+  <p>Stage five is where business observability starts to become something larger — what we call a <a href="/company/vision/">Business Operating System</a>: a shared, living model that the whole organisation uses to see, decide and coordinate. That is a long-term direction, not a prerequisite. Most of the value is available well before it.</p>
+
+  <h2>How to start</h2>
+  <p>The most common mistake is to start broad: connect every system, model every entity, build a company-wide health score. The result is a large integration project with no obvious first decision to improve. A narrower start tends to work better.</p>
+  <ol>
+    <li><strong>Pick one value stream that hurts.</strong> Choose a flow where money or customer experience is visibly at stake and where delays or leakage are suspected but not well understood — onboarding, order-to-cash, claims, renewals. One flow, end to end.</li>
+    <li><strong>Write down the commitment.</strong> State what "working" means in a sentence a customer would recognise: "Approved merchants process their first payment within 72 hours." This becomes the objective everything else is measured against.</li>
+    <li><strong>Map the entities and stages.</strong> List the entities the flow touches and the stages it passes through, and note which system records each transition. Gaps in this map are findings in their own right.</li>
+    <li><strong>Connect the events, not just the totals.</strong> For each stage transition, capture when it happened and for which entity. Event-level data is what makes waiting time, rework and drop-off visible. The <a href="/integrations/data-sources/">data sources</a> and <a href="/integrations/api/">API &amp; events</a> pages describe the common patterns.</li>
+    <li><strong>Set expectations by segment.</strong> Establish normal ranges for the objective and for each stage, split by the segments that genuinely behave differently — region, channel, customer tier, payment route.</li>
+    <li><strong>Start a change log.</strong> Record releases, rule changes, pricing and staffing changes that touch the flow. It can begin as a shared list; what matters is that it is timestamped and linked to the stages it affects.</li>
+    <li><strong>Name an owner and a cadence.</strong> One person owns the objective. Deviations go to them with context. A short weekly review asks three questions: what drifted, what did we do, and did it work?</li>
+  </ol>
+  <p>Done well, this produces a small, credible win within weeks: one flow where the organisation can see drift early, explain it quickly and act on it deliberately. That credibility is what earns the right to extend the model to the next flow. The guide to <a href="/resources/building-a-business-operating-model/">building a business operating model</a> covers how to grow from one flow to many.</p>
+
+  <h3>What to measure about the effort itself</h3>
+  <p>Avoid judging the programme by the number of dashboards or integrations. Better measures are operational: how long it takes from a meaningful deviation to someone knowing about it; how long from knowing to a plausible explanation; what share of deviations have a named owner and a recorded decision; and whether interventions are being measured against an expected path rather than a simple before-and-after. These are outcomes to track over time, not targets to promise in advance.</p>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>Observability, in its original sense, is the ability to infer a system's internal state from its outputs. Applied to a business, it means understanding what is happening inside revenue flows, journeys, workflows and commitments — continuously and in connected detail.</li>
+    <li>It rests on five connected layers: entities and relationships, processes and journeys, change and context, expectations, and ownership and action.</li>
+    <li>It is not BI on a faster refresh, not software monitoring pointed at revenue, not process mining alone, and never surveillance of individuals.</li>
+    <li>Maturity is best described by the questions you can answer reliably — from "what happened?" to "what do we do, and did it work?" — and it varies by domain.</li>
+    <li>Start with one painful value stream, one written commitment, event-level data, segment-aware expectations, a change log and a named owner. Earn the right to expand.</li>
+  </ul>
+  <p>For definitions of the terms used here, see the <a href="/resources/business-observability-glossary/">business observability glossary</a>. To see how these ideas map onto a product, read <a href="/how-it-works/">how Panoptes works</a>.</p>
+</ArticleLayout>

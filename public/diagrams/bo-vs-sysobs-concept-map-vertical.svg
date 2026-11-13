@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 550" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>How software observability concepts map to business observability, with fit rated strong or adapt</title>
+<g class="d-t">
+<rect x="10" y="10" width="340" height="96" rx="12" class="d-surface"/><rect x="10" y="10" width="340" height="96" rx="12" class="d-line"/>
+<text x="24" y="37" font-size="12" class="d-muted">Metrics, logs, traces →</text>
+<text x="24" y="64" font-size="14" font-weight="600" class="d-text">Business events &amp; state</text>
+<text x="24" y="86" font-size="11" class="d-muted">orders, cases, payments, balances</text>
+<rect x="262" y="22" width="76" height="22" rx="11" class="d-warn-s" stroke-width="1.5"/><text x="300" y="37" font-size="11" font-weight="600" text-anchor="middle" class="d-warn">Adapt</text>
+<rect x="10" y="118" width="340" height="96" rx="12" class="d-surface"/><rect x="10" y="118" width="340" height="96" rx="12" class="d-line"/>
+<text x="24" y="145" font-size="12" class="d-muted">SLOs &amp; error budgets →</text>
+<text x="24" y="172" font-size="14" font-weight="600" class="d-text">Objectives &amp; commitment budgets</text>
+<text x="24" y="194" font-size="11" class="d-muted">e.g. 95% activated within 48 h</text>
+<rect x="262" y="130" width="76" height="22" rx="11" class="d-warn-s" stroke-width="1.5"/><text x="300" y="145" font-size="11" font-weight="600" text-anchor="middle" class="d-warn">Adapt</text>
+<rect x="10" y="226" width="340" height="96" rx="12" class="d-surface"/><rect x="10" y="226" width="340" height="96" rx="12" class="d-line"/>
+<text x="24" y="253" font-size="12" class="d-muted">Distributed tracing →</text>
+<text x="24" y="280" font-size="14" font-weight="600" class="d-text">Journey tracing</text>
+<text x="24" y="302" font-size="11" class="d-muted">one order across systems and teams</text>
+<rect x="262" y="238" width="76" height="22" rx="11" class="d-ok-s" stroke-width="1.5"/><text x="300" y="253" font-size="11" font-weight="600" text-anchor="middle" class="d-ok">Strong fit</text>
+<rect x="10" y="334" width="340" height="96" rx="12" class="d-surface"/><rect x="10" y="334" width="340" height="96" rx="12" class="d-line"/>
+<text x="24" y="361" font-size="12" class="d-muted">High cardinality →</text>
+<text x="24" y="388" font-size="14" font-weight="600" class="d-text">Segments</text>
+<text x="24" y="410" font-size="11" class="d-muted">per cohort, route, region, tier</text>
+<rect x="262" y="346" width="76" height="22" rx="11" class="d-ok-s" stroke-width="1.5"/><text x="300" y="361" font-size="11" font-weight="600" text-anchor="middle" class="d-ok">Strong fit</text>
+<rect x="10" y="442" width="340" height="96" rx="12" class="d-surface"/><rect x="10" y="442" width="340" height="96" rx="12" class="d-line"/>
+<text x="24" y="469" font-size="12" class="d-muted">Incidents &amp; postmortems →</text>
+<text x="24" y="496" font-size="14" font-weight="600" class="d-text">Interventions &amp; reviews</text>
+<text x="24" y="518" font-size="11" class="d-muted">change an outcome, then measure it</text>
+<rect x="262" y="454" width="76" height="22" rx="11" class="d-warn-s" stroke-width="1.5"/><text x="300" y="469" font-size="11" font-weight="600" text-anchor="middle" class="d-warn">Adapt</text>
+</g>
+</svg>

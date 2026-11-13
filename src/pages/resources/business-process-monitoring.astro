@@ -1,0 +1,138 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Diagram from '../../components/resources-b/RbDiagram.astro';
+---
+<ArticleLayout
+  title="Business process monitoring: what to watch, and how"
+  metaTitle="Business Process Monitoring: What to Measure and How to Instrument It"
+  description="A practical guide to business process monitoring: arrival rate, wait versus work time, WIP, completion, rework and breach risk, instrumented with business events."
+  eyebrow="Business process monitoring"
+  dek="A process is not a pile of tasks. It is a flow of work through stages, and the signals that matter most sit at the edges of those stages: what arrives, what waits, what gets done, what comes back, and which promises are about to break."
+  related={['/resources/understanding-business-bottlenecks/', '/resources/how-business-events-connect-to-outcomes/', '/resources/business-health-metrics/']}
+>
+  <p>Most organisations can tell you, at any moment, how many tickets each team closed yesterday. Far fewer can tell you how long a customer has been waiting for the outcome those tickets were supposed to produce. The difference is the difference between monitoring tasks and monitoring a process, and it is where a surprising amount of operational pain hides.</p>
+  <p>This guide sets out what to measure in a business process, why each measurement earns its place, how to capture it with business events rather than screen-scraped status fields, and how the measurements combine into monitors that warn you early. It finishes with a worked example from merchant onboarding, using fictional numbers, to show the method end to end.</p>
+
+  <h2>Task monitoring is not process monitoring</h2>
+  <p>Task monitoring asks whether individual units of work were done, and whether they were done on time by the team that owned them. It is the natural view of any single system: a ticketing tool knows about tickets, a case-management tool knows about cases, a warehouse system knows about picks. Each reports its own completion rates and its own service levels, and each can be entirely green.</p>
+  <p>Process monitoring asks a different question: <em>is the thing the customer or the business is waiting for moving through the whole sequence at the pace we promised?</em> That question cannot be answered from inside any one system, because most of the elapsed time in a real process is not spent inside a task at all. It is spent between tasks: in queues, in hand-offs, waiting on a customer, waiting for a batch to run, or sitting in someone's inbox because the routing rule did not know where to send it.</p>
+  <div class="callout">
+    <strong>A useful test</strong>
+    Pick any end-to-end commitment you make to customers, such as "accounts live within 21 days" or "claims paid within 10 working days". If you cannot say, right now, how many open items are on track to miss it and which stage they are stuck in, you are monitoring tasks, not the process.
+  </div>
+  <p>The practical consequence is that every team can hit its own target while the end-to-end outcome deteriorates. Verification closes its cases within two days; risk review closes its cases within three; configuration within two. Nobody is failing. Yet the customer waits nineteen days, because the gaps between those stages, and the work that bounces back between them, belong to nobody. This is sometimes called the "watermelon" effect: green on the outside, red on the inside. Process monitoring is how you see the red.</p>
+
+  <h2>The seven measurements of a stage</h2>
+  <p>A process is a sequence of stages, and every stage, however different its content, has the same shape. Work arrives. It waits. Someone or something works on it. It leaves, either forwards to the next stage or backwards for correction. While it is inside, it is getting older, and somewhere there is a promise about how old it is allowed to get. That shape gives you seven measurements that apply to almost any business process, from loan underwriting to warehouse fulfilment.</p>
+
+  <Diagram src="/diagrams/process-monitoring-stage-anatomy.svg" alt="Diagram of a single process stage. Work arrives from the left, waits in a queue, is worked on, then exits to Done. A dashed rework loop returns items from the exit back into the queue. Seven numbered measurements are marked: arrivals, wait time, work time, work in progress spanning queue and work, completions and lead time, rework, and breach risk on the oldest waiting item." caption="Every stage has the same anatomy. The numbers mark where each measurement is taken." zoom />
+
+  <h3>1. Arrival rate</h3>
+  <p>How much work enters the stage per hour, day or week, and how that compares with what is normal for this time of week and season. Arrival rate is the most under-watched measurement in operations, because it is usually somebody else's output: marketing's campaign, sales' quarter-end push, a partner's batch upload. Yet almost every queue problem starts with a change in arrivals that nobody connected to capacity. Watch it by segment as well as in total; a stable total can hide a sharp rise in a work type that takes three times longer to handle.</p>
+
+  <h3>2. Wait time</h3>
+  <p>The time an item spends in the stage before anyone starts on it, plus any time it spends paused mid-way (waiting on a customer, a document, another team). Wait time is almost always larger than work time, often several times larger, and it is where delay accumulates when demand approaches capacity. Separate <em>internal</em> waiting (our queue) from <em>external</em> waiting (blocked on the customer or a third party), because the remedies are completely different.</p>
+
+  <h3>3. Work time</h3>
+  <p>The time spent actively working on an item. It matters for two reasons. First, the ratio of work time to total elapsed time, often called <a href="/resources/business-observability-glossary/#flow-efficiency">flow efficiency</a>, tells you how much of your lead time is genuinely productive. Second, rising work time per item is an early sign of a change in the work itself: a new policy check, a more complex customer mix, or a tool that has become slower. Measure it as a distribution, not just an average; a long tail of difficult cases behaves very differently from a uniform increase.</p>
+
+  <h3>4. Work in progress</h3>
+  <p>The number of items currently inside the stage, waiting or in work. <a href="/resources/business-observability-glossary/#wip">Work in progress</a> is the stock that the flows of arrivals and completions fill and drain. It connects directly to lead time through <a href="/resources/business-observability-glossary/#littles-law">Little's Law</a>: in a stable system, the average time items spend inside equals average work in progress divided by average throughput. If WIP doubles while throughput stays flat, the average item will take twice as long, and you know that before any of those items finish.</p>
+
+  <h3>5. Completions and lead time</h3>
+  <p>How many items leave the stage per period (throughput), and how long the ones that left actually took (lead time, measured from entering the stage to leaving it). These are the measurements most teams already have. Their weakness is that they are lagging: they describe items that have already finished, so they only reflect a problem after the slow items finally clear. Treat them as confirmation rather than early warning.</p>
+
+  <h3>6. Rework</h3>
+  <p>The share of items sent back for correction, either within the stage or from a later stage back to an earlier one. Rework is expensive twice over: it consumes capacity a second time, and it re-enters the queue, adding to the waiting time of everything behind it. A rework rate that creeps from 5% to 20% can quietly remove a fifth of a team's effective capacity without any change in headcount or arrivals. Always record <em>why</em> an item was returned; the reason code is what turns a rework rate into an actionable finding.</p>
+
+  <h3>7. Breach risk</h3>
+  <p>For every open item, how much of its allowed time has elapsed, and whether, given the current pace of the stages ahead, it is likely to miss its commitment. Breach risk is the only one of the seven that is forward-looking by construction. It is what lets you act on the claims that will breach on Thursday while it is still Monday. The <a href="/use-cases/sla-monitoring/">SLA monitoring use case</a> covers this measurement in more depth.</p>
+
+  <table>
+    <thead><tr><th>Measurement</th><th>Question it answers</th><th>Leading or lagging?</th><th>Typical first alert</th></tr></thead>
+    <tbody>
+      <tr><td>Arrival rate</td><td>Is more (or different) work coming in than usual?</td><td>Leading</td><td>Arrivals outside expected band for the hour or day</td></tr>
+      <tr><td>Wait time</td><td>Is work sitting idle before anyone touches it?</td><td>Leading</td><td>Age of oldest waiting item; median wait rising</td></tr>
+      <tr><td>Work time</td><td>Has the work itself become harder or slower?</td><td>Coincident</td><td>90th-percentile work time drifting upwards</td></tr>
+      <tr><td>Work in progress</td><td>Is the stage filling faster than it drains?</td><td>Leading</td><td>WIP growing for several consecutive periods</td></tr>
+      <tr><td>Completions and lead time</td><td>How fast did finished work move?</td><td>Lagging</td><td>Lead time outside band; throughput below arrivals</td></tr>
+      <tr><td>Rework</td><td>How much work comes back, and why?</td><td>Leading for cost, lagging for quality</td><td>Return rate by reason code above band</td></tr>
+      <tr><td>Breach risk</td><td>Which open items will miss their commitment?</td><td>Leading</td><td>Count of items projected to breach in the next 24–72 hours</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Instrumenting stages with business events</h2>
+  <p>You cannot measure a stage you cannot see the edges of. The cleanest way to see them is to record a small number of <a href="/resources/how-business-events-connect-to-outcomes/">business events</a>: timestamped facts that something meaningful happened to a specific business entity. For process monitoring, a handful of event types per stage is usually enough.</p>
+  <table>
+    <thead><tr><th>Event</th><th>When it is recorded</th><th>What it enables</th></tr></thead>
+    <tbody>
+      <tr><td><code>stage_entered</code></td><td>The item becomes eligible for this stage</td><td>Arrival rate, WIP, start of wait time</td></tr>
+      <tr><td><code>work_started</code></td><td>Someone (or something) begins working on it</td><td>End of initial wait; start of work time</td></tr>
+      <tr><td><code>work_paused</code> / <code>work_resumed</code></td><td>Blocked on a customer, document or another team, and unblocked</td><td>Splitting internal from external waiting</td></tr>
+      <tr><td><code>stage_completed</code></td><td>The stage's outcome is decided and the item moves on</td><td>Throughput, lead time, flow efficiency</td></tr>
+      <tr><td><code>item_returned</code></td><td>The item is sent back, with a reason code and the stage it returns to</td><td>Rework rate, rework reasons, loop detection</td></tr>
+    </tbody>
+  </table>
+  <p>Each event should carry the identifiers of the entities it concerns (the application, the customer, the commitment it falls under), the stage, a reason where relevant, and the time the thing actually happened rather than the time it was loaded into a warehouse. With that, every one of the seven measurements can be derived, and they can be cut by any attribute of the entities involved: product, region, customer tier, channel, work type.</p>
+  <div class="callout">
+    <strong>Derive from transitions, not snapshots</strong>
+    Many teams try to monitor processes by sampling a status field every hour. Snapshots miss items that pass through quickly, cannot separate waiting from work, and make rework invisible when an item returns to a status it held before. Transition events are cheaper to reason about and harder to fool.
+  </div>
+  <p>Where the source systems do not emit events directly, they can often be reconstructed from audit logs, status-history tables or change-data feeds. The important thing is agreeing on stage boundaries with the people who run the process, and writing those definitions down. "Risk review starts when the case is assigned" and "risk review starts when verification completes" produce very different wait times, and both are defensible. Pick one, document it, and keep it stable. The <a href="/integrations/api/">API and events</a> page describes how events of this kind are designed to flow into Panoptes.</p>
+
+  <h2>Worked example: merchant onboarding</h2>
+  <p>Consider a fictional B2B payments provider that onboards new merchants. Its commercial promise is that a merchant who signs a contract will be able to take live payments within 21 days. Onboarding passes through five stages: business verification, risk review, technical integration (largely done by the merchant), account configuration and go-live checks. Each stage belongs to a different team, and each team has its own two-to-three day internal service level.</p>
+  <p>Last quarter, median time from contract to live was 14 days. This quarter it is 19 days, and the 90th percentile has reached 31 days. Every team reports that it is meeting its internal target. The commercial team is fielding escalations from merchants who were promised a launch date.</p>
+
+  <h3>What the seven measurements show</h3>
+  <Diagram src="/diagrams/process-monitoring-onboarding-stages.svg" alt="Horizontal bar chart of median days per onboarding stage, split into work and waiting. Business verification 2.0 days, risk review 4.5 days (up from 1.5 last quarter, mostly waiting), integration 5.5 days, configuration 3.0 days, go-live checks 1.5 days. A returned column shows risk review returning 22% of cases, far above other stages at 1–6%. Flow efficiency across stages is about 28%." caption="Risk review's waiting time has tripled and it returns more than a fifth of its cases. Fictional data." zoom />
+  <ul>
+    <li><strong>Arrival rate.</strong> New contracts rose about 35% quarter on quarter after a referral partnership launched. Arrivals into verification rose accordingly; nobody had told risk review, which sits two stages downstream.</li>
+    <li><strong>Wait time.</strong> Median waiting in risk review went from roughly one day to nearly four. Work time per case barely moved. The team is not slower; work is queuing for it.</li>
+    <li><strong>Work in progress.</strong> Open cases in risk review rose from about 30 to about 85. By Little's Law, with throughput roughly 19 cases a day, that alone implies an average stay of around four and a half days, which matches what the lead time later confirmed.</li>
+    <li><strong>Rework.</strong> 22% of cases are returned from risk review to verification, against 6% last quarter. The dominant reason code is "proof of address missing or out of date", which corresponds to a policy change made at the start of the quarter that verification's checklist was never updated to reflect.</li>
+    <li><strong>Breach risk.</strong> Of 41 open onboardings, nine are projected to miss the 21-day promise if current stage times hold, and six of those are currently sitting in the risk review queue or have been returned from it.</li>
+  </ul>
+  <p>Two forces are combining. Higher arrivals pushed risk review close to its capacity, and the rework loop fed a fifth of its output back into the system, consuming verification capacity and then arriving at risk review a second time. Each team's internal service level stayed green because the clock restarted every time a case changed hands.</p>
+
+  <h3>What the team did with it</h3>
+  <p>The interventions followed directly from the measurements, which is the point of measuring the right things:</p>
+  <ol>
+    <li><strong>Fix the rework cause first.</strong> Updating the verification checklist to request current proof of address costs almost nothing and, if the reason code is accurate, should remove most of the returns. That releases capacity at two stages at once.</li>
+    <li><strong>Work the breach-risk list.</strong> The nine at-risk merchants were reviewed individually; several needed only a single document chased.</li>
+    <li><strong>Connect arrivals to capacity.</strong> Partner-sourced contracts were given their own arrivals monitor, so a future surge would be visible to risk review on the day it started, not weeks later.</li>
+    <li><strong>Measure the outcome.</strong> The team agreed in advance what success would look like: return rate back below 8%, risk review wait back near one day, and contract-to-live median back under 15 days within six weeks. If those did not move, the diagnosis was wrong and would be revisited.</li>
+  </ol>
+  <p>None of the interventions required new headcount, and none would have been obvious from the team-level dashboards that were all green. A version of this story, told as an investigation, is on the <a href="/use-cases/operational-bottlenecks/">operational bottlenecks</a> page.</p>
+
+  <h2>From measurements to monitors</h2>
+  <p>Measurements become monitoring when you decide what "normal" looks like and who is told when it stops being normal. A few principles keep the result useful rather than noisy.</p>
+  <h3>Compare against expected behaviour, not fixed lines</h3>
+  <p>Arrivals on a Monday morning look nothing like arrivals on a Sunday night. A fixed threshold either fires every Monday or misses everything that happens at the weekend. Expected bands that account for time of day, day of week and known seasonality catch genuine change without crying wolf. The <a href="/resources/business-health-metrics/">business health metrics</a> guide discusses bands in more detail.</p>
+  <h3>Alert on the leading measurements</h3>
+  <p>By the time lead time breaches its band, the delay has already been experienced by customers. WIP growth, oldest-item age and projected breaches move days earlier. Reserve lead time for confirming that an intervention worked.</p>
+  <h3>Route to the owner of the stage and the owner of the outcome</h3>
+  <p>A queue building in risk review is the risk team's problem to work, but the commitment it threatens belongs to whoever owns the end-to-end promise. Both need to know, and they need to see the same picture. This is where a shared <a href="/resources/building-a-business-operating-model/">operating model</a> of stages, entities, commitments and owners does real work.</p>
+  <h3>Watch the whole, then drill into stages</h3>
+  <p>Start every review from the end-to-end view: are items getting through at the pace we promised? Only then look stage by stage. Starting from stages invites local optimisation; starting from the outcome keeps attention on the constraint that actually matters, which is the subject of <a href="/resources/understanding-business-bottlenecks/">understanding business bottlenecks</a>.</p>
+
+  <h2>Common traps</h2>
+  <ul>
+    <li><strong>Averages only.</strong> A median lead time of nine days can coexist with a long tail of forty-day cases that drive most of the complaints. Track percentiles and the age of the oldest open items.</li>
+    <li><strong>Resetting the clock at each hand-off.</strong> Stage-level service levels are useful, but if the end-to-end clock is not also running, the gaps between stages disappear from view.</li>
+    <li><strong>Counting rework as new work.</strong> If a returned item is recorded as a fresh arrival, arrival rates inflate, rework vanishes, and the stage that caused it looks productive.</li>
+    <li><strong>Ignoring external waiting.</strong> Time blocked on the customer is real elapsed time from the customer's perspective, even if it is not your queue. Measure it separately, but do not exclude it from the commitment view without saying so.</li>
+    <li><strong>Monitoring people instead of flow.</strong> The aim is to see how work moves through a process, not to rank individuals. Monitoring that is perceived as surveillance gets gamed, and gamed data is worse than none.</li>
+    <li><strong>Too many stages.</strong> Twenty-step process maps are hard to keep instrumented and hard to read. Model the stages where work changes hands or waits; collapse the rest.</li>
+  </ul>
+
+  <h2>Key takeaways</h2>
+  <ul>
+    <li>Task monitoring tells you whether teams did their work; process monitoring tells you whether the outcome is moving at the promised pace. You need both, and most organisations only have the first.</li>
+    <li>Every stage has the same anatomy, which gives seven reusable measurements: arrivals, wait, work, WIP, completions and lead time, rework, and breach risk.</li>
+    <li>Instrument stages with a few transition events carrying entity identifiers and reason codes. Derive measurements from transitions rather than snapshots.</li>
+    <li>Alert on leading measurements (arrivals, WIP, oldest-item age, projected breaches), and use lead time to confirm the effect of interventions.</li>
+    <li>When a process slows down, look first for a change in arrivals and a change in rework. Between them, they explain a large share of real-world delays.</li>
+  </ul>
+  <p>Panoptes' <a href="/platform/process-intelligence/">Process Intelligence</a> capability is designed around this stage anatomy: it models stages from business events, separates waiting from work, and connects open items to the commitments they fall under.</p>
+</ArticleLayout>

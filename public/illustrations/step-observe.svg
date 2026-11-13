@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>Observe: expected bands versus actual behaviour</title>
+<rect x="8" y="8" width="224" height="134" rx="12" class="d-surface"/>
+<path d="M20 92C50 84 70 70 100 66S150 58 180 50 214 40 222 38V70C214 72 190 80 180 82S130 96 100 98 50 112 20 118Z" class="d-soft"/>
+<path d="M20 104C50 96 70 84 100 80S140 72 160 70" class="d-accent-s" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M160 70C176 70 186 96 200 104S216 108 222 110" class="d-crit-s" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="200" cy="104" r="5" class="d-crit d-pulse"/>
+<g class="d-tm" font-size="8"><text x="20" y="28" class="d-muted">Payment completion</text><text x="20" y="40" class="d-text" font-weight="600" font-size="11">−6.8 pts vs expected</text>
+<text x="160" y="132" class="d-muted">expected band</text></g>
+</svg>

@@ -1,0 +1,220 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Diagram from '../../components/Diagram.astro';
+import RelatedLinks from '../../components/RelatedLinks.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import CopyEmail from '../../components/CopyEmail.astro';
+import IntegrationDirectory from '../../components/integrations/IntegrationDirectory.astro';
+import IntegrationIcon from '../../components/integrations/IntegrationIcon.astro';
+import { CATEGORIES, ENTRIES } from '../../components/integrations/directory';
+
+const crumbs = [{ label: 'Integrations', href: '/integrations/' }];
+
+const principles = [
+  { i: 'plug', t: 'Connect what already exists', d: 'Panoptes is designed to read from the systems your teams already use, rather than asking them to re-enter data or change tools.' },
+  { i: 'graph', t: 'Map into one model', d: 'Source records become entities, states and events in a shared business model, so “account” means the same thing in CRM, billing and support.' },
+  { i: 'event', t: 'Send events directly', d: 'For workflows no off-the-shelf system records, your services can send business events to the API as they happen.' },
+  { i: 'shield', t: 'Least privilege by default', d: 'Read-oriented, scoped credentials, kept server-side. Access is agreed per source during evaluation, not assumed.' },
+];
+
+const stages = [
+  { n: '01', t: 'Agree the questions', d: 'Start from the business questions that matter, such as “where is cash leaking between invoice and collection?” — not from a list of tables.' },
+  { n: '02', t: 'Choose the sources', d: 'Identify the smallest set of systems that answer those questions, and how fresh each needs to be.' },
+  { n: '03', t: 'Map to the model', d: 'Decide which fields identify entities, which statuses become states, and which timestamps become events.' },
+  { n: '04', t: 'Validate together', d: 'Compare what the model shows with what your teams know to be true, before anyone relies on it.' },
+];
+---
+<BaseLayout
+  title="Integrations"
+  description="How Panoptes connects to CRM, payments, finance, warehouses, databases, support, product analytics and event streams, and what each contributes to the business model."
+  ogImage="/social/og-integrations.png"
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Integrations"
+    title="Bring fragmented systems into <span class='gradient-text'>one model of the business.</span>"
+    lede="Panoptes is designed to connect to the categories of systems a business already runs on, map what they hold into shared entities, events and states, and accept business events directly through an API. Search the directory below to see the kinds of systems we evaluate."
+    breadcrumbs={crumbs}
+  >
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#directory">Browse the directory<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/integrations/api/">API &amp; events</a>
+      <a class="btn btn-ghost" href="/demo/">Book a Demo</a>
+    </div>
+    <Fragment slot="visual">
+      <Diagram class="hide-sm" src="/diagrams/integration-architecture.svg" alt="Panoptes architecture: business systems feed data connectivity, which feeds business modelling, the observability engine, and intelligence and actions; actions and outcomes feed back as new business events" frame="panoptes architecture" illustrative={false} zoom />
+      <Diagram class="show-sm" src="/diagrams/integration-architecture-vertical.svg" alt="Panoptes architecture, top to bottom: business systems, data connectivity, business modelling, observability engine, intelligence and actions" frame="panoptes architecture" illustrative={false} />
+    </Fragment>
+  </PageHero>
+
+  <!-- Principles -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="How connections work" title="Integrations exist to feed the model, not to fill a data lake." lede="Every connection answers one question: which entities, events and states does this system contribute to the picture of how the business operates?" />
+      <div class="grid grid-4">
+        {principles.map((p) => (
+          <article class="card reveal">
+            <span class="icon-tile"><Icon name={p.i} /></span>
+            <h3>{p.t}</h3>
+            <p class="muted">{p.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Directory -->
+  <section class="section section-alt" id="directory">
+    <div class="container">
+      <div class="dir-head">
+        <SectionHead eyebrow="Ecosystem directory" title="Systems Panoptes is designed to connect to." lede={`${ENTRIES.length} example systems and patterns across ${CATEGORIES.length} categories. Search by product, category or the kind of data you care about.`} />
+        <aside class="dir-note reveal" aria-label="About this directory">
+          <p class="kpi-label">About these examples</p>
+          <p class="small muted">Product names show the <strong>kinds of systems</strong> Panoptes is designed to work with. They are not claims of a packaged, certified or partner integration. How each source connects (API, export, replica, stream or warehouse) is <strong>evaluated per deployment</strong> and agreed with you.</p>
+        </aside>
+      </div>
+      <IntegrationDirectory />
+      <p class="note mt-2">Product names are trademarks of their respective owners and are used only to describe categories of systems. No affiliation, partnership or endorsement is implied. Tiles use monograms and Panoptes category icons, not third-party logos.</p>
+    </div>
+  </section>
+
+  <!-- What each category contributes -->
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="What each category contributes" title="Every source adds a different part of the picture." lede="The value is in the joins: a failed payment matters more when you can see the open opportunity, the overdue invoice and the urgent support case on the same account." />
+      <div class="table-wrap reveal">
+        <table class="table contrib">
+          <caption class="sr-only">Typical entities and events each category of system contributes to the business model</caption>
+          <thead>
+            <tr><th scope="col">Category</th><th scope="col">Typical entities</th><th scope="col">Typical events and states</th><th scope="col">Helps answer</th></tr>
+          </thead>
+          <tbody>
+            {CATEGORIES.map((c) => (
+              <tr>
+                <th scope="row"><span class="c-name"><span class="c-ico"><IntegrationIcon name={c.icon} /></span>{c.label}</span></th>
+                <td data-label="Typical entities">{c.entities.join(', ')}</td>
+                <td data-label="Typical events and states">{c.events.join(', ')}</td>
+                <td class="c-q" data-label="Helps answer">{c.answers}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- How a source is onboarded -->
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="From system to signal" title="How a new source is brought in." lede="Connecting a system is a modelling exercise as much as a technical one. A typical evaluation follows four steps." />
+      <ol class="stages">
+        {stages.map((s) => (
+          <li class="stage reveal">
+            <span class="stage-n">{s.n}</span>
+            <h3>{s.t}</h3>
+            <p class="muted">{s.d}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="btn-row mt-2">
+        <a class="link-arrow" href="/integrations/data-sources/">How data sources are modelled</a>
+        <a class="link-arrow" href="/integrations/security-governance/">Security and governance of connections</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Don't see your system -->
+  <section class="section">
+    <div class="container">
+      <div class="missing card card-accent reveal">
+        <div class="missing-copy">
+          <p class="eyebrow">Don’t see your system?</p>
+          <h2>If it records business activity, it can usually be a source.</h2>
+          <p class="muted">The directory shows examples, not limits. Internal tools, industry-specific platforms and home-grown services can send business events through the API, publish to an event stream, or be read from your warehouse. Tell us what you run and what you want to see, and we will say plainly how it would connect.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="/integrations/api/">Explore API &amp; events<Icon name="arrow" class="arrow" /></a>
+            <a class="btn" href="/contact/">Ask about your system</a>
+          </div>
+        </div>
+        <div class="missing-side">
+          <p class="kpi-label">Three ways in</p>
+          <ul class="ways">
+            <li><span class="icon-tile"><Icon name="api" /></span><span><strong>Events API</strong><span class="muted small">Your services POST business events as they happen.</span></span></li>
+            <li><span class="icon-tile"><IntegrationIcon name="event-streams" /></span><span><strong>Event streams</strong><span class="muted small">Consume topics you already publish to.</span></span></li>
+            <li><span class="icon-tile"><IntegrationIcon name="data-warehouses" /></span><span><strong>Warehouse</strong><span class="muted small">Read curated tables you already maintain.</span></span></li>
+          </ul>
+          <p class="small muted mt-1">Or write to us directly:</p>
+          <CopyEmail />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tight section-alt">
+    <div class="container">
+      <RelatedLinks
+        eyebrow="Keep exploring"
+        title="Related pages"
+        items={[
+          { label: 'Data sources', href: '/integrations/data-sources/', desc: 'Systems of record, event streams and warehouses', icon: 'database' },
+          { label: 'API & events', href: '/integrations/api/', desc: 'Send business events and query the model', icon: 'api' },
+          { label: 'Security & governance', href: '/integrations/security-governance/', desc: 'Access, ownership and auditability', icon: 'shield' },
+          { label: 'Business Graph', href: '/platform/business-graph/', desc: 'The model every source feeds', icon: 'graph' },
+          { label: 'How it works', href: '/how-it-works/', desc: 'Connect → Model → Observe → Understand → Act', icon: 'flow' },
+          { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Why CRM, payments and finance belong together', icon: 'revenue' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <CTA title="Map your systems to the questions that matter." text="Bring a list of the systems you run and one business question you cannot answer today. We will walk through how Panoptes would model it." secondary={{ label: 'API & events', href: '/integrations/api/' }} />
+</BaseLayout>
+
+<style>
+  .dir-head { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: end; margin-bottom: clamp(28px, 4vw, 40px); }
+  .dir-head :global(.section-head) { margin-bottom: 0; }
+  .dir-note { border-left: 2px solid var(--accent); padding: 4px 0 4px 18px; }
+  .dir-note p { margin: 0 0 .4rem; }
+  .dir-note p:last-child { margin: 0; }
+  @media (max-width: 860px) { .dir-head { grid-template-columns: 1fr; } }
+
+  .contrib th[scope='row'] { font: 600 .95rem/1.3 var(--font-body); text-transform: none; letter-spacing: 0; color: var(--text); background: transparent; white-space: nowrap; }
+  .contrib td { color: var(--text-2); }
+  .contrib .c-q { color: var(--text); font-size: .9rem; }
+  .c-name { display: inline-flex; align-items: center; gap: 10px; }
+  .c-ico { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: var(--accent-soft); color: var(--accent-text); flex: none; }
+  .c-ico :global(svg) { width: 17px; height: 17px; }
+  .contrib { min-width: 860px; }
+  @media (max-width: 760px) {
+    .contrib { min-width: 0; }
+    .contrib thead { display: none; }
+    .contrib tr { display: block; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+    .contrib tr:last-child { border-bottom: 0; }
+    .contrib th[scope='row'], .contrib td { display: block; padding: 0; border: 0; white-space: normal; }
+    .contrib td { margin-top: .6rem; font-size: .9rem; }
+    .contrib td::before { content: attr(data-label); display: block; font: 500 .68rem/1.3 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); margin-bottom: 2px; }
+  }
+
+  .stages { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); overflow: hidden; }
+  .stage { padding: clamp(20px, 2.4vw, 28px); border-right: 1px solid var(--border); }
+  .stage:last-child { border-right: 0; }
+  .stage-n { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-text); font: 600 .8rem/1 var(--font-mono); margin-bottom: 1rem; }
+  .stage h3 { font-size: 1.1rem; }
+  .stage p { margin: 0; font-size: .94rem; }
+  @media (max-width: 960px) { .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stage:nth-child(2) { border-right: 0; } .stage:nth-child(-n+2) { border-bottom: 1px solid var(--border); } }
+  @media (max-width: 640px) { .stages { grid-template-columns: 1fr; } .stage { border-right: 0; border-bottom: 1px solid var(--border); } .stage:last-child { border-bottom: 0; } }
+
+  .missing { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); padding: clamp(24px, 4vw, 48px); }
+  .missing h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); max-width: 20ch; }
+  .missing .btn-row { margin-top: 1.4rem; }
+  .ways { list-style: none; padding: 0; margin: .8rem 0 0; display: grid; gap: 14px; }
+  .ways li { display: flex; gap: 14px; align-items: flex-start; }
+  .ways .icon-tile { margin: 0; width: 38px; height: 38px; }
+  .ways .icon-tile :global(svg) { width: 19px; height: 19px; }
+  .ways li > span:last-child { display: grid; gap: 2px; }
+  .ways strong { font-size: .95rem; }
+  @media (max-width: 860px) { .missing { grid-template-columns: 1fr; } }
+</style>

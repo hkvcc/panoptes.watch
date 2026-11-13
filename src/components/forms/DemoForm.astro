@@ -1,0 +1,60 @@
+---
+import FormShell from './FormShell.astro';
+import { ROLE_OPTIONS, SIZE_OPTIONS, INTEREST_OPTIONS, LIMITS } from './schema';
+const id = 'demo-form';
+const f = (n: string) => `${id}-${n}`;
+---
+<FormShell kind="demo" id={id} label="Book a demo" submitLabel="Request a demo" success="Thank you — your request has been sent. We will reply by email to arrange a time.">
+  <div class="form-grid">
+    <div class="field">
+      <label for={f('name')}>Full name<span class="req" aria-hidden="true">*</span></label>
+      <input class="input" id={f('name')} name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} aria-describedby={f('name-error')} />
+      <p class="field-error" id={f('name-error')} data-error-for="name"></p>
+    </div>
+    <div class="field">
+      <label for={f('email')}>Work email<span class="req" aria-hidden="true">*</span></label>
+      <input class="input" id={f('email')} name="email" type="email" autocomplete="email" inputmode="email" required maxlength={LIMITS.email} aria-describedby={f('email-error')} />
+      <p class="field-error" id={f('email-error')} data-error-for="email"></p>
+    </div>
+    <div class="field full">
+      <label for={f('company')}>Company<span class="req" aria-hidden="true">*</span></label>
+      <input class="input" id={f('company')} name="company" type="text" autocomplete="organization" required maxlength={LIMITS.company} aria-describedby={f('company-error')} />
+      <p class="field-error" id={f('company-error')} data-error-for="company"></p>
+    </div>
+    <div class="field">
+      <label for={f('role')}>Your role<span class="req" aria-hidden="true">*</span></label>
+      <select class="select" id={f('role')} name="role" required aria-describedby={f('role-error')}>
+        <option value="">Choose a role</option>
+        {ROLE_OPTIONS.map((o) => <option value={o.value}>{o.label}</option>)}
+      </select>
+      <p class="field-error" id={f('role-error')} data-error-for="role"></p>
+    </div>
+    <div class="field">
+      <label for={f('size')}>Company size<span class="req" aria-hidden="true">*</span></label>
+      <select class="select" id={f('size')} name="size" required aria-describedby={f('size-error')}>
+        <option value="">Choose a size</option>
+        {SIZE_OPTIONS.map((o) => <option value={o.value}>{o.label}</option>)}
+      </select>
+      <p class="field-error" id={f('size-error')} data-error-for="size"></p>
+    </div>
+    <fieldset class="full" data-group="interests" aria-describedby={f('interests-error')}>
+      <legend>Areas of interest <span class="opt muted small">(optional)</span></legend>
+      <div class="check-grid">
+        {INTEREST_OPTIONS.map((o) => (
+          <label class="check"><input type="checkbox" name="interests" value={o.value} /> <span>{o.label}</span></label>
+        ))}
+      </div>
+      <p class="field-error" id={f('interests-error')} data-error-for="interests"></p>
+    </fieldset>
+    <div class="field full">
+      <label for={f('message')}>What would you like to explore? <span class="opt">(optional)</span></label>
+      <textarea class="textarea" id={f('message')} name="message" maxlength={LIMITS.message} aria-describedby={f('message-hint') + ' ' + f('message-error')}></textarea>
+      <p class="hint" id={f('message-hint')}>A business question you would like answered, or the systems involved, helps us prepare.</p>
+      <p class="field-error" id={f('message-error')} data-error-for="message"></p>
+    </div>
+    <div class="field full">
+      <label class="check"><input type="checkbox" id={f('consent')} name="consent" required aria-describedby={f('consent-error')} /> <span>I agree that Panoptes may use these details to respond to my request, as described in the <a href="/privacy/">privacy notice</a>.<span class="req" aria-hidden="true">*</span></span></label>
+      <p class="field-error" id={f('consent-error')} data-error-for="consent"></p>
+    </div>
+  </div>
+</FormShell>

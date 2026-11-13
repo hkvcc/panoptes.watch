@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" fill="none">
+<style>.d-bg{fill:var(--d-bg,#fff)}.d-surface{fill:var(--d-surface,#F8F5FF)}.d-surface-2{fill:var(--d-surface-2,#EDE2FF)}.d-line{stroke:var(--d-line,#D9CFEA);fill:none}.d-line-f{fill:var(--d-line,#D9CFEA)}.d-text{fill:var(--d-text,#191326)}.d-muted{fill:var(--d-muted,#6E6680)}.d-accent{fill:var(--d-accent,#7126E8)}.d-accent-s{stroke:var(--d-accent,#7126E8);fill:none}.d-accent-2{fill:var(--d-accent-2,#9965FF)}.d-accent-2-s{stroke:var(--d-accent-2,#9965FF);fill:none}.d-soft{fill:var(--d-soft,#EDE2FF)}.d-ok{fill:var(--d-ok,#12A150)}.d-warn{fill:var(--d-warn,#E59A0B)}.d-crit{fill:var(--d-crit,#E0364A)}.d-ok-s{stroke:var(--d-ok,#12A150);fill:none}.d-warn-s{stroke:var(--d-warn,#E59A0B);fill:none}.d-crit-s{stroke:var(--d-crit,#E0364A);fill:none}.d-t{font-family:Inter,system-ui,sans-serif}.d-tm{font-family:'JetBrains Mono',ui-monospace,monospace}.d-td{font-family:'Space Grotesk',system-ui,sans-serif}</style>
+<title>Model: entities and relationships form a business graph</title>
+<g stroke-width="1.5" class="d-line"><path d="M50 40L120 75M120 75L190 36M120 75L72 120M120 75L176 116M50 40L72 120M190 36L176 116"/></g>
+<g class="d-t" font-size="8.5" font-weight="600">
+<circle cx="50" cy="40" r="16" class="d-surface"/><circle cx="50" cy="40" r="16" class="d-accent-2-s" stroke-width="1.5"/><text x="50" y="67" text-anchor="middle" class="d-muted">Customer</text>
+<circle cx="190" cy="36" r="16" class="d-surface"/><circle cx="190" cy="36" r="16" class="d-accent-2-s" stroke-width="1.5"/><text x="190" y="63" text-anchor="middle" class="d-muted">Order</text>
+<circle cx="72" cy="120" r="13" class="d-surface"/><circle cx="72" cy="120" r="13" class="d-accent-2-s" stroke-width="1.5"/><text x="72" y="145" text-anchor="middle" class="d-muted">Case</text>
+<circle cx="176" cy="116" r="13" class="d-surface"/><circle cx="176" cy="116" r="13" class="d-accent-2-s" stroke-width="1.5"/><text x="176" y="141" text-anchor="middle" class="d-muted">Payment</text>
+</g>
+<circle cx="120" cy="75" r="20" class="d-accent"/><path d="M112 75h16M120 67v16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+</svg>

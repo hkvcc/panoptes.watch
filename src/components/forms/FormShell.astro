@@ -1,0 +1,48 @@
+---
+/**
+ * Shared wrapper for site forms: progressive-enhancement attributes, hidden
+ * fields (form kind, timestamp, honeypot), status region and submit row.
+ * Without JS the form posts to /api/contact, which redirects back with
+ * ?sent=1 or ?error=<code>; form-client.ts shows the result either way.
+ */
+import { HONEYPOT, TIMESTAMP, type FormKind } from './schema';
+interface Props { kind: FormKind; id: string; submitLabel: string; success: string; label: string }
+const { kind, id, submitLabel, success, label } = Astro.props;
+---
+<form class="site-form" id={id} method="post" action="/api/contact" data-form={kind} data-success={success} aria-label={label}>
+  <input type="hidden" name="form" value={kind} />
+  <input type="hidden" name={TIMESTAMP} value="" />
+  <div class="hp-field" aria-hidden="true">
+    <label for={`${id}-${HONEYPOT}`}>Leave this field empty</label>
+    <input type="text" id={`${id}-${HONEYPOT}`} name={HONEYPOT} tabindex="-1" autocomplete="off" />
+  </div>
+  <p class="sf-req note"><span aria-hidden="true">*</span> Required field</p>
+  <slot />
+  <div class="form-status" id={`${id}-status`} role="status" aria-live="polite" tabindex="-1"></div>
+  <div class="sf-submit">
+    <button type="submit" class="btn btn-primary btn-lg">{submitLabel}</button>
+    <p class="note">Prefer email? Write to <a href="mailto:sales@panoptes.watch">sales@panoptes.watch</a>.</p>
+  </div>
+</form>
+<script>
+  import './form-client';
+</script>
+<style>
+  .site-form { display: grid; gap: 20px; }
+  .sf-req { margin: 0; }
+  .site-form :global(.req) { color: var(--crit-text); margin-left: 2px; }
+  .site-form :global(.field label .opt) { font-weight: 400; color: var(--text-3); font-size: .84rem; margin-left: 4px; }
+  .site-form :global(fieldset) { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px 16px; margin: 0; min-width: 0; }
+  .site-form :global(fieldset[data-invalid]) { border-color: var(--crit); }
+  .site-form :global(legend) { font-weight: 600; font-size: .9rem; padding: 0 6px; margin-left: -6px; }
+  .site-form :global(.check-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; margin-top: 8px; }
+  @media (max-width: 640px) { .site-form :global(.check-grid) { grid-template-columns: 1fr; } }
+  .site-form :global(.check input[aria-invalid='true']) { outline: 2px solid var(--crit); outline-offset: 2px; }
+  .site-form :global(.check a) { color: var(--accent-text); }
+  .site-form :global(.field label.check) { font-weight: 400; font-size: .9rem; }
+  .form-status:focus { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .form-status :global(a) { color: inherit; font-weight: 600; }
+  .sf-submit { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+  .sf-submit .note { margin: 0; }
+  .site-form[aria-busy='true'] button[type='submit'] { opacity: .7; cursor: progress; }
+</style>
