@@ -8,15 +8,8 @@
   "max_articles_per_run": 2,
   "audience": "B2B operations leaders, digital product owners, IT/SRE teams and technical buyers",
   "brand_voice": "Plain, precise, vendor-neutral, evidence-led. British English. No hype, no superlatives without evidence.",
-  "product_truth_source": [
-    "/platform/",
-    "/how-it-works/",
-    "/integrations/"
-  ],
-  "product_truth_note": "Claims about Panoptes may only restate what the live product_truth_source pages say (fetch them each run). No invented features, pricing, customers or results. Conversion pages: /demo/, /contact/.",
-  "cms": null,
-  "cms_note": "No CMS credentials. Output is publication-ready Markdown merged into main. Never claim a post is live unless its canonical URL has been fetched and resolves.",
-  "content_dir": "content/blog",
+  "product_truth_source": "seo/business-observability/PRODUCT_TRUTH.md",
+  "product_truth_note": "PRODUCT_TRUTH.md v1.0 is PROPOSED and unvalidated: use it for positioning and terminology; describe every Panoptes capability as design intent ('designed to', 'aims to'); AI Business Intelligence is product vision only. Live /platform/ pages may be cited as on-site context. No customers, metrics, results or availability claims. Conversion pages: /demo/, /contact/.",
   "existing_pages": [
     "/",
     "/business-observability/",
@@ -70,7 +63,6 @@
   "model_note": "Runs on a low-cost model via a scheduled cloud session; see RUNBOOK.md.",
   "scheduled_task_id": "trig_01ShpDYjhxvZPtGgZnF6G93S",
   "schedule": "Daily 10:37 Europe/London, fresh cloud session per run",
-  "site_checked": "2026-11-13: site is live (Astro on Cloudflare). /blog/ 301-redirects to /resources/; no /blog/* articles exist. This repo does NOT build the site, so merged articles are not live until someone publishes them.",
   "cannibalisation_watchlist": {
     "BO-01": [
       "/business-observability/",
@@ -110,5 +102,31 @@
       "/resources/business-health-metrics/"
     ]
   },
-  "cannibalisation_note": "Before writing a watchlisted brief, read the listed live pages. If the brief would substantially duplicate one, either sharpen the angle so it is clearly distinct and link to the existing page, or mark the brief merged with merged_into set to the closest brief and explain in qa_findings, recommending the existing page as canonical."
+  "cannibalisation_note": "Before writing a watchlisted brief, read the listed live pages. If the brief would substantially duplicate one, either sharpen the angle so it is clearly distinct and link to the existing page, or mark the brief merged with merged_into set to the closest brief and explain in qa_findings, recommending the existing page as canonical.",
+  "site_checked": "2026-11-13: panoptes.watch is live; this repo IS the site (Astro 5, Cloudflare Pages, deploys from main). /blog/ 301-redirects to /resources/.",
+  "publishing_note": "Merging into main deploys to production. Articles are Astro pages at src/pages/resources/<slug>.astro using ArticleLayout, registered in src/data/site.ts RESOURCES and in META in src/pages/resources/index.astro.",
+  "url_map": {
+    "BO-01": "/business-observability/",
+    "BO-02": "/resources/business-observability-platform/",
+    "BO-03": "/resources/business-observability-tools/",
+    "BO-04": "/resources/business-observability-software/",
+    "BO-05": "/resources/real-time-business-monitoring/",
+    "BO-06": "/resources/business-process-observability/",
+    "BO-07": "/resources/business-observability-vs-monitoring/",
+    "BO-08": "/resources/business-kpi-monitoring/",
+    "BO-09": "/resources/end-to-end-business-process-monitoring/",
+    "BO-10": "/resources/business-observability-solutions/",
+    "BO-11": "/resources/best-business-observability-platforms/",
+    "BO-12": "/resources/business-observability-use-cases/",
+    "BO-13": "/resources/real-time-business-transaction-monitoring/",
+    "BO-14": "/resources/business-observability-dashboards/",
+    "BO-15": "/resources/ai-powered-business-observability/",
+    "BO-16": "/resources/business-observability-architecture/",
+    "BO-17": "/resources/business-observability-metrics/",
+    "BO-18": "/resources/business-observability-implementation/",
+    "BO-19": "/resources/business-observability-vs-process-mining/",
+    "BO-20": "/resources/business-observability-for-financial-services/"
+  },
+  "existing_pages_note": "Routes in src/pages are the source of truth for internal links; this list is a snapshot of the live sitemap.",
+  "positioning_note": "Panoptes observes the business (revenue, customers, finance, operations, delivery), not infrastructure. Many briefs cite APM vendors (Dynatrace) and OpenTelemetry: cite them accurately as the technical-observability context, but frame the article around business-level observability and keep it vendor-neutral. Never imply Panoptes is an APM/infrastructure monitoring tool or integrates with a named product."
 }

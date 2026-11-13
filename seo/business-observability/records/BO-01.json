@@ -1,16 +1,23 @@
 {
   "id": "BO-01",
   "keyword": "business observability",
-  "status": "queued",
+  "status": "covered",
   "markdown": null,
   "metadata": null,
   "validated_external_urls": [],
   "validated_internal_urls": [],
-  "qa_findings": [],
-  "canonical_url": null,
+  "qa_findings": [
+    {
+      "check": "cannibalisation",
+      "result": "pass",
+      "note": "Site already owns the definition at /business-observability/ (category overview) and /resources/what-is-business-observability/ (long-form guide). Writing BO-01 would duplicate both. Treat /business-observability/ as the pillar for all 'link to BO-01' instructions; improve existing pages instead of adding a third."
+    }
+  ],
+  "canonical_url": "https://panoptes.watch/business-observability/",
   "publish_timestamp": null,
   "next_link_update_tasks": [],
   "hold_reason": null,
   "merged_into": null,
-  "owner": "seo-agent"
+  "owner": "seo-agent",
+  "covered_by": "/business-observability/"
 }

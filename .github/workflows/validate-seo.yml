@@ -1,10 +1,8 @@
-name: Validate SEO content
+name: Validate site and SEO content
 on:
   pull_request:
-    paths: ["content/**", "seo/**", "scripts/validate_seo.py"]
   push:
     branches: [main]
-    paths: ["content/**", "seo/**", "scripts/validate_seo.py"]
 permissions:
   contents: read
 jobs:
@@ -15,4 +13,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
       - run: python3 scripts/validate_seo.py
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check:links

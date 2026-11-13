@@ -82,7 +82,7 @@ export const NAV: NavGroup[] = [
   },
   {
     label: 'Resources', href: '/resources/', intro: 'Guides and essays on business observability.',
-    columns: [{ title: 'Guides', links: RESOURCES.slice(0, 6) }, { title: 'Deep dives', links: RESOURCES.slice(6) }],
+    columns: [{ title: 'Guides', links: RESOURCES.slice(0, 6) }, { title: 'Deep dives', links: RESOURCES.slice(6, 11) }],
   },
   {
     label: 'Company', href: '/company/', intro: 'Why Panoptes exists.',
