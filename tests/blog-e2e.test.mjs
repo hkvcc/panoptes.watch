@@ -108,7 +108,7 @@ test('pagination moves through pages and updates the URL', { skip }, async () =>
   await page.close();
 });
 
-for (const route of ['/blog/', '/blog/fixture-article-03/']) {
+for (const route of ['/blog/', '/blog/fixture-article-03/', '/blog/authors/kieran-lovell/']) {
   test(`no horizontal overflow or console errors at 390px: ${route}`, { skip }, async () => {
     const { page, errors } = await open(route, 390);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), 0);
@@ -116,6 +116,17 @@ for (const route of ['/blog/', '/blog/fixture-article-03/']) {
     await page.close();
   });
 }
+
+test('byline links on cards and the featured slot open the author page, not the article', { skip }, async () => {
+  const { page } = await open('/blog/');
+  await page.click('[data-post]:not([hidden]) .bc-author >> nth=0');
+  await page.waitForURL(/\/blog\/authors\/(kieran-lovell|florian-andrews)\/$/);
+  await page.goto(base + '/blog/', { waitUntil: 'networkidle' });
+  await page.click('[data-featured] .fa-author');
+  await page.waitForURL(/\/blog\/authors\/kieran-lovell\/$/);
+  assert.equal(await page.textContent('h1'), 'Kieran Lovell');
+  await page.close();
+});
 
 test('unknown article slug serves the 404 page', { skip }, async () => {
   const { page } = await open('/blog/does-not-exist/');

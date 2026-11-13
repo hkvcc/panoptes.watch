@@ -1,0 +1,88 @@
+---
+/**
+ * Author profile: /blog/authors/<slug>/ for every registered author (src/data/authors.ts)
+ * with at least one published article. Lists their articles, newest first.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CTA from '../../../components/CTA.astro';
+import BlogCard from '../../../components/blog/BlogCard.astro';
+import { BLOG_TITLE, authorsWithPosts, getPosts, isoDate, type Post, type PostAuthor } from '../../../lib/blog';
+import { SITE } from '../../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return authorsWithPosts(posts).map(({ author, posts }) => ({ params: { slug: author.slug }, props: { author, posts } }));
+}
+
+interface Props { author: PostAuthor; posts: Post[] }
+const { author, posts } = Astro.props;
+const first = author.name.split(' ')[0];
+const title = `${author.name}, ${author.role}`;
+const description = `Articles by ${author.name}, ${author.role} at Panoptes, on ${author.topics}.`;
+const person = {
+  '@type': 'Person',
+  '@id': `${author.url}#person`,
+  name: author.name,
+  jobTitle: author.role,
+  description: author.tagline,
+  url: author.url,
+  worksFor: { '@type': 'Organization', name: SITE.name, url: SITE.origin },
+};
+const schema = {
+  '@type': 'ProfilePage',
+  name: title,
+  url: author.url,
+  inLanguage: 'en-GB',
+  isPartOf: { '@type': 'Blog', name: BLOG_TITLE, url: new URL('/blog/', SITE.origin).href },
+  dateModified: isoDate(posts[0].updated ?? posts[0].published),
+  mainEntity: person,
+  hasPart: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.heading, url: p.url, datePublished: isoDate(p.published), author: { '@id': `${author.url}#person` } })),
+};
+const crumbs = [{ label: 'Blog', href: '/blog/' }, { label: author.name, href: author.href }];
+---
+<BaseLayout title={title} description={description} ogImage="/social/og-resources.png" schema={schema} breadcrumbs={crumbs}>
+  <header class="au-hero bg-glow">
+    <div class="bg-grid au-grid" aria-hidden="true"></div>
+    <div class="container container-wide au-inner">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol><li><a href="/">Home</a></li><li><a href="/blog/">Blog</a></li><li><span aria-current="page">{author.name}</span></li></ol>
+      </nav>
+      <p class="eyebrow">Author</p>
+      <h1>{author.name}</h1>
+      <p class="au-role">{author.role}</p>
+      <p class="au-tagline">{author.tagline}</p>
+      <p class="au-bio">{author.bio}</p>
+    </div>
+  </header>
+
+  <section class="section-tight au-main">
+    <div class="container container-wide">
+      <div class="au-head">
+        <h2 id="articles">Articles by {first}</h2>
+        <p class="au-count">{posts.length} {posts.length === 1 ? 'article' : 'articles'}</p>
+      </div>
+      <ul class="au-grid-list">{posts.map((p) => <BlogCard post={p} />)}</ul>
+      <a href="/blog/" class="link-arrow au-all">All articles on the blog</a>
+    </div>
+  </section>
+
+  <CTA title="See your own operations this way." text="Panoptes is designed to model how work, money and customers move through your business, and to flag where that flow changes." />
+</BaseLayout>
+
+<style>
+  .au-hero { padding: clamp(44px, 6vw, 88px) 0 clamp(32px, 4.5vw, 52px); border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+  .au-grid { position: absolute; inset: 0; z-index: -1; -webkit-mask-image: radial-gradient(ellipse 70% 80% at 60% 0%, #000, transparent 75%); mask-image: radial-gradient(ellipse 70% 80% at 60% 0%, #000, transparent 75%); }
+  .au-inner > * { max-width: 880px; }
+  .au-hero h1 { font-size: clamp(2.1rem, 4.6vw, 3.4rem); line-height: 1.1; margin-bottom: .4rem; }
+  .au-role { margin: 0 0 1rem; font: 500 .85rem/1.3 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
+  .au-tagline { margin: 0 0 1rem; font: 600 clamp(1.15rem, 2vw, 1.35rem)/1.4 var(--font-display); color: var(--text); max-width: 52ch; }
+  .au-bio { margin: 0; color: var(--text-2); font-size: 1.05rem; line-height: 1.65; max-width: 64ch; }
+  .au-main { padding-bottom: var(--section); }
+  .au-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 1.6rem; }
+  .au-head h2 { margin: 0; }
+  .au-count { margin: 0; font: 500 .8rem/1.3 var(--font-mono); color: var(--text-3); }
+  .au-grid-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .au-all { display: inline-block; margin-top: 2rem; }
+  @media (max-width: 1000px) { .au-grid-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .au-grid-list { grid-template-columns: minmax(0, 1fr); gap: 18px; } }
+</style>

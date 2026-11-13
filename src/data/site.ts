@@ -9,7 +9,7 @@ export const SITE = {
 };
 
 export type NavLink = { label: string; href: string; desc?: string; icon?: string };
-export type NavGroup = { label: string; href: string; intro: string; columns: { title?: string; links: NavLink[] }[]; feature?: { title: string; text: string; href: string; cta: string; eyebrow?: string; label?: string } };
+export type NavGroup = { label: string; href: string; intro: string; columns: { title?: string; href?: string; links: NavLink[] }[]; feature?: { title: string; text: string; href: string; cta: string; eyebrow?: string; label?: string } };
 
 export const PLATFORM: NavLink[] = [
   { label: 'Business Graph', href: '/platform/business-graph/', desc: 'Entities, relationships and dependencies', icon: 'graph' },
@@ -29,6 +29,16 @@ export const SOLUTIONS: NavLink[] = [
   { label: 'Finance', href: '/solutions/finance/', desc: 'Money movement, leakage and cost drivers', icon: 'finance' },
   { label: 'Revenue', href: '/solutions/revenue/', desc: 'Pipeline-to-cash conversion and risk', icon: 'revenue' },
   { label: 'Customer Experience', href: '/solutions/customer-experience/', desc: 'Journeys, friction and promises kept', icon: 'customers' },
+];
+
+/** Solutions by industry (/solutions/industries/…). Page content lives in src/components/industries/data.ts. */
+export const INDUSTRIES: NavLink[] = [
+  { label: 'Financial Services & Fintech', href: '/solutions/industries/financial-services/', desc: 'Payments, onboarding and reconciliation', icon: 'finance' },
+  { label: 'SaaS & Subscription', href: '/solutions/industries/saas/', desc: 'Trial to activation to renewal', icon: 'layers' },
+  { label: 'E-commerce & Retail', href: '/solutions/industries/ecommerce-retail/', desc: 'Checkout, fulfilment and returns', icon: 'cart' },
+  { label: 'Marketplaces', href: '/solutions/industries/marketplaces/', desc: 'Both sides of supply and demand', icon: 'users' },
+  { label: 'Logistics & Supply Chain', href: '/solutions/industries/logistics-supply-chain/', desc: 'Orders, shipments and promised dates', icon: 'delivery' },
+  { label: 'Insurance', href: '/solutions/industries/insurance/', desc: 'Quotes, policies and claims', icon: 'shield' },
 ];
 
 export const USE_CASES: NavLink[] = [
@@ -61,7 +71,22 @@ export const RESOURCES: NavLink[] = [
   { label: 'Glossary', href: '/resources/business-observability-glossary/', icon: 'list' },
 ];
 
+/** Knowledge center: short "What is…" explainers (/resources/knowledge/…). */
+export const KNOWLEDGE: NavLink[] = [
+  { label: 'What is process mining?', href: '/resources/knowledge/what-is-process-mining/', desc: 'Event logs, discovered processes and limits', icon: 'process' },
+  { label: 'What is customer journey analytics?', href: '/resources/knowledge/what-is-customer-journey-analytics/', desc: 'Journeys across channels and systems', icon: 'journey' },
+  { label: 'What is operational intelligence?', href: '/resources/knowledge/what-is-operational-intelligence/', desc: 'Analysis of operations as they run', icon: 'signal' },
+  { label: 'What is decision intelligence?', href: '/resources/knowledge/what-is-decision-intelligence/', desc: 'Engineering how decisions are made', icon: 'target' },
+  { label: 'What is order to cash?', href: '/resources/knowledge/what-is-order-to-cash/', desc: 'The O2C process, stages and measures', icon: 'revenue' },
+  { label: 'What is a semantic layer?', href: '/resources/knowledge/what-is-a-semantic-layer/', desc: 'One definition for every metric', icon: 'database' },
+];
+
 export const BLOG: NavLink = { label: 'Blog', href: '/blog/', desc: 'Articles and analysis on business observability', icon: 'book' };
+
+// Guides shown in the Resources mega-menu (looked up by href so appended guides do not shift it).
+const NAV_GUIDES = ['what-is-business-observability', 'business-observability-vs-bi', 'business-observability-vs-system-observability', 'business-process-monitoring', 'business-health-metrics', 'business-observability-glossary']
+  .map((slug) => RESOURCES.find((r) => r.href === `/resources/${slug}/`))
+  .filter((r): r is NavLink => !!r);
 
 export const NAV: NavGroup[] = [
   {
@@ -71,7 +96,7 @@ export const NAV: NavGroup[] = [
   },
   {
     label: 'Solutions', href: '/solutions/', intro: 'Business observability for the people who run the business.',
-    columns: [{ title: 'By role', links: SOLUTIONS }],
+    columns: [{ title: 'By role', links: SOLUTIONS }, { title: 'By industry', href: '/solutions/industries/', links: INDUSTRIES }],
     feature: { title: 'What is Business Observability?', text: 'The category, explained in one page: what it is, what it is not, and why it matters now.', href: '/business-observability/', cta: 'Read the overview' },
   },
   {
@@ -84,7 +109,10 @@ export const NAV: NavGroup[] = [
   },
   {
     label: 'Resources', href: '/resources/', intro: 'Guides, articles and analysis on business observability.',
-    columns: [{ title: 'Guides', links: RESOURCES.slice(0, 6) }, { title: 'Deep dives', links: RESOURCES.slice(6) }],
+    columns: [
+      { title: 'Guides', href: '/resources/', links: NAV_GUIDES },
+      { title: 'Knowledge center', href: '/resources/knowledge/', links: KNOWLEDGE },
+    ],
     feature: { eyebrow: 'Blog', label: BLOG.label, title: 'Articles and analysis', text: 'Writing on business observability: how operations, revenue and customer outcomes connect.', href: BLOG.href, cta: 'Read the blog' },
   },
   {
@@ -92,7 +120,9 @@ export const NAV: NavGroup[] = [
     columns: [{ links: [
       { label: 'About Panoptes', href: '/company/', desc: 'Mission and the idea behind the name', icon: 'eye' },
       { label: 'Vision', href: '/company/vision/', desc: 'Toward a Business Operating System', icon: 'compass' },
-      { label: 'Contact', href: '/company/contact/', desc: 'Talk to the team', icon: 'mail' },
+      { label: 'Team', href: '/company/team/', desc: 'The people building Panoptes', icon: 'users' },
+      { label: 'Trust', href: '/trust/', desc: 'Security, governance and legal in one place', icon: 'shield' },
+      { label: 'Contact', href: '/contact/', desc: 'Talk to the team', icon: 'mail' },
     ] }],
   },
 ];
@@ -103,18 +133,19 @@ const pick = (links: NavLink[]): FooterLink[] => links.map(({ label, href }) => 
 export const FOOTER: { title: string; links: FooterLink[] }[] = [
   { title: 'Platform', links: [{ label: 'Platform overview', href: '/platform/' }, { label: 'How it works', href: '/how-it-works/' }, ...pick(PLATFORM)] },
   { title: 'Solutions', links: [{ label: 'All solutions', href: '/solutions/' }, ...pick(SOLUTIONS)] },
+  { title: 'Industries', links: [{ label: 'All industries', href: '/solutions/industries/' }, ...pick(INDUSTRIES)] },
   { title: 'Use cases', links: [{ label: 'All use cases', href: '/use-cases/' }, ...pick(USE_CASES)] },
   { title: 'Integrations', links: [{ label: 'Overview', href: '/integrations/' }, ...pick(INTEGRATIONS.slice(1))] },
-  { title: 'Resources', links: [{ label: 'Blog', href: BLOG.href }, { label: 'Business observability', href: '/business-observability/' }, { label: 'Resources hub', href: '/resources/' }, { label: 'Glossary', href: '/resources/business-observability-glossary/' }] },
-  { title: 'Company', links: [{ label: 'About', href: '/company/' }, { label: 'Vision', href: '/company/vision/' }, { label: 'Contact', href: '/contact/' }, { label: 'Book a demo', href: '/demo/' }] },
+  { title: 'Resources', links: [{ label: 'Blog', href: BLOG.href }, { label: 'Business observability', href: '/business-observability/' }, { label: 'Guides', href: '/resources/' }, { label: 'Knowledge center', href: '/resources/knowledge/' }, { label: 'Glossary', href: '/resources/business-observability-glossary/' }] },
+  { title: 'Company', links: [{ label: 'About', href: '/company/' }, { label: 'Vision', href: '/company/vision/' }, { label: 'Team', href: '/company/team/' }, { label: 'Trust', href: '/trust/' }, { label: 'Contact', href: '/contact/' }, { label: 'Book a demo', href: '/demo/' }] },
 ];
 
-/** Footer bottom bar: legal and trust links (not repeated in the columns above). */
+/** Footer bottom bar: legal links (not repeated in the columns above). Security lives under Company → Trust. */
 export const FOOTER_LEGAL: FooterLink[] = [
   { label: 'Privacy notice', href: '/privacy/' },
   { label: 'Terms of use', href: '/terms/' },
   { label: 'Cookie notice', href: '/cookies/' },
+  { label: 'Acceptable use', href: '/legal/acceptable-use/' },
+  { label: 'Subprocessors', href: '/legal/subprocessors/' },
   { label: 'Legal', href: '/legal/' },
-  { label: 'Security', href: '/integrations/security-governance/' },
-  { label: 'Sitemap', href: '/sitemap.xml' },
 ];

@@ -1,9 +1,9 @@
 ---
 # Copy this file to content/blog/<url-slug>.md (lowercase, hyphens). Files starting with "_" are ignored.
 # The filename is the URL: content/blog/order-to-cash-signals.md → /blog/order-to-cash-signals/
-title: "SEO title shown in the browser tab, about 50–60 characters"
+title: "SEO title for the browser tab, max 49 chars"
 meta_description: "Search-result summary, about 140–160 characters. Also used as the standfirst under the heading and on the article card."
-author: "Panoptes Editorial Team"
+author: "kieran-lovell"            # required: a slug from src/data/authors.ts (kieran-lovell, florian-andrews)
 published: "2026-11-20"
 category: "Business observability"
 tags: ["process monitoring", "KPIs"]
@@ -13,7 +13,7 @@ tags: ["process monitoring", "KPIs"]
 # image_alt: "What the cover shows"  # required with cover
 # featured: true                   # pin to the featured slot on /blog/
 # draft: true                      # merged but not published (visible only in `npm run dev`)
-# Campaign articles also carry: id, slug, canonical_url, primary_keyword, reviewed (see seo/business-observability/RUNBOOK.md)
+# Also accepted: id, slug, canonical_url, primary_keyword, reviewed (slug/canonical_url must match the filename)
 ---
 
 # The heading readers see on the page

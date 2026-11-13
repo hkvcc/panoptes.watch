@@ -3,7 +3,6 @@
  * Long-form document page used by /company/vision/ and the legal pages.
  * Renders a compact hero, an "On this page" table of contents derived from the
  * body's <h2> headings (highlighted by the shared article-TOC script) and a .prose body.
- * `draft` adds a visible legal-review notice listing the details still to be confirmed.
  * `legalNav` (legal pages only) adds a "Related legal documents" panel linking the /legal/ hub
  * and the other documents in LEGAL_DOCS.
  */
@@ -21,11 +20,9 @@ interface Props {
   ogImage?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
   updated?: string;          // human-readable "last updated" text
-  draft?: boolean;
-  placeholders?: string[];   // listed in the draft notice
   legalNav?: boolean;
 }
-const { title, metaTitle, description, eyebrow, lede, breadcrumbs, ogImage = '/social/og-company.png', schema, updated, draft = false, placeholders = [], legalNav = false } = Astro.props;
+const { title, metaTitle, description, eyebrow, lede, breadcrumbs, ogImage = '/social/og-company.png', schema, updated, legalNav = false } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const slug = (s: string) => s.toLowerCase().replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -65,18 +62,6 @@ body = body.replace(/<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g, (_m, attrs = '', inner) =
       </aside>
     )}
     <div class="doc-main">
-      {draft && (
-        <div class="draft-notice" role="note">
-          <p class="dn-title"><Icon name="alert" /> Draft — pending legal review</p>
-          <p>Draft — this document has not been reviewed by legal counsel and is provided for structure only. It does not yet create, waive or limit any legal rights or obligations.</p>
-          {placeholders.length > 0 && (
-            <>
-              <p class="dn-sub">Details still to be confirmed by the business (until then the operator is named only as “Panoptes”):</p>
-              <ul>{placeholders.map((p) => <li>{p}</li>)}</ul>
-            </>
-          )}
-        </div>
-      )}
       <article class="prose doc-body">
         <Fragment set:html={body} />
       </article>
@@ -115,17 +100,10 @@ body = body.replace(/<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g, (_m, attrs = '', inner) =
   .doc-body { max-width: 72ch; }
   .doc-body :global(> h2:first-child) { margin-top: 0; }
   .doc-body :global(p code), .doc-body :global(li code) { overflow-wrap: anywhere; }
-  .draft-notice { max-width: 72ch; border: 1px solid var(--warn); background: var(--warn-bg); color: var(--text); border-radius: var(--radius); padding: 1.1rem 1.3rem; margin-bottom: 2.4rem; font-size: .95rem; }
-  .draft-notice p { margin: 0 0 .6rem; }
-  .dn-title { display: flex; align-items: center; gap: 8px; font: 600 1rem/1.3 var(--font-display); color: var(--warn-text); }
-  .dn-title :global(svg) { width: 18px; height: 18px; flex: none; }
-  .dn-sub { font-weight: 600; margin-top: .9rem !important; }
-  .draft-notice ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .25rem; }
   .legal-nav { max-width: 72ch; margin-top: 2.8rem; padding-top: 1.4rem; border-top: 1px solid var(--border); }
   .ln-title { font: 500 .72rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 .9rem; }
   .legal-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .6rem 1.6rem; }
   .legal-nav a { display: inline-block; padding-block: 4px; color: var(--accent-text); font-weight: 500; }
-  .draft-notice code { font-size: .84rem; overflow-wrap: anywhere; }
   @media (max-width: 960px) {
     .doc-layout { grid-template-columns: minmax(0, 1fr); }
     .doc-toc { position: static; max-height: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; background: var(--surface-2); }

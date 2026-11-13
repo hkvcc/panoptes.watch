@@ -1,0 +1,78 @@
+---
+import KnowledgeArticle from '../../../components/knowledge/KnowledgeArticle.astro';
+
+const faqs = [
+  { q: 'What data does process mining need?', a: 'At minimum, an event log in which every row records a case identifier, an activity name and a timestamp. Additional attributes, such as the team, channel, product or value of the case, make it possible to compare variants and segments.' },
+  { q: 'Is process mining the same as business process monitoring?', a: 'No. Process mining reconstructs and analyses how a process has run, usually over a historical window. <a href="/resources/business-process-monitoring/">Business process monitoring</a> watches stages, queues and commitments continuously as work flows. Many teams use mining to understand a process and monitoring to keep it healthy.' },
+  { q: 'Does process mining show why a process is slow?', a: 'It shows where time is spent, which paths are common and where rework loops occur. Explaining <em>why</em> usually needs context the event log does not hold, such as a policy change, a staffing change or an upstream system issue, and should distinguish correlation from verified cause.' },
+  { q: 'Can process mining be used to monitor individual employees?', a: 'Event logs often contain user identifiers, so it technically can. Panoptes is designed to observe processes and outcomes, not individuals, and recommends excluding or aggregating staff identifiers unless they are needed to route ownership.' },
+];
+---
+<KnowledgeArticle
+  title="What is process mining?"
+  metaTitle="What Is Process Mining? Definition and Limits"
+  description="Process mining explained: how event logs reveal the real path work takes, discovery and conformance checking, its limits, and how it differs from monitoring."
+  crumb="Process mining"
+  dek="Most organisations have a diagram of how a process is meant to run. Process mining shows how it actually ran, reconstructed from the timestamps systems leave behind."
+  definition="<strong>Process mining</strong> is a set of techniques that reconstruct how a business process actually runs by analysing event logs from the systems that support it. Each recorded event links a case, such as an order or a claim, to an activity and a timestamp; together they reveal the real sequence of steps, the variants, the waiting time and the rework."
+  term="Process mining"
+  faqs={faqs}
+  related={[
+    { label: 'Business process monitoring', href: '/resources/business-process-monitoring/', desc: 'Watching stages, waiting and rework as work flows', icon: 'process' },
+    { label: 'Process Intelligence', href: '/platform/process-intelligence/', desc: 'Stages, throughput and bottlenecks in Panoptes', icon: 'layers' },
+    { label: 'Understanding business bottlenecks', href: '/resources/understanding-business-bottlenecks/', desc: 'Queues, utilisation and the true constraint', icon: 'clock' },
+    { label: 'Operational bottlenecks', href: '/use-cases/operational-bottlenecks/', desc: 'See where work waits, and why', icon: 'search' },
+    { label: 'What is order to cash?', href: '/resources/knowledge/what-is-order-to-cash/', desc: 'A process commonly mined end to end', icon: 'revenue' },
+  ]}
+>
+  <h2>How does process mining work?</h2>
+  <p>Process mining starts from an <strong>event log</strong>. Every time a system records that something happened to a case (an invoice was created, approved, sent or paid), that record becomes a row with three essential fields:</p>
+  <ul>
+    <li><strong>Case identifier</strong>: which order, claim, ticket or application the event belongs to.</li>
+    <li><strong>Activity</strong>: what happened, such as "documents received" or "payment captured".</li>
+    <li><strong>Timestamp</strong>: when it happened.</li>
+  </ul>
+  <p>Sorting the events for each case by time gives a trace: the actual path that case took. Aggregating thousands of traces produces a map of the process as it really runs, including the paths nobody drew on the official diagram. The time between consecutive events shows where cases spend their time, and repeated activities show where work loops back.</p>
+  <p>The hard part is rarely the algorithm. It is building a clean log: deciding what counts as a case, mapping system-specific status codes to meaningful activities, and joining events from several systems that use different identifiers for the same customer or order.</p>
+
+  <h2>The three main types of process mining</h2>
+  <table>
+    <thead><tr><th>Type</th><th>Question it answers</th><th>Typical output</th></tr></thead>
+    <tbody>
+      <tr><td>Discovery</td><td>What does the process actually look like?</td><td>A process map with frequencies, durations and variants</td></tr>
+      <tr><td>Conformance checking</td><td>Where does reality deviate from the intended process?</td><td>Cases that skipped approvals, ran steps out of order or repeated work</td></tr>
+      <tr><td>Enhancement</td><td>How could the model be enriched or improved?</td><td>Maps annotated with waiting time, rework rates or cost by path</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What is process mining used for?</h2>
+  <p>It is most useful where a process is high-volume, crosses several teams or systems, and is believed to work differently from how it is documented. Common examples:</p>
+  <ul>
+    <li><strong>Order to cash</strong>: finding the paths that delay invoicing or collection. See <a href="/resources/knowledge/what-is-order-to-cash/">what is order to cash</a>.</li>
+    <li><strong>Purchase to pay</strong>: spotting invoices paid without a matching order, or approvals that are routinely bypassed.</li>
+    <li><strong>Customer onboarding</strong>: seeing how many applications loop back for missing documents, and how long they wait each time.</li>
+    <li><strong>Claims and case handling</strong>: identifying the variants that take far longer than the standard path.</li>
+  </ul>
+  <p>Typical outcomes are a redesigned hand-off, a removed approval step, a targeted automation or a corrected system configuration, each of which should then be measured to confirm the change worked.</p>
+
+  <h2>What are the limitations of process mining?</h2>
+  <p>Process mining is powerful, but its boundaries are worth knowing before a project starts:</p>
+  <ul>
+    <li><strong>It only sees what is logged.</strong> Work done in email, spreadsheets or conversations leaves no events, so those steps appear as unexplained waiting.</li>
+    <li><strong>It is usually retrospective.</strong> Many analyses are run on an extract covering past months. That is ideal for redesign, less so for noticing that today's queue is building.</li>
+    <li><strong>One process at a time.</strong> A log is built around one case notion. Effects that cross processes, such as a fulfilment delay that later shows up as a collections problem, need the processes to be connected.</li>
+    <li><strong>Where, not why.</strong> A map shows where time goes. The reason, perhaps a policy change, a supplier delay or a new release, usually lives outside the log.</li>
+  </ul>
+  <div class="callout">
+    <strong>Mapping is the start, not the finish</strong>
+    The value of process mining comes from the decisions it informs and from checking afterwards whether those decisions changed the process. A map that is admired once and not revisited rarely changes outcomes.
+  </div>
+
+  <h2>Process mining vs business process monitoring</h2>
+  <p>The two are complementary. Process mining is primarily an <em>analysis</em> discipline: reconstruct, compare and redesign. <a href="/resources/business-process-monitoring/">Business process monitoring</a> is an <em>operating</em> discipline: watch arrivals, waiting, work in progress, rework and breach risk continuously, and tell the owner when a stage drifts. Mining is a good way to learn the shape of a process; monitoring keeps an eye on it once you know what normal looks like.</p>
+
+  <h2>How it relates to business observability</h2>
+  <p>Business observability takes the same raw material, timestamped business events, and connects it across processes, customers, money and commitments in one continuously updated model. Rather than mining one process from a historical extract, the aim is to see how a change in one flow affects the others while it is happening.</p>
+  <p>Panoptes is designed to model processes as stages with entry and exit events, measure flow at each stage and link those stages to the customers, payments and commitments they affect. Its <a href="/platform/process-intelligence/">Process Intelligence</a> capability is designed to show throughput, waiting time and constraints, and <a href="/platform/root-cause-analysis/">Root Cause Analysis</a> is designed to trace a change back to contributing causes while stating clearly what is correlation and what is confirmed.</p>
+  <p>If you already use process mining, its event definitions and process maps are a useful head start for building an observable model of the same process.</p>
+</KnowledgeArticle>

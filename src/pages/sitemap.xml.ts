@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro';
-import { getPosts, isoDate } from '../lib/blog';
+import { authorsWithPosts, getPosts, isoDate } from '../lib/blog';
 
 // Builds sitemap.xml at build time from every .astro page (excluding utility and dynamic
-// routes) plus every published blog article. Drafts never reach getPosts() in production.
+// routes) plus every published blog article and author page (dynamic routes, listed explicitly). Drafts never reach getPosts() in production.
 const pages = import.meta.glob('./**/*.astro', { eager: false });
 const EXCLUDE = ['/404/'];
 
@@ -17,6 +17,7 @@ export const GET: APIRoute = async ({ site }) => {
     .forEach((p) => entries.set(p, today));
   if (posts.length) entries.set('/blog/', isoDate(posts[0].updated ?? posts[0].published));
   for (const p of posts) entries.set(p.href, isoDate(p.updated ?? p.published));
+  for (const { author, posts: theirs } of authorsWithPosts(posts)) entries.set(author.href, isoDate(theirs[0].updated ?? theirs[0].published));
 
   const urls = [...entries.keys()].sort((a, b) => a.split('/').length - b.split('/').length || a.localeCompare(b));
   const priority = (u: string) => (u === '/' ? '1.0' : u.split('/').length <= 3 ? '0.8' : '0.6');

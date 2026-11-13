@@ -1,0 +1,71 @@
+---
+import KnowledgeArticle from '../../../components/knowledge/KnowledgeArticle.astro';
+
+const faqs = [
+  { q: 'Is a semantic layer the same as a data warehouse?', a: 'No. A data warehouse stores data. A semantic layer sits on top of stored data and defines what business terms and metrics mean, so that every tool and query calculates them the same way.' },
+  { q: 'What is the difference between a semantic layer and a metrics layer?', a: 'The terms overlap and are often used interchangeably. "Metrics layer" usually emphasises metric definitions; "semantic layer" is broader and also covers entities, relationships, dimensions and business-friendly names.' },
+  { q: 'Do small organisations need a semantic layer?', a: 'Not necessarily as a separate tool. What every organisation needs is agreed, written, owned definitions for the measures it runs on. A semantic layer is one way to make those definitions enforceable once several tools and teams depend on them.' },
+  { q: 'Is Panoptes a semantic layer?', a: 'No. Panoptes is designed as a business observability platform. It relies on governed definitions in its own model of the business, and can work alongside an existing warehouse and semantic layer rather than replacing them.' },
+];
+---
+<KnowledgeArticle
+  title="What is a semantic layer?"
+  metaTitle="What Is a Semantic Layer? Definition and Uses"
+  description="What a semantic layer is, how it gives every tool one definition for each metric, what it contains, the common pitfalls and how it differs from a warehouse."
+  crumb="Semantic layer"
+  dek="When finance and sales bring different numbers for the same measure to the same meeting, the problem is rarely the data. It is that the definition lives in too many places."
+  definition="A <strong>semantic layer</strong> is a shared set of business definitions that sits between stored data and the tools people use. It defines entities, metrics, dimensions and relationships once, in business terms, so that every report, dashboard and query calculates a measure such as &ldquo;active customer&rdquo; or &ldquo;net revenue&rdquo; in the same way."
+  term="Semantic layer"
+  faqs={faqs}
+  related={[
+    { label: 'Why dashboards miss the full picture', href: '/resources/why-dashboards-miss-the-full-picture/', desc: 'Siloed definitions and other blind spots', icon: 'eye' },
+    { label: 'Building a business operating model', href: '/resources/building-a-business-operating-model/', desc: 'Entities, flows, objectives and owners', icon: 'graph' },
+    { label: 'Security & governance', href: '/integrations/security-governance/', desc: 'Access, ownership and auditability', icon: 'shield' },
+    { label: 'Data sources', href: '/integrations/data-sources/', desc: 'Systems of record, events and warehouses', icon: 'database' },
+    { label: 'What is decision intelligence?', href: '/resources/knowledge/what-is-decision-intelligence/', desc: 'Engineering how decisions are made', icon: 'target' },
+  ]}
+>
+  <h2>Why a semantic layer matters</h2>
+  <p>Without one, each dashboard, spreadsheet and query carries its own copy of the logic for every measure. Copies drift. One team excludes trial accounts from "active customers", another does not; one counts revenue at invoice, another at payment. Every number is correct by its own definition, and the organisation still cannot agree on what happened.</p>
+  <p>A semantic layer moves those definitions into one governed place so that tools consume them rather than reinvent them.</p>
+
+  <h2>What does a semantic layer contain?</h2>
+  <ul>
+    <li><strong>Entities</strong>: the things the business is made of, such as customer, order, subscription and invoice, with their identifiers.</li>
+    <li><strong>Relationships</strong>: how entities connect, for example an invoice belongs to an order which belongs to a customer.</li>
+    <li><strong>Metrics</strong>: calculations with explicit rules, such as "net revenue = invoiced amount minus credit notes, by invoice date".</li>
+    <li><strong>Dimensions</strong>: the attributes metrics can be broken down by, such as region, channel and product.</li>
+    <li><strong>Business names and descriptions</strong>: plain-language labels that hide raw table and column names.</li>
+    <li><strong>Ownership and access rules</strong>: who maintains each definition and who may see what.</li>
+  </ul>
+
+  <h2>How does a semantic layer work?</h2>
+  <p>Definitions are written once, usually as code or configuration under version control. When a user or tool asks for "net revenue by region last month", the semantic layer translates that request into the correct query against the underlying data, applying the agreed rules and access controls. Changes to a definition are reviewed and versioned, so that history can be explained when a number is restated.</p>
+
+  <h2>Semantic layer vs data warehouse vs BI tool</h2>
+  <table>
+    <thead><tr><th>Component</th><th>Main job</th></tr></thead>
+    <tbody>
+      <tr><td>Data warehouse</td><td>Store and process large volumes of data</td></tr>
+      <tr><td>Semantic layer</td><td>Define what the data means in business terms, once</td></tr>
+      <tr><td>BI tool</td><td>Present, explore and report on the defined measures</td></tr>
+    </tbody>
+  </table>
+  <p>Some BI tools include their own semantic modelling. The trade-off is that definitions held inside one tool are not automatically shared with others.</p>
+
+  <h2>Common pitfalls</h2>
+  <ul>
+    <li><strong>Defining everything at once.</strong> Start with the handful of measures that leadership reviews and that teams currently dispute.</li>
+    <li><strong>No owner per definition.</strong> A definition without an accountable owner drifts back into local copies.</li>
+    <li><strong>Silent changes.</strong> Changing a definition without versioning makes past reports impossible to reconcile.</li>
+    <li><strong>Agreeing on words, not rules.</strong> "Active customer" needs explicit inclusion rules, time windows and edge cases, not just a label.</li>
+  </ul>
+  <div class="callout">
+    <strong>Illustrative example</strong>
+    A subscription business reports two churn figures to its board in the same quarter. One counts cancelled subscriptions; the other counts customers with no active subscription. A single governed definition, with the second kept as a separately named measure, ends the debate.
+  </div>
+
+  <h2>How it relates to business observability</h2>
+  <p>Business observability depends on the same principle: a measure such as "time to first invoice" or "SLA breach" must mean one thing, owned in one place, for every team that looks at it. Without that, a shared picture of the business is impossible.</p>
+  <p>Panoptes is designed to define entities, relationships, objectives and expectations once, with owners and versioning, inside its model of the business, the <a href="/platform/business-graph/">Business Graph</a>, and to apply them to live business events as well as warehouse data. It is not a semantic layer product and is designed to sit alongside an existing warehouse and semantic layer; see <a href="/integrations/data-sources/">data sources</a> and <a href="/integrations/security-governance/">security &amp; governance</a> for how definitions and access are handled.</p>
+</KnowledgeArticle>

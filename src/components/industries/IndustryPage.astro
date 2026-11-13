@@ -1,0 +1,154 @@
+---
+/**
+ * Template for /solutions/industries/<slug>/ pages. One <h1> (PageHero), then H2 sections
+ * with H3 cards: the visibility problem → value streams → indicators → an illustrative
+ * investigation → capabilities → related pages → FAQ → CTA. Emits WebPage + FAQPage schema;
+ * BaseLayout adds the BreadcrumbList.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../PageHero.astro';
+import SectionHead from '../SectionHead.astro';
+import Diagram from '../Diagram.astro';
+import FeatureCard from '../FeatureCard.astro';
+import RelatedLinks from '../RelatedLinks.astro';
+import FAQ from '../FAQ.astro';
+import Icon from '../Icon.astro';
+import CTA from '../CTA.astro';
+import { INDUSTRIES, SITE } from '../../data/site';
+import type { Industry } from './types';
+
+interface Props { industry: Industry }
+const { industry: d } = Astro.props;
+const path = `/solutions/industries/${d.slug}/`;
+const crumbs = [
+  { label: 'Solutions', href: '/solutions/' },
+  { label: 'Industries', href: '/solutions/industries/' },
+  { label: d.name, href: path },
+];
+const url = new URL(path, SITE.origin).href;
+const schema = {
+  '@type': 'WebPage', name: d.metaTitle, description: d.description, url, inLanguage: 'en-GB',
+  isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.origin },
+  about: { '@type': 'Thing', name: d.keyword },
+  audience: { '@type': 'BusinessAudience', name: d.name },
+  primaryImageOfPage: new URL('/social/og-solutions.png', SITE.origin).href,
+};
+const others = INDUSTRIES.filter((i) => i.href !== path);
+---
+<BaseLayout title={d.metaTitle} description={d.description} ogImage="/social/og-solutions.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow={`Industries · ${d.name}`} title={d.h1} lede={d.lede} breadcrumbs={crumbs} split={!!d.visual}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#signals">Indicators to watch</a>
+    </div>
+    {d.visual && <Fragment slot="visual"><Diagram src={d.visual.src} alt={d.visual.alt} frame={d.visual.frame} zoom /></Fragment>}
+  </PageHero>
+
+  <section class="section">
+    <div class="container split split-top">
+      <div>
+        <p class="eyebrow">The visibility problem</p>
+        <h2>{d.problem.title}</h2>
+        {d.problem.paras.map((p) => <p class="muted" set:html={p} />)}
+      </div>
+      <ul class="ind-points">
+        {d.problem.points.map((p) => <li class="reveal"><Icon name="alert" /><span set:html={p} /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Value streams" title={`What to observe in ${d.name.toLowerCase().replace('saas', 'SaaS')}`} lede="The flows where money, customers and commitments move — and the business events that show whether each one is working." />
+      <div class="grid grid-2">
+        {d.flows.map((f) => (
+          <article class="card reveal flow">
+            <span class="icon-tile"><Icon name={f.icon} /></span>
+            <h3>{f.title}</h3>
+            <p class="muted">{f.text}</p>
+            <ul class="pill-list mt-1" aria-label={`Signals for ${f.title.toLowerCase()}`}>{f.signals.map((s) => <li>{s}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="signals">
+    <div class="container">
+      <SectionHead eyebrow="Indicators" title="Indicators worth watching" lede="Each indicator is paired with a counter-measure, so improving one number cannot quietly hide a problem in another." />
+      <div class="table-wrap reveal">
+        <table class="table">
+          <caption class="sr-only">{`Indicators for ${d.name}, why each matters and what to pair it with`}</caption>
+          <thead><tr><th scope="col">Indicator</th><th scope="col">Why it matters</th><th scope="col">Pair it with</th></tr></thead>
+          <tbody>
+            {d.indicators.map((i) => (
+              <tr><th scope="row">{i.name}</th><td data-label="Why it matters">{i.why}</td><td data-label="Pair it with">{i.pair}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="note mt-1">Definitions and targets differ between organisations; these are starting points to agree internally, not benchmarks.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container container-narrow">
+      <p class="eyebrow">Illustrative investigation</p>
+      <h2>{d.scenario.title}</h2>
+      <p class="lede">{d.scenario.intro}</p>
+      <ol class="ind-steps">
+        {d.scenario.steps.map((s) => <li class="reveal"><span class="ind-k">{s.k}</span><p set:html={s.t} /></li>)}
+      </ol>
+      <p class="note mt-1"><span class="badge badge-outline">Illustrative</span> {d.scenario.caveat}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Platform" title="How Panoptes is designed to help" lede="The same capabilities apply in every industry; what changes is the model of entities, flows and commitments they work on." />
+      <div class="grid grid-4">
+        {d.capabilities.map((c) => <FeatureCard title={c.title} text={c.text} href={c.href} icon={c.icon} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container split split-top">
+      <RelatedLinks eyebrow="Keep exploring" title="Related roles, use cases and guides" items={d.related} />
+      <div>
+        <p class="eyebrow">Questions</p>
+        <h2 class="faq-title">{`${d.name}: common questions`}</h2>
+        <FAQ items={d.faqs} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <h2 class="other-title">Other industries</h2>
+      <ul class="pill-list other">
+        {others.map((o) => <li><a href={o.href}>{o.label}</a></li>)}
+        <li><a href="/solutions/industries/">All industries</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <CTA title={`See ${d.name.toLowerCase().replace('saas', 'SaaS')} operations in one model.`} text="Bring one flow that crosses teams and systems, and we will walk through how Panoptes is designed to model it, watch it and explain what changes." />
+</BaseLayout>
+
+<style>
+  .ind-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .ind-points li { display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-size: .96rem; }
+  .ind-points :global(svg) { width: 20px; height: 20px; flex: none; color: var(--warn-text, var(--accent-text)); margin-top: 2px; }
+  .flow h3 { margin-top: .9rem; }
+  .ind-steps { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; gap: 12px; }
+  .ind-steps li { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+  .ind-steps p { margin: 0; }
+  .ind-k { font: 500 .74rem/1.5 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
+  .faq-title, .other-title { font-size: clamp(1.4rem, 2.2vw, 1.8rem); }
+  .other { margin-top: 1rem; }
+  .other a { text-decoration: none; color: inherit; }
+  .other a:hover { color: var(--accent-text); }
+  table th[scope='row'] { font-weight: 600; text-align: left; }
+  @media (max-width: 640px) { .ind-steps li { grid-template-columns: 1fr; gap: 4px; } }
+</style>

@@ -57,7 +57,9 @@
     "/use-cases/operational-bottlenecks/",
     "/use-cases/operational-efficiency/",
     "/use-cases/revenue-leakage/",
-    "/use-cases/sla-monitoring/"
+    "/use-cases/sla-monitoring/",
+    "/blog/",
+    "/legal/"
   ],
   "author_byline": "Katy Simmons",
   "model_note": "Runs on Sonnet 5.5 via a scheduled cloud session (fresh session per run); see RUNBOOK.md.",
@@ -103,8 +105,13 @@
     ]
   },
   "cannibalisation_note": "Before writing a watchlisted brief, read the listed live pages. If the brief would substantially duplicate one, either sharpen the angle so it is clearly distinct and link to the existing page, or mark the brief merged with merged_into set to the closest brief and explain in qa_findings, recommending the existing page as canonical.",
+<<<<<<< HEAD
   "site_checked": "2026-11-13: panoptes.watch is live; this repo IS the site (Astro 5, Cloudflare Pages, deploys from main). Markdown blog at /blog/ built from content/blog/*.md.",
   "publishing_note": "Merging into main deploys to production. Articles are Markdown files content/blog/<slug>.md (schema: src/lib/blog-schema.ts, template: content/blog/_template.md). Adding the file is the whole publishing step: listing, RSS, sitemap and search update automatically.",
+=======
+  "site_checked": "2026-11-13: panoptes.watch is live; this repo IS the site (Astro 5, Cloudflare Pages, deploys from main). /blog/ is a separate code-first blog (content/blog/*.md); campaign articles still go to /resources/.",
+  "publishing_note": "Merging into main deploys to production. Articles are Astro pages at src/pages/resources/<slug>.astro using ArticleLayout, registered in src/data/site.ts RESOURCES and in META in src/pages/resources/index.astro.",
+>>>>>>> 1561854 (Add knowledge articles for Order to Cash and Process Mining; create industry pages for eCommerce, Financial Services, Insurance, Logistics, Marketplaces, SaaS; implement Trust Center with security and privacy information)
   "url_map": {
     "BO-01": "/business-observability/",
     "BO-02": "/blog/business-observability-platform/",

@@ -8,8 +8,8 @@
 /book-a-demo/       /demo/                            301
 /pricing            /demo/                            302
 /pricing/           /demo/                            302
-/security           /integrations/security-governance/ 301
-/security/          /integrations/security-governance/ 301
+/security           /trust/ 301
+/security/          /trust/ 301
 /glossary           /resources/business-observability-glossary/ 301
 /glossary/          /resources/business-observability-glossary/ 301
 /sitemap-index.xml  /sitemap.xml                      301

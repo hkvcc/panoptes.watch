@@ -1,0 +1,142 @@
+---
+/**
+ * Knowledge center article ("What is …?" explainers under /resources/knowledge/).
+ * Wraps BaseLayout with Resources → Knowledge center → article breadcrumbs, a short
+ * definition box, a table of contents from the body's <h2>s, an optional FAQ
+ * (FAQPage schema via the FAQ component), related links and the closing CTA.
+ * Emits Article schema. Exactly one <h1> (the `title`).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTA from '../CTA.astro';
+import FAQ from '../FAQ.astro';
+import Icon from '../Icon.astro';
+import RelatedLinks from '../RelatedLinks.astro';
+import { SITE } from '../../data/site';
+import { countWords, readingMinutes } from '../../lib/reading';
+
+interface Props {
+  title: string;          // H1 — contains the target query, e.g. "What is process mining?"
+  metaTitle: string;      // <title> (without "| Panoptes")
+  description: string;    // meta description, 140–160 chars
+  crumb: string;          // short breadcrumb label
+  dek: string;            // standfirst
+  definition: string;     // one-paragraph answer shown in the definition box (HTML allowed)
+  term: string;           // the defined term, for DefinedTerm schema
+  faqs?: { q: string; a: string }[];
+  related: { label: string; href: string; desc?: string; icon?: string }[];
+  published?: string;
+  updated?: string;
+}
+const { title, metaTitle, description, crumb, dek, definition, term, faqs = [], related, published = '2026-11-13', updated } = Astro.props;
+
+const slug = (s: string) => s.toLowerCase().replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+let body = await Astro.slots.render('default');
+const toc: { id: string; text: string }[] = [];
+body = body.replace(/<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g, (_m, attrs = '', inner) => {
+  const existing = /id="([^"]+)"/.exec(attrs);
+  const id = existing ? existing[1] : slug(inner);
+  toc.push({ id, text: inner.replace(/<[^>]+>/g, '') });
+  return existing ? `<h2${attrs}>${inner}</h2>` : `<h2 id="${id}"${attrs}>${inner}</h2>`;
+});
+if (faqs.length) toc.push({ id: 'faq', text: 'Frequently asked questions' });
+const words = countWords(body + definition + faqs.map((f) => `${f.q} ${f.a}`).join(' '));
+const minutes = readingMinutes(words);
+const path = Astro.url.pathname;
+const url = new URL(path, SITE.origin).href;
+const crumbs = [{ label: 'Resources', href: '/resources/' }, { label: 'Knowledge center', href: '/resources/knowledge/' }, { label: crumb, href: path }];
+const plain = (s: string) => s.replace(/<[^>]+>/g, '');
+const schema = [
+  {
+    '@type': 'Article', headline: plain(title), description, url, mainEntityOfPage: url, inLanguage: 'en-GB',
+    datePublished: published, dateModified: updated ?? published, wordCount: words,
+    articleSection: 'Knowledge center',
+    image: new URL('/social/og-resources.png', SITE.origin).href,
+    author: { '@type': 'Organization', name: 'Panoptes', url: SITE.origin },
+    publisher: { '@type': 'Organization', name: 'Panoptes', url: SITE.origin, logo: { '@type': 'ImageObject', url: new URL('/logos/png/panoptes-symbol-purple-512.png', SITE.origin).href } },
+    about: { '@type': 'DefinedTerm', name: term, description: plain(definition), inDefinedTermSet: new URL('/resources/knowledge/', SITE.origin).href },
+  },
+];
+---
+<BaseLayout title={metaTitle} description={description} ogImage="/social/og-resources.png" ogType="article" schema={schema} breadcrumbs={crumbs}>
+  <header class="ka-hero bg-glow">
+    <div class="bg-grid ka-grid" aria-hidden="true"></div>
+    <div class="container container-narrow">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/resources/">Resources</a></li>
+          <li><a href="/resources/knowledge/">Knowledge center</a></li>
+          <li><span aria-current="page">{crumb}</span></li>
+        </ol>
+      </nav>
+      <p class="eyebrow">Knowledge center</p>
+      <h1 set:html={title} />
+      <p class="lede">{dek}</p>
+      <div class="ka-meta">
+        <span><Icon name="clock" /> {minutes} min read</span>
+        <span><Icon name="calendar" /> <time datetime={updated ?? published}>{new Date(updated ?? published).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container ka-layout">
+    {toc.length > 2 && (
+      <aside class="ka-toc" aria-label="Table of contents">
+        <details open class="toc-box">
+          <summary>On this page</summary>
+          <ol>{toc.map((t) => <li><a href={`#${t.id}`} data-toc-link>{t.text}</a></li>)}</ol>
+        </details>
+      </aside>
+    )}
+    <article class="prose ka-body">
+      <div class="ka-def">
+        <p class="ka-def-k">Definition</p>
+        <p set:html={definition} />
+      </div>
+      <Fragment set:html={body} />
+      {faqs.length > 0 && (
+        <section class="ka-faq" aria-labelledby="faq">
+          <h2 id="faq">Frequently asked questions</h2>
+          <FAQ items={faqs} />
+        </section>
+      )}
+    </article>
+  </div>
+
+  <section class="section-tight section-alt">
+    <div class="container">
+      <RelatedLinks eyebrow="Keep exploring" title="Related pages" items={related} />
+      <p class="mt-2"><a class="link-arrow" href="/resources/knowledge/">All knowledge center articles</a></p>
+    </div>
+  </section>
+  <CTA title="See it on your own processes." text="Bring one workflow — an onboarding queue, a payment route, an invoice run — and we will show how Panoptes is designed to model and observe it." />
+</BaseLayout>
+
+<style>
+  .ka-hero { padding: clamp(48px, 7vw, 96px) 0 clamp(32px, 5vw, 56px); border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+  .ka-grid { position: absolute; inset: 0; z-index: -1; -webkit-mask-image: radial-gradient(ellipse 70% 80% at 60% 0%, #000, transparent 75%); mask-image: radial-gradient(ellipse 70% 80% at 60% 0%, #000, transparent 75%); }
+  .ka-hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+  .ka-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 1.6rem; font: 500 .8rem/1 var(--font-mono); color: var(--text-3); }
+  .ka-meta span { display: inline-flex; align-items: center; gap: 7px; }
+  .ka-meta :global(svg) { width: 15px; height: 15px; }
+  .ka-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); padding-block: clamp(40px, 6vw, 72px) var(--section); align-items: start; }
+  .ka-layout:not(:has(.ka-toc)) { grid-template-columns: minmax(0, 1fr); max-width: 820px; }
+  .ka-toc { position: sticky; top: calc(var(--header-h) + 24px); max-height: calc(100vh - var(--header-h) - 48px); overflow: auto; }
+  .toc-box summary { font: 500 .72rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); cursor: pointer; padding: 6px 0 14px; list-style: none; }
+  .toc-box summary::-webkit-details-marker { display: none; }
+  .toc-box ol { list-style: none; padding: 0; margin: 0; border-left: 1px solid var(--border); }
+  .toc-box a { display: block; padding: 7px 0 7px 16px; margin-left: -1px; border-left: 2px solid transparent; color: var(--text-2); text-decoration: none; font-size: .88rem; line-height: 1.4; }
+  .toc-box a:hover { color: var(--text); }
+  .toc-box a.active { color: var(--accent-text); border-left-color: var(--accent); font-weight: 600; }
+  .ka-body { max-width: 72ch; }
+  .ka-def { border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); background: var(--accent-soft); border-radius: var(--radius-lg); padding: 18px 22px; margin-bottom: 2rem; }
+  .ka-def p { margin: 0; color: var(--text); }
+  .ka-def .ka-def-k { font: 500 .72rem/1.2 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent-text); margin-bottom: .5rem; }
+  .ka-faq { margin-top: 2.5rem; }
+  @media (max-width: 960px) {
+    .ka-layout { grid-template-columns: minmax(0, 1fr); }
+    .ka-toc { position: static; max-height: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; background: var(--surface-2); }
+    .toc-box summary { padding-bottom: 0; }
+    .toc-box[open] summary { padding-bottom: 12px; }
+  }
+</style>

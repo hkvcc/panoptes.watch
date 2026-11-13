@@ -2,8 +2,8 @@
 import { defineConfig } from 'astro/config';
 
 /**
- * Blog articles carry their display heading as a Markdown `# H1` (the SEO agent's
- * contract, see seo/business-observability/RUNBOOK.md). The article template renders
+ * Blog articles (content/blog/*.md) carry their display heading as a Markdown `# H1`
+ * so the files read naturally on their own. The article template renders
  * the H1 itself, so drop it from the rendered body to keep exactly one <h1> per page.
  * The heading text is read from the raw source by src/lib/blog.ts.
  */

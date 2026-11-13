@@ -1,7 +1,11 @@
 ---
 import type { Crumb } from '../layouts/BaseLayout.astro';
-interface Props { eyebrow?: string; title: string; lede?: string; breadcrumbs?: Crumb[]; split?: boolean; center?: boolean }
-const { eyebrow, title, lede, breadcrumbs, split = false, center = false } = Astro.props;
+/**
+ * `keyword` (optional) is the page's target phrase. It renders inside the <h1>, styled like the
+ * eyebrow, so the heading is keyword-led while the display line stays human; it replaces `eyebrow`.
+ */
+interface Props { eyebrow?: string; keyword?: string; title: string; lede?: string; breadcrumbs?: Crumb[]; split?: boolean; center?: boolean }
+const { eyebrow, keyword, title, lede, breadcrumbs, split = false, center = false } = Astro.props;
 const hasVisual = Astro.slots.has('visual');
 ---
 <section class:list={['page-hero bg-glow', { center }]}>
@@ -16,8 +20,14 @@ const hasVisual = Astro.slots.has('visual');
           </ol>
         </nav>
       )}
-      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-      <h1 set:html={title} />
+      {keyword ? (
+        <h1><span class="eyebrow h1-kicker">{keyword}<span class="sr-only">: </span></span> <span class="h1-main" set:html={title} /></h1>
+      ) : (
+        <Fragment>
+          {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+          <h1 set:html={title} />
+        </Fragment>
+      )}
       {lede && <p class="lede">{lede}</p>}
       <slot />
     </div>
@@ -30,4 +40,7 @@ const hasVisual = Astro.slots.has('visual');
   .center h1 { max-width: 20ch; }
   .center :global(.breadcrumbs ol) { justify-content: center; }
   .split :global(h1) { max-width: 14ch; }
+  .h1-kicker { display: flex; width: fit-content; max-width: 100%; }
+  .h1-main { display: block; }
+  .center .h1-kicker { margin-inline: auto; }
 </style>

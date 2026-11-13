@@ -2,55 +2,69 @@
 import DocPage from '../../components/company/DocPage.astro';
 import Icon from '../../components/Icon.astro';
 import { SITE } from '../../data/site';
-import { LEGAL, LEGAL_DOCS, lastUpdatedLabel, missingIdentity } from '../../data/legal';
+import { LEGAL, LEGAL_DOCS, lastUpdatedLabel, operatorHtml } from '../../data/legal';
 
 const crumbs = [{ label: 'Legal', href: '/legal/' }];
-const status = LEGAL.reviewed ? 'Reviewed' : 'Draft — pending legal review';
+const groups = [
+  { id: 'privacy', title: 'Privacy', intro: 'How this website handles personal data and what it stores in your browser.' },
+  { id: 'website-terms', title: 'Website terms and policies', intro: 'The rules for using this website and Panoptes services.' },
+].map((g) => ({ ...g, docs: LEGAL_DOCS.filter((d) => d.group === g.title) }));
 ---
 <DocPage
   title="Legal information"
-  metaTitle="Legal information"
-  description="Index of the panoptes.watch legal documents — privacy notice, website terms of use and cookie notice — with their scope, review status and last-updated dates."
+  metaTitle="Legal information and company details"
+  description="Panoptes Watch LLC company details and the panoptes.watch legal documents: privacy notice, cookie notice, terms of use, acceptable use and service providers."
   eyebrow="Legal"
-  lede="The documents that govern this website, what each one covers and when it last changed. They apply to the panoptes.watch website only; use of the Panoptes product is governed by a separate agreement with each customer."
+  lede="Who operates this website and the documents that govern it: what each covers and when it last changed. Use of the Panoptes product is governed by a separate written agreement with each customer."
   breadcrumbs={crumbs}
   ogImage="/social/og-company.png"
   updated={lastUpdatedLabel}
-  draft={!LEGAL.reviewed}
-  placeholders={missingIdentity}
 >
-  <h2 id="website-documents">Website documents</h2>
-  <p>These documents apply to everyone who visits panoptes.watch.</p>
-  <ul class="legal-docs">
-    {LEGAL_DOCS.map((d) => (
-      <li class="card">
-        <h3><Icon name={d.icon} /> <a href={d.href}>{d.title}</a></h3>
-        <p>{d.scope}</p>
-        <p class="ld-meta"><span>Last updated: {lastUpdatedLabel}</span><span>Status: {status}</span></p>
-      </li>
-    ))}
-  </ul>
+  <h2 id="company">Company information</h2>
+  <p>The panoptes.watch website and Panoptes services are provided by <Fragment set:html={operatorHtml()} />. Our company details are:</p>
+  <dl class="company-id">
+    <dt>Company name</dt><dd>{LEGAL.entityName}</dd>
+    <dt>Legal form</dt><dd>Limited liability company</dd>
+    <dt>Registered in</dt><dd>The Cayman Islands</dd>
+    <dt>Registration number</dt><dd>{LEGAL.companyNumber}</dd>
+    <dt>Registered office</dt><dd>{LEGAL.registeredOffice}</dd>
+    <dt>Email</dt><dd><a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a></dd>
+  </dl>
 
-  <h2 id="review-status">Review status</h2>
-  {LEGAL.reviewed ? (
-    <p>The documents listed above have been reviewed. Each shows the date it was last updated at the top of the page.</p>
-  ) : (
-    <p>All three documents are <strong>drafts pending legal review</strong>. They describe how this website actually works, but they have not yet been reviewed by legal counsel, and each one says so in a notice at the top of the page. Some company details, such as the registered company name and address, are still to be confirmed; until then the documents name the operator simply as “Panoptes”.</p>
-  )}
-  <p>When a document changes, its “last updated” date changes too. Earlier versions are not currently published on this site.</p>
+  {groups.map((g) => (
+    <>
+      <h2 id={g.id}>{g.title}</h2>
+      <p>{g.intro}</p>
+      <ul class="legal-docs">
+        {g.docs.map((d) => (
+          <li class="card">
+            <h3><Icon name={d.icon} /> <a href={d.href}>{d.title}</a></h3>
+            <p>{d.scope}</p>
+            <p class="ld-meta"><span>Last updated: {lastUpdatedLabel}</span></p>
+          </li>
+        ))}
+      </ul>
+    </>
+  ))}
+  <p>When a document changes, the “last updated” date on it changes too. Earlier versions are not published on this site; if you need one, contact us.</p>
 
   <h2 id="customer-agreements">Customer agreements and data processing terms</h2>
-  <p>The documents above cover the website only. Access to and use of the Panoptes product is governed by a written agreement between Panoptes and each customer, including any terms for processing personal data on the customer’s behalf. These agreements are not published on this website.</p>
+  <p>The documents above cover the website and, in the case of the acceptable use policy, general use of Panoptes services. Access to and use of the Panoptes product is governed by a written agreement between Panoptes and each customer, including any terms for processing personal data on the customer’s behalf and the list of subprocessors that applies to the product. These agreements are provided to customers directly and are not published on this website.</p>
   <p>If you are evaluating Panoptes and want to discuss contractual or data processing terms, email <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>.</p>
 
   <h2 id="security">Security information</h2>
-  <p>How Panoptes approaches security and governance for the product — access control, data ownership, auditability and the decisions agreed with each customer during evaluation — is described on the <a href="/integrations/security-governance/">security and governance</a> page. How this website itself protects form submissions and restricts the resources pages may load is covered in the <a href="/privacy/#security">privacy notice</a>.</p>
+  <p>How Panoptes approaches security and governance for the product — access control, data ownership, auditability and the decisions agreed with each customer during evaluation — is described on the <a href="/integrations/security-governance/">security and governance</a> page. How this website protects form submissions and restricts the resources pages may load is covered in the <a href="/privacy/#security">privacy notice</a>. To report a security issue or misuse, see the <a href="/legal/acceptable-use/#reporting">acceptable use policy</a>.</p>
 
   <h2 id="contact">Contact</h2>
   <p>Questions about any of these documents, or requests about your personal data: <a href={`mailto:${LEGAL.privacyEmail}?subject=Privacy`}>{LEGAL.privacyEmail}</a>. For privacy requests, please put “Privacy” in the subject line.</p>
+  <p>By post: {LEGAL.entityName}, {LEGAL.registeredOffice}.</p>
 </DocPage>
 
 <style>
+  .company-id { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .55em 1.6em; padding: 1.2em 1.4em; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); margin: 1.2em 0 0; }
+  .company-id dt { margin: 0 !important; font-weight: 600; font-size: .92rem; }
+  .company-id dd { margin: 0 !important; font-size: .95rem; overflow-wrap: anywhere; }
+  @media (max-width: 560px) { .company-id { grid-template-columns: minmax(0, 1fr); gap: .15em; } .company-id dd { margin-bottom: .6em !important; } }
   .legal-docs { list-style: none; padding: 0; margin: 1.4em 0 0; display: grid; gap: 1rem; }
   .legal-docs li { margin: 0; padding: 1.2rem 1.4rem; }
   .legal-docs h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 .5rem; font-size: 1.1rem; }

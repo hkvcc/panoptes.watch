@@ -37,8 +37,8 @@ const features = [
   { t: 'History of the model', d: 'Relationships change: new routes, new suppliers, reorganised teams. The graph is designed to keep that history so past investigations still make sense.', i: 'clock' },
 ];
 ---
-<BaseLayout title="Business Graph" description="Model customers, orders, payments, fulfilment and revenue as one connected graph, so an issue at any step can be traced to its downstream business consequences." ogImage="/social/og-platform.png" breadcrumbs={crumbs}>
-  <PageHero eyebrow="Platform · Business Graph" title="Your business, <span class='gradient-text'>as it is actually connected.</span>" lede="The Business Graph models the entities your business runs on (customers, orders, payments, fulfilment, revenue, teams and suppliers) and the relationships between them. It is the shared model that lets Panoptes follow a problem from where it starts to everything it affects." breadcrumbs={crumbs} split>
+<BaseLayout title="Business Graph: Map Business Dependencies" description="Business dependency mapping with the Business Graph: model customers, orders, payments and revenue as one connected graph and trace issues to downstream impact." ogImage="/social/og-platform.png" breadcrumbs={crumbs}>
+  <PageHero keyword="Business dependency mapping" title="Your business, <span class='gradient-text'>as it is actually connected.</span>" lede="The Business Graph models the entities your business runs on (customers, orders, payments, fulfilment, revenue, teams and suppliers) and the relationships between them. It is the shared model that lets Panoptes follow a problem from where it starts to everything it affects." breadcrumbs={crumbs} split>
     <div class="btn-row">
       <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
       <a class="btn" href="#break-a-step">Try the impact explorer</a>
@@ -182,7 +182,7 @@ const features = [
         { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Commitments that share a dependency', icon: 'target' },
       ]} />
       <div class="mt-3">
-        <RelatedLinks eyebrow="Related capabilities" title="Explore further" items={[
+        <RelatedLinks eyebrow="Related capabilities" title="Related platform capabilities" items={[
           { label: 'Root Cause Analysis', href: '/platform/root-cause-analysis/', desc: 'From symptom to contributing change', icon: 'rootcause' },
           { label: 'Business Health', href: '/platform/business-health/', desc: 'Objectives on top of the graph', icon: 'health' },
           { label: 'Building a business operating model', href: '/resources/building-a-business-operating-model/', desc: 'Guide: how to model a business', icon: 'book' },

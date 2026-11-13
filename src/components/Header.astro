@@ -9,7 +9,10 @@ const under = (href: string) => href !== '/' && path.startsWith(href);
 const isActive = (g: NavGroup) => under(g.href) || g.columns.some((c) => c.links.some((l) => under(l.href))) || (!!g.feature && under(g.feature.href));
 // Mobile list: group links plus the featured page (which is otherwise desktop-only), de-duplicated.
 const mobileLinks = (g: NavGroup) => {
-  const links = g.columns.flatMap((c) => c.links).filter((l) => l.href !== g.href);
+  // A column with its own hub (e.g. "By industry" → /solutions/industries/) lists that hub before its links.
+  const links = g.columns
+    .flatMap((c) => [...(c.href && c.title ? [{ label: c.title, href: c.href }] : []), ...c.links])
+    .filter((l, i, all) => l.href !== g.href && all.findIndex((x) => x.href === l.href) === i);
   if (g.feature && !links.some((l) => l.href === g.feature!.href)) links.push({ label: g.feature.label ?? g.feature.title, href: g.feature.href });
   return links;
 };
@@ -30,7 +33,9 @@ const mobileLinks = (g: NavGroup) => {
                 <div class="mega-cols">
                   {g.columns.map((col) => (
                     <div class="mega-col">
-                      {col.title && <p class="mega-title">{col.title}</p>}
+                      {col.title && (col.href && col.href !== g.href
+                        ? <p class="mega-title"><a href={col.href}>{col.title}<Icon name="arrow" class="mt-arrow" /></a></p>
+                        : <p class="mega-title">{col.title}</p>)}
                       <ul class:list={['mega-links', { two: col.links.length > 6 }]}>
                         {col.links.map((l) => (
                           <li>
@@ -96,15 +101,17 @@ const mobileLinks = (g: NavGroup) => {
   .brand:focus-visible { outline-offset: 4px; }
   .brand :global(.logo) { height: 28px; }
   .nav-desktop { flex: 1; display: flex; justify-content: center; }
-  .nav-list { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; }
-  .nav-item { position: relative; }
+  /* Mega-menus are positioned against the whole nav bar and centred under it, so wide
+     multi-column menus (Solutions, Resources) never run off either edge at ≥1080px. */
+  .nav-list { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; position: relative; }
+  .nav-item { position: static; }
   .nav-trigger { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 10px 12px; border-radius: var(--radius-pill); font: 500 .92rem/1 var(--font-body); color: var(--text-2); cursor: pointer; transition: color .15s, background .15s; }
   .nav-trigger:hover, .nav-trigger[aria-expanded='true'], .nav-trigger.active { color: var(--text); }
   .nav-trigger[aria-expanded='true'] { background: var(--bg-2); }
   .nav-trigger:focus-visible { outline-offset: 1px; }
   .nav-trigger :global(.chev) { width: 14px; height: 14px; transition: transform .2s var(--ease); opacity: .7; }
   .nav-trigger[aria-expanded='true'] :global(.chev) { transform: rotate(180deg); }
-  .mega { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%); background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); min-width: 380px; overflow: hidden; animation: mega-in .18s var(--ease); }
+  .mega { position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%); background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); min-width: 380px; max-width: calc(100vw - 2 * var(--gutter, 16px)); overflow: hidden; animation: mega-in .18s var(--ease); }
   @keyframes mega-in { from { opacity: 0; transform: translate(-50%, -6px); } }
   .mega-inner { display: grid; padding: 14px; gap: 10px; }
   .mega-inner.has-feature { grid-template-columns: 1fr 240px; }
@@ -112,6 +119,9 @@ const mobileLinks = (g: NavGroup) => {
   .mega-inner.wide .mega-links.two { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
   .mega-cols { display: grid; grid-auto-flow: column; gap: 10px; }
   .mega-title { font: 500 .7rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 8px 10px 10px; }
+  .mega-title a { display: inline-flex; align-items: center; gap: 6px; color: inherit; text-decoration: none; }
+  .mega-title a:hover, .mega-title a:focus-visible { color: var(--accent-text); }
+  .mega-title :global(.mt-arrow) { width: 12px; height: 12px; }
   .mega-links { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
   .mega-links.two { grid-template-columns: 1fr 1fr; }
   .mega-link { display: flex; gap: 12px; align-items: flex-start; padding: 10px; border-radius: var(--radius-sm); text-decoration: none; color: var(--text); }
@@ -129,9 +139,6 @@ const mobileLinks = (g: NavGroup) => {
   .mega-feature .link-arrow { margin-top: auto; font-size: .86rem; }
   .mega-foot { display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 12px 24px; border-top: 1px solid var(--border); background: var(--surface-2); font-size: .82rem; color: var(--text-2); }
   .mega-foot .link-arrow { font-size: .84rem; white-space: nowrap; }
-  .nav-item:first-child .mega, .nav-item:nth-child(2) .mega { left: 0; transform: none; animation-name: mega-in-l; }
-  .nav-item:last-child .mega, .nav-item:nth-last-child(2) .mega { left: auto; right: 0; transform: none; animation-name: mega-in-l; }
-  @keyframes mega-in-l { from { opacity: 0; transform: translateY(-6px); } }
 
   .hdr-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
   .nav-burger { display: none; }

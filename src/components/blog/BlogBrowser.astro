@@ -217,6 +217,9 @@ const featuredPost = posts.find((p) => p.id === featuredId);
     window.addEventListener('popstate', () => { state = parseState(new URLSearchParams(location.search)); render(); });
 
     render();
+    // Normalise the address after clamping/cleaning (e.g. ?page=99 → last page, ?category=Metrics → metrics).
+    const clean = `${location.pathname}${serializeState(state)}${location.hash}`;
+    if (clean !== `${location.pathname}${location.search}${location.hash}`) history.replaceState(null, '', clean);
   }
 </script>
 

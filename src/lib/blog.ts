@@ -8,12 +8,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../data/site';
+import { AUTHORS, authorHref, getAuthor, type Author } from '../data/authors';
 import { crossCheck } from './blog-schema';
 import { normalize, slugify } from './blog-query';
 
 export type BlogEntry = CollectionEntry<'blog'>;
 
 export interface Term { label: string; slug: string }
+
+/** A registered author (src/data/authors.ts) plus the URLs of their author page. */
+export interface PostAuthor extends Author { href: string; url: string }
 
 export interface Post {
   id: string;
@@ -26,7 +30,7 @@ export interface Post {
   category: Term;
   tags: Term[];
   keyword?: string;
-  author: string;
+  author: PostAuthor;
   published: Date;
   updated?: Date;          // only when later than `published`
   cover?: string;
@@ -43,6 +47,22 @@ export const DEFAULT_CATEGORY = 'Business observability';
 export const BLOG_TITLE = 'Panoptes blog';
 
 const PUBLIC_DIR = path.resolve('public');
+
+function toAuthor(slug: string): PostAuthor | undefined {
+  const a = getAuthor(slug);
+  return a && { ...a, href: authorHref(a.slug), url: new URL(authorHref(a.slug), SITE.origin).href };
+}
+
+/**
+ * Registered authors who have at least one of the given posts, each with their posts (order kept,
+ * so newest first when given getPosts()). Authors with nothing published get no page: an empty
+ * profile would be a thin page, and nothing links to it.
+ */
+export function authorsWithPosts(posts: Post[]): { author: PostAuthor; posts: Post[] }[] {
+  return AUTHORS
+    .map((a) => ({ author: toAuthor(a.slug)!, posts: posts.filter((p) => p.author.slug === a.slug) }))
+    .filter((x) => x.posts.length > 0);
+}
 
 /** Strips Markdown syntax for word counts, excerpts and the search index. */
 export function toPlainText(md: string): string {
@@ -73,6 +93,8 @@ function toPost(entry: BlogEntry): Post {
   const d = entry.data;
   const problems = crossCheck(entry.id, d, SITE.origin);
   if (d.cover && !fs.existsSync(path.join(PUBLIC_DIR, d.cover))) problems.push(`cover "${d.cover}" not found in public/`);
+  const author = toAuthor(d.author);
+  if (!author) problems.push(`author "${d.author}" is not registered in src/data/authors.ts`);
   if (problems.length) {
     throw new Error(`Invalid blog article content/blog/${entry.id}.md:\n  - ${problems.join('\n  - ')}`);
   }
@@ -98,7 +120,7 @@ function toPost(entry: BlogEntry): Post {
     category: { label: categoryLabel, slug: slugify(categoryLabel) },
     tags,
     keyword: d.primary_keyword,
-    author: d.author,
+    author: author!,
     published,
     updated: latest && latest.getTime() > published.getTime() ? latest : undefined,
     cover: d.cover,
@@ -159,6 +181,6 @@ export const formatDate = (d: Date) => d.toLocaleDateString('en-GB', { day: 'num
 export const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 
 /** Text the client search matches against before the full-text index has loaded. */
-export const metaText = (p: Post) => normalize([p.heading, p.seoTitle, p.description, p.category.label, p.keyword ?? '', ...p.tags.map((t) => t.label)].join(' '));
+export const metaText = (p: Post) => normalize([p.heading, p.seoTitle, p.description, p.category.label, p.author.name, p.keyword ?? '', ...p.tags.map((t) => t.label)].join(' '));
 
 export const isRasterImage = (src?: string) => !!src && /\.(png|jpe?g|webp)$/i.test(src);

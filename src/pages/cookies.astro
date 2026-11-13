@@ -1,20 +1,19 @@
 ---
 import DocPage from '../components/company/DocPage.astro';
-import { SITE } from '../data/site';
-import { LEGAL, lastUpdatedLabel, operatorHtml, missingIdentity } from '../data/legal';
+import { LEGAL, lastUpdatedLabel, operatorHtml } from '../data/legal';
 
 const crumbs = [{ label: 'Legal', href: '/legal/' }, { label: 'Cookie notice', href: '/cookies/' }];
+const mail = `mailto:${LEGAL.privacyEmail}?subject=Privacy`;
 ---
 <DocPage
   title="Cookie notice"
-  description="panoptes.watch sets no cookies of its own and runs no analytics or ad trackers. One local storage key remembers your theme; our host may set security cookies."
+  metaTitle="Cookie notice — no tracking cookies"
+  description="panoptes.watch sets no cookies of its own and runs no analytics or ad trackers. One local storage key keeps your theme; our host may set security cookies."
   eyebrow="Legal · Cookies"
   lede="This site sets no cookies of its own and uses no analytics or advertising trackers. It remembers one thing in your browser — your light or dark theme, if you choose one — and our hosting provider may set strictly necessary security cookies."
   breadcrumbs={crumbs}
   ogImage="/social/og-company.png"
   updated={lastUpdatedLabel}
-  draft={!LEGAL.reviewed}
-  placeholders={missingIdentity}
   legalNav
 >
   <h2 id="summary">Summary</h2>
@@ -28,13 +27,15 @@ const crumbs = [{ label: 'Legal', href: '/legal/' }, { label: 'Cookie notice', h
       <tr><td>Security cookies set by our hosting provider</td><td>Possibly — strictly necessary, see below</td></tr>
     </tbody>
   </table>
-  <p>Because the site uses only strictly necessary technologies and storage you request yourself, it does not show a cookie consent banner. How we handle personal data more generally is set out in our <a href="/privacy/">privacy notice</a>.</p>
+  <p>This notice explains how the panoptes.watch website, operated by <Fragment set:html={operatorHtml()} />, uses cookies and similar technologies. It should be read with our <a href="/privacy/">privacy notice</a>, which explains how we handle personal data more generally.</p>
 
   <h2 id="what-are-cookies">What cookies and similar technologies are</h2>
-  <p>Cookies are small text files a website asks your browser to store and send back with later requests. Similar technologies, such as the browser’s local storage, let a site keep small amounts of information on your device without sending it with every request. Under UK and EU rules (including the UK Privacy and Electronic Communications Regulations and the EU ePrivacy Directive), storing or reading information on your device generally needs your consent, unless it is strictly necessary to provide something you have asked for.</p>
+  <p>Cookies are small text files that a website asks your browser to store and send back with later requests. First-party cookies are set by the site you are visiting; third-party cookies are set by another domain. Similar technologies, such as the browser’s local storage, let a site keep small amounts of information on your device without sending it with every request.</p>
+  <p>The law on these technologies depends on where you are. In the UK and the EU, for example, the Privacy and Electronic Communications Regulations and the ePrivacy Directive generally require consent before information is stored on or read from your device, unless it is strictly necessary to provide a service you have asked for. We apply that standard to every visitor, wherever they are.</p>
 
-  <h2 id="local-storage">Local storage: your theme preference</h2>
-  <p>The site follows your device’s light or dark setting by default. If you use the theme switch in the header to choose one explicitly, the site saves that choice so that it stays the same as you move between pages and come back later.</p>
+  <h2 id="how-we-use">How this site uses them</h2>
+  <h3>Local storage: your theme preference</h3>
+  <p>The site follows your device’s light or dark setting by default. If you use the theme switch in the header to choose one, the site saves that choice so that it stays the same as you move between pages and when you come back.</p>
   <dl class="storage-item">
     <dt>Key</dt><dd><code>panoptes-theme</code></dd>
     <dt>Type</dt><dd>Browser local storage, first party (not a cookie)</dd>
@@ -42,28 +43,33 @@ const crumbs = [{ label: 'Legal', href: '/legal/' }, { label: 'Cookie notice', h
     <dt>Purpose</dt><dd>Remember the colour theme you chose</dd>
     <dt>Duration</dt><dd>Until you clear your browser’s site data</dd>
   </dl>
-  <p>This value is only written when you use the theme switch. It is read by the page in your browser and is never sent to our servers or anyone else. If your browser blocks local storage, the site still works; it simply will not remember your choice.</p>
+  <p>The value is written only when you use the theme switch. It is read by the page in your browser and is never sent to our servers or anyone else. If your browser blocks local storage, the site still works; it simply will not remember your choice.</p>
+  <h3>Features that use no storage</h3>
+  <p>Blog search loads a search file from our own domain and runs entirely in your browser; it stores nothing. The contact and demo forms set no cookies.</p>
 
-  <h2 id="hosting-provider">Cookies our hosting provider may set</h2>
-  <p>The site is hosted on Cloudflare, which protects it against automated abuse and attacks. Depending on the security features enabled and on how a request looks, Cloudflare may set strictly necessary cookies — for example, <code>__cf_bm</code>, which helps distinguish people from bots, or <code>cf_clearance</code>, which records that your browser has passed a security check. Whether these cookies appear depends on the protection Cloudflare applies to a given request, so you may see them on some visits and not others.</p>
-  <p>Where these cookies are set, they are used only for security, are not used to track you across other websites, and are typically short-lived. Cloudflare describes them in its own cookie documentation. Because they are strictly necessary to deliver the site securely, they do not require consent.</p>
+  <h2 id="hosting-provider">Cookies set by our hosting provider</h2>
+  <p>The site is hosted on Cloudflare, which protects it against automated abuse and attacks. Depending on the security features in use and how a request looks, Cloudflare may set strictly necessary cookies — for example <code>__cf_bm</code>, which helps tell people from bots, or <code>cf_clearance</code>, which records that your browser has passed a security check. Whether these appear depends on the protection applied to a given request, so you may see them on some visits and not others.</p>
+  <p>Where they are set, these cookies are used only for security, are not used to track you across other websites and are typically short-lived. Cloudflare describes them in its own cookie documentation. Because they are strictly necessary to deliver the site securely, they do not require consent.</p>
 
   <h2 id="what-we-do-not-use">What we do not use</h2>
   <p>The site does not load analytics tools, advertising or remarketing tags, tracking pixels, session recording tools, social media plugins or embedded third-party content. Fonts, images and scripts are served from our own domain, and the site’s security policy prevents pages from loading scripts from anywhere else.</p>
-  <p>Share links that some pages offer (for example to LinkedIn or X) are ordinary links and set no cookies on this site; a copy-link button uses your browser’s clipboard only. If you follow a share link, the destination service’s own cookie and privacy policies apply.</p>
-  <p>If any of this changes, we will update this notice first and ask for your consent where the law requires it.</p>
+  <p>Share links on some pages (for example to LinkedIn or X) are ordinary links and set no cookies on this site, and the copy-link button uses only your browser’s clipboard. If you follow a share link, the destination service’s own cookie and privacy policies apply.</p>
 
-  <h2 id="managing">Managing cookies and storage</h2>
+  <h2 id="consent">Why there is no cookie banner</h2>
+  <p>Everything this site stores on your device is either strictly necessary for security or something you asked for by using the theme switch. As nothing needs your consent, the site does not show a consent banner. If that changes — for example if we ever add analytics — we will update this notice first and ask for your consent where the law requires it.</p>
+
+  <h2 id="managing">Your choices</h2>
   <ul>
-    <li><strong>Theme preference:</strong> clear this site’s data in your browser settings (often under “site data” or “cookies and other site data”), and the site will go back to following your device setting.</li>
-    <li><strong>Cookies:</strong> most browsers let you view, delete and block cookies. Blocking strictly necessary security cookies may mean you see additional security checks.</li>
+    <li><strong>Theme preference:</strong> clear this site’s data in your browser settings (often under “site data” or “cookies and other site data”) and the site will go back to following your device setting.</li>
+    <li><strong>Cookies:</strong> most browsers let you view, delete and block cookies. Blocking strictly necessary security cookies may mean you see extra security checks.</li>
+    <li><strong>More information:</strong> your browser’s help pages explain how to manage cookies and site data.</li>
   </ul>
 
   <h2 id="changes">Changes to this notice</h2>
-  <p>We will update this notice if the way the site uses cookies or browser storage changes. The “last updated” date at the top shows the latest revision.</p>
+  <p>We will update this notice before changing how the site uses cookies or browser storage. The “last updated” date at the top shows the latest revision.</p>
 
   <h2 id="contact">Contact</h2>
-  <p>This site is operated by <Fragment set:html={operatorHtml(false)} />. Questions about this notice: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>. See also our <a href="/privacy/">privacy notice</a>, <a href="/terms/">website terms of use</a> and the <a href="/legal/">legal information page</a>.</p>
+  <p>Questions about this notice: <a href={mail}>{LEGAL.privacyEmail}</a>. By post: {LEGAL.entityName}, {LEGAL.registeredOffice}. See also our <a href="/privacy/">privacy notice</a> and the <a href="/legal/">legal information page</a>.</p>
 </DocPage>
 
 <style>

@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
+import FAQ from '../components/FAQ.astro';
+import Icon from '../components/Icon.astro';
+import CTA from '../components/CTA.astro';
+import CopyEmail from '../components/CopyEmail.astro';
+import { SITE } from '../data/site';
+import { LEGAL_DOCS } from '../data/legal';
+
+const crumbs = [{ label: 'Trust center', href: '/trust/' }];
+
+// Summaries of the six principles on /integrations/security-governance/ (anchors match its pillar ids).
+const principles = [
+  { id: 'access', icon: 'key', t: 'Access control', d: 'Role-based access so people see the parts of the business model relevant to their responsibilities.' },
+  { id: 'ownership', icon: 'database', t: 'Data ownership', d: 'Your business data remains yours: export on request and deletion on exit, agreed in writing.' },
+  { id: 'definitions', icon: 'layers', t: 'Governed definitions', d: 'Metrics, entities and objectives are explicit, owned and versioned rather than hidden in dashboards.' },
+  { id: 'audit', icon: 'audit', t: 'Auditability', d: 'Investigations record their evidence, and correlation is labelled differently from verified cause.' },
+  { id: 'integrations', icon: 'plug', t: 'Secure integrations', d: 'Least-privilege, read-oriented connections with dedicated service credentials kept server-side.' },
+  { id: 'protection', icon: 'lock', t: 'Data protection', d: 'Encryption in transit and at rest, data minimisation and retention periods defined per data class.' },
+];
+
+const faqs = [
+  { q: 'Does Panoptes hold security certifications?', a: 'This website does not claim any security certifications or attestations. If they matter to your organisation, ask us directly and we will tell you plainly where things stand and what documentation is available.' },
+  { q: 'Who processes personal data for this website?', a: 'The third parties that process personal data for panoptes.watch are listed on the <a href="/legal/subprocessors/">website service providers</a> page, and the <a href="/privacy/">privacy notice</a> explains what is collected and why. Product sub-processors are disclosed during evaluation.' },
+  { q: 'Is Panoptes used to monitor employees?', a: 'No. Panoptes is designed to observe business processes and outcomes — orders, payments, cases and commitments — not the activity or productivity of individual people.' },
+  { q: 'How do I report a security concern?', a: `Email ${SITE.salesEmail} with the details. Please do not include sensitive personal data in the first message; we will reply with a way to share more if needed.` },
+];
+
+const schema = {
+  '@type': 'WebPage',
+  name: 'Panoptes trust center',
+  description: 'Security, governance, privacy and legal information for Panoptes in one place.',
+  url: new URL('/trust/', SITE.origin).href,
+  inLanguage: 'en-GB',
+  isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.origin },
+  publisher: { '@type': 'Organization', name: SITE.name, url: SITE.origin },
+};
+---
+<BaseLayout
+  title="Trust Center: Security, Privacy and Legal"
+  description="The Panoptes trust center: security and governance principles, privacy and legal documents, and how to raise a security question or concern with us."
+  ogImage="/social/og-company.png"
+  breadcrumbs={crumbs}
+  schema={schema}
+>
+  <PageHero
+    eyebrow="Trust"
+    title="Panoptes <span class='gradient-text'>trust center</span>"
+    lede="A model of how your business runs is among the most sensitive things you own. This page brings together how Panoptes is designed to protect it, the documents that govern this website, and how to ask us anything we have not answered here."
+    breadcrumbs={crumbs}
+  >
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/integrations/security-governance/">Security &amp; governance<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/legal/">Legal documents</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Security" title="Security and governance principles" lede="Six design commitments shape the platform. Each one is described in full, with what it means in practice, on the security and governance page." />
+      <div class="grid grid-3">
+        {principles.map((p) => (
+          <a href={`/integrations/security-governance/#${p.id}`} class="card card-link tr-card reveal">
+            <span class="icon-tile"><Icon name={p.icon} /></span>
+            <h3>{p.t}</h3>
+            <p class="muted">{p.d}</p>
+            <span class="link-arrow">Read the principle</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Privacy and legal" title="Privacy and legal documents" lede="The documents that govern this website and the personal data it handles. They are indexed, with their scope and review status, on the legal page." />
+      <ul class="doc-list" role="list">
+        {LEGAL_DOCS.map((doc) => (
+          <li>
+            <a href={doc.href} class="doc reveal">
+              <span class="icon-tile"><Icon name={doc.icon} /></span>
+              <span class="doc-body"><strong>{doc.title}</strong><span>{doc.scope}</span></span>
+              <Icon name="arrow" class="doc-arrow" />
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-2"><a class="link-arrow" href="/legal/">All legal information</a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split split-top">
+      <div>
+        <p class="eyebrow">Responsible observation</p>
+        <h2>We observe the business, not the people in it.</h2>
+        <p class="lede">Panoptes is designed to watch queues, journeys, commitments and money movement. It is not designed to score, rank or monitor individual employees.</p>
+        <p class="muted">Fields that identify staff are excluded unless they are needed to route ownership of a problem, and even then they are used for routing, not for measuring people. See <a href="/integrations/data-sources/">data sources</a> for how connections are scoped.</p>
+      </div>
+      <div class="card card-raised">
+        <h3>What this site does not claim</h3>
+        <ul class="checklist mt-1">
+          <li>No security certifications or attestations are claimed on this website.</li>
+          <li>Data residency, retention and sub-processors for the product are agreed during evaluation, not assumed.</li>
+          <li>Capabilities are described as design intent unless stated otherwise.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container split split-top">
+      <div>
+        <p class="eyebrow">Get in touch</p>
+        <h2>Security questions and reviews</h2>
+        <p class="muted">Security review is a normal part of evaluation. Send your questionnaire or requirements with your demo request, or write to us directly.</p>
+        <CopyEmail />
+        <RelatedLinks title="Related pages" items={[
+          { label: 'Security & governance', href: '/integrations/security-governance/', desc: 'Principles in full', icon: 'shield' },
+          { label: 'Privacy notice', href: '/privacy/', desc: 'Personal data on this website', icon: 'lock' },
+          { label: 'About Panoptes', href: '/company/', desc: 'Mission and principles', icon: 'eye' },
+        ]} />
+      </div>
+      <div>
+        <h2 class="faq-title">Trust questions</h2>
+        <FAQ items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <CTA title="Bring your security questions early." text="Send your requirements with your demo request and we will cover them alongside the product." secondary={{ label: 'Contact us', href: '/contact/' }} />
+</BaseLayout>
+
+<style>
+  .tr-card { display: flex; flex-direction: column; height: 100%; }
+  .tr-card h3 { margin-top: .8rem; }
+  .tr-card .link-arrow { margin-top: auto; padding-top: .6rem; }
+  .doc-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  .doc { display: flex; align-items: flex-start; gap: 14px; padding: 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); text-decoration: none; color: var(--text); height: 100%; transition: border-color .15s; }
+  .doc:hover { border-color: var(--accent); }
+  .doc .icon-tile { margin: 0; width: 38px; height: 38px; flex: none; }
+  .doc-body { display: grid; gap: 4px; flex: 1; min-width: 0; }
+  .doc-body strong { font-weight: 600; }
+  .doc-body span { font-size: .88rem; color: var(--text-2); line-height: 1.45; }
+  .doc :global(.doc-arrow) { width: 18px; height: 18px; color: var(--text-3); flex: none; margin-top: 2px; }
+  .faq-title { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  .split :global(.related) { margin-top: 2rem; }
+</style>

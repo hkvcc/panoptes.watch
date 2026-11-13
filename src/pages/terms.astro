@@ -1,85 +1,94 @@
 ---
 import DocPage from '../components/company/DocPage.astro';
-import { SITE } from '../data/site';
-import { LEGAL, lastUpdatedLabel, operatorHtml, missingIdentity } from '../data/legal';
+import { LEGAL, lastUpdatedLabel, operatorHtml } from '../data/legal';
 
 const crumbs = [{ label: 'Legal', href: '/legal/' }, { label: 'Website terms of use', href: '/terms/' }];
+const mail = `mailto:${LEGAL.legalEmail}?subject=Website%20terms`;
 ---
 <DocPage
   title="Website terms of use"
-  description="Terms of use for the panoptes.watch website: how you may use the site and its content, our brand assets, illustrative data and product vision, and liability."
+  metaTitle="Website terms of use for panoptes.watch"
+  description="The terms for using panoptes.watch: permitted use of the site and content, brand assets, illustrative data, liability, and Cayman Islands governing law."
   eyebrow="Legal · Terms"
-  lede="The rules for using the panoptes.watch website. These terms cover the website only — use of the Panoptes product is governed by a separate customer agreement."
+  lede="The rules for using the panoptes.watch website and its content. They cover the website only — use of the Panoptes product is governed by a separate written agreement with each customer."
   breadcrumbs={crumbs}
   ogImage="/social/og-company.png"
   updated={lastUpdatedLabel}
-  draft={!LEGAL.reviewed}
-  placeholders={missingIdentity}
   legalNav
 >
   <h2 id="summary">Summary</h2>
   <ul>
-    <li><strong>Website only.</strong> These terms cover your use of panoptes.watch. Use of the Panoptes product is governed by a separate written agreement with each customer.</li>
+    <li><strong>Website only.</strong> These terms cover your use of panoptes.watch. Use of the Panoptes product is governed by a separate written agreement.</li>
     <li><strong>Illustrative content.</strong> Dashboards, figures and scenarios on the site use fictional data, and capabilities described as vision are not commitments.</li>
-    <li><strong>Fair use.</strong> You may read, download and share pages, and refer to Panoptes using our brand files, but not misuse the site or reuse its content commercially without permission.</li>
+    <li><strong>Fair use.</strong> You may read, download and share pages and refer to Panoptes using our brand files, but you must not misuse the site or reuse its content commercially without permission.</li>
     <li><strong>Liability.</strong> The site is provided “as is”, within the limits the law allows.</li>
+    <li><strong>Law.</strong> These terms are governed by the law of {LEGAL.governingLaw}, without affecting mandatory consumer rights where you live.</li>
   </ul>
-  <p>These terms sit alongside our <a href="/privacy/">privacy notice</a> and <a href="/cookies/">cookie notice</a>. All of the website’s legal documents are listed on the <a href="/legal/">legal information page</a>.</p>
 
   <h2 id="about-these-terms">About these terms</h2>
-  <p>These terms of use apply to your use of the website at panoptes.watch (the “site”). By using the site you agree to them. If you do not agree, please do not use the site.</p>
-  <p>The site is operated by <Fragment set:html={operatorHtml()} />. You can contact us at <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>.</p>
+  <p>These terms of use (the “terms”) apply to your use of the website at panoptes.watch, including its pages, articles, downloads and forms (together, the “site”). The site is operated by <Fragment set:html={operatorHtml()} />.</p>
+  <p>By using the site you agree to these terms and to our <a href="/legal/acceptable-use/">acceptable use policy</a>, which forms part of them. If you do not agree, please do not use the site. If you use the site on behalf of an organisation, you confirm that you may accept these terms for it.</p>
 
-  <h2 id="product-terms">The product is covered separately</h2>
-  <p>These terms are not a subscription, licence or services agreement. Access to and use of the Panoptes product is governed only by a written agreement between Panoptes and the customer. Nothing on this site forms part of such an agreement unless that agreement expressly says so.</p>
+  <h2 id="product-terms">The Panoptes product is covered separately</h2>
+  <p>These terms are not a subscription, licence or services agreement. Access to and use of the Panoptes product is governed only by a written agreement between Panoptes and the customer. Nothing on the site forms part of such an agreement unless that agreement expressly says so, and if the two conflict, the customer agreement prevails.</p>
 
   <h2 id="using-the-site">Using the site</h2>
-  <p>You may view, download and print pages from the site for your own information, including to evaluate Panoptes for your organisation. The site is made available free of charge. We may change, suspend or withdraw any part of it without notice, and we do not guarantee that it will always be available or free of errors.</p>
+  <p>We give you a personal, non-exclusive, non-transferable and revocable permission to view, download and print pages from the site for your own information, including to evaluate Panoptes for your organisation. The site is free to use. We may change, suspend or withdraw any part of it without notice, and we do not guarantee that it will always be available, uninterrupted or free of errors.</p>
 
   <h2 id="information-on-the-site">Information on the site</h2>
-  <p>The content on the site is provided for general information. In particular:</p>
+  <p>Content on the site is provided for general information. In particular:</p>
   <ul>
-    <li><strong>Illustrative data.</strong> Dashboards, diagrams, scenarios and figures shown on the site use fictional data to illustrate how Panoptes is designed to work. They do not describe real organisations or real results.</li>
-    <li><strong>Product vision.</strong> Some capabilities are described as vision or direction, such as AI-assisted investigation and automated execution. These describe intentions, not commitments, and may change or never become available.</li>
-    <li><strong>Third-party products.</strong> Names of other software products appear only as examples of the systems a business may use. Their mention does not imply partnership, certification or endorsement.</li>
+    <li><strong>Illustrative data.</strong> Dashboards, diagrams, scenarios and figures use fictional data to show how Panoptes is designed to work. They do not describe real organisations or real results.</li>
+    <li><strong>Product vision.</strong> Some capabilities, such as AI-assisted investigation and automated execution, are described as vision or direction. They are intentions, not commitments, and may change or never become available.</li>
+    <li><strong>Third-party products.</strong> Other software products are named only as examples of systems a business may use. Their mention does not imply partnership, certification or endorsement.</li>
     <li><strong>Not professional advice.</strong> Guides and articles are general in nature and are not legal, financial or other professional advice for your circumstances.</li>
   </ul>
-  <p>We try to keep the site accurate and up to date, but we make no promise that it is complete or current.</p>
+  <p>We try to keep the site accurate and up to date, but we do not promise that it is complete or current, and you should not rely on it without checking with us.</p>
 
-  <h2 id="intellectual-property">Intellectual property</h2>
-  <p>We, or our licensors, own the intellectual property rights in the site and its content, including text, diagrams, illustrations, software and design. Except as allowed by these terms or by law, you may not copy, adapt, republish or commercially exploit that content without our written permission.</p>
-  <p>“Panoptes” and the Panoptes logo and symbol are our brand assets. You may use the files offered on the <a href="/company/#brand">About page</a> to refer to Panoptes accurately — for example, in an article or a list of tools — provided you do not alter them or use them in a way that suggests a partnership, sponsorship or endorsement that does not exist.</p>
+  <h2 id="intellectual-property">Our content and intellectual property</h2>
+  <p>We, or our licensors, own the intellectual property rights in the site and its content, including text, diagrams, illustrations, software and design. Except as these terms or the law allow, you may not copy, adapt, republish, frame or commercially exploit that content without our written permission.</p>
+
+  <h2 id="trademarks">Trademarks and brand assets</h2>
+  <p>“Panoptes” and the Panoptes logo and symbol are our brand assets. You may use the files offered on the <a href="/company/#brand">About page</a> to refer to Panoptes accurately — for example, in an article or a list of tools — as long as you do not alter them or use them in a way that suggests a partnership, sponsorship or endorsement that does not exist. Other names and logos on the site belong to their owners.</p>
 
   <h2 id="acceptable-use">Acceptable use</h2>
-  <p>When using the site, you must not:</p>
-  <ul>
-    <li>use it in any way that breaks the law or is fraudulent;</li>
-    <li>attempt to gain unauthorised access to the site, the server it is hosted on or any connected system;</li>
-    <li>interfere with the site’s operation, including through denial-of-service attacks, excessive automated requests or deliberately introducing malicious code;</li>
-    <li>submit forms with false information about someone else, or use them to send spam or unsolicited promotions;</li>
-    <li>scrape or copy the site’s content at scale for commercial reuse without our permission.</li>
-  </ul>
+  <p>You must use the site lawfully and in line with our <a href="/legal/acceptable-use/">acceptable use policy</a>. In particular, you must not try to gain unauthorised access to the site or its hosting, interfere with its operation, send spam or false information through its forms, or scrape its content at scale for reuse without our permission.</p>
 
   <h2 id="what-you-send-us">What you send us</h2>
-  <p>If you contact us through the site’s forms or by email, please do not include confidential or sensitive information that we have not asked for. We use what you send in line with our <a href="/privacy/">privacy notice</a>. Sending an enquiry does not create a contract or any obligation on either side.</p>
+  <p>If you contact us through the site’s forms or by email, please do not include confidential or sensitive information we have not asked for. We use what you send in line with our <a href="/privacy/">privacy notice</a>. Sending an enquiry does not create a contract or any obligation on either side. If you send us suggestions or feedback, we may use them without any obligation to you.</p>
 
-  <h2 id="links">Links</h2>
-  <p>Where the site links to other websites or resources, the links are provided for convenience only. We have no control over their content and are not responsible for them. You may link to our home page or any public page of the site, as long as you do so fairly and lawfully and do not suggest any association or endorsement that does not exist.</p>
+  <h2 id="links">Links to and from the site</h2>
+  <p>Links to other websites or resources are provided for convenience only. We do not control their content and are not responsible for it, or for any loss arising from your use of them. You may link to our home page or any public page of the site, as long as you do so fairly and lawfully and do not suggest any association or endorsement that does not exist.</p>
 
-  <h2 id="liability">Our liability</h2>
+  <h2 id="disclaimers">Disclaimers</h2>
+  <p>To the extent permitted by law, the site and its content are provided “as is” and “as available”, without warranties of any kind, whether express or implied, including warranties of accuracy, fitness for a particular purpose and non-infringement. We do not warrant that the site is free of viruses or other harmful components; you are responsible for protecting your own devices and data.</p>
+
+  <h2 id="liability">Limitation of liability</h2>
   <p>Nothing in these terms excludes or limits any liability that cannot be excluded or limited by law, including liability for death or personal injury caused by negligence, or for fraud or fraudulent misrepresentation.</p>
-  <p>Subject to that, and to the extent permitted by law, the site is provided “as is”, and we are not liable for any loss or damage arising from use of, or inability to use, the site or reliance on its content — including loss of profits, revenue, business, data or goodwill, or any indirect or consequential loss.</p>
-  <p>If you use the site as a consumer, you may have additional statutory rights. Nothing in these terms affects them.</p>
+  <p>Subject to that, and to the extent permitted by law, we are not liable for any loss or damage arising from your use of, or inability to use, the site or from reliance on its content. This includes loss of profits, revenue, business, data or goodwill, and any indirect or consequential loss. Because the site is provided free of charge, our total liability to you in connection with the site is limited to USD 100.</p>
+  <p>If you use the site as a consumer, you may have rights under the law of the country where you live that cannot be limited by contract. Nothing in these terms affects them.</p>
+
+  <h2 id="suspension">Suspending access</h2>
+  <p>We may restrict or block access to the site, or to its forms, for anyone who breaches these terms or the acceptable use policy, or where we reasonably need to in order to protect the site, our users or others.</p>
 
   <h2 id="privacy-and-cookies">Privacy and cookies</h2>
   <p>How we handle personal data is described in our <a href="/privacy/">privacy notice</a>. How the site uses cookies and browser storage is described in our <a href="/cookies/">cookie notice</a>.</p>
 
   <h2 id="changes">Changes to these terms</h2>
-  <p>We may revise these terms from time to time. The version on this page at the time you use the site applies. The “last updated” date at the top shows when they last changed.</p>
+  <p>We may revise these terms from time to time by updating this page. The version shown when you use the site applies to that use, and the “last updated” date at the top shows when the terms last changed.</p>
 
-  <h2 id="law">Governing law</h2>
-  <p>These terms, and any dispute arising from them or from your use of the site, are governed by the law of {LEGAL.governingLaw}. {LEGAL.courts.charAt(0).toUpperCase() + LEGAL.courts.slice(1)} have jurisdiction, subject to any mandatory rights you may have to bring proceedings where you live.</p>
+  <h2 id="law">Governing law and jurisdiction</h2>
+  <p>These terms, and any dispute or claim arising from them or from your use of the site (including non-contractual disputes or claims), are governed by the law of {LEGAL.governingLaw}. {LEGAL.courts.charAt(0).toUpperCase() + LEGAL.courts.slice(1)} have exclusive jurisdiction. If you are a consumer, this does not take away the protection of mandatory laws of the country where you live, or your right to bring proceedings in your local courts where that law gives you one.</p>
+
+  <h2 id="general">General</h2>
+  <ul>
+    <li><strong>Whole agreement.</strong> These terms, together with the documents they refer to, are the whole agreement between you and us about your use of the site.</li>
+    <li><strong>Severability.</strong> If any part of these terms is found to be unenforceable, the rest remains in effect.</li>
+    <li><strong>No waiver.</strong> If we do not enforce a right straight away, we can still enforce it later.</li>
+    <li><strong>Transfer.</strong> We may transfer our rights and obligations under these terms to another organisation. You may not transfer yours.</li>
+    <li><strong>Third parties.</strong> Nobody other than you and us has any right to enforce these terms.</li>
+  </ul>
 
   <h2 id="contact">Contact</h2>
-  <p>Questions about these terms: <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>. See also the <a href="/legal/">legal information page</a>.</p>
+  <p>Questions about these terms: <a href={mail}>{LEGAL.legalEmail}</a>. By post: {LEGAL.entityName}, {LEGAL.registeredOffice}.</p>
 </DocPage>

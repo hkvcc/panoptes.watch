@@ -1,0 +1,84 @@
+---
+import DocPage from '../../components/company/DocPage.astro';
+import { LEGAL, lastUpdatedLabel, operatorHtml } from '../../data/legal';
+
+const crumbs = [{ label: 'Legal', href: '/legal/' }, { label: 'Acceptable use policy', href: '/legal/acceptable-use/' }];
+const mail = `mailto:${LEGAL.legalEmail}?subject=Acceptable%20use`;
+---
+<DocPage
+  title="Acceptable use policy"
+  metaTitle="Acceptable use policy for Panoptes"
+  description="What you may not do on panoptes.watch or with any Panoptes service: unlawful use, security abuse, spam, scraping and high-risk use, plus how we enforce it."
+  eyebrow="Legal · Policies"
+  lede="The rules that keep the panoptes.watch website and Panoptes services safe and lawful for everyone. It sets out what is not allowed, how we respond to misuse and how to report it."
+  breadcrumbs={crumbs}
+  ogImage="/social/og-company.png"
+  updated={lastUpdatedLabel}
+  legalNav
+>
+  <h2 id="about">About this policy</h2>
+  <p>This acceptable use policy (the “policy”) is issued by <Fragment set:html={operatorHtml()} />. It applies to everyone who uses the panoptes.watch website (the “site”) and to anyone using a Panoptes product or service (the “services”).</p>
+  <p>For the site, this policy forms part of our <a href="/terms/">website terms of use</a>. For the services, it applies alongside the written agreement between Panoptes and the customer; if that agreement contains different rules on acceptable use, the agreement prevails. The prohibitions below are examples, not a complete list: misuse that is not described here may still breach this policy.</p>
+
+  <h2 id="unlawful-use">Unlawful or fraudulent use</h2>
+  <p>You must not use the site or the services:</p>
+  <ul>
+    <li>in breach of any applicable law or regulation, including data protection, consumer protection, anti-bribery, export control and sanctions laws;</li>
+    <li>for any fraudulent or deceptive purpose, or to impersonate any person or organisation, or misrepresent your connection with them;</li>
+    <li>to promote, plan or carry out any illegal activity.</li>
+  </ul>
+
+  <h2 id="rights-of-others">Rights of others</h2>
+  <ul>
+    <li>Do not infringe or misappropriate anyone’s intellectual property, such as copyright, trademarks, patents or trade secrets.</li>
+    <li>Do not collect, disclose or process anyone’s personal or confidential information without a lawful basis and any authorisation required.</li>
+    <li>Do not upload or send content that is defamatory, threatening, harassing, hateful, obscene, or harmful to children.</li>
+  </ul>
+
+  <h2 id="security">Security and integrity</h2>
+  <p>You must not, and must not attempt to:</p>
+  <ul>
+    <li>access, probe, scan or test the vulnerability of any Panoptes system or network without our prior written permission, or get around any security, authentication or rate-limiting measure;</li>
+    <li>access accounts, data or systems you are not authorised to use;</li>
+    <li>interfere with or disrupt the site or the services, for example through denial-of-service attacks, flooding, excessive automated requests or overloading infrastructure;</li>
+    <li>introduce viruses, malware or any other code designed to damage, intercept or take control of systems or data;</li>
+    <li>forge headers or otherwise disguise the origin of requests or messages.</li>
+  </ul>
+  <p>If you believe you have found a security vulnerability, please tell us privately at the address below rather than testing it further or publishing it.</p>
+
+  <h2 id="content-and-scraping">Content, scraping and framing</h2>
+  <ul>
+    <li>Do not scrape, harvest, crawl or copy the site’s content at scale, by automated means or otherwise, for reuse without our written permission. Ordinary search engine indexing is welcome.</li>
+    <li>Do not frame or mirror the site, or present its content as your own.</li>
+    <li>Do not use the site’s content or the services to build a competing product or train a commercial model without our written permission.</li>
+  </ul>
+
+  <h2 id="messages">Forms, email and unsolicited messages</h2>
+  <ul>
+    <li>Do not use the site’s forms to send spam, advertising, chain messages or other unsolicited messages.</li>
+    <li>Do not submit false information, or another person’s details without their permission.</li>
+    <li>Do not use the services to send messages to people who have not agreed to receive them, or who have asked you to stop.</li>
+  </ul>
+
+  <h2 id="high-risk">High-risk use</h2>
+  <p>The services are business software. They are not designed or intended for use where a failure or inaccuracy could lead to death, personal injury or serious physical or environmental damage — for example, operating aircraft, medical devices, nuclear facilities or emergency services. Do not use them for those purposes.</p>
+
+  <h2 id="responsibility">Responsibility for others</h2>
+  <p>If you give others access to the services through your organisation’s account, you are responsible for their compliance with this policy. You must not help, encourage or allow anyone else to do something this policy prohibits.</p>
+
+  <h2 id="enforcement">How we enforce this policy</h2>
+  <p>We are not obliged to monitor use of the site or the services, but we may investigate suspected breaches. If we reasonably believe this policy has been breached, we may take any action we consider appropriate, including:</p>
+  <ul>
+    <li>blocking access to the site or its forms;</li>
+    <li>removing or disabling access to content;</li>
+    <li>suspending or ending access to the services, in line with the customer’s agreement;</li>
+    <li>reporting suspected unlawful activity to the relevant authorities and co-operating with them, which may include sharing information as the law permits.</li>
+  </ul>
+  <p>We may act whether the breach was deliberate or not, and whether or not it was authorised by the account holder, where this is necessary to protect the site, the services, our customers or others, or to comply with the law.</p>
+
+  <h2 id="reporting">Reporting misuse</h2>
+  <p>If you become aware of any breach of this policy, please tell us promptly at <a href={mail}>{LEGAL.legalEmail}</a> with “Acceptable use” in the subject line, giving as much detail as you can. If the breach involves your own account or users, please help us stop and remedy it.</p>
+
+  <h2 id="changes">Changes to this policy</h2>
+  <p>We may update this policy from time to time by publishing a new version on this page. The “last updated” date at the top shows when it last changed. Changes affecting customers of the services take effect as set out in their agreement.</p>
+</DocPage>

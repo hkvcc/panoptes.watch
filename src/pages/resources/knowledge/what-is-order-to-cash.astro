@@ -1,0 +1,86 @@
+---
+import KnowledgeArticle from '../../../components/knowledge/KnowledgeArticle.astro';
+
+const faqs = [
+  { q: 'What is the difference between order to cash and quote to cash?', a: 'Quote to cash starts earlier, with configuring, pricing and quoting the deal, and typically includes contract management. Order to cash usually starts once an order is placed or a contract is signed. The boundary varies between organisations, so it is worth defining explicitly.' },
+  { q: 'Who owns the order-to-cash process?', a: 'Usually no single team. Sales, operations, fulfilment, billing, credit control and treasury each own a stage. That is why hand-offs between them are where delays and leakage most often occur, and why many organisations name an end-to-end process owner.' },
+  { q: 'What is days sales outstanding (DSO)?', a: 'DSO is a common measure of how long, on average, it takes to collect payment after a sale is invoiced. It is a lagging indicator: it confirms a collection problem after it has happened. Stage-level measures such as time to invoice and dispute ageing give earlier warning.' },
+  { q: 'Is order-to-cash automation the same as observing it?', a: 'No. Automation speeds up individual steps. Observing the process shows how the steps perform together, where items wait and where value is lost, which tells you which steps are worth automating.' },
+];
+---
+<KnowledgeArticle
+  title="What is order to cash (O2C)?"
+  metaTitle="What Is Order to Cash (O2C)? Stages and Metrics"
+  description="Order to cash (O2C) explained: the stages from order to collected payment, who owns each one, the metrics that matter and where delays and leakage occur."
+  crumb="Order to cash"
+  dek="Every sale is a promise of cash. Order to cash is the chain of work that turns that promise into money in the bank, and it crosses more teams than almost any other process."
+  definition="<strong>Order to cash (O2C)</strong> is the end-to-end business process that begins when a customer places an order and ends when payment has been received and reconciled. It typically covers order management, credit checks, fulfilment or service delivery, invoicing, collections and cash application."
+  term="Order to cash"
+  faqs={faqs}
+  related={[
+    { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Find where earned revenue goes missing', icon: 'revenue' },
+    { label: 'Panoptes for finance', href: '/solutions/finance/', desc: 'Money movement, leakage and cost drivers', icon: 'finance' },
+    { label: 'Business Graph', href: '/platform/business-graph/', desc: 'Entities, relationships and dependencies', icon: 'graph' },
+    { label: 'Logistics & supply chain', href: '/solutions/industries/logistics-supply-chain/', desc: 'Orders, shipments and promised dates', icon: 'delivery' },
+    { label: 'What is process mining?', href: '/resources/knowledge/what-is-process-mining/', desc: 'Reconstructing processes from event logs', icon: 'process' },
+  ]}
+>
+  <h2>What are the stages of order to cash?</h2>
+  <table>
+    <thead><tr><th>Stage</th><th>What happens</th><th>Typical owner</th></tr></thead>
+    <tbody>
+      <tr><td>Order management</td><td>The order is captured, validated and priced</td><td>Sales operations or customer service</td></tr>
+      <tr><td>Credit management</td><td>The customer's credit limit and terms are checked</td><td>Credit control</td></tr>
+      <tr><td>Fulfilment or delivery</td><td>Goods are picked, shipped and delivered, or the service is provisioned</td><td>Operations or logistics</td></tr>
+      <tr><td>Invoicing</td><td>An accurate invoice is issued for what was delivered</td><td>Billing</td></tr>
+      <tr><td>Collections</td><td>Payment is chased, disputes are handled</td><td>Accounts receivable</td></tr>
+      <tr><td>Cash application</td><td>Received payments are matched to invoices</td><td>Accounts receivable or treasury</td></tr>
+      <tr><td>Reporting</td><td>Revenue and receivables are recorded and reported</td><td>Finance</td></tr>
+    </tbody>
+  </table>
+  <p>For subscription businesses, the same chain repeats at every renewal: usage or entitlement drives an invoice, which drives a payment attempt, which may fail and enter recovery.</p>
+
+  <h2>Why order to cash is hard to see end to end</h2>
+  <p>Each stage usually lives in a different system (a CRM, an order platform, a warehouse or provisioning tool, a billing system, a payment provider, an ERP) and is measured by a different team. Each team can be meeting its own targets while the process as a whole is slowing down, because the delay sits in the hand-offs between them.</p>
+  <ul>
+    <li>An order is delivered but the invoice is not triggered because a status was not updated.</li>
+    <li>An invoice is issued with the wrong price or purchase order reference and is disputed.</li>
+    <li>A payment arrives but cannot be matched, so the customer is chased for money already paid.</li>
+  </ul>
+
+  <h2>Which order-to-cash metrics matter?</h2>
+  <p>Outcome measures confirm how the process performed. Stage measures warn earlier.</p>
+  <h3>Outcome measures</h3>
+  <ul>
+    <li><strong>Days sales outstanding (DSO)</strong>: average time from invoice to payment.</li>
+    <li><strong>Bad debt and write-offs</strong>: revenue that will not be collected.</li>
+    <li><strong>Order-to-cash cycle time</strong>: elapsed time from order to reconciled cash.</li>
+  </ul>
+  <h3>Stage measures</h3>
+  <ul>
+    <li><strong>Time from delivery to invoice</strong>, and the count of delivered-but-not-invoiced orders.</li>
+    <li><strong>Invoice accuracy</strong>: the share of invoices issued without correction or credit note.</li>
+    <li><strong>Dispute volume and ageing</strong>, by reason.</li>
+    <li><strong>Unapplied cash</strong>: payments received but not yet matched.</li>
+    <li><strong>Payment failure and recovery rates</strong> for card and direct-debit collections.</li>
+  </ul>
+
+  <h2>Where delays and leakage occur</h2>
+  <p>Delay and leakage are related but different. Delay means cash arrives later than it should. Leakage means value that was earned is never billed or collected at all: unbilled usage, missed price increases, credit notes issued in error or failed payments that are never recovered. The <a href="/use-cases/revenue-leakage/">revenue leakage use case</a> covers how to find it.</p>
+  <div class="callout">
+    <strong>Illustrative example</strong>
+    A distributor's DSO rises at quarter end. Stage measures show the cause is not slow-paying customers but a growing number of invoices disputed for missing purchase order references, after a change in how orders are captured for one customer segment.
+  </div>
+
+  <h2>How to improve the order-to-cash process</h2>
+  <ol>
+    <li>Agree where the process starts and ends, and name an end-to-end owner.</li>
+    <li>Define the business event that marks entry to and exit from each stage.</li>
+    <li>Measure waiting time at each hand-off, not only work time inside each team.</li>
+    <li>Track items that are stuck between stages, such as delivered-not-invoiced, as a live list with owners.</li>
+    <li>Change one thing at a time and check whether the stage measure moved.</li>
+  </ol>
+
+  <h2>How it relates to business observability</h2>
+  <p>Order to cash is a natural first journey to make observable, because it connects customers, operations and money. Panoptes is designed to model it as connected entities (order, shipment, invoice, payment) in the <a href="/platform/business-graph/">Business Graph</a>, follow each order end to end with <a href="/platform/journey-intelligence/">Journey Intelligence</a> and show where items wait with <a href="/platform/process-intelligence/">Process Intelligence</a>, so that a change in fulfilment can be traced to its effect on billing and cash.</p>
+</KnowledgeArticle>

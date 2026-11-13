@@ -16,6 +16,7 @@ const { post, hidden = false } = Astro.props;
       <p class="bc-kicker"><span>{post.category.label}</span>{post.draft && <span class="badge badge-warn">Draft</span>}</p>
       <h3 class="bc-title"><a href={post.href} class="bc-link">{post.heading}</a></h3>
       <p class="bc-desc">{post.description}</p>
+      <p class="bc-byline"><a href={post.author.href} class="bc-author" rel="author">{post.author.name}</a><span class="bc-role">{post.author.role}</span></p>
       <p class="bc-meta">
         <time datetime={isoDate(post.published)}>{formatDate(post.published)}</time>
         <span aria-hidden="true">·</span>
@@ -39,5 +40,10 @@ const { post, hidden = false } = Astro.props;
   .bc-link:focus-visible { outline: none; }
   .bc-card:has(.bc-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
   .bc-desc { color: var(--text-2); font-size: .95rem; line-height: 1.55; margin: 0 0 1.1rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .bc-meta { margin: auto 0 0; display: flex; flex-wrap: wrap; gap: 6px; font: 500 .76rem/1.4 var(--font-mono); color: var(--text-3); }
+  /* The author link sits above the title link's whole-card overlay so it stays clickable. */
+  .bc-byline { position: relative; z-index: 1; margin: auto 0 .45rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; font-size: .86rem; line-height: 1.4; }
+  .bc-author { color: var(--text); font-weight: 600; text-decoration: none; }
+  .bc-author:hover { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+  .bc-role { color: var(--text-3); font-size: .8rem; }
+  .bc-meta { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; font: 500 .76rem/1.4 var(--font-mono); color: var(--text-3); }
 </style>

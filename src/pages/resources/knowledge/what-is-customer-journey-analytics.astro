@@ -1,0 +1,69 @@
+---
+import KnowledgeArticle from '../../../components/knowledge/KnowledgeArticle.astro';
+
+const faqs = [
+  { q: 'What is the difference between journey mapping and journey analytics?', a: 'Journey mapping is a design exercise: a team describes the steps and emotions a customer goes through, often from research and workshops. Journey analytics measures the journeys customers actually take, from event data, at scale.' },
+  { q: 'Is customer journey analytics the same as web or product analytics?', a: 'Product and web analytics focus on behaviour inside one digital channel. Journey analytics follows the customer across channels and across the operational steps behind them, such as verification, delivery, billing and support.' },
+  { q: 'What data do you need for customer journey analytics?', a: 'Timestamped events from each channel and system the customer touches, plus a way to recognise that events in different systems belong to the same customer or order. That second part, identity resolution, is usually the hardest.' },
+  { q: 'Does journey analytics prove why customers drop out?', a: 'It shows where they drop out and which segments are affected. Explaining why needs further evidence: what changed at that step, whether the drop is consistent across segments and whether reversing the change restores completion.' },
+];
+---
+<KnowledgeArticle
+  title="What is customer journey analytics?"
+  metaTitle="What Is Customer Journey Analytics? Guide"
+  description="Customer journey analytics explained: joining events from every channel and back-office step into journeys, what to measure, common pitfalls and its limits."
+  crumb="Customer journey analytics"
+  dek="Customers do not experience departments. They experience one journey that happens to cross marketing, product, operations, billing and support. Journey analytics tries to measure it that way."
+  definition="<strong>Customer journey analytics</strong> is the practice of joining the interactions and operational events that make up a customer's path, across channels and systems, and measuring how customers move along it: where they progress, where they stall, where they drop out and how long each step takes."
+  term="Customer journey analytics"
+  faqs={faqs}
+  related={[
+    { label: 'Journey Intelligence', href: '/platform/journey-intelligence/', desc: 'End-to-end journeys across systems', icon: 'journey' },
+    { label: 'Customer journey friction', href: '/use-cases/customer-journey-friction/', desc: 'Locate the step where customers stall', icon: 'search' },
+    { label: 'Panoptes for customer experience', href: '/solutions/customer-experience/', desc: 'Journeys, friction and promises kept', icon: 'customers' },
+    { label: 'SaaS & subscription', href: '/solutions/industries/saas/', desc: 'Trial to activation to renewal', icon: 'layers' },
+    { label: 'What is process mining?', href: '/resources/knowledge/what-is-process-mining/', desc: 'Reconstructing processes from event logs', icon: 'process' },
+  ]}
+>
+  <h2>How does customer journey analytics work?</h2>
+  <p>Journey analytics follows four steps, whatever the tooling:</p>
+  <ol>
+    <li><strong>Collect events</strong> from every touchpoint: sign-up forms, app usage, emails, verification checks, orders, deliveries, invoices, payments and support contacts.</li>
+    <li><strong>Resolve identity</strong> so that the same customer is recognised in each system, even when the CRM, the billing platform and the help desk use different identifiers. The glossary covers <a href="/resources/business-observability-glossary/#identity-resolution">identity resolution</a> in more detail.</li>
+    <li><strong>Assemble journeys</strong> by ordering each customer's events in time and mapping them to the stages that matter, such as "applied", "verified", "first order" and "first renewal".</li>
+    <li><strong>Measure and compare</strong> completion, drop-out and time between stages, broken down by segment, channel, product or cohort.</li>
+  </ol>
+
+  <h2>What should you measure?</h2>
+  <table>
+    <thead><tr><th>Measure</th><th>What it tells you</th></tr></thead>
+    <tbody>
+      <tr><td>Step completion rate</td><td>The share of customers who reach the next stage within an expected time</td></tr>
+      <tr><td>Time between stages</td><td>Where customers wait, and whether that waiting is on them or on you</td></tr>
+      <tr><td>Drop-out point</td><td>The last stage reached by customers who did not complete</td></tr>
+      <tr><td>Path variants</td><td>How many customers take a detour, such as a repeat verification or a manual review</td></tr>
+      <tr><td>Contacts per journey</td><td>How often customers need to ask for help, and at which step</td></tr>
+      <tr><td><a href="/resources/business-observability-glossary/#time-to-value">Time to value</a></td><td>How long until the customer receives the first meaningful benefit</td></tr>
+    </tbody>
+  </table>
+  <p>Segmenting each measure matters as much as the measure itself. A journey that looks stable overall can be deteriorating sharply for one channel, region or product while improving for another.</p>
+
+  <h2>Journey analytics vs funnel analysis</h2>
+  <p>A funnel counts how many people reach each predefined step. Journey analytics keeps the full sequence for each customer, so it can show loops, detours, repeat attempts and the time spent between steps. Funnels are a useful summary of a journey; they are not the journey.</p>
+
+  <h2>Common pitfalls</h2>
+  <ul>
+    <li><strong>Stopping at the digital edge.</strong> Many journeys stall in the back office: a document check, a credit review, a delivery slot. If those steps are not in the data, the drop-out looks like a website problem.</li>
+    <li><strong>Averages that hide segments.</strong> A small, fast-growing segment with a poor experience can be invisible in the overall completion rate.</li>
+    <li><strong>Mistaking correlation for cause.</strong> Customers who use a feature may retain better because they were already more engaged. Treat such patterns as hypotheses to test.</li>
+    <li><strong>No owner.</strong> A journey crosses teams, so a drop at one step can sit between teams for weeks. Each stage needs an accountable owner.</li>
+  </ul>
+  <div class="callout">
+    <strong>Illustrative example</strong>
+    A lender sees fewer applications turning into funded loans. Journey analytics shows the drop is concentrated among applicants routed to manual document review, whose wait has lengthened since a policy change. The website is not the problem; the queue behind it is.
+  </div>
+
+  <h2>How it relates to business observability</h2>
+  <p>Business observability treats the customer journey as one flow among several connected ones: the same journey touches orders, payments, queues and commitments. That makes it possible to see not only where customers stall, but which operational change is behind it and what it costs downstream.</p>
+  <p>Panoptes is designed to assemble journeys across systems with its <a href="/platform/journey-intelligence/">Journey Intelligence</a> capability, link each stage to the processes that serve it through the <a href="/platform/business-graph/">Business Graph</a>, and route changes to the owner of the affected stage. The <a href="/use-cases/customer-journey-friction/">customer journey friction</a> use case walks through an example.</p>
+</KnowledgeArticle>

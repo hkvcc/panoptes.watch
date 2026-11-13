@@ -44,7 +44,7 @@ const year = new Date().getFullYear();
   .ft-sub { color: var(--text-2); margin: 0; line-height: 1.55; }
   .ft-contact { display: grid; gap: .7rem; }
   .ft-contact .ft-title { margin: 0; }
-  .ft-cols { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 32px 24px; padding-block: clamp(32px, 4vw, 44px); }
+  .ft-cols { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 32px 20px; padding-block: clamp(32px, 4vw, 44px); }
   .ft-title { font: 500 .72rem/1.2 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 .9rem; }
   .ft-col ul, .ft-legal { list-style: none; padding: 0; margin: 0; }
   .ft-col ul { display: grid; gap: 2px; }
@@ -55,7 +55,8 @@ const year = new Date().getFullYear();
   .ft-copy { margin: 0; }
   .ft-legal { display: flex; flex-wrap: wrap; gap: 0 20px; }
   .ft-legal a { display: inline-block; padding: 4px 0; color: var(--text-2); text-decoration: none; }
-  @media (max-width: 1080px) { .ft-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 1240px) { .ft-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (max-width: 900px) { .ft-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 640px) {
     .ft-top { align-items: flex-start; }
     .ft-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }

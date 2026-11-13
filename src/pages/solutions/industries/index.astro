@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import RelatedLinks from '../../../components/RelatedLinks.astro';
+import FAQ from '../../../components/FAQ.astro';
+import Icon from '../../../components/Icon.astro';
+import CTA from '../../../components/CTA.astro';
+import { INDUSTRIES, SITE } from '../../../data/site';
+import { INDUSTRY_DATA } from '../../../components/industries/data';
+
+const crumbs = [{ label: 'Solutions', href: '/solutions/' }, { label: 'Industries', href: '/solutions/industries/' }];
+const items = INDUSTRIES.map((i) => {
+  const slug = i.href.split('/').filter(Boolean).pop()!;
+  const d = INDUSTRY_DATA[slug];
+  return { ...i, flows: d?.flows.map((f) => f.title) ?? [] };
+});
+
+const faqs = [
+  { q: 'Is Panoptes built for one industry?', a: 'No. The platform works on a model of entities, flows and commitments that you define, so the same capabilities apply to a payment route, a subscription renewal or a claims queue. The industry pages show what that model typically contains in each sector.' },
+  { q: 'My industry is not listed. Does that matter?', a: 'Not necessarily. If your business has flows that cross teams and systems — orders, cases, applications, shipments, invoices — the same approach applies. <a href="/contact/">Tell us about your operation</a> and we will say honestly whether it is a good fit.' },
+  { q: 'How do industry pages relate to the role pages?', a: 'Industry pages describe <em>what</em> to observe in a sector; <a href="/solutions/">role pages</a> describe <em>who</em> uses the view and the questions each seat asks. Most organisations need both lenses on one model.' },
+  { q: 'Are the scenarios on these pages real customer examples?', a: 'No. Every scenario and figure on the industry pages is illustrative and labelled as such. They show the kind of investigation Panoptes is designed to support, not results achieved.' },
+];
+
+const schema = {
+  '@type': 'CollectionPage',
+  name: 'Business observability solutions by industry',
+  description: 'Industry pages describing the value streams, indicators and investigations business observability is designed to support in each sector.',
+  url: new URL('/solutions/industries/', SITE.origin).href,
+  inLanguage: 'en-GB',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: INDUSTRIES.map((i, n) => ({ '@type': 'ListItem', position: n + 1, name: i.label, url: new URL(i.href, SITE.origin).href })),
+  },
+};
+---
+<BaseLayout
+  title="Business Observability Solutions by Industry"
+  description="Business observability by industry: financial services, SaaS, e-commerce, marketplaces, logistics and insurance — the flows and indicators to watch in each."
+  ogImage="/social/og-solutions.png"
+  breadcrumbs={crumbs}
+  schema={schema}
+>
+  <PageHero
+    eyebrow="Solutions · By industry"
+    title="Business observability solutions <span class='gradient-text'>by industry</span>"
+    lede="Every sector moves money, customers and commitments through its own flows. These pages describe what Panoptes is designed to observe in each one — the value streams, the indicators worth pairing and the kind of investigation a connected model supports."
+    breadcrumbs={crumbs}
+  >
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="/solutions/">Solutions by role</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead eyebrow="Industries" title="Choose your industry" lede="Each page covers the flows specific to the sector, six indicators with counter-measures, an illustrative investigation and answers to common questions." />
+      <ul class="ind-grid" role="list">
+        {items.map((i) => (
+          <li>
+            <a href={i.href} class="card card-link ind-card reveal">
+              <span class="icon-tile"><Icon name={i.icon ?? 'layers'} /></span>
+              <h3>{i.label}</h3>
+              <p class="muted">{i.desc}.</p>
+              {i.flows.length > 0 && <ul class="pill-list" aria-label={`Value streams covered for ${i.label}`}>{i.flows.map((f) => <li>{f}</li>)}</ul>}
+              <span class="link-arrow">{`Explore ${i.label}`}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container split split-top">
+      <div>
+        <p class="eyebrow">One model, many sectors</p>
+        <h2>The sector changes the nouns, not the questions.</h2>
+        <p class="lede">A payment, a subscription, a shipment and a claim are different things, but the questions leaders ask about them are the same: is it flowing, where is it waiting, what is it costing, and who owns the fix?</p>
+        <p class="muted">Panoptes is designed to model those flows as connected entities and events in the <a href="/platform/business-graph/">Business Graph</a>, so the same <a href="/platform/process-intelligence/">process intelligence</a>, <a href="/platform/anomaly-detection/">anomaly detection</a> and <a href="/platform/root-cause-analysis/">root cause analysis</a> work in any sector.</p>
+      </div>
+      <ul class="q-list">
+        <li class="reveal"><h3>Is it flowing?</h3><p class="muted">Throughput and waiting time at each stage, compared with what is expected for this hour, day and segment.</p></li>
+        <li class="reveal"><h3>Where is it stuck?</h3><p class="muted">The stage, hand-off or segment where items accumulate — and whether they wait on you or on the customer.</p></li>
+        <li class="reveal"><h3>What is it costing?</h3><p class="muted">Revenue deferred or at risk, commitments projected to breach and effort spent on rework.</p></li>
+        <li class="reveal"><h3>Who should act?</h3><p class="muted">The owner of the part of the flow that changed first, with the evidence attached.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split split-top">
+      <RelatedLinks eyebrow="Other ways in" title="Browse by role or problem" items={[
+        { label: 'Solutions by role', href: '/solutions/', desc: 'Executives, operations, finance, revenue and CX', icon: 'users' },
+        { label: 'Use cases', href: '/use-cases/', desc: 'Concrete problems, told as investigations', icon: 'search' },
+        { label: 'Knowledge center', href: '/resources/knowledge/', desc: 'Plain-language explainers of related terms', icon: 'book' },
+        { label: 'Data sources', href: '/integrations/data-sources/', desc: 'The categories of system Panoptes reads from', icon: 'database' },
+      ]} />
+      <div>
+        <p class="eyebrow">Questions</p>
+        <h2 class="faq-title">Industry questions</h2>
+        <FAQ items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <CTA title="Your sector, your flows, one model." text="Tell us which flow matters most in your business and we will walk through how Panoptes is designed to observe it." />
+</BaseLayout>
+
+<style>
+  .ind-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .ind-card { height: 100%; display: flex; flex-direction: column; gap: .2rem; }
+  .ind-card h3 { margin-top: .8rem; }
+  .ind-card .pill-list { margin: .4rem 0 1rem; }
+  .ind-card .link-arrow { margin-top: auto; }
+  .q-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .q-list li { padding: 20px 22px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+  .q-list h3 { font-size: 1.1rem; margin: 0 0 .4rem; }
+  .q-list p { margin: 0; font-size: .95rem; }
+  .faq-title { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  @media (max-width: 1024px) { .ind-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .ind-grid, .q-list { grid-template-columns: minmax(0, 1fr); } }
+</style>

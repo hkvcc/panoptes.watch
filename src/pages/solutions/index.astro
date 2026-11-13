@@ -8,6 +8,7 @@ import RelatedLinks from '../../components/RelatedLinks.astro';
 import FAQ from '../../components/FAQ.astro';
 import Icon from '../../components/Icon.astro';
 import CTA from '../../components/CTA.astro';
+import { INDUSTRIES, SITE } from '../../data/site';
 
 const crumbs = [{ label: 'Solutions', href: '/solutions/' }];
 
@@ -72,12 +73,22 @@ const faqs = [
   { q: 'Does this replace our BI tools?', a: 'No. BI remains the right place for reporting and historical analysis. Panoptes focuses on what is happening now, why, and who should act. The <a href="/resources/business-observability-vs-bi/">comparison guide</a> explains the difference.' },
   { q: 'Is Panoptes used to monitor individual employees?', a: 'No. Panoptes observes business processes and outcomes — queues, journeys, commitments and money movement — not individual people’s activity.' },
 ];
+
+const schema = {
+  '@type': 'CollectionPage',
+  name: 'Business observability solutions by role and industry',
+  url: new URL('/solutions/', SITE.origin).href,
+  inLanguage: 'en-GB',
+  hasPart: [...seats.map((s) => ({ '@type': 'WebPage', name: `Business observability for ${s.short.toLowerCase()}`, url: new URL(s.href, SITE.origin).href })),
+    ...INDUSTRIES.map((i) => ({ '@type': 'WebPage', name: i.label, url: new URL(i.href, SITE.origin).href }))],
+};
 ---
-<BaseLayout title="Solutions by role" description="Business observability for executives, operations, finance, revenue and customer experience: five views of one shared business model, so the answers agree." ogImage="/social/og-solutions.png" breadcrumbs={crumbs}>
-  <PageHero eyebrow="Solutions" title="Five seats. <span class='gradient-text'>One shared picture.</span>" lede="Every leader asks a different first question about the business. Panoptes is designed to answer each one from the same continuously updated model — so when operations, finance and revenue look at the same event, they see the same facts and argue about what to do, not whose number is right." breadcrumbs={crumbs}>
+<BaseLayout title="Business Observability Solutions" description="Business observability solutions by role — executives, operations, finance, revenue, CX — and by industry, from fintech and SaaS to logistics and insurance." ogImage="/social/og-solutions.png" breadcrumbs={crumbs} schema={schema}>
+  <PageHero eyebrow="Solutions" title="Business observability solutions <span class='gradient-text'>for every seat and sector</span>" lede="Every leader asks a different first question about the business, and every industry moves money and customers through different flows. Panoptes is designed to answer each question from the same continuously updated model — so when operations, finance and revenue look at the same event, they see the same facts and argue about what to do, not whose number is right." breadcrumbs={crumbs}>
     <div class="btn-row">
       <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
-      <a class="btn" href="#one-event">See one event, five ways</a>
+      <a class="btn" href="#by-role">By role</a>
+      <a class="btn" href="#by-industry">By industry</a>
     </div>
     <Fragment slot="visual">
       <Diagram src="/diagrams/solutions-shared-model.svg" alt="Five role views — executives, operations, finance, revenue and customer experience — connected to one shared business model in which a verification delay is highlighted" frame="one model · five seats" illustrative={false} zoom class="hide-sm" />
@@ -86,9 +97,9 @@ const faqs = [
   </PageHero>
 
   <!-- Seats -->
-  <section class="section">
+  <section class="section" id="by-role">
     <div class="container">
-      <SectionHead eyebrow="By role" title="Start from the question you are accountable for." lede="Each role page describes the visibility problems that seat typically lives with, the indicators worth watching and the decisions a connected model can support." />
+      <SectionHead eyebrow="By role" title="Solutions by role: start from the question you own" lede="Each role page describes the visibility problems that seat typically lives with, the indicators worth watching and the decisions a connected model can support." />
       <ol class="seats">
         {seats.map((s, i) => (
           <li class="seat reveal">
@@ -105,8 +116,27 @@ const faqs = [
     </div>
   </section>
 
+  <!-- Industries -->
+  <section class="section section-alt" id="by-industry">
+    <div class="container">
+      <SectionHead eyebrow="By industry" title="Solutions by industry: the flows your sector runs on" lede="The questions stay the same across sectors; the entities and flows change. Each industry page covers the value streams to observe, indicators to pair and an illustrative investigation." />
+      <ul class="inds" role="list">
+        {INDUSTRIES.map((i) => (
+          <li>
+            <a href={i.href} class="ind reveal">
+              <span class="icon-tile"><Icon name={i.icon ?? 'layers'} /></span>
+              <span class="ind-body"><strong>{i.label}</strong><span>{i.desc}</span></span>
+              <Icon name="arrow" class="ind-arrow" />
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-2"><a class="link-arrow" href="/solutions/industries/">All industries</a></p>
+    </div>
+  </section>
+
   <!-- One event, five seats -->
-  <section class="section section-alt" id="one-event">
+  <section class="section" id="one-event">
     <div class="container">
       <SectionHead eyebrow="One event, five seats" title="The same delay matters differently to every leader." lede="A verification queue for new business accounts starts to back up on a Tuesday. Choose a seat to see which part of the chain that person cares about, and the decision it informs. The scenario and figures are illustrative." />
       <div class="lens reveal" data-lens>
@@ -145,7 +175,7 @@ const faqs = [
   </section>
 
   <!-- Why one model -->
-  <section class="section">
+  <section class="section section-alt">
     <div class="container">
       <div class="split split-top why">
         <div>
@@ -166,7 +196,7 @@ const faqs = [
   </section>
 
   <!-- Capabilities -->
-  <section class="section section-alt">
+  <section class="section">
     <div class="container">
       <SectionHead eyebrow="Under every view" title="The capabilities each seat draws on." />
       <div class="grid grid-4">
@@ -260,6 +290,16 @@ const faqs = [
   @media (max-width: 640px) { .chain { grid-template-columns: 1fr 1fr; } .lens-panel dl { grid-template-columns: 1fr; } }
 
   .why h2 { max-width: 16ch; }
+  .inds { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .ind { display: flex; align-items: center; gap: 14px; padding: 18px; height: 100%; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); text-decoration: none; transition: border-color .15s; }
+  .ind:hover { border-color: var(--accent); }
+  .ind .icon-tile { margin: 0; width: 40px; height: 40px; flex: none; }
+  .ind-body { display: grid; gap: 2px; flex: 1; min-width: 0; }
+  .ind-body strong { font-weight: 600; }
+  .ind-body span { font-size: .86rem; color: var(--text-2); }
+  .ind :global(.ind-arrow) { width: 18px; height: 18px; color: var(--text-3); flex: none; }
+  @media (max-width: 960px) { .inds { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .inds { grid-template-columns: minmax(0, 1fr); } }
   .why-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
   .why-list li { padding: 20px 22px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
   .why-k { font: 600 1.1rem/1.3 var(--font-display); display: block; margin-bottom: 6px; }

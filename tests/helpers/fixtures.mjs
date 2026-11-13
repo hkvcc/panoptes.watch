@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const CATS = ['Process monitoring', 'Metrics', 'Architecture'];
+// Odd-numbered fixtures are Kieran's (7), even-numbered Florian's (6).
+export const fixtureAuthor = (i) => (i % 2 ? 'kieran-lovell' : 'florian-andrews');
 const fm = (o) => '---\n' + Object.entries(o).map(([k, v]) => `${k}: ${JSON.stringify(v)}`).join('\n') + '\n---\n';
 
 export function writeValidFixtures(dir) {
@@ -19,7 +21,7 @@ export function writeValidFixtures(dir) {
       slug: `/blog/${slug}/`,
       canonical_url: `https://panoptes.watch/blog/${slug}/`,
       primary_keyword: i % 2 ? 'business process monitoring' : 'kpi monitoring',
-      author: 'Panoptes Editorial Team',
+      author: fixtureAuthor(i),
       reviewed: `2026-0${1 + (i % 9)}-${String(10 + i).padStart(2, '0')}`,
       published: `2026-0${1 + (i % 9)}-${String(10 + i).padStart(2, '0')}`,
       category: CATS[i % 3],
@@ -30,19 +32,21 @@ export function writeValidFixtures(dir) {
   fs.writeFileSync(path.join(dir, 'fixture-draft.md'), fm({
     title: 'Draft fixture that must stay hidden',
     meta_description: 'This draft article must never be built, listed, indexed or included in the sitemap, feed or search.',
-    reviewed: '2026-10-01', category: 'Metrics', draft: true,
+    author: 'florian-andrews', reviewed: '2026-10-01', category: 'Metrics', draft: true,
   }) + '\n# Draft heading\n\nSecret draft body.\n');
   fs.writeFileSync(path.join(dir, '_ignored-partial.md'), 'not an article');
 }
 
 export function writeInvalidFixture(dir, kind) {
   fs.mkdirSync(dir, { recursive: true });
-  const base = { title: 'A perfectly valid title', meta_description: 'A description that is long enough to pass the minimum length rule set.', reviewed: '2026-11-01' };
+  const base = { title: 'A perfectly valid title', meta_description: 'A description that is long enough to pass the minimum length rule set.', author: 'kieran-lovell', reviewed: '2026-11-01' };
   const variants = {
     'missing-title': { ...base, title: undefined },
     'unknown-key': { ...base, categroy: 'Typo' },
     'slug-mismatch': { ...base, slug: '/blog/something-else/' },
     'no-date': { ...base, reviewed: undefined },
+    'unknown-author': { ...base, author: 'Panoptes Editorial Team' },
+    'missing-author': { ...base, author: undefined },
   };
   const data = Object.fromEntries(Object.entries(variants[kind]).filter(([, v]) => v !== undefined));
   fs.writeFileSync(path.join(dir, 'bad-article.md'), fm(data) + '\n# Heading\n\nText.\n');

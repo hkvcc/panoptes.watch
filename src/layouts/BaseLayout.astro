@@ -23,6 +23,12 @@ const ogUrl = new URL(ogImage, SITE.origin).href;
 
 const graph: Record<string, unknown>[] = [];
 if (schema) graph.push(...(Array.isArray(schema) ? schema : [schema]));
+// Every indexable page describes itself; pages that pass their own page-level node (WebPage, Article…) keep it.
+const PAGE_TYPES = ['WebPage', 'CollectionPage', 'AboutPage', 'ContactPage', 'FAQPage', 'Article', 'BlogPosting', 'TechArticle'];
+if (!noindex && !graph.some((n) => PAGE_TYPES.includes(String(n['@type'])))) {
+  graph.unshift({ '@type': 'WebPage', name: fullTitle, description, url: canonical, inLanguage: 'en-GB', isPartOf: { '@type': 'WebSite', name: 'Panoptes', url: SITE.origin } });
+}
+const ogAlt = title.includes('Panoptes') ? title : `${title} — Panoptes`;
 if (breadcrumbs?.length) {
   graph.push({
     '@type': 'BreadcrumbList',
@@ -31,7 +37,8 @@ if (breadcrumbs?.length) {
     })),
   });
 }
-const jsonLd = graph.length ? JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }) : null;
+// `<` is escaped so text from content (e.g. blog front matter) can never close the <script> element.
+const jsonLd = graph.length ? JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c') : null;
 ---
 <!doctype html>
 <html lang="en" class="no-js">
@@ -67,12 +74,13 @@ const jsonLd = graph.length ? JSON.stringify({ '@context': 'https://schema.org',
     <meta property="og:image" content={ogUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${title} — Panoptes`} />
+    <meta property="og:image:alt" content={ogAlt} />
     <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogUrl} />
+    <meta name="twitter:image:alt" content={ogAlt} />
     <slot name="head" />
     {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
   </head>

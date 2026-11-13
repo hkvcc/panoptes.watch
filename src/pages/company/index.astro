@@ -45,7 +45,7 @@ const schema = [
   { '@type': 'AboutPage', name: 'About Panoptes', url: `${SITE.origin}/company/`, about: { '@id': `${SITE.origin}/#org` } },
 ];
 ---
-<BaseLayout title="About Panoptes" description="Panoptes exists to make the real workings of a business visible, understandable and actionable. Our mission, the name, what we believe and brand assets." ogImage="/social/og-company.png" breadcrumbs={crumbs} schema={schema}>
+<BaseLayout title="About Panoptes: Mission and Principles" description="Panoptes exists to make the real workings of a business visible, understandable and actionable. Our mission, the name, what we believe and brand assets." ogImage="/social/og-company.png" breadcrumbs={crumbs} schema={schema}>
   <PageHero eyebrow="About Panoptes" title="Making the real workings of every business <span class='gradient-text'>visible</span>." lede="Software teams can see inside their systems at any moment. The people who run the business usually cannot see inside the business itself. Panoptes exists to close that gap." breadcrumbs={crumbs} split>
     <div class="btn-row">
       <a class="btn btn-primary" href="/company/vision/">Read the vision<Icon name="arrow" class="arrow" /></a>
@@ -194,9 +194,10 @@ const schema = [
       <div class="reveal">
         <RelatedLinks title="Keep exploring" items={[
           { label: 'Vision', href: '/company/vision/', desc: 'Toward a Business Operating System', icon: 'compass' },
+          { label: 'Team', href: '/company/team/', desc: 'The people building Panoptes', icon: 'users' },
+          { label: 'Trust center', href: '/trust/', desc: 'Security, privacy and legal in one place', icon: 'shield' },
           { label: 'What is Business Observability?', href: '/business-observability/', desc: 'The category, in one page', icon: 'book' },
           { label: 'How Panoptes works', href: '/how-it-works/', desc: 'Connect → Model → Observe → Understand → Act', icon: 'flow' },
-          { label: 'Security & Governance', href: '/integrations/security-governance/', desc: 'Access, ownership and auditability', icon: 'shield' },
         ]} />
       </div>
     </div>

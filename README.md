@@ -48,6 +48,27 @@ Node 18.17+ (22 recommended).
 └── assets-manifest.md      Inventory of every brand and visual asset
 ```
 
+## Site structure
+
+The information architecture follows the pattern of large observability vendors: product capabilities, solutions split by role and by industry, use cases, an integrations directory, resources split into long-form guides and a "What is…" knowledge center, and a company section with a trust hub. Navigation and footer data live in `src/data/site.ts` (`NAV`, `FOOTER`, `FOOTER_LEGAL`).
+
+| Section | Routes |
+|---|---|
+| Home | `/` |
+| Platform | `/platform/` + 9 capabilities (`/platform/business-graph/` …), `/how-it-works/`, `/business-observability/` |
+| Solutions — by role | `/solutions/` (hub for role and industry), `/solutions/{executives,operations,finance,revenue,customer-experience}/` |
+| Solutions — by industry | `/solutions/industries/` + `financial-services/`, `saas/`, `ecommerce-retail/`, `marketplaces/`, `logistics-supply-chain/`, `insurance/` (one template, `src/components/industries/IndustryPage.astro`; copy in `src/components/industries/data.ts`) |
+| Use cases | `/use-cases/` + 6 use cases |
+| Integrations | `/integrations/`, `/integrations/{data-sources,api,security-governance}/` |
+| Resources — guides | `/resources/` + long-form guides (`ArticleLayout`) and `/resources/business-observability-glossary/` |
+| Resources — knowledge center | `/resources/knowledge/` + `what-is-process-mining/`, `what-is-customer-journey-analytics/`, `what-is-operational-intelligence/`, `what-is-decision-intelligence/`, `what-is-order-to-cash/`, `what-is-a-semantic-layer/` (`src/components/knowledge/KnowledgeArticle.astro`) |
+| Blog | `/blog/`, `/blog/<slug>/`, `/blog/rss.xml` |
+| Company | `/company/`, `/company/vision/`, `/company/team/`, `/company/contact/`, `/trust/` (security, privacy and legal hub) |
+| Conversion | `/demo/`, `/contact/` |
+| Legal | `/legal/`, `/privacy/`, `/terms/`, `/cookies/`, `/legal/acceptable-use/`, `/legal/subprocessors/` |
+
+To add an industry: add an entry to `INDUSTRIES` in `src/data/site.ts` and `INDUSTRY_DATA` in `src/components/industries/data.ts`, then a two-line page in `src/pages/solutions/industries/`. To add a knowledge article: add it to `KNOWLEDGE` in `src/data/site.ts` and create `src/pages/resources/knowledge/<slug>.astro` with `KnowledgeArticle`. Each new "What is…" page must target a query no existing guide, use case or planned SEO brief targets (see `cannibalisation_watchlist` and `url_map` in `seo/business-observability/config.json`).
+
 ## Deployment
 
 See **[deployment/cloudflare-pages.md](deployment/cloudflare-pages.md)**. In short: Cloudflare Pages → connect the repo → build command `npm run build`, output directory `dist`. Form delivery requires environment variables — see **[deployment/forms.md](deployment/forms.md)**. Direct (ZIP) upload deploys only the static site, not the form function.

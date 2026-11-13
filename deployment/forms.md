@@ -142,4 +142,4 @@ The server side is ready. When `TURNSTILE_SECRET_KEY` is set, every submission m
 
 ## Privacy
 
-Submissions are not stored by the function. They are only forwarded to the configured destinations. The email includes the Cloudflare country header (`cf-ipcountry`) for context, but not the IP address or user agent. Both forms have a required consent checkbox linking to `/privacy/`. Keep the privacy notice in line with your chosen providers (Resend as a processor, plus any webhook destination).
+Submissions are not stored by the function. They are only forwarded to the configured destinations. The email includes the Cloudflare country header (`cf-ipcountry`) for context, but not the IP address or user agent. Both forms have a required consent checkbox linking to `/privacy/`. Keep the privacy notice (`/privacy/`) and the website service providers list (`/legal/subprocessors/`) in line with your chosen providers (Resend as a processor, plus any webhook destination), and update them before turning on a webhook or Turnstile. `LEGAL-DETAILS.md` lists everything that has to change.

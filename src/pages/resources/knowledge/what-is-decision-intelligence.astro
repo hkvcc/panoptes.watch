@@ -1,0 +1,70 @@
+---
+import KnowledgeArticle from '../../../components/knowledge/KnowledgeArticle.astro';
+
+const faqs = [
+  { q: 'Is decision intelligence just AI?', a: 'No. AI and machine learning can support parts of it, such as forecasting or suggesting options, but decision intelligence is mainly about how decisions are framed, informed, owned and evaluated. Much of it can be done with clear models, good data and discipline.' },
+  { q: 'How is decision intelligence different from business intelligence?', a: 'Business intelligence produces information: reports, dashboards and analyses. Decision intelligence starts from the decision and works backwards to the information, assumptions and owners it needs, then records what was decided and checks whether it worked.' },
+  { q: 'What is a decision model?', a: 'A structured description of a decision: the options available, the outcomes it is meant to affect, the factors that link actions to outcomes, the evidence for each link, and who is accountable. It makes reasoning explicit so it can be reviewed and improved.' },
+  { q: 'Does Panoptes make decisions automatically?', a: 'No. Panoptes is designed to inform decisions by showing what is happening, why and who owns it, and to record actions and their effects. AI-assisted investigation and automated execution are part of the product vision, not current capabilities.' },
+];
+---
+<KnowledgeArticle
+  title="What is decision intelligence?"
+  metaTitle="What Is Decision Intelligence? Definition"
+  description="Decision intelligence explained: designing decisions around outcomes, evidence and owners, how it differs from BI and analytics, and where AI fits."
+  crumb="Decision intelligence"
+  dek="Organisations invest heavily in information and comparatively little in the decisions that information is meant to improve. Decision intelligence puts the decision at the centre."
+  definition="<strong>Decision intelligence</strong> is a discipline that treats decisions as things to be designed, informed and evaluated: it links each decision to the outcomes it should affect, the evidence and assumptions behind it, the people accountable for it and a check afterwards on whether it worked."
+  term="Decision intelligence"
+  faqs={faqs}
+  related={[
+    { label: 'From dashboards to decisions', href: '/resources/from-dashboards-to-decisions/', desc: 'Why more dashboards rarely mean better decisions', icon: 'target' },
+    { label: 'AI Intelligence (product vision)', href: '/platform/ai-intelligence/', desc: 'Assisted investigation and explanation', icon: 'ai' },
+    { label: 'Actions & Automation', href: '/platform/actions-automation/', desc: 'Ownership, routing and follow-through', icon: 'actions' },
+    { label: 'Panoptes for executives', href: '/solutions/executives/', desc: 'One honest picture of the whole business', icon: 'compass' },
+    { label: 'What is operational intelligence?', href: '/resources/knowledge/what-is-operational-intelligence/', desc: 'Analysis of operations as they run', icon: 'signal' },
+  ]}
+>
+  <h2>Why decision intelligence matters</h2>
+  <p>Most analytics programmes measure their output in reports and dashboards. Yet the value of information is realised only when someone decides differently because of it. Common symptoms of the gap are familiar: several dashboards that disagree, meetings that debate whose number is right, and decisions whose effects are never checked.</p>
+  <p>Decision intelligence reverses the direction of work. Instead of asking "what data do we have?", it asks "what decision are we trying to make, and what would change it?"</p>
+
+  <h2>The building blocks of decision intelligence</h2>
+  <ul>
+    <li><strong>A defined decision</strong>: for example, "whether to add reviewer capacity to the verification queue this week".</li>
+    <li><strong>Outcomes</strong>: what the decision should affect, such as time to activation and first-month billing.</li>
+    <li><strong>A causal picture</strong>: how actions are believed to lead to outcomes, with the strength of evidence for each link stated honestly.</li>
+    <li><strong>Options and trade-offs</strong>: what each option costs and what it risks.</li>
+    <li><strong>An owner</strong>: the role accountable for deciding and acting.</li>
+    <li><strong>A feedback loop</strong>: a record of what was decided and a measure of whether it worked.</li>
+  </ul>
+
+  <h2>Decision intelligence vs business intelligence vs analytics</h2>
+  <table>
+    <thead><tr><th></th><th>Starts from</th><th>Produces</th><th>Success looks like</th></tr></thead>
+    <tbody>
+      <tr><td>Business intelligence</td><td>Data and reporting needs</td><td>Reports, dashboards</td><td>Accurate, trusted reporting</td></tr>
+      <tr><td>Analytics</td><td>A question or hypothesis</td><td>Analyses, models, forecasts</td><td>Sound answers to specific questions</td></tr>
+      <tr><td>Decision intelligence</td><td>A decision and its outcomes</td><td>Decision models, recorded decisions, evaluations</td><td>Better decisions, verified afterwards</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Where does AI fit?</h2>
+  <p>AI can help with specific parts of a decision: forecasting demand, flagging unusual patterns, summarising evidence or suggesting options. It does not remove the need for a clear objective, explicit assumptions and an accountable owner. A recommendation from a model is only as good as the picture of the business it is based on, and should show its working so that people can judge it.</p>
+  <div class="callout">
+    <strong>Correlation is not a decision basis on its own</strong>
+    If two metrics move together, that is a reason to investigate, not a reason to act. Stronger evidence comes from a known mechanism, consistency across segments and comparison with groups that did not experience the change.
+  </div>
+
+  <h2>How to start in practice</h2>
+  <ol>
+    <li>Pick one recurring, consequential decision, such as weekly capacity allocation or a pricing review.</li>
+    <li>Write down the outcomes it should affect and how they will be measured.</li>
+    <li>Agree the assumptions linking actions to outcomes, and mark which ones are verified.</li>
+    <li>Name the owner and the information they need, at the moment they need it.</li>
+    <li>Record each decision and review its effect after an agreed interval.</li>
+  </ol>
+
+  <h2>How it relates to business observability</h2>
+  <p>Business observability supplies the information side of decision intelligence: a current, connected picture of what is happening, why, and who owns it. Panoptes is designed to route findings to accountable owners and record interventions and their measured effects with <a href="/platform/actions-automation/">Actions &amp; Automation</a>, and to trace changes to contributing causes with <a href="/platform/root-cause-analysis/">Root Cause Analysis</a>. Plain-language, AI-assisted investigation is part of the <a href="/platform/ai-intelligence/">product vision</a> rather than a current capability. The guide <a href="/resources/from-dashboards-to-decisions/">from dashboards to decisions</a> covers the operating habits that close the loop.</p>
+</KnowledgeArticle>

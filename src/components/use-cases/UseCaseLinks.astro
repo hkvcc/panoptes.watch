@@ -24,7 +24,7 @@ const { caps, roles, related, alt = true } = Astro.props;
       ); })}
     </div>
     <div class="ucl-rel">
-      <RelatedLinks eyebrow="Who this is for" title="Related roles" items={roles.map((r) => { const s = role(r.slug); return { label: s.label, href: s.href, desc: r.why, icon: s.icon }; })} />
+      <RelatedLinks eyebrow="Who this is for" title="Solutions for these roles" items={roles.map((r) => { const s = role(r.slug); return { label: s.label, href: s.href, desc: r.why, icon: s.icon }; })} />
       <RelatedLinks eyebrow="Keep exploring" title="Related use cases" items={related.map((r) => { const u = useCase(r.slug); return { label: u.label, href: u.href, desc: r.why, icon: u.icon }; })} />
     </div>
   </div>

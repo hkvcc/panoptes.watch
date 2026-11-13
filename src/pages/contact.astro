@@ -13,8 +13,8 @@ const next = [
 ];
 ---
 <BaseLayout
-  title="Contact"
-  description="Contact Panoptes about sales, partnerships, press or anything else. Send a message through the form or email sales@panoptes.watch directly."
+  title="Contact Panoptes: Sales, Partnerships, Press"
+  description="Contact Panoptes about sales, partnerships, press or anything else. Send a message through the form or email sales@panoptes.watch, and a person will reply."
   ogImage="/social/og-company.png"
   breadcrumbs={crumbs}
 >
@@ -23,8 +23,7 @@ const next = [
     <div class="container contact-grid">
       <div class="contact-intro">
         <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><span aria-current="page">Contact</span></li></ol></nav>
-        <p class="eyebrow">Contact</p>
-        <h1>Send us a message.</h1>
+        <h1><span class="eyebrow contact-kicker">Contact Panoptes<span class="sr-only">: </span></span> Send us a message.</h1>
         <p class="lede">Questions about Panoptes, partnerships, press enquiries or something else — write to us here and a person will reply by email.</p>
 
         <div class="direct">
@@ -57,6 +56,7 @@ const next = [
 </BaseLayout>
 
 <style>
+  .contact-kicker { display: flex; width: fit-content; }
   .contact { padding-block: clamp(40px, 6vw, 88px) clamp(56px, 8vw, 104px); position: relative; overflow: hidden; }
   .contact .bg-grid-layer { position: absolute; inset: 0; z-index: -1; -webkit-mask-image: radial-gradient(ellipse 70% 60% at 20% 0%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 70% 60% at 20% 0%, #000 20%, transparent 75%); }
   .contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: 'intro form' 'side form'; column-gap: clamp(32px, 5vw, 72px); row-gap: 40px; align-items: start; }

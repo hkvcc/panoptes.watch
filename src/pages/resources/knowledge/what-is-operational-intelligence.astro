@@ -1,0 +1,73 @@
+---
+import KnowledgeArticle from '../../../components/knowledge/KnowledgeArticle.astro';
+
+const faqs = [
+  { q: 'Is operational intelligence the same as business intelligence?', a: 'No. Business intelligence is mainly about reporting and analysing what has happened, usually from a warehouse refreshed on a schedule. Operational intelligence analyses activity as it happens so that people can act while it still matters. The <a href="/resources/business-observability-vs-bi/">BI comparison guide</a> covers the reporting side in more depth.' },
+  { q: 'Is operational intelligence about IT operations?', a: 'The term is used in both senses. In IT it often means analysing machine data from servers and applications. In a business context it means analysing operational events such as orders, cases, shipments and payments. This article uses the business sense.' },
+  { q: 'What data does operational intelligence need?', a: 'Timely business events from the systems that run operations, with enough context (which customer, which order, which stage, which team) to aggregate them meaningfully and to route an alert to the right owner.' },
+  { q: 'How does operational intelligence relate to business observability?', a: 'Operational intelligence is mostly about seeing and alerting on current activity. Business observability adds an explicit model of how the parts of the business depend on one another, so that a change can be explained and its downstream effects traced.' },
+];
+---
+<KnowledgeArticle
+  title="What is operational intelligence?"
+  metaTitle="What Is Operational Intelligence? Definition"
+  description="Operational intelligence explained: analysing business events as they happen, how it differs from BI, where it falls short and how business observability fits."
+  crumb="Operational intelligence"
+  dek="Reports tell you how last month went. Operational intelligence is about knowing how today is going while there is still time to change it."
+  definition="<strong>Operational intelligence</strong> is the continuous analysis of operational data, such as orders, cases, shipments, payments and system events, as it is generated, so that people can see what is happening in the business now and act on it before it becomes a reported result."
+  term="Operational intelligence"
+  faqs={faqs}
+  related={[
+    { label: 'Business observability vs BI', href: '/resources/business-observability-vs-bi/', desc: 'Reporting versus understanding what is happening', icon: 'chart' },
+    { label: 'Command Center', href: '/platform/command-center/', desc: 'One cockpit for business operations', icon: 'command' },
+    { label: 'Panoptes for operations', href: '/solutions/operations/', desc: 'Flow, capacity and service commitments', icon: 'process' },
+    { label: 'SLA monitoring', href: '/use-cases/sla-monitoring/', desc: 'Watch commitments before they break', icon: 'target' },
+    { label: 'What is decision intelligence?', href: '/resources/knowledge/what-is-decision-intelligence/', desc: 'Engineering how decisions are made', icon: 'target' },
+  ]}
+>
+  <h2>How does operational intelligence work?</h2>
+  <p>An operational intelligence setup typically has four layers:</p>
+  <ol>
+    <li><strong>Capture</strong>: business events stream in from operational systems, or are read frequently, rather than being loaded into a warehouse once a night.</li>
+    <li><strong>Correlate</strong>: events are enriched with context and joined, so that "payment failed" is linked to the order, the customer, the payment route and the time.</li>
+    <li><strong>Analyse</strong>: rolling measures, thresholds, expected ranges and simple rules run continuously over the stream.</li>
+    <li><strong>Act</strong>: when something deviates, a person is alerted, a case is opened or a workflow is triggered.</li>
+  </ol>
+
+  <h2>Operational intelligence vs business intelligence</h2>
+  <table>
+    <thead><tr><th></th><th>Business intelligence</th><th>Operational intelligence</th></tr></thead>
+    <tbody>
+      <tr><td>Main question</td><td>What happened, and how did we perform?</td><td>What is happening now, and does it need action?</td></tr>
+      <tr><td>Freshness</td><td>Scheduled refreshes, often daily</td><td>Continuous or near continuous</td></tr>
+      <tr><td>Grain</td><td>Aggregated for reporting</td><td>Individual events and short windows</td></tr>
+      <tr><td>Typical users</td><td>Analysts, finance, leadership reviews</td><td>Operations managers and team leads</td></tr>
+      <tr><td>Typical output</td><td>Reports and dashboards</td><td>Alerts, live views and triggered actions</td></tr>
+    </tbody>
+  </table>
+  <p>Both are necessary. BI remains the right place for period reporting, planning and historical analysis.</p>
+
+  <h2>Common uses</h2>
+  <ul>
+    <li><strong>Service commitments</strong>: spotting open cases that are on course to miss a resolution target while there is still time to prioritise them.</li>
+    <li><strong>Payment operations</strong>: noticing a rise in declines on one payment route within minutes rather than at month end.</li>
+    <li><strong>Fulfilment</strong>: seeing that orders are not being picked fast enough to make a carrier cut-off.</li>
+    <li><strong>Queues and capacity</strong>: watching arrivals against completion capacity at each stage of a back-office process.</li>
+  </ul>
+
+  <h2>Where operational intelligence falls short</h2>
+  <p>Operational intelligence is good at telling you that a number has moved. It is often weaker at three things:</p>
+  <ul>
+    <li><strong>Explaining why.</strong> An alert on declined payments says nothing about the release, configuration change or supplier issue behind it.</li>
+    <li><strong>Seeing consequences.</strong> A delay in verification affects activation, billing, cash and customer contacts. Alerts on each metric arrive separately, to different teams, with no link between them.</li>
+    <li><strong>Avoiding alert fatigue.</strong> Fixed thresholds fire at predictable quiet times and miss real deviations at busy ones, so people learn to ignore them. Expected ranges that account for seasonality help.</li>
+  </ul>
+  <div class="callout">
+    <strong>Illustrative example</strong>
+    Three alerts fire on the same morning: verification wait time is up, first invoices are down and "where is my account" contacts are rising. Each goes to a different team. Seen together, they are one problem with one origin.
+  </div>
+
+  <h2>How it relates to business observability</h2>
+  <p>Business observability builds on operational intelligence by adding an explicit model of the business: the entities, flows, dependencies, objectives and owners that connect one signal to another. The goal shifts from "alert when a number moves" to "understand what changed, what it affects and who should act".</p>
+  <p>Panoptes is designed to provide that model through the <a href="/platform/business-graph/">Business Graph</a>, surface meaningful change with <a href="/platform/anomaly-detection/">Anomaly Detection</a> using expected ranges rather than fixed thresholds, and bring the result into one ranked operating view in the <a href="/platform/command-center/">Command Center</a>.</p>
+</KnowledgeArticle>

@@ -1,4 +1,5 @@
 ---
+import { LEGAL } from '../data/legal';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DemoDashboard from '../components/DemoDashboard.astro';
 import BusinessGraph from '../components/BusinessGraph.astro';
@@ -9,7 +10,7 @@ import Tabs from '../components/Tabs.astro';
 import TabPanel from '../components/TabPanel.astro';
 import Icon from '../components/Icon.astro';
 import CTA from '../components/CTA.astro';
-import { PLATFORM, SITE } from '../data/site';
+import { INDUSTRIES, PLATFORM, SITE } from '../data/site';
 
 const capabilityText: Record<string, string> = {
   'Business Graph': 'Model customers, orders, payments, workflows and teams as one connected graph, so a change in one place can be traced to its consequences elsewhere.',
@@ -82,7 +83,8 @@ const trust = [
 ];
 
 const schema = [
-  { '@type': 'Organization', '@id': `${SITE.origin}/#org`, name: 'Panoptes', url: SITE.origin, logo: `${SITE.origin}/logos/png/panoptes-symbol-purple-512.png`, email: SITE.salesEmail,
+  { '@type': 'Organization', '@id': `${SITE.origin}/#org`, name: 'Panoptes', legalName: LEGAL.entityName, url: SITE.origin, logo: `${SITE.origin}/logos/png/panoptes-symbol-purple-512.png`, email: SITE.salesEmail,
+    address: { '@type': 'PostalAddress', streetAddress: 'Suite 5304, 3rd Floor, 18 Forum Lane, Camana Bay', addressLocality: 'Grand Cayman', postalCode: 'KY1-1106', addressCountry: 'KY' },
     contactPoint: { '@type': 'ContactPoint', contactType: 'sales', email: SITE.salesEmail } },
   { '@type': 'WebSite', '@id': `${SITE.origin}/#website`, name: 'Panoptes', url: SITE.origin, publisher: { '@id': `${SITE.origin}/#org` } },
   { '@type': 'SoftwareApplication', name: 'Panoptes', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', url: SITE.origin,
@@ -241,6 +243,7 @@ const schema = [
           </a>
         ))}
       </div>
+      <p class="ind-links reveal"><span class="muted">By industry:</span> {INDUSTRIES.map((i, n) => <>{n > 0 && ' · '}<a href={i.href}>{i.label}</a></>)} · <a href="/solutions/industries/">All industries</a></p>
     </div>
   </section>
 
@@ -273,7 +276,7 @@ const schema = [
           <h2>Observing a business is a responsibility.</h2>
           <p class="lede">A model of how your business runs is among the most sensitive things you own. Panoptes is designed around control, ownership and accountability from the start.</p>
           <p class="muted small">Panoptes observes business processes and outcomes — not individuals. We describe design principles here; specific certifications and contractual commitments are discussed directly during evaluation.</p>
-          <a href="/integrations/security-governance/" class="link-arrow">Security &amp; governance</a>
+          <div class="btn-row trust-links"><a href="/trust/" class="link-arrow">Trust center</a><a href="/integrations/security-governance/" class="link-arrow">Security &amp; governance</a></div>
         </div>
         <div class="grid grid-2">
           {trust.map((t) => (
@@ -300,6 +303,7 @@ const schema = [
           { h: '/resources/from-dashboards-to-decisions/', t: 'From dashboards to decisions', d: 'Why more dashboards rarely produce better decisions — and what does.', i: 'target' },
         ].map((r) => <FeatureCard title={r.t} text={r.d} href={r.h} icon={r.i} cta="Read the guide" />)}
       </div>
+      <p class="mt-2 res-more"><a class="link-arrow" href="/resources/">All guides</a> <a class="link-arrow" href="/resources/knowledge/">Knowledge center: what is process mining, order to cash and more</a></p>
     </div>
   </section>
 
@@ -317,6 +321,9 @@ const schema = [
   .hero-visual { margin-top: clamp(40px, 6vw, 72px); }
   .hero-note { text-align: center; margin-top: 1rem; }
 
+  .ind-links { margin-top: 1.6rem; line-height: 1.9; }
+  .trust-links { gap: 8px 24px; }
+  .res-more { display: flex; flex-wrap: wrap; gap: 8px 28px; }
   .compare { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 16px; align-items: stretch; }
   .cmp { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; background: var(--surface); display: flex; flex-direction: column; }
   .cmp h3 { font-size: 1.35rem; }

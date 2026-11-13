@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import RelatedLinks from '../../../components/RelatedLinks.astro';
+import Icon from '../../../components/Icon.astro';
+import CTA from '../../../components/CTA.astro';
+import { KNOWLEDGE, SITE } from '../../../data/site';
+
+const crumbs = [{ label: 'Resources', href: '/resources/' }, { label: 'Knowledge center', href: '/resources/knowledge/' }];
+const byHref = (slug: string) => KNOWLEDGE.find((k) => k.href === `/resources/knowledge/${slug}/`)!;
+const groups = [
+  { title: 'Processes and operations', intro: 'How work actually flows, and how to see it while it runs.', items: ['what-is-process-mining', 'what-is-operational-intelligence', 'what-is-order-to-cash'].map(byHref) },
+  { title: 'Customers and decisions', intro: 'Following customers end to end, and making decisions that can be checked.', items: ['what-is-customer-journey-analytics', 'what-is-decision-intelligence'].map(byHref) },
+  { title: 'Data and definitions', intro: 'Making sure every team calculates the same measure the same way.', items: ['what-is-a-semantic-layer'].map(byHref) },
+];
+const listed = new Set(groups.flatMap((g) => g.items.map((i) => i.href)));
+const ungrouped = KNOWLEDGE.filter((k) => !listed.has(k.href));
+if (ungrouped.length) groups.push({ title: 'More explainers', intro: 'Further definitions.', items: ungrouped });
+
+const schema = {
+  '@type': 'CollectionPage',
+  name: 'Knowledge center',
+  description: 'Plain-language explainers of the operational, data and decision-making terms that sit around business observability.',
+  url: new URL('/resources/knowledge/', SITE.origin).href,
+  inLanguage: 'en-GB',
+  hasPart: KNOWLEDGE.map((k) => ({ '@type': 'Article', headline: k.label, url: new URL(k.href, SITE.origin).href })),
+};
+---
+<BaseLayout
+  title="Knowledge Center: Operations and Data Explained"
+  description="Knowledge center: plain-language answers to “what is process mining, operational intelligence, order to cash, a semantic layer?” and related terms."
+  ogImage="/social/og-resources.png"
+  breadcrumbs={crumbs}
+  schema={schema}
+>
+  <PageHero
+    eyebrow="Resources · Knowledge center"
+    title="Knowledge center: <span class='gradient-text'>the terms around business observability</span>"
+    lede="Short, direct explainers of the disciplines that sit next to business observability — what each one is, how it works, where it stops, and how they fit together. Each starts with a one-paragraph definition you can quote."
+    breadcrumbs={crumbs}
+  >
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/resources/">Long-form guides</a>
+      <a class="btn" href="/resources/business-observability-glossary/">Glossary</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container">
+      {groups.map((g) => (
+        <div class="kc-group">
+          <div class="kc-head">
+            <h2>{g.title}</h2>
+            <p class="muted">{g.intro}</p>
+          </div>
+          <ul class="kc-grid" role="list">
+            {g.items.map((k) => (
+              <li>
+                <a href={k.href} class="card card-link kc-card reveal">
+                  <span class="icon-tile"><Icon name={k.icon ?? 'book'} /></span>
+                  <h3>{k.label}</h3>
+                  <p class="muted">{k.desc}.</p>
+                  <span class="link-arrow">Read the explainer</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container split split-top">
+      <div>
+        <SectionHead eyebrow="How to use this section" title="Explainers, guides and the glossary" />
+        <ul class="checklist mt-1">
+          <li><strong>Knowledge center</strong> — one term per page, answered directly: what it is, how it works, its limits.</li>
+          <li><strong><a href="/resources/">Guides</a></strong> — long-form reading on business observability itself, from first principles to practice.</li>
+          <li><strong><a href="/resources/business-observability-glossary/">Glossary</a></strong> — one-line definitions of the vocabulary used across the site.</li>
+          <li><strong><a href="/blog/">Blog</a></strong> — shorter articles and analysis.</li>
+        </ul>
+      </div>
+      <RelatedLinks eyebrow="Start here" title="New to business observability?" items={[
+        { label: 'Business observability overview', href: '/business-observability/', desc: 'The category, in one page', icon: 'eye' },
+        { label: 'What is business observability?', href: '/resources/what-is-business-observability/', desc: 'The complete introduction', icon: 'book' },
+        { label: 'Business observability vs BI', href: '/resources/business-observability-vs-bi/', desc: 'How it differs from reporting', icon: 'chart' },
+        { label: 'Solutions by industry', href: '/solutions/industries/', desc: 'What to observe in your sector', icon: 'building' },
+      ]} />
+    </div>
+  </section>
+
+  <CTA title="See the ideas on your own data." text="Bring one process or journey and we will show how Panoptes is designed to model it, observe it and explain what changes." />
+</BaseLayout>
+
+<style>
+  .kc-group + .kc-group { margin-top: clamp(40px, 5vw, 64px); }
+  .kc-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .kc-head h2 { font-size: clamp(1.35rem, 2.2vw, 1.7rem); margin: 0; }
+  .kc-head p { margin: 0; }
+  .kc-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .kc-card { height: 100%; display: flex; flex-direction: column; }
+  .kc-card h3 { margin-top: .8rem; }
+  .kc-card .link-arrow { margin-top: auto; padding-top: .6rem; }
+  @media (max-width: 1024px) { .kc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .kc-grid { grid-template-columns: minmax(0, 1fr); } }
+</style>

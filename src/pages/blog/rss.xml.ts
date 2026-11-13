@@ -12,11 +12,12 @@ export const GET: APIRoute = async () => {
       <link>${p.url}</link>
       <guid isPermaLink="true">${p.url}</guid>
       <description>${esc(p.description)}</description>
+      <dc:creator>${esc(p.author.name)}</dc:creator>
       <category>${esc(p.category.label)}</category>
       <pubDate>${p.published.toUTCString()}</pubDate>
     </item>`).join('\n');
   const body = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>${esc(BLOG_TITLE)}</title>
     <link>${home}</link>

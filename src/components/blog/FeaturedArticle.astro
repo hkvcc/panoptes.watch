@@ -11,7 +11,7 @@ const { post } = Astro.props;
       <h2 id="fa-title" class="fa-title"><a href={post.href} class="fa-link">{post.heading}</a></h2>
       <p class="fa-desc">{post.description}</p>
       <p class="fa-meta">
-        <span>{post.author}</span><span aria-hidden="true">·</span>
+        <span class="fa-byline"><a href={post.author.href} class="fa-author" rel="author">{post.author.name}</a>, {post.author.role}</span><span aria-hidden="true">·</span>
         <time datetime={isoDate(post.published)}>{formatDate(post.published)}</time><span aria-hidden="true">·</span>
         <span>{post.minutes} min read</span>
       </p>
@@ -34,6 +34,9 @@ const { post } = Astro.props;
   .fa-link:focus-visible { outline: none; }
   .fa-desc { color: var(--text-2); font-size: 1.05rem; line-height: 1.6; margin: 0 0 1.4rem; max-width: 56ch; }
   .fa-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 1.6rem; font: 500 .78rem/1.4 var(--font-mono); color: var(--text-3); }
+  .fa-byline { position: relative; z-index: 1; } /* above the title link's whole-card overlay */
+  .fa-author { color: var(--text-2); font-weight: 600; text-decoration: none; }
+  .fa-author:hover { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
   .fa-body .link-arrow { margin-top: auto; }
   .fa-visual { border-left: 1px solid var(--border); }
   @media (max-width: 860px) {

@@ -45,8 +45,22 @@ function layout(f, text, size, ls = 0) {
   }
   return { glyphs, width: x - ls };
 }
+// Serialise path commands ourselves: opentype.js 2.0's toPathData() can emit "NaN" for valid
+// commands (it corrupted several social-image headlines), so its output is not used.
+const num = (v) => { if (!Number.isFinite(v)) throw new Error(`Non-finite glyph coordinate: ${v}`); return String(Math.round(v * 100) / 100); };
+function pathData(commands) {
+  return commands.map((c) => {
+    switch (c.type) {
+      case 'M': case 'L': return `${c.type}${num(c.x)} ${num(c.y)}`;
+      case 'Q': return `Q${num(c.x1)} ${num(c.y1)} ${num(c.x)} ${num(c.y)}`;
+      case 'C': return `C${num(c.x1)} ${num(c.y1)} ${num(c.x2)} ${num(c.y2)} ${num(c.x)} ${num(c.y)}`;
+      case 'Z': return 'Z';
+      default: throw new Error(`Unknown path command ${c.type}`);
+    }
+  }).join('');
+}
 function textPath(f, text, size, x, y, fill, ls = 0) {
-  const d = layout(f, text, size, ls).glyphs.map(({ g, x: gx }) => g.getPath(x + gx, y, size).toPathData(2)).join('');
+  const d = layout(f, text, size, ls).glyphs.map(({ g, x: gx }) => pathData(g.getPath(x + gx, y, size).commands)).join('');
   return `<path d="${d}" fill="${fill}"/>`;
 }
 const textWidth = (f, text, size, ls = 0) => layout(f, text, size, ls).width;
@@ -180,5 +194,10 @@ for (const [name, cfg] of Object.entries(social)) {
   const svg = ogSvg(cfg);
   fs.writeFileSync(pub('social', `${name}.svg`), svg);
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9, palette: false }).toFile(pub('social', `${name}.png`));
+}
+for (const dir of ['social', 'logos']) {
+  for (const file of fs.readdirSync(pub(dir)).filter((f) => f.endsWith('.svg'))) {
+    if (fs.readFileSync(pub(dir, file), 'utf8').includes('NaN')) throw new Error(`public/${dir}/${file} contains NaN`);
+  }
 }
 console.log('Brand assets generated.');

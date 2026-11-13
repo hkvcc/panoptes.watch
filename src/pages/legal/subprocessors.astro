@@ -1,0 +1,58 @@
+---
+import DocPage from '../../components/company/DocPage.astro';
+import { LEGAL, lastUpdatedLabel, operatorHtml } from '../../data/legal';
+import { SITE } from '../../data/site';
+
+const crumbs = [{ label: 'Legal', href: '/legal/' }, { label: 'Website service providers', href: '/legal/subprocessors/' }];
+const mail = `mailto:${LEGAL.privacyEmail}?subject=Privacy`;
+---
+<DocPage
+  title="Website service providers"
+  metaTitle="Website service providers and subprocessors"
+  description="The third parties that process personal data for panoptes.watch — Cloudflare and Resend — with what each one does, where it is based and the data involved."
+  eyebrow="Legal · Privacy"
+  lede="The companies that process personal data on our behalf to run this website, what each one does, where it is based and which data it handles."
+  breadcrumbs={crumbs}
+  ogImage="/social/og-company.png"
+  updated={lastUpdatedLabel}
+  legalNav
+>
+  <h2 id="about">About this list</h2>
+  <p>To run the panoptes.watch website, <Fragment set:html={operatorHtml()} /> uses a small number of service providers that process personal data on our behalf. This page lists them. It covers the website and the enquiries sent through it only; how we handle that data is explained in our <a href="/privacy/">privacy notice</a>.</p>
+  <p>This list does not cover the Panoptes product. The subprocessors that may process customer data in the product are provided to each customer under its agreement with us. If you are a customer or evaluating Panoptes and need that information, email <a href={`mailto:${SITE.salesEmail}`}>{SITE.salesEmail}</a>.</p>
+
+  <h2 id="providers">Service providers for this website</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Provider</th><th>Purpose</th><th>Personal data involved</th><th>Headquarters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Cloudflare, Inc.</strong></td>
+          <td>Website hosting and content delivery; runs the server-side function that handles form submissions; security and protection against abuse</td>
+          <td>Technical request data (such as IP address, user agent, page requested and time); form submissions while they are processed; security cookies where set</td>
+          <td>United States; processing takes place across Cloudflare’s global network</td>
+        </tr>
+        <tr>
+          <td><strong>{LEGAL.emailProvider}</strong></td>
+          <td>Delivers contact and demo form submissions to our team by email</td>
+          <td>The contents of the submission: name, email address, company details, message and the other form fields, plus the time, sending site address and approximate country</td>
+          <td>United States</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>We also receive and answer messages using {LEGAL.mailboxProvider}, which stores the emails we send and receive.</p>
+
+  <h2 id="not-used">Services we do not use</h2>
+  <p>The website uses no analytics, advertising, tag management, session recording, chat widget, social media plugin or embedded third-party content providers, so none appears on this list. Fonts, images and scripts are served from our own domain. Share links to other services are ordinary links that send nothing unless you follow them.</p>
+
+  <h2 id="safeguards">How we protect data shared with providers</h2>
+  <p>Each provider processes personal data to deliver its service to us, under the terms it offers its business customers, which limit how it may use that data. Because both providers are based in the United States, the safeguards for international transfers described in the <a href="/privacy/#international-transfers">privacy notice</a> apply.</p>
+
+  <h2 id="updates">Changes to this list</h2>
+  <p>We will update this page before a new provider begins processing personal data for the website. The “last updated” date at the top shows when the list last changed. Questions about it: <a href={mail}>{LEGAL.privacyEmail}</a>.</p>
+</DocPage>
+
+<style>
+  .table-wrap { overflow-x: auto; }
+</style>
