@@ -41,6 +41,9 @@ set; retried on a later run) and `merged` (cannibalisation: consolidated into
    BO-02/04/10/11 and BO-06/09). If a brief should be consolidated, set
    `status: merged`, `merged_into: BO-XX`, add a qa_finding with the evidence, and
    take the next brief instead. Never write near-duplicates to hit quota.
+   Also check the **live site**: `config.json` → `cannibalisation_watchlist` lists
+   existing panoptes.watch pages that overlap specific briefs; read them first and
+   follow `cannibalisation_note`. Link to relevant existing pages (they are live).
 5. **Research.** Open every `external_references` URL in the brief (WebFetch). Only
    cite URLs that resolved and actually support the sentence you attach them to.
    Record them in `validated_external_urls`. Never invent sources, quotes, statistics,
