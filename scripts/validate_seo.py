@@ -78,7 +78,7 @@ def main():
     url_map = config["url_map"]
     cap = config.get("max_articles_per_run", 2)
     content_dir = ROOT / config.get("content_dir", "content/blog")
-    author = config.get("author_byline")
+    author_map = config.get("author_map") or {}
     categories = set(config.get("categories") or [])
     route_set = routes(content_dir)
 
@@ -155,15 +155,17 @@ def main():
             err(f"{rid}: front matter slug/canonical_url do not match {path}")
         if fm.get("draft") == "true":
             err(f"{rid}: shipped record but article is a draft")
-        if author and fm.get("author") != author:
-            err(f"{rid}: author {fm.get('author')!r} should be {author!r}")
+        if rid in author_map and fm.get("author") != author_map[rid]:
+            err(f"{rid}: author {fm.get('author')!r} should be {author_map[rid]!r} (config author_map)")
         if categories and fm.get("category") not in categories:
             err(f"{rid}: category {fm.get('category')!r} not in config categories")
         for bad in BANNED:
             if bad.lower() in text.lower():
                 err(f"{rid}: contains banned/placeholder text {bad!r}")
         tl, ml = len(fm.get("title", "")), len(fm.get("meta_description", ""))
-        if not 30 <= tl <= 70:
+        if "Panoptes" in fm.get("title", "") and tl > 60 or "Panoptes" not in fm.get("title", "") and tl > 49:
+            err(f"{rid}: SEO title is {tl} chars; max 49 (site appends ' | Panoptes'), or 60 if it names Panoptes")
+        elif tl < 25:
             warn(f"{rid}: SEO title length {tl}")
         if not 110 <= ml <= 170:
             warn(f"{rid}: meta description length {ml}")

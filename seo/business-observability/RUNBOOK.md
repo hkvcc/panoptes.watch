@@ -19,7 +19,7 @@ the pillar for every "link to BO-01" instruction.
 
 | Path | Purpose |
 |---|---|
-| `seo/business-observability/config.json` | Voice, byline, categories, url_map, overlap watchlist |
+| `seo/business-observability/config.json` | Voice, author_map, categories, url_map, overlap watchlist |
 | `seo/business-observability/PRODUCT_TRUTH.md` | What may be said about Panoptes (proposed; design intent only) |
 | `seo/business-observability/records/BO-XX.json` | One state record per brief (JSON contract) |
 | `content/blog/<slug>.md` | The article. Adding it is the whole publishing step |
@@ -31,6 +31,11 @@ Record `status` values: `queued` → `ready` (merged into main) → `live` (cano
 URL fetched and confirmed). Also `held` (failed QA; `hold_reason`; retried later),
 `merged` (consolidated into another brief, `merged_into`), and `covered` (an existing
 site page already serves this intent, `covered_by`).
+
+**Scope note.** The scheduled task's prompt may mention a growth backlog
+(`seo/growth/backlog.json`) and `npm run audit:seo`. If either does not exist in the
+repo, skip it, record it in RUN_LOG as `not_run (missing)`, and carry on with the
+campaign briefs. Missing optional items are never a reason to ship nothing.
 
 ## Each run, in order
 
@@ -65,12 +70,12 @@ site page already serves this intent, `covered_by`).
    ```yaml
    ---
    id: "BO-03"
-   title: "SEO title, ~50-60 chars"
+   title: "SEO title, max 49 chars"  # site appends " | Panoptes"; build fails if longer
    meta_description: "~140-160 chars; also the standfirst and card text"
    slug: "/blog/business-observability-tools/"
    canonical_url: "https://panoptes.watch/blog/business-observability-tools/"
    primary_keyword: "business observability tools"
-   author: "Katy Simmons"            # config.json → author_byline
+   author: "kieran-lovell"           # slug from config.json → author_map[id]
    reviewed: "YYYY-MM-DD"            # today
    published: "YYYY-MM-DD"           # today
    category: "Buying and evaluation" # one of config.json → categories
