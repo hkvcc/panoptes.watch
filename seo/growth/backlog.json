@@ -293,9 +293,30 @@
         "/platform/command-center/"
       ],
       "nearest_existing_page": "/resources/from-dashboards-to-decisions/ argues for decision-oriented monitoring in general; this article is a meeting-format how-to for one specific ritual.",
-      "status": "queued",
-      "shipped_on": null,
-      "qa_findings": [],
+      "status": "shipped",
+      "shipped_on": "2026-11-25",
+      "qa_findings": [
+        {
+          "check": "cannibalisation",
+          "result": "pass",
+          "note": "No existing page or post covers WBR format; /solutions/executives/ and the AI chief of staff post are linked, not duplicated."
+        },
+        {
+          "check": "external_sources",
+          "result": "not_run",
+          "note": "Working Backwards, Wikipedia hosts unreachable from this session; article cites no external URLs and attributes nothing to third parties."
+        },
+        {
+          "check": "no_invented_claims",
+          "result": "pass",
+          "note": "Metrics table labelled hypothetical; no statistics or customers."
+        },
+        {
+          "check": "internal_links",
+          "result": "pass",
+          "note": "Links to existing routes only."
+        }
+      ],
       "hold_reason": null,
       "covered_by": null
     },
@@ -807,7 +828,7 @@
         {
           "name": "Wikipedia: Little's law",
           "url": "https://en.wikipedia.org/wiki/Little%27s_law",
-          "supports": "Little's law L = λW"
+          "supports": "Little's law L = \u03bbW"
         }
       ],
       "internal_links_to": [
@@ -1039,7 +1060,7 @@
         {
           "name": "Wikipedia: Little's law",
           "url": "https://en.wikipedia.org/wiki/Little%27s_law",
-          "supports": "Little's law L = λW"
+          "supports": "Little's law L = \u03bbW"
         },
         {
           "name": "Wikipedia: Capacity management",

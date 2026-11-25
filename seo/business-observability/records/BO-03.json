@@ -1,16 +1,22 @@
 {
   "id": "BO-03",
   "keyword": "business observability tools",
-  "status": "queued",
+  "status": "held",
   "markdown": null,
   "metadata": null,
   "validated_external_urls": [],
   "validated_internal_urls": [],
-  "qa_findings": [],
+  "qa_findings": [
+    {
+      "check": "external_sources",
+      "result": "fail",
+      "note": "dynatrace.com, gartner.com, ibm.com unreachable (ENOTFOUND) on 2026-11-25."
+    }
+  ],
   "canonical_url": null,
   "publish_timestamp": null,
   "next_link_update_tasks": [],
-  "hold_reason": null,
+  "hold_reason": "Brief requires evidence-backed vendor/category claims from cited pages (Gartner, Dynatrace, IBM). All external hosts are unreachable from this session (DNS failure), so no claim can be verified. Retry when egress to those hosts is allowed.",
   "merged_into": null,
   "owner": "seo-agent",
   "covered_by": null
