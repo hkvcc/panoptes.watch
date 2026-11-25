@@ -277,6 +277,12 @@ and says in the summary that the backlog needs human attention.
   because the validator checks it. Definitions are neutral and 1–3 sentences, linking
   to a site page where one exists.
 
+## Writing style (applies to every article, page and glossary entry)
+
+- **No em dashes** (the long dash character) and no spaced hyphens used as dashes. Use a full stop, comma, colon, brackets or a rewrite instead. Check with `grep -n "—" <file>` before committing; the count must be 0.
+- **Readability:** aim for a Flesch Reading Ease of about 60 or higher (plain English, school year 8 to 9). Average sentence length 15 to 18 words, none over 30. Prefer short, common words ("use", not "utilise"; "help", not "facilitate"). One idea per paragraph, paragraphs of 1 to 4 sentences. Define jargon once, in plain words. Compute the score (for example with a small script) and record it in `qa_findings` as `flesch_reading_ease`; if it is below 55, rewrite before shipping.
+- **Human voice:** write like a knowledgeable colleague talking to one reader. Use "you" and "we", contractions where natural, concrete examples, and an opinion where the evidence supports one. Vary sentence length. Cut filler openers ("In today's fast-paced world"), stock transitions ("Moreover", "Furthermore", "In conclusion"), empty intensifiers, rule-of-three padding and bulleted lists where a sentence would do. No headings that just restate the previous one. Do not drop the accuracy rules: claims stay sourced, Panoptes capabilities stay as design intent.
+
 ## Hard limits
 
 - At most 2 new items per run (campaign and backlog combined; the validator enforces
