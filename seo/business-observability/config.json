@@ -59,11 +59,17 @@
     "/use-cases/revenue-leakage/",
     "/use-cases/sla-monitoring/",
     "/blog/",
-    "/legal/"
+    "/legal/",
+    "/solutions/industries/",
+    "/resources/knowledge/",
+    "/company/team/",
+    "/trust/",
+    "/legal/acceptable-use/",
+    "/legal/subprocessors/"
   ],
   "model_note": "Runs on Sonnet 5.5 via a scheduled cloud session (fresh session per run); see RUNBOOK.md.",
   "scheduled_task_id": "trig_01ShpDYjhxvZPtGgZnF6G93S",
-  "schedule": "Daily 10:37 Europe/London, fresh cloud session per run",
+  "schedule": "Daily 10:37 Europe/London, fresh cloud session per run; ships 1-2 items per run from the campaign briefs and seo/growth/backlog.json",
   "cannibalisation_watchlist": {
     "BO-01": [
       "/business-observability/",
@@ -71,6 +77,9 @@
     ],
     "BO-02": [
       "/platform/"
+    ],
+    "BO-05": [
+      "/resources/knowledge/what-is-operational-intelligence/"
     ],
     "BO-06": [
       "/resources/business-process-monitoring/",
@@ -80,7 +89,9 @@
       "/resources/business-observability-vs-system-observability/"
     ],
     "BO-08": [
-      "/resources/business-health-metrics/"
+      "/resources/business-health-metrics/",
+      "/blog/how-to-build-a-kpi-tree/",
+      "/blog/kpi-definition-template/"
     ],
     "BO-09": [
       "/resources/business-process-monitoring/"
@@ -89,7 +100,8 @@
       "/solutions/"
     ],
     "BO-12": [
-      "/use-cases/"
+      "/use-cases/",
+      "/solutions/industries/"
     ],
     "BO-14": [
       "/resources/from-dashboards-to-decisions/",
@@ -99,8 +111,19 @@
       "/platform/ai-intelligence/",
       "/platform/anomaly-detection/"
     ],
+    "BO-16": [
+      "/blog/semantic-layer-vs-business-model/",
+      "/resources/knowledge/what-is-a-semantic-layer/"
+    ],
     "BO-17": [
-      "/resources/business-health-metrics/"
+      "/resources/business-health-metrics/",
+      "/blog/kpi-definition-template/"
+    ],
+    "BO-19": [
+      "/resources/knowledge/what-is-process-mining/"
+    ],
+    "BO-20": [
+      "/solutions/industries/financial-services/"
     ]
   },
   "cannibalisation_note": "Before writing a watchlisted brief, read the listed live pages. If the brief would substantially duplicate one, either sharpen the angle so it is clearly distinct and link to the existing page, or mark the brief merged with merged_into set to the closest brief and explain in qa_findings, recommending the existing page as canonical.",
@@ -138,7 +161,8 @@
     "Operating cadence",
     "Architecture and data",
     "Buying and evaluation",
-    "AI and automation"
+    "AI and automation",
+    "Industries"
   ],
   "categories_note": "One category per article. The first four are already used by existing posts; prefer them and only use the last three when none fits.",
   "authors": {

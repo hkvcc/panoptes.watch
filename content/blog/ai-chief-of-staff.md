@@ -3,7 +3,7 @@ title: "AI Chief of Staff: What It Should Actually Do"
 meta_description: "What an AI chief of staff should do for a leadership team: run the operating cadence, prepare reviews, track commitments and follow up, with people deciding."
 author: "florian-andrews"
 published: "2026-11-11"
-category: "Operating cadence"
+category: "AI and automation"
 tags: ["AI chief of staff", "Agentic AI", "Operating cadence", "Leadership"]
 primary_keyword: "AI chief of staff"
 ---

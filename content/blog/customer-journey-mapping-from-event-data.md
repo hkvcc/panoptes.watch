@@ -3,7 +3,7 @@ title: "Customer Journey Mapping From Event Data"
 meta_description: "How to map customer journeys from event data, not workshops: pick the journey, stitch identities, define stages, measure transitions and read the friction."
 author: "florian-andrews"
 published: "2026-10-14"
-category: "Journeys and processes"
+category: "Processes and journeys"
 tags: ["Customer journeys", "Journey mapping", "Event data", "Customer experience"]
 primary_keyword: "customer journey mapping from event data"
 ---

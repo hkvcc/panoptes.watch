@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Panoptes — Observability for your entire business. Marketing website (Astro, static, Cloudflare Pages).",
+  "description": "Panoptes \u2014 Observability for your entire business. Marketing website (Astro, static, Cloudflare Pages).",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/postbuild.mjs",
@@ -12,7 +12,8 @@
     "check:links": "node scripts/check-links.mjs",
     "test": "node --experimental-strip-types --no-warnings=ExperimentalWarning --test --test-concurrency=1 tests/*.test.ts tests/blog-build.test.mjs tests/blog-e2e.test.mjs",
     "test:unit": "node --experimental-strip-types --no-warnings=ExperimentalWarning --test tests/*.test.ts",
-    "validate:seo": "python3 scripts/validate_seo.py"
+    "validate:seo": "python3 scripts/validate_seo.py",
+    "audit:seo": "node scripts/seo-audit.mjs"
   },
   "engines": {
     "node": ">=18.17"

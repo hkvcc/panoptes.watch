@@ -3,7 +3,7 @@ title: "Semantic Layer vs Business Model, Explained"
 meta_description: "A semantic layer makes metrics consistent; a business model describes how the business works. What each does, where they overlap and when you need both."
 author: "kieran-lovell"
 published: "2026-09-30"
-category: "Metrics and modelling"
+category: "Architecture and data"
 tags: ["Semantic layer", "Business modelling", "Business intelligence", "Data modelling"]
 primary_keyword: "semantic layer vs business model"
 featured: true

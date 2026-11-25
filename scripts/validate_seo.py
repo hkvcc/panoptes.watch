@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Validate the business-observability SEO campaign before merging to main.
+"""Validate the daily site-growth work (SEO campaign + growth backlog) before merging to main.
 
 Merging to main deploys panoptes.watch, so this is a publishing gate. It checks
 the per-article records (JSON contract), each shipped Markdown article in
 content/blog/, internal links against real routes and blog posts, external links
-against the validated list, byline/category, and the 2-per-day cap. The site's
+against the validated list, byline alternation/category, the growth backlog
+(seo/growth/backlog.json) and the combined 2-items-per-day cap. The site's
 own `npm test` and `npm run build` enforce the front-matter schema
 (src/lib/blog-schema.ts); run them too. Exit code 1 on any error. Stdlib only.
 """
@@ -16,6 +17,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CAMPAIGN = ROOT / "seo" / "business-observability"
+BACKLOG = ROOT / "seo" / "growth" / "backlog.json"
+SITE_TS = ROOT / "src" / "data" / "site.ts"
+GLOSSARY = ROOT / "src" / "pages" / "resources" / "business-observability-glossary.astro"
+GR_TYPES = {"knowledge", "blog", "industry", "use-case", "role", "glossary"}
+GR_STATUSES = {"queued", "held", "shipped", "covered"}
+# Where each page type must be registered so hubs and navigation pick it up.
+GR_REGISTRY = {"knowledge": "KNOWLEDGE", "industry": "INDUSTRIES", "use-case": "USE_CASES", "role": "SOLUTIONS"}
 PAGES = ROOT / "src" / "pages"
 STATUSES = {"queued", "held", "ready", "live", "merged", "covered"}
 RECORD_KEYS = {
@@ -69,6 +77,87 @@ def parse_front_matter(text):
 
 def strip_code(body):
     return re.sub(r"```.*?```", "", body, flags=re.S)
+
+
+def check_bylines(content_dir, authors, start_date):
+    """Posts published on/after start_date must alternate authors, in (published, filename) order."""
+    if not authors:
+        return
+    posts = []
+    for p in sorted(content_dir.glob("*.md")):
+        if p.name.startswith("_"):
+            continue
+        fm, _ = parse_front_matter(p.read_text())
+        fm = fm or {}
+        if fm.get("draft") == "true":
+            continue
+        posts.append(((fm.get("published") or fm.get("reviewed") or "")[:10], p.stem, fm.get("author")))
+    posts.sort()
+    for i, (date, slug, author) in enumerate(posts):
+        if date < start_date:
+            continue
+        if author not in authors:
+            err(f"blog/{slug}: author {author!r} not in config authors {authors}")
+        elif i and posts[i - 1][2] == author:
+            err(f"blog/{slug}: byline should alternate; previous post {posts[i - 1][1]!r} is also by {author!r} "
+                f"(next author must be the one who did not write the last post)")
+
+
+def check_backlog(route_set):
+    """Validates seo/growth/backlog.json; returns shipped-item counts per day."""
+    shipped_per_day = Counter()
+    if not BACKLOG.is_file():
+        warn("seo/growth/backlog.json not found")
+        return shipped_per_day
+    data = json.loads(BACKLOG.read_text())
+    items = data.get("items") or []
+    site_ts = SITE_TS.read_text()
+    glossary = GLOSSARY.read_text() if GLOSSARY.is_file() else ""
+    seen = {"id": set(), "priority": set(), "url": set(), "keyword": set()}
+    for it in items:
+        gid = it.get("id", "?")
+        for k in seen:
+            v = it.get(k)
+            v = v.lower() if isinstance(v, str) and k == "keyword" else v
+            if v in seen[k] and not (k == "url" and it.get("type") == "glossary"):
+                err(f"{gid}: duplicate {k} {v!r}")
+            seen[k].add(v)
+        if it.get("type") not in GR_TYPES:
+            err(f"{gid}: bad type {it.get('type')!r}")
+        st = it.get("status")
+        if st not in GR_STATUSES:
+            err(f"{gid}: bad status {st!r}")
+        if len(it.get("meta_title") or "") > 49 and it.get("type") != "glossary":
+            err(f"{gid}: meta_title over 49 chars")
+        for f in it.get("qa_findings") or []:
+            if f.get("result") not in QA_RESULTS:
+                err(f"{gid}: qa_finding {f.get('check')!r} has bad result {f.get('result')!r}")
+        if st == "held" and not it.get("hold_reason"):
+            err(f"{gid}: held without hold_reason")
+        if st == "covered" and (it.get("covered_by") not in route_set or not it.get("qa_findings")):
+            err(f"{gid}: covered needs covered_by (a site route) and evidence in qa_findings")
+        if st != "shipped":
+            continue
+        if not re.match(r"^\d{4}-\d{2}-\d{2}$", it.get("shipped_on") or ""):
+            err(f"{gid}: shipped without shipped_on (YYYY-MM-DD)")
+        else:
+            shipped_per_day[it["shipped_on"]] += 1
+        if not it.get("qa_findings") or any(f.get("result") == "fail" for f in it["qa_findings"]):
+            err(f"{gid}: shipped without passing qa_findings")
+        t, url = it.get("type"), it.get("url", "")
+        if t == "glossary":
+            for term in it.get("terms") or []:
+                if f"term: '{term}'" not in glossary and f'term: "{term}"' not in glossary:
+                    err(f"{gid}: glossary term {term!r} not found in the glossary TERMS")
+            continue
+        if url not in route_set:
+            err(f"{gid}: shipped but {url} is not a built route")
+        reg = GR_REGISTRY.get(t)
+        if reg:
+            m = re.search(rf"export const {reg}\b.*?\n\];", site_ts, flags=re.S)
+            if not m or f"href: '{url}'" not in m.group(0):
+                err(f"{gid}: {url} is not registered in {reg} in src/data/site.ts")
+    return shipped_per_day
 
 
 def main():
@@ -201,16 +290,19 @@ def main():
             elif target not in route_set:
                 err(f"{rid}: internal link to non-existent page {href}")
 
+    check_bylines(content_dir, authors, config.get("start_date", "0000-00-00"))
+    for day, n in check_backlog(route_set).items():
+        per_day[day] += n
     for day, n in per_day.items():
         if n > cap:
-            err(f"{n} articles published on {day} (cap {cap})")
+            err(f"{n} items shipped on {day} (cap {cap} per run/day across campaign and backlog)")
 
     for w in warnings:
         print(f"WARN  {w}")
     for e in errors:
         print(f"ERROR {e}")
     shipped = sum(r.get("status") in {"ready", "live"} for r in records.values())
-    print(f"{len(records)} records, {shipped} shipped, {len(errors)} errors, {len(warnings)} warnings")
+    print(f"{len(records)} campaign records, {shipped} shipped, {len(errors)} errors, {len(warnings)} warnings")
     return 1 if errors else 0
 
 

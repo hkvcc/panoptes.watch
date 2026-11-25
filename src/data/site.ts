@@ -83,6 +83,9 @@ export const KNOWLEDGE: NavLink[] = [
 
 export const BLOG: NavLink = { label: 'Blog', href: '/blog/', desc: 'Articles and analysis on business observability', icon: 'book' };
 
+/** Menus and footer show at most this many links per list; the hub pages list everything, so lists can grow freely. */
+const NAV_MAX = 6;
+
 // Guides shown in the Resources mega-menu (looked up by href so appended guides do not shift it).
 const NAV_GUIDES = ['what-is-business-observability', 'business-observability-vs-bi', 'business-observability-vs-system-observability', 'business-process-monitoring', 'business-health-metrics', 'business-observability-glossary']
   .map((slug) => RESOURCES.find((r) => r.href === `/resources/${slug}/`))
@@ -96,12 +99,12 @@ export const NAV: NavGroup[] = [
   },
   {
     label: 'Solutions', href: '/solutions/', intro: 'Business observability for the people who run the business.',
-    columns: [{ title: 'By role', links: SOLUTIONS }, { title: 'By industry', href: '/solutions/industries/', links: INDUSTRIES }],
+    columns: [{ title: 'By role', links: SOLUTIONS.slice(0, NAV_MAX) }, { title: 'By industry', href: '/solutions/industries/', links: INDUSTRIES.slice(0, NAV_MAX) }],
     feature: { title: 'What is Business Observability?', text: 'The category, explained in one page: what it is, what it is not, and why it matters now.', href: '/business-observability/', cta: 'Read the overview' },
   },
   {
     label: 'Use Cases', href: '/use-cases/', intro: 'Concrete problems, told as investigations.',
-    columns: [{ title: 'Use cases', links: USE_CASES }],
+    columns: [{ title: 'Use cases', links: USE_CASES.slice(0, NAV_MAX) }],
   },
   {
     label: 'Integrations', href: '/integrations/', intro: 'Bring fragmented systems into one model.',
@@ -111,7 +114,7 @@ export const NAV: NavGroup[] = [
     label: 'Resources', href: '/resources/', intro: 'Guides, articles and analysis on business observability.',
     columns: [
       { title: 'Guides', href: '/resources/', links: NAV_GUIDES },
-      { title: 'Knowledge center', href: '/resources/knowledge/', links: KNOWLEDGE },
+      { title: 'Knowledge center', href: '/resources/knowledge/', links: KNOWLEDGE.slice(0, NAV_MAX) },
     ],
     feature: { eyebrow: 'Blog', label: BLOG.label, title: 'Articles and analysis', text: 'Writing on business observability: how operations, revenue and customer outcomes connect.', href: BLOG.href, cta: 'Read the blog' },
   },
@@ -132,9 +135,9 @@ const pick = (links: NavLink[]): FooterLink[] => links.map(({ label, href }) => 
 
 export const FOOTER: { title: string; links: FooterLink[] }[] = [
   { title: 'Platform', links: [{ label: 'Platform overview', href: '/platform/' }, { label: 'How it works', href: '/how-it-works/' }, ...pick(PLATFORM)] },
-  { title: 'Solutions', links: [{ label: 'All solutions', href: '/solutions/' }, ...pick(SOLUTIONS)] },
-  { title: 'Industries', links: [{ label: 'All industries', href: '/solutions/industries/' }, ...pick(INDUSTRIES)] },
-  { title: 'Use cases', links: [{ label: 'All use cases', href: '/use-cases/' }, ...pick(USE_CASES)] },
+  { title: 'Solutions', links: [{ label: 'All solutions', href: '/solutions/' }, ...pick(SOLUTIONS.slice(0, NAV_MAX))] },
+  { title: 'Industries', links: [{ label: 'All industries', href: '/solutions/industries/' }, ...pick(INDUSTRIES.slice(0, NAV_MAX))] },
+  { title: 'Use cases', links: [{ label: 'All use cases', href: '/use-cases/' }, ...pick(USE_CASES.slice(0, NAV_MAX))] },
   { title: 'Integrations', links: [{ label: 'Overview', href: '/integrations/' }, ...pick(INTEGRATIONS.slice(1))] },
   { title: 'Resources', links: [{ label: 'Blog', href: BLOG.href }, { label: 'Business observability', href: '/business-observability/' }, { label: 'Guides', href: '/resources/' }, { label: 'Knowledge center', href: '/resources/knowledge/' }, { label: 'Glossary', href: '/resources/business-observability-glossary/' }] },
   { title: 'Company', links: [{ label: 'About', href: '/company/' }, { label: 'Vision', href: '/company/vision/' }, { label: 'Team', href: '/company/team/' }, { label: 'Trust', href: '/trust/' }, { label: 'Contact', href: '/contact/' }, { label: 'Book a demo', href: '/demo/' }] },

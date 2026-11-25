@@ -3,7 +3,7 @@ title: "Business Process Analysis Before You Automate"
 meta_description: "How to run a business process analysis that tells you what to automate: map the real flow, measure waits and rework, find the constraint, then redesign first."
 author: "florian-andrews"
 published: "2026-09-16"
-category: "Journeys and processes"
+category: "Processes and journeys"
 tags: ["Business process analysis", "Process automation", "Process mapping", "Operations"]
 primary_keyword: "business process analysis"
 ---

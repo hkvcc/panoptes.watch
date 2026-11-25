@@ -3,7 +3,7 @@ title: "How to Build a KPI Tree That Explains Results"
 meta_description: "A practical method for building a KPI tree: choose the outcome, decompose it into drivers that add up, attach owners and expectations, and avoid common traps."
 author: "kieran-lovell"
 published: "2026-09-02"
-category: "Metrics and modelling"
+category: "Metrics and KPIs"
 tags: ["KPI design", "KPI tree", "Driver trees", "Metrics"]
 primary_keyword: "KPI tree"
 ---

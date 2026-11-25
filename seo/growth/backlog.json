@@ -1,0 +1,3139 @@
+{
+  "version": 1,
+  "created": "2026-11-13",
+  "basis": "Priority is set by intent fit and business value, not search volume (no volume data was available and none is implied). Highest: definitional and commercial-investigation queries close to the finance, operations and revenue buyers in PRODUCT_TRUTH section 8, where the observed SERP is vendor-led and leaves a clear gap Panoptes can fill without product claims. Lower: AI-first items (product vision only), healthcare (needs compliance review) and long-tail opinion pieces. Types are interleaved so a daily run alternates formats. SERP notes come from web searches run on 2026-11-13; Datadog's knowledge center and industry pages were used only as a breadth reference for the taxonomy.",
+  "clusters": [
+    {
+      "id": "process-ops",
+      "name": "Business process and operations",
+      "pillar": "/platform/process-intelligence/",
+      "description": "End-to-end processes (O2C, P2P, R2R), exceptions, hand-offs, capacity and incident review. Supports Process Intelligence and the process-monitoring guide without re-targeting \"business process monitoring\" (owned by /resources/business-process-monitoring/ and BO-06/BO-09).",
+      "item_ids": [
+        "GR-002",
+        "GR-011",
+        "GR-012",
+        "GR-015",
+        "GR-016",
+        "GR-019",
+        "GR-024",
+        "GR-036",
+        "GR-038",
+        "GR-039"
+      ]
+    },
+    {
+      "id": "customer-journey",
+      "name": "Customer journey and retention",
+      "pillar": "/platform/journey-intelligence/",
+      "description": "Onboarding, effort, resolution, churn and health scoring, framed from operational events rather than surveys alone.",
+      "item_ids": [
+        "GR-010",
+        "GR-022",
+        "GR-025",
+        "GR-026",
+        "GR-027",
+        "GR-031",
+        "GR-037"
+      ]
+    },
+    {
+      "id": "revenue-finance",
+      "name": "Revenue and finance operations",
+      "pillar": "/solutions/finance/",
+      "description": "Cost to serve, unit economics, DSO, CCC, Q2C, NRR, billing errors and variance. Second hub: /use-cases/revenue-leakage/.",
+      "item_ids": [
+        "GR-001",
+        "GR-004",
+        "GR-006",
+        "GR-007",
+        "GR-008",
+        "GR-013",
+        "GR-017",
+        "GR-018",
+        "GR-020",
+        "GR-033",
+        "GR-034",
+        "GR-035",
+        "GR-052"
+      ]
+    },
+    {
+      "id": "metrics-kpis",
+      "name": "Metrics, KPIs and operating cadence",
+      "pillar": "/resources/business-health-metrics/",
+      "description": "North star, SLA vs SLO, leading indicators, vanity metrics and the weekly business review. Avoids BO-08/BO-17 keywords.",
+      "item_ids": [
+        "GR-003",
+        "GR-028",
+        "GR-029",
+        "GR-046",
+        "GR-047"
+      ]
+    },
+    {
+      "id": "data-foundations",
+      "name": "Data foundations",
+      "pillar": "/platform/business-graph/",
+      "description": "Data observability, data contracts, tracking plans for business events and the data-vs-business triage. Links to the semantic layer page and /integrations/api/.",
+      "item_ids": [
+        "GR-040",
+        "GR-042",
+        "GR-043",
+        "GR-044",
+        "GR-045"
+      ]
+    },
+    {
+      "id": "ai-operations",
+      "name": "AI-first operations (product vision)",
+      "pillar": "/platform/ai-intelligence/",
+      "description": "Agentic AI in operations, context for agents and human oversight. All Panoptes AI statements are product vision per PRODUCT_TRUTH 6H.",
+      "item_ids": [
+        "GR-048",
+        "GR-049",
+        "GR-050",
+        "GR-051"
+      ]
+    },
+    {
+      "id": "industries",
+      "name": "Industries",
+      "pillar": "/solutions/industries/",
+      "description": "Five new industry pages using the existing Industry data model: telecom, professional services, travel and hospitality, energy and utilities, healthcare administrative operations.",
+      "item_ids": [
+        "GR-005",
+        "GR-014",
+        "GR-023",
+        "GR-030",
+        "GR-041"
+      ]
+    },
+    {
+      "id": "roles",
+      "name": "Roles",
+      "pillar": "/solutions/",
+      "description": "RevOps, data and analytics teams, product teams. COO/operations is already served by /solutions/operations/.",
+      "item_ids": [
+        "GR-009",
+        "GR-021",
+        "GR-032"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "GR-001",
+      "type": "knowledge",
+      "cluster": "revenue-finance",
+      "priority": 1,
+      "keyword": "cost to serve",
+      "secondary_keywords": [
+        "cost to serve analysis",
+        "cost to serve model",
+        "cost to serve vs COGS",
+        "cost to serve per customer"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-cost-to-serve/",
+      "meta_title": "What Is Cost to Serve? Definition and Drivers",
+      "h1": "What is cost to serve?",
+      "angle": "Ranking pages are logistics/AP-automation glossaries that stop at a formula. Panoptes can show cost to serve as an operational, not just accounting, number: each driver (contacts, rework, exceptions, failed deliveries, returns) is a business event that can be counted per customer or order, so the figure can be watched as it moves rather than calculated once a year.",
+      "serp_notes": "Observed: vendor glossaries (Hyperbots, Capterra, EasyMetrics, logistics firms) and a few how-to blogs. Mostly definition + generic formula; logistics-centric. Gaps: little on service/SaaS cost to serve, no link between drivers and the operational events that cause them, no caution about allocation arbitrariness.",
+      "outline_h2": [
+        "Cost to serve in one sentence",
+        "Cost to serve vs cost of goods sold",
+        "What goes into cost to serve",
+        "How to calculate it: activity-based allocation",
+        "Drivers that move cost to serve (rework, contacts, exceptions)",
+        "Common pitfalls: averages, arbitrary allocation, ignoring mix",
+        "Watching cost to serve continuously"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative worked example: two hypothetical customers with equal revenue and very different cost to serve, broken down by activity in a table.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Activity-based costing",
+          "url": "https://en.wikipedia.org/wiki/Activity-based_costing",
+          "supports": "Activity-based costing as the method behind cost-to-serve allocation"
+        },
+        {
+          "name": "Wikipedia: Contribution margin",
+          "url": "https://en.wikipedia.org/wiki/Contribution_margin",
+          "supports": "Contribution margin definition used in unit economics"
+        },
+        {
+          "name": "Wikipedia: Gross margin",
+          "url": "https://en.wikipedia.org/wiki/Gross_margin",
+          "supports": "Gross margin definition"
+        }
+      ],
+      "internal_links_to": [
+        "/use-cases/operational-efficiency/",
+        "/solutions/finance/",
+        "/resources/business-health-metrics/",
+        "/platform/business-graph/",
+        "GR-018"
+      ],
+      "nearest_existing_page": "/use-cases/operational-efficiency/ covers unit cost and rework as an investigation; this page is the neutral definition of the cost-to-serve concept and links there for the use case.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-002",
+      "type": "use-case",
+      "cluster": "process-ops",
+      "priority": 2,
+      "keyword": "order exceptions",
+      "secondary_keywords": [
+        "order fallout",
+        "order to cash exceptions",
+        "stuck orders",
+        "order exception management"
+      ],
+      "intent": "commercial investigation",
+      "url": "/use-cases/order-exceptions/",
+      "meta_title": "Order Exceptions: Find Stuck and Failed Orders",
+      "h1": "Order exceptions: find the orders that stopped moving",
+      "angle": "SERP is split between telecom \"order fallout\" vendor pages and OMS product pages. Panoptes angle: treat an exception as an order that stopped progressing between systems (order, credit, fulfilment, invoice), quantify exceptions by age and value, and trace a rise in fallout to the change that preceded it, across industries rather than just telecom.",
+      "serp_notes": "Observed: Salesforce/Oracle/BSS-vendor pages and white papers on telecom order fallout; Oracle OSM docs on \"fallout management\". Mostly product-led and telecom-specific; no cross-industry framing; few concrete measures beyond fallout rate.",
+      "outline_h2": [
+        "Where orders stop moving",
+        "Exceptions by stage, age and value",
+        "Tracing a spike in fallout to a change",
+        "From exception queue to owner",
+        "What to measure: fallout rate, exception age, time to clear"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative investigation (fictional): exception rate rises after a pricing-table change; table of exceptions by stage and age band.",
+      "external_references": [
+        {
+          "name": "Microsoft Learn: Order to cash introduction",
+          "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/business-processes/order-to-cash-introduction",
+          "supports": "Order to cash as an end-to-end process"
+        },
+        {
+          "name": "Wikipedia: Straight-through processing",
+          "url": "https://en.wikipedia.org/wiki/Straight-through_processing",
+          "supports": "Definition of straight-through processing"
+        },
+        {
+          "name": "Wikipedia: Management by exception",
+          "url": "https://en.wikipedia.org/wiki/Management_by_exception",
+          "supports": "Management by exception definition"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/knowledge/what-is-order-to-cash/",
+        "/platform/process-intelligence/",
+        "/use-cases/revenue-leakage/",
+        "/use-cases/operational-bottlenecks/",
+        "GR-024",
+        "GR-005"
+      ],
+      "nearest_existing_page": "/use-cases/revenue-leakage/ follows payments from attempt to ledger; this page covers orders that stall before they are ever invoiced, a different stage and owner.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-003",
+      "type": "blog",
+      "cluster": "metrics-kpis",
+      "priority": 3,
+      "keyword": "weekly business review",
+      "secondary_keywords": [
+        "WBR",
+        "weekly business review template",
+        "weekly operating review",
+        "business review cadence"
+      ],
+      "intent": "informational",
+      "url": "/blog/weekly-business-review/",
+      "meta_title": "Weekly Business Review: A Practical Format",
+      "h1": "How to run a weekly business review that changes decisions",
+      "angle": "Ranking pages are templates and Amazon-style summaries. The gap is what makes a WBR work between meetings: metrics shown against expected ranges rather than targets alone, owners speaking only to exceptions, and an action log closed in the next session. Kieran/Florian voice can tie it to the operating-cadence argument already in the AI chief of staff article.",
+      "serp_notes": "Observed: practitioner/vendor guides (Basedash, Rework, Rhythms, Sentra), templates, and the Working Backwards authors' own WBR material. Mostly agenda templates and metric lists; little on how to choose expected ranges or close the action loop.",
+      "outline_h2": [
+        "What a weekly business review is for",
+        "Choosing the metrics: inputs and outputs",
+        "Showing expected ranges, not just targets",
+        "Running the meeting by exception",
+        "The action log and closing the loop",
+        "Common failure modes"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Copyable WBR agenda and a one-page metric layout (illustrative), plus a checklist for an action log.",
+      "external_references": [
+        {
+          "name": "Working Backwards: Quarterly and monthly business reviews",
+          "url": "https://workingbackwards.com/concepts/quarterly-monthly-business-reviews/",
+          "supports": "Business review practice described by former Amazon executives Bryar and Carr"
+        },
+        {
+          "name": "Working Backwards: WBR app documentation",
+          "url": "https://docs.workingbackwards.com/wbr-app/",
+          "supports": "Format of a weekly business review report (authors' own description)"
+        },
+        {
+          "name": "Wikipedia: Performance indicator",
+          "url": "https://en.wikipedia.org/wiki/Performance_indicator",
+          "supports": "KPI definition"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/executives/",
+        "/resources/business-health-metrics/",
+        "/resources/from-dashboards-to-decisions/",
+        "/blog/ai-chief-of-staff/",
+        "/platform/command-center/"
+      ],
+      "nearest_existing_page": "/resources/from-dashboards-to-decisions/ argues for decision-oriented monitoring in general; this article is a meeting-format how-to for one specific ritual.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-004",
+      "type": "knowledge",
+      "cluster": "revenue-finance",
+      "priority": 4,
+      "keyword": "days sales outstanding",
+      "secondary_keywords": [
+        "DSO",
+        "DSO formula",
+        "how to calculate DSO",
+        "what is a good DSO"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-days-sales-outstanding/",
+      "meta_title": "What Is Days Sales Outstanding (DSO)?",
+      "h1": "What is days sales outstanding (DSO)?",
+      "angle": "Top results are AR-automation vendors and finance glossaries repeating the formula and generic benchmarks. Panoptes angle: explain the formula variants honestly (period-end vs average AR, credit vs total sales), why DSO can move for reasons that are not collections (mix, billing delays, disputes), and which operational events upstream of AR to watch.",
+      "serp_notes": "Observed: Chaser, Gaviti, NetSuite, AFP glossary, Tesorio, Metabase metric pages and calculators. Formula-heavy with unsourced benchmark bands; little on why DSO moves or on upstream causes such as invoicing delays and disputes.",
+      "outline_h2": [
+        "DSO in one sentence",
+        "The formula and its variants",
+        "Worked example",
+        "Why DSO moves: collections, billing delays, disputes, mix",
+        "DSO and the cash conversion cycle",
+        "Limits of DSO as a single number"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative worked calculation with both formula variants side by side, and a table of non-collections causes of DSO movement.",
+      "external_references": [
+        {
+          "name": "AFP glossary: Days sales outstanding",
+          "url": "https://www.financialprofessionals.org/glossary/days-sales-outstanding-dso",
+          "supports": "DSO = (average AR / net revenue) x 365, from the Association for Financial Professionals"
+        },
+        {
+          "name": "Wikipedia: Days sales outstanding",
+          "url": "https://en.wikipedia.org/wiki/Days_sales_outstanding",
+          "supports": "DSO definition and standard formula"
+        },
+        {
+          "name": "Wikipedia: Accounts receivable",
+          "url": "https://en.wikipedia.org/wiki/Accounts_receivable",
+          "supports": "Accounts receivable definition"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/finance/",
+        "/resources/knowledge/what-is-order-to-cash/",
+        "/use-cases/revenue-leakage/",
+        "GR-020",
+        "GR-052"
+      ],
+      "nearest_existing_page": "No existing page targets DSO; /resources/knowledge/what-is-order-to-cash/ names DSO as an O2C measure only in passing.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-005",
+      "type": "industry",
+      "cluster": "industries",
+      "priority": 5,
+      "keyword": "telecom operations monitoring",
+      "secondary_keywords": [
+        "order to activation",
+        "telecom order fallout",
+        "telco business assurance",
+        "BSS OSS monitoring"
+      ],
+      "intent": "commercial investigation",
+      "url": "/solutions/industries/telecommunications/",
+      "meta_title": "Telecom Operations Monitoring: Order to Bill",
+      "h1": "Telecom operations monitoring from order to first bill",
+      "angle": "Telecom SERPs are dominated by network/service-assurance and BSS vendors. Gap: a business-level view from order capture through activation, first bill and repair, linking fallout, missed appointments and billing errors to customer outcomes. UK hook: Ofcom automatic compensation makes missed appointments and delayed installs a direct cost.",
+      "serp_notes": "Observed: Salesforce/Oracle/BMC/Subex product pages, telecom primers and white papers on order fallout and revenue assurance. Infrastructure/BSS-centric; little cross-system journey view; no business-observability framing.",
+      "outline_h2": [
+        "Orders, activations and bills cross more systems than any team sees",
+        "Value streams: order to activate, first bill, repair and faults, moves and switching",
+        "Indicators worth watching",
+        "Illustrative investigation",
+        "Capabilities",
+        "FAQs"
+      ],
+      "target_length_words": "1200-1600",
+      "original_asset": "Indicator table (fallout rate by stage, install lead time vs promise, missed appointments, first-bill accuracy) and a fictional investigation, labelled as such.",
+      "external_references": [
+        {
+          "name": "Ofcom: Automatic compensation",
+          "url": "https://www.ofcom.org.uk/phones-and-broadband/service-quality/automatic-compensation",
+          "supports": "UK compensation for delayed repairs, delayed installations and missed engineer appointments"
+        },
+        {
+          "name": "Wikipedia: Business support system",
+          "url": "https://en.wikipedia.org/wiki/Business_support_system",
+          "supports": "BSS definition (orders, billing, customer)"
+        },
+        {
+          "name": "Wikipedia: Operations support system",
+          "url": "https://en.wikipedia.org/wiki/Operations_support_system",
+          "supports": "OSS definition (provisioning, assurance)"
+        },
+        {
+          "name": "Wikipedia: Telecommunications billing",
+          "url": "https://en.wikipedia.org/wiki/Telecommunications_billing",
+          "supports": "Telecom billing process"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/industries/",
+        "/use-cases/sla-monitoring/",
+        "/platform/journey-intelligence/",
+        "/platform/process-intelligence/",
+        "GR-002",
+        "GR-017"
+      ],
+      "nearest_existing_page": "No telecom page exists; /solutions/industries/saas/ and financial-services/ cover subscription and payments, not order-to-activation.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-006",
+      "type": "glossary",
+      "cluster": "revenue-finance",
+      "priority": 6,
+      "keyword": "dunning meaning",
+      "secondary_keywords": [
+        "DSO definition",
+        "cash conversion cycle definition",
+        "unbilled revenue meaning"
+      ],
+      "intent": "informational",
+      "url": "/resources/business-observability-glossary/#days-sales-outstanding",
+      "meta_title": "Glossary: cash and collections terms",
+      "h1": "Glossary additions: cash and collections",
+      "angle": "Glossary currently has no finance/cash terms. Adds short, cross-linked definitions that the finance knowledge pages and role page can link to by anchor.",
+      "serp_notes": "Observed for \"dunning meaning\": dictionary entries and billing-vendor glossaries. Glossary entries here are support content; no SERP win expected, value is internal linking.",
+      "outline_h2": [
+        "(glossary entries, no H2s)"
+      ],
+      "target_length_words": "150-300 (definitions only)",
+      "original_asset": "Four cross-linked definitions with see-also links to existing terms (commitment, lead time).",
+      "external_references": [
+        {
+          "name": "AFP glossary: Days sales outstanding",
+          "url": "https://www.financialprofessionals.org/glossary/days-sales-outstanding-dso",
+          "supports": "DSO = (average AR / net revenue) x 365, from the Association for Financial Professionals"
+        },
+        {
+          "name": "Wikipedia: Cash conversion cycle",
+          "url": "https://en.wikipedia.org/wiki/Cash_conversion_cycle",
+          "supports": "CCC = DIO + DSO - DPO definition"
+        },
+        {
+          "name": "Wikipedia: Dunning (process)",
+          "url": "https://en.wikipedia.org/wiki/Dunning_(process)",
+          "supports": "Definition of dunning as the process of chasing payment"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-glossary/",
+        "/solutions/finance/",
+        "GR-004",
+        "GR-052"
+      ],
+      "nearest_existing_page": "/resources/business-observability-glossary/ (adds new terms; no existing term covers these).",
+      "terms": [
+        "Days sales outstanding (DSO)",
+        "Cash conversion cycle",
+        "Dunning",
+        "Unbilled revenue"
+      ],
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-007",
+      "type": "blog",
+      "cluster": "revenue-finance",
+      "priority": 7,
+      "keyword": "variance analysis",
+      "secondary_keywords": [
+        "budget vs actual variance",
+        "variance analysis root cause",
+        "explain a variance",
+        "price volume mix"
+      ],
+      "intent": "informational",
+      "url": "/blog/variance-analysis-operational-causes/",
+      "meta_title": "Variance Analysis: From Number to Cause",
+      "h1": "Variance analysis: from a finance number to an operational cause",
+      "angle": "Ranking pages explain the arithmetic (price/volume/mix) and then jump to AI-tool pitches. Gap: the hand-off between finance and operations, i.e. how to take a decomposed variance and find the operational change behind it, with evidence grades and the honest \"we do not know yet\". Fits Kieran's BI background.",
+      "serp_notes": "Observed: FP&A vendor guides (Runway, Drivetrain, Tellius), accounting explainers. Strong on decomposition, weak on linking to operational drivers and on distinguishing correlation from cause.",
+      "outline_h2": [
+        "Decompose before you explain",
+        "From driver to operational change",
+        "Evidence grades: observed, plausible, verified",
+        "Common traps: mix shifts, timing, one-offs",
+        "Writing the variance commentary",
+        "Making it a routine"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Illustrative variance bridge table for a hypothetical margin miss, with each line linked to an operational hypothesis and its evidence grade.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Variance (accounting)",
+          "url": "https://en.wikipedia.org/wiki/Variance_(accounting)",
+          "supports": "Budget vs actual variance definition, favourable/unfavourable"
+        },
+        {
+          "name": "Wikipedia: Contribution margin",
+          "url": "https://en.wikipedia.org/wiki/Contribution_margin",
+          "supports": "Contribution margin definition used in unit economics"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/finance/",
+        "/platform/root-cause-analysis/",
+        "/blog/how-to-build-a-kpi-tree/",
+        "/resources/how-business-events-connect-to-outcomes/"
+      ],
+      "nearest_existing_page": "/platform/root-cause-analysis/ is a product page; this is a vendor-neutral method for finance teams.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-008",
+      "type": "knowledge",
+      "cluster": "revenue-finance",
+      "priority": 8,
+      "keyword": "quote to cash",
+      "secondary_keywords": [
+        "Q2C",
+        "QTC",
+        "quote to cash process",
+        "quote to cash vs order to cash"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-quote-to-cash/",
+      "meta_title": "What Is Quote to Cash (Q2C)? Stages, Measures",
+      "h1": "What is quote to cash (Q2C)?",
+      "angle": "SERP is Q2C/CPQ software vendors and one Wikipedia page; definitions disagree on the end point. Panoptes angle: neutral definition, explicit Q2C vs O2C vs CPQ comparison, and where Q2C loses time and money (hand-offs from sales to finance), linking to the existing O2C page rather than repeating it.",
+      "serp_notes": "Observed: Wikipedia, Zuora, NetSuite, Stripe, PandaDoc, PROS and many CPQ vendors. Vendor framing; inconsistent scope; little on measures across the hand-offs.",
+      "outline_h2": [
+        "Quote to cash in one sentence",
+        "Stages of quote to cash",
+        "Quote to cash vs order to cash vs CPQ",
+        "Where quote to cash breaks: hand-offs",
+        "Measures across the cycle",
+        "Revenue recognition and the end point"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Comparison table Q2C vs O2C vs CPQ (scope, start, end, owner) and a stage-by-stage measures table.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Quote to cash",
+          "url": "https://en.wikipedia.org/wiki/Quote_to_cash",
+          "supports": "Definition and scope of quote to cash (definition only)"
+        },
+        {
+          "name": "Wikipedia: Revenue recognition",
+          "url": "https://en.wikipedia.org/wiki/Revenue_recognition",
+          "supports": "Revenue recognition principle (context for Q2C end point)"
+        },
+        {
+          "name": "IFRS Foundation: IFRS 15 Revenue from Contracts with Customers",
+          "url": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-15-revenue-from-contracts-with-customers/",
+          "supports": "Revenue recognition standard governing when contract revenue is recognised"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/knowledge/what-is-order-to-cash/",
+        "/solutions/revenue/",
+        "/solutions/finance/",
+        "/use-cases/revenue-leakage/"
+      ],
+      "nearest_existing_page": "/resources/knowledge/what-is-order-to-cash/ covers the back half (order onward); this page covers the full quote-to-cash scope and defers to the O2C page for detail.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-009",
+      "type": "role",
+      "cluster": "roles",
+      "priority": 9,
+      "keyword": "revenue operations visibility",
+      "secondary_keywords": [
+        "RevOps",
+        "revenue operations metrics",
+        "RevOps dashboard",
+        "go-to-market operations"
+      ],
+      "intent": "commercial investigation",
+      "url": "/solutions/revenue-operations/",
+      "meta_title": "Business Observability for RevOps Teams",
+      "h1": "Revenue operations visibility across the whole funnel",
+      "angle": "RevOps SERP is dashboard/KPI listicles. RevOps owns the systems, definitions and hand-offs of the funnel rather than the number itself; the angle is consistent definitions, hand-off monitoring (MQL to SQL, closed-won to onboarding, invoice to cash) and detecting definition drift. Distinct from /solutions/revenue/, which speaks to CROs about outcomes.",
+      "serp_notes": "Observed: RevOps KPI and dashboard guides (TechRepublic, Fullcast, Gong, InsideA, Saber). Metric lists and dashboard tiers; little about cross-system hand-offs or post-sale stages.",
+      "outline_h2": [
+        "What RevOps is accountable for",
+        "Hand-offs to watch across the funnel",
+        "Definitions that hold across tools",
+        "Questions RevOps teams ask"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Hand-off table across the revenue funnel: hand-off, typical failure, signal to watch.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Performance indicator",
+          "url": "https://en.wikipedia.org/wiki/Performance_indicator",
+          "supports": "KPI definition"
+        },
+        {
+          "name": "Wikipedia: Customer acquisition cost",
+          "url": "https://en.wikipedia.org/wiki/Customer_acquisition_cost",
+          "supports": "Definition of customer acquisition cost"
+        },
+        {
+          "name": "Wikipedia: Customer lifetime value",
+          "url": "https://en.wikipedia.org/wiki/Customer_lifetime_value",
+          "supports": "Definition of customer lifetime value"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/revenue/",
+        "/solutions/",
+        "/resources/knowledge/what-is-a-semantic-layer/",
+        "/blog/kpi-definition-template/",
+        "/platform/journey-intelligence/"
+      ],
+      "nearest_existing_page": "/solutions/revenue/ targets CROs and revenue leaders on outcomes; this page targets RevOps on systems, definitions and hand-offs. Must cross-link both ways and keep the H1 on \"revenue operations\".",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-010",
+      "type": "use-case",
+      "cluster": "customer-journey",
+      "priority": 10,
+      "keyword": "onboarding drop-off",
+      "secondary_keywords": [
+        "customer onboarding drop-off",
+        "onboarding backlog",
+        "KYC onboarding delays",
+        "activation drop-off"
+      ],
+      "intent": "commercial investigation",
+      "url": "/use-cases/onboarding-drop-off/",
+      "meta_title": "Onboarding Drop-off and Backlog Monitoring",
+      "h1": "Onboarding drop-off: see where new customers stall",
+      "angle": "Ranking pages are product-analytics blogs focused on in-app onboarding. Gap: onboarding that spans people and back-office steps (verification/KYC, contracting, implementation), where customers wait on the business, not just on a UI. Angle: separate customer-side waiting from business-side backlog.",
+      "serp_notes": "Observed: product-analytics and SaaS onboarding blogs (Monolytics, InnerTrends, GuideCX) and some fintech commentary. In-app funnel focus; unsourced statistics; little on operational backlog.",
+      "outline_h2": [
+        "Two kinds of stall: waiting on the customer vs waiting on you",
+        "Where onboarding stalls by step and segment",
+        "Verification and review backlogs",
+        "Measuring time to activation",
+        "Owners and follow-through"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative onboarding funnel table split by waiting-on-customer vs waiting-on-business at each step.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Know your customer",
+          "url": "https://en.wikipedia.org/wiki/Know_your_customer",
+          "supports": "KYC definition, context for regulated onboarding"
+        },
+        {
+          "name": "legislation.gov.uk: Money Laundering Regulations 2017",
+          "url": "https://www.legislation.gov.uk/uksi/2017/692/contents",
+          "supports": "UK customer due diligence obligations behind onboarding checks"
+        },
+        {
+          "name": "Wikipedia: Cohort analysis",
+          "url": "https://en.wikipedia.org/wiki/Cohort_analysis",
+          "supports": "Cohort analysis definition"
+        }
+      ],
+      "internal_links_to": [
+        "/use-cases/customer-journey-friction/",
+        "/solutions/industries/financial-services/",
+        "/solutions/industries/saas/",
+        "/platform/journey-intelligence/",
+        "/blog/customer-journey-mapping-from-event-data/"
+      ],
+      "nearest_existing_page": "/use-cases/customer-journey-friction/ is about any journey step; this page is specifically onboarding and the internal backlog component. Link to it as the general case.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-011",
+      "type": "knowledge",
+      "cluster": "process-ops",
+      "priority": 11,
+      "keyword": "procure to pay",
+      "secondary_keywords": [
+        "P2P process",
+        "purchase to pay",
+        "procure to pay steps",
+        "P2P cycle"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-procure-to-pay/",
+      "meta_title": "What Is Procure to Pay (P2P)? Steps, Measures",
+      "h1": "What is procure to pay (P2P)?",
+      "angle": "SERP is AP/procurement software vendors (SAP, Ramp, Basware, NetSuite). Panoptes angle: neutral definition with steps, the controls (three-way match), measures across the cycle (cycle time, first-pass match rate, exceptions, on-time payment) and how P2P mirrors O2C from the supplier's side.",
+      "serp_notes": "Observed: SAP, Ramp, IBM, ServiceNow, NetSuite, Basware, TechTarget, CIPS. Vendor framing; steps vary; few process measures beyond \"automation\".",
+      "outline_h2": [
+        "Procure to pay in one sentence",
+        "The steps of P2P",
+        "Controls: approvals and three-way match",
+        "Measures across the cycle",
+        "Where P2P breaks",
+        "P2P vs order to cash"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Step-by-step table with the business event that marks each step and the measure it enables.",
+      "external_references": [
+        {
+          "name": "Microsoft Learn: Procure to pay (source to pay) introduction",
+          "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/business-processes/source-to-pay-introduction",
+          "supports": "P2P steps (need, supplier, PO, invoice, approval, payment) and the impacts of a poorly run process"
+        },
+        {
+          "name": "Wikipedia: Procure-to-pay",
+          "url": "https://en.wikipedia.org/wiki/Procure-to-pay",
+          "supports": "Definition of procure to pay (definition only)"
+        },
+        {
+          "name": "Wikipedia: Three-way match",
+          "url": "https://en.wikipedia.org/wiki/Three-way_match",
+          "supports": "PO / receipt / invoice matching control"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/knowledge/what-is-order-to-cash/",
+        "/solutions/finance/",
+        "/resources/business-process-monitoring/",
+        "/platform/process-intelligence/"
+      ],
+      "nearest_existing_page": "No existing page covers P2P; /resources/business-process-monitoring/ is the general method and is linked as such.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-012",
+      "type": "blog",
+      "cluster": "process-ops",
+      "priority": 12,
+      "keyword": "cross-functional handoffs",
+      "secondary_keywords": [
+        "handoffs between teams",
+        "handoff delays",
+        "reduce handoff delays",
+        "work between teams"
+      ],
+      "intent": "informational",
+      "url": "/blog/cross-functional-handoffs/",
+      "meta_title": "Cross-Functional Handoffs: Where Work Waits",
+      "h1": "Cross-functional handoffs: where work waits and nobody owns it",
+      "angle": "Ranking pages are consultancy blogs listing causes and generic fixes, often with unverified statistics. Gap: a measurement method: define each hand-off as a pair of events, measure the gap, assign ownership of the gap itself, and set an expectation for it. Ties to Florian's process-analysis article.",
+      "serp_notes": "Observed: consultancy/vendor blogs (Consultevo, Fitgap, ndash) with cause lists and unsourced percentages. No method for measuring the gap between teams.",
+      "outline_h2": [
+        "Why hand-offs are where time goes",
+        "Defining a hand-off as two events",
+        "Measuring the gap",
+        "Owning the gap, not just the stages",
+        "Expectations for hand-offs",
+        "Worked example"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Hand-off register template (from event, to event, owner, expected gap, current gap) with an illustrative example.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Responsibility assignment matrix",
+          "url": "https://en.wikipedia.org/wiki/Responsibility_assignment_matrix",
+          "supports": "RACI roles for hand-off ownership"
+        },
+        {
+          "name": "Wikipedia: Service blueprint",
+          "url": "https://en.wikipedia.org/wiki/Service_blueprint",
+          "supports": "Service blueprint: front-stage/back-stage hand-offs"
+        },
+        {
+          "name": "Wikipedia: Little's law",
+          "url": "https://en.wikipedia.org/wiki/Little%27s_law",
+          "supports": "Little's law L = λW"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/understanding-business-bottlenecks/",
+        "/use-cases/operational-bottlenecks/",
+        "/blog/business-process-analysis-before-automation/",
+        "/resources/business-process-monitoring/"
+      ],
+      "nearest_existing_page": "/resources/understanding-business-bottlenecks/ is about capacity constraints; hand-off gaps are waiting caused by ownership, not capacity. Glossary has \"Hand-off\" as a term only.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-013",
+      "type": "glossary",
+      "cluster": "revenue-finance",
+      "priority": 13,
+      "keyword": "contribution margin",
+      "secondary_keywords": [
+        "unit economics definition",
+        "cost to serve definition",
+        "payback period definition"
+      ],
+      "intent": "informational",
+      "url": "/resources/business-observability-glossary/#unit-economics",
+      "meta_title": "Glossary: unit economics terms",
+      "h1": "Glossary additions: unit economics",
+      "angle": "Adds the unit economics vocabulary that the cost-to-serve and unit-economics knowledge pages need for cross-links.",
+      "serp_notes": "Observed for \"contribution margin\": accounting glossaries and Wikipedia. Support content; value is internal linking.",
+      "outline_h2": [
+        "(glossary entries, no H2s)"
+      ],
+      "target_length_words": "150-300 (definitions only)",
+      "original_asset": "Four cross-linked definitions.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Contribution margin",
+          "url": "https://en.wikipedia.org/wiki/Contribution_margin",
+          "supports": "Contribution margin definition used in unit economics"
+        },
+        {
+          "name": "Wikipedia: Payback period",
+          "url": "https://en.wikipedia.org/wiki/Payback_period",
+          "supports": "Definition of payback period"
+        },
+        {
+          "name": "Wikipedia: Activity-based costing",
+          "url": "https://en.wikipedia.org/wiki/Activity-based_costing",
+          "supports": "Activity-based costing as the method behind cost-to-serve allocation"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-glossary/",
+        "/use-cases/operational-efficiency/",
+        "GR-001",
+        "GR-018"
+      ],
+      "nearest_existing_page": "/resources/business-observability-glossary/ (new terms; \"Utilisation\" and \"Rework\" exist but no cost terms).",
+      "terms": [
+        "Unit economics",
+        "Cost to serve",
+        "Contribution margin",
+        "Payback period"
+      ],
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-014",
+      "type": "industry",
+      "cluster": "industries",
+      "priority": 14,
+      "keyword": "professional services operations monitoring",
+      "secondary_keywords": [
+        "utilisation and realisation",
+        "project margin monitoring",
+        "PSA reporting",
+        "billable utilisation"
+      ],
+      "intent": "commercial investigation",
+      "url": "/solutions/industries/professional-services/",
+      "meta_title": "Professional Services Operations Monitoring",
+      "h1": "Professional services operations monitoring from pipeline to invoice",
+      "angle": "SERP is PSA vendors listing KPIs (utilisation, realisation, margin). Gap: these metrics live in different systems (CRM, resourcing, timesheets, billing) and conflict; angle is connecting pipeline, staffing, delivery and invoicing so margin erosion is seen during the project, not at month end.",
+      "serp_notes": "Observed: Sage, Kantata, Birdview, Teamwork, Productive, SPI-cited benchmarks. KPI lists and PSA dashboards; little on cross-system linkage or early warning.",
+      "outline_h2": [
+        "Margin is decided long before the invoice",
+        "Value streams: pipeline to staffing, delivery, time to invoice, invoice to cash",
+        "Indicators worth watching",
+        "Illustrative investigation",
+        "Capabilities",
+        "FAQs"
+      ],
+      "target_length_words": "1200-1600",
+      "original_asset": "Indicator table (utilisation, realisation, write-offs, unbilled WIP age, invoice lag) and a fictional investigation.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Professional services automation",
+          "url": "https://en.wikipedia.org/wiki/Professional_services_automation",
+          "supports": "PSA software category definition"
+        },
+        {
+          "name": "Wikipedia: Utilization rate",
+          "url": "https://en.wikipedia.org/wiki/Utilization_rate",
+          "supports": "Utilisation rate definition"
+        },
+        {
+          "name": "Wikipedia: Billable hours",
+          "url": "https://en.wikipedia.org/wiki/Billable_hours",
+          "supports": "Billable hours definition"
+        },
+        {
+          "name": "Wikipedia: Professional services",
+          "url": "https://en.wikipedia.org/wiki/Professional_services",
+          "supports": "Professional services definition"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/industries/",
+        "/solutions/finance/",
+        "/use-cases/revenue-leakage/",
+        "/platform/business-graph/"
+      ],
+      "nearest_existing_page": "No professional-services page exists; closest is /solutions/finance/, which is function-led, not industry-led.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-015",
+      "type": "knowledge",
+      "cluster": "process-ops",
+      "priority": 15,
+      "keyword": "record to report",
+      "secondary_keywords": [
+        "R2R process",
+        "record to report steps",
+        "financial close process",
+        "R2R vs O2C"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-record-to-report/",
+      "meta_title": "What Is Record to Report (R2R)? Steps, Measures",
+      "h1": "What is record to report (R2R)?",
+      "angle": "SERP is close-management vendors (Numeric, HighRadius, SolveXia) with varying step lists, plus Wikipedia and Microsoft Learn. Panoptes angle: neutral definition, where R2R depends on upstream processes (O2C, P2P) and why close delays and late adjustments are often operational issues surfacing in finance.",
+      "serp_notes": "Observed: Numeric, Auxis, HighRadius, SolveXia, Microsoft Learn, Wikipedia. Step lists differ; vendor-led; little about upstream causes of close problems.",
+      "outline_h2": [
+        "Record to report in one sentence",
+        "Stages of R2R",
+        "How R2R depends on O2C and P2P",
+        "Measures: days to close, adjustments, reconciliation breaks",
+        "Where R2R breaks",
+        "R2R and continuous monitoring"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Diagram-ready table mapping upstream process exceptions to the R2R stage where they surface.",
+      "external_references": [
+        {
+          "name": "Microsoft Learn: Record to report introduction",
+          "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/business-processes/record-to-report-introduction",
+          "supports": "Record to report as an end-to-end business process and its stages"
+        },
+        {
+          "name": "Wikipedia: Record to report",
+          "url": "https://en.wikipedia.org/wiki/Record_to_report",
+          "supports": "Definition of record to report (definition only)"
+        },
+        {
+          "name": "Microsoft Learn: Business process guidance overview",
+          "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/business-processes/overview",
+          "supports": "End-to-end process taxonomy (O2C, P2P, R2R and others)"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/knowledge/what-is-order-to-cash/",
+        "/solutions/finance/",
+        "/platform/process-intelligence/",
+        "GR-011"
+      ],
+      "nearest_existing_page": "No existing page covers R2R.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-016",
+      "type": "blog",
+      "cluster": "process-ops",
+      "priority": 16,
+      "keyword": "operations capacity planning",
+      "secondary_keywords": [
+        "capacity planning for operations teams",
+        "demand and capacity",
+        "staffing to demand",
+        "capacity vs demand"
+      ],
+      "intent": "informational",
+      "url": "/blog/operations-capacity-planning/",
+      "meta_title": "Operations Capacity Planning Without Guesswork",
+      "h1": "Operations capacity planning from arrivals, not headcount",
+      "angle": "Ranking content is workforce-management vendor docs for contact centres. Gap: a general method for back-office and delivery teams: forecast arrivals, measure work time per item, account for rework and waiting, and watch utilisation against the point where queues grow. Grounded in queueing basics, no unsourced benchmarks.",
+      "serp_notes": "Observed: Workday, Microsoft Dynamics Contact Center docs, Assembled, Fitgap guides. Contact-centre and WFM-tool centric; little for non-contact-centre operations; few explain the utilisation-queue relationship.",
+      "outline_h2": [
+        "Start from arrivals, not headcount",
+        "Work content per item, including rework",
+        "Why queues explode near full utilisation",
+        "Planning horizons and re-forecasting",
+        "Watching capacity against demand continuously",
+        "Worked example"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Illustrative capacity model for a hypothetical review team (arrivals, work time, rework, required capacity), as a table.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Queueing theory",
+          "url": "https://en.wikipedia.org/wiki/Queueing_theory",
+          "supports": "Queueing basics: arrival rate, service rate, utilisation"
+        },
+        {
+          "name": "Wikipedia: Little's law",
+          "url": "https://en.wikipedia.org/wiki/Little%27s_law",
+          "supports": "Little's law L = λW"
+        },
+        {
+          "name": "Wikipedia: Capacity management",
+          "url": "https://en.wikipedia.org/wiki/Capacity_management",
+          "supports": "Capacity management definition"
+        },
+        {
+          "name": "Wikipedia: Erlang (unit)",
+          "url": "https://en.wikipedia.org/wiki/Erlang_(unit)",
+          "supports": "Erlang traffic unit used in contact-centre staffing"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/operations/",
+        "/resources/understanding-business-bottlenecks/",
+        "/use-cases/operational-bottlenecks/",
+        "/resources/business-observability-glossary/"
+      ],
+      "nearest_existing_page": "/resources/understanding-business-bottlenecks/ explains constraints; this is a forward-looking planning method.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-017",
+      "type": "use-case",
+      "cluster": "revenue-finance",
+      "priority": 17,
+      "keyword": "billing errors",
+      "secondary_keywords": [
+        "invoice errors",
+        "billing accuracy",
+        "billing error detection",
+        "incorrect invoices"
+      ],
+      "intent": "commercial investigation",
+      "url": "/use-cases/billing-errors/",
+      "meta_title": "Billing Errors: Catch Them Before Customers Do",
+      "h1": "Billing errors: catch them before customers do",
+      "angle": "SERP is invoice-audit and AP vendors, often from the payer side. Angle from the seller side: billing errors as the output of upstream changes (price tables, contract terms, usage feeds, plan changes), detected by comparing what should have been billed with what was, and by watching downstream signals (disputes, credit notes, billing contacts).",
+      "serp_notes": "Observed: vendor pages (Hyperbots, Arcadia, RecVue, Mobilsense) with unverified error-rate claims; mostly payer-side invoice auditing.",
+      "outline_h2": [
+        "Where billing errors come from",
+        "Expected vs billed: the core comparison",
+        "Downstream signals: disputes, credit notes, contacts",
+        "Tracing an error spike to a change",
+        "Owners and fixes"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative investigation (fictional): credit notes rise after a plan migration; table of error types and their upstream sources.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Invoice",
+          "url": "https://en.wikipedia.org/wiki/Invoice",
+          "supports": "What an invoice contains"
+        },
+        {
+          "name": "Wikipedia: Telecommunications billing",
+          "url": "https://en.wikipedia.org/wiki/Telecommunications_billing",
+          "supports": "Telecom billing process"
+        },
+        {
+          "name": "Ofgem press release: ban on back-billing beyond 12 months",
+          "url": "https://www.ofgem.gov.uk/press-release/ofgem-bans-suppliers-backbilling-customers-beyond-12-months",
+          "supports": "Regulatory reason billing accuracy and timeliness matter in energy"
+        }
+      ],
+      "internal_links_to": [
+        "/use-cases/revenue-leakage/",
+        "/solutions/finance/",
+        "/platform/anomaly-detection/",
+        "/platform/root-cause-analysis/"
+      ],
+      "nearest_existing_page": "/use-cases/revenue-leakage/ is about payments failing between attempt and ledger; billing errors are about invoices being wrong in the first place.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-018",
+      "type": "knowledge",
+      "cluster": "revenue-finance",
+      "priority": 18,
+      "keyword": "unit economics",
+      "secondary_keywords": [
+        "unit economics formula",
+        "LTV to CAC",
+        "contribution margin per unit",
+        "unit economics SaaS"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-unit-economics/",
+      "meta_title": "What Is Unit Economics? Definition and Uses",
+      "h1": "What is unit economics?",
+      "angle": "SERP is startup/payments-vendor glossaries repeating LTV:CAC 3:1 without source. Angle: define the unit first (customer, order, shipment), show the components, and explain why averages hide cohorts and why operational drivers (cost to serve, failure rates) change unit economics after the sale.",
+      "serp_notes": "Observed: Yotpo, Cashfree, AltexSoft, Hyperbots, many SaaS glossaries. Repetitive; unsourced benchmarks; acquisition-side bias.",
+      "outline_h2": [
+        "Unit economics in one sentence",
+        "Choosing the unit",
+        "The components",
+        "Worked example",
+        "Why averages mislead: cohorts and mix",
+        "Operational drivers after the sale"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative per-order unit economics table for a hypothetical business, with a cohort comparison.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Contribution margin",
+          "url": "https://en.wikipedia.org/wiki/Contribution_margin",
+          "supports": "Contribution margin definition used in unit economics"
+        },
+        {
+          "name": "Wikipedia: Customer lifetime value",
+          "url": "https://en.wikipedia.org/wiki/Customer_lifetime_value",
+          "supports": "Definition of customer lifetime value"
+        },
+        {
+          "name": "Wikipedia: Customer acquisition cost",
+          "url": "https://en.wikipedia.org/wiki/Customer_acquisition_cost",
+          "supports": "Definition of customer acquisition cost"
+        },
+        {
+          "name": "Wikipedia: Payback period",
+          "url": "https://en.wikipedia.org/wiki/Payback_period",
+          "supports": "Definition of payback period"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/finance/",
+        "/solutions/executives/",
+        "/use-cases/operational-efficiency/",
+        "GR-001"
+      ],
+      "nearest_existing_page": "No existing page covers unit economics.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-019",
+      "type": "glossary",
+      "cluster": "process-ops",
+      "priority": 19,
+      "keyword": "O2C P2P R2R",
+      "secondary_keywords": [
+        "end-to-end business processes",
+        "order to cash definition",
+        "procure to pay definition"
+      ],
+      "intent": "informational",
+      "url": "/resources/business-observability-glossary/#order-to-cash",
+      "meta_title": "Glossary: end-to-end process terms",
+      "h1": "Glossary additions: end-to-end processes",
+      "angle": "Adds the four end-to-end process names as glossary terms linking to the knowledge pages, so the glossary becomes a hub for the process cluster.",
+      "serp_notes": "Observed for \"O2C P2P R2R\": consultancy and ERP explainers comparing the cycles. Support content.",
+      "outline_h2": [
+        "(glossary entries, no H2s)"
+      ],
+      "target_length_words": "150-300 (definitions only)",
+      "original_asset": "Four cross-linked definitions, each linking to its knowledge page.",
+      "external_references": [
+        {
+          "name": "Microsoft Learn: Business process guidance overview",
+          "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/business-processes/overview",
+          "supports": "End-to-end process taxonomy (O2C, P2P, R2R and others)"
+        },
+        {
+          "name": "Wikipedia: Quote to cash",
+          "url": "https://en.wikipedia.org/wiki/Quote_to_cash",
+          "supports": "Definition and scope of quote to cash (definition only)"
+        },
+        {
+          "name": "Wikipedia: Record to report",
+          "url": "https://en.wikipedia.org/wiki/Record_to_report",
+          "supports": "Definition of record to report (definition only)"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-glossary/",
+        "/resources/knowledge/what-is-order-to-cash/",
+        "GR-008",
+        "GR-011",
+        "GR-015"
+      ],
+      "nearest_existing_page": "/resources/business-observability-glossary/ (new terms; \"Process\" exists as a general term).",
+      "terms": [
+        "Order to cash (O2C)",
+        "Procure to pay (P2P)",
+        "Record to report (R2R)",
+        "Quote to cash (Q2C)"
+      ],
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-020",
+      "type": "blog",
+      "cluster": "revenue-finance",
+      "priority": 20,
+      "keyword": "how to reduce DSO",
+      "secondary_keywords": [
+        "reduce days sales outstanding",
+        "improve DSO",
+        "speed up collections",
+        "DSO reduction"
+      ],
+      "intent": "informational",
+      "url": "/blog/how-to-reduce-dso/",
+      "meta_title": "How to Reduce DSO From Upstream Causes",
+      "h1": "How to reduce DSO by fixing what happens before collections",
+      "angle": "Ranking articles are collections-software tips (reminders, payment links). Angle: much DSO is created before collections starts: invoices issued late, wrong or disputed. Method: split DSO movement into invoice lag, dispute time and payment behaviour, then fix the largest component.",
+      "serp_notes": "Observed: AR-automation vendor blogs (Chaser, Gaviti, Tesorio, HighRadius). Tactic lists focused on dunning; little on upstream invoice timeliness or accuracy.",
+      "outline_h2": [
+        "Where DSO really comes from",
+        "Decompose: invoice lag, disputes, payment behaviour",
+        "Fix invoicing timeliness first",
+        "Disputes as an operational signal",
+        "Then improve collections",
+        "Measuring the change honestly"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Illustrative DSO decomposition table for a hypothetical company and a prioritisation checklist.",
+      "external_references": [
+        {
+          "name": "AFP glossary: Days sales outstanding",
+          "url": "https://www.financialprofessionals.org/glossary/days-sales-outstanding-dso",
+          "supports": "DSO = (average AR / net revenue) x 365, from the Association for Financial Professionals"
+        },
+        {
+          "name": "GOV.UK: Late commercial payments",
+          "url": "https://www.gov.uk/late-commercial-payments-interest-debt-recovery",
+          "supports": "UK statutory interest and payment terms context for collections"
+        },
+        {
+          "name": "Wikipedia: Dunning (process)",
+          "url": "https://en.wikipedia.org/wiki/Dunning_(process)",
+          "supports": "Definition of dunning as the process of chasing payment"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/finance/",
+        "/resources/knowledge/what-is-order-to-cash/",
+        "/use-cases/revenue-leakage/",
+        "GR-004",
+        "GR-017"
+      ],
+      "nearest_existing_page": "GR-004 defines DSO (informational); this is the how-to. Link GR-004 as the definition.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-021",
+      "type": "role",
+      "cluster": "roles",
+      "priority": 21,
+      "keyword": "business monitoring for data teams",
+      "secondary_keywords": [
+        "data and analytics teams",
+        "analytics engineering",
+        "data team operating model",
+        "metric ownership for data teams"
+      ],
+      "intent": "commercial investigation",
+      "url": "/solutions/data-analytics/",
+      "meta_title": "Business Observability for Data Teams",
+      "h1": "Business monitoring for data teams and analytics leads",
+      "angle": "Data teams search for data observability, semantic layers and metric stores; no page speaks to how data teams move from answering ad-hoc \"why did this move\" requests to maintaining a model of the business. Angle: what data teams own (definitions, events, model), what they stop doing (one-off investigations), and how it complements data observability.",
+      "serp_notes": "Observed: no direct SERP for this phrase; adjacent results are data-observability and semantic-layer vendor pages. Gap is a role page for data teams on a business-observability site.",
+      "outline_h2": [
+        "From ad-hoc questions to a maintained model",
+        "What data teams own: events, definitions, entities",
+        "Data quality vs business change",
+        "Questions data teams ask"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Responsibility table: what the data team owns vs business owners vs platform.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Data governance",
+          "url": "https://en.wikipedia.org/wiki/Data_governance",
+          "supports": "Data governance definition"
+        },
+        {
+          "name": "Wikipedia: Data mesh",
+          "url": "https://en.wikipedia.org/wiki/Data_mesh",
+          "supports": "Domain ownership of data products, context for data contracts"
+        },
+        {
+          "name": "IBM Think: What is data observability?",
+          "url": "https://www.ibm.com/think/topics/data-observability",
+          "supports": "Data observability definition and five pillars (freshness, distribution, volume, schema, lineage)"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/",
+        "/resources/knowledge/what-is-a-semantic-layer/",
+        "/integrations/data-sources/",
+        "/integrations/api/",
+        "/blog/semantic-layer-vs-business-model/",
+        "GR-040"
+      ],
+      "nearest_existing_page": "No role page for data teams; /integrations/data-sources/ is technical. Keyword avoids the BO-01..20 \"business observability\" head terms.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-022",
+      "type": "knowledge",
+      "cluster": "customer-journey",
+      "priority": 22,
+      "keyword": "customer effort score",
+      "secondary_keywords": [
+        "CES",
+        "CES survey",
+        "how to calculate customer effort score",
+        "CES vs NPS"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-customer-effort-score/",
+      "meta_title": "What Is Customer Effort Score (CES)?",
+      "h1": "What is customer effort score (CES)?",
+      "angle": "SERP is CX survey vendors (Salesforce, Medallia, SurveyMonkey) with scale confusion and unsourced churn statistics. Angle: define CES and its scales clearly, then show that effort can also be observed behaviourally (repeat contacts, transfers, resubmissions, channel switches) without waiting for a survey.",
+      "serp_notes": "Observed: Salesforce, IBM, Intercom, Medallia, TechTarget, Genesys, SurveyMonkey. Survey-centric; inconsistent scales; repeated vendor statistics.",
+      "outline_h2": [
+        "Customer effort score in one sentence",
+        "How CES is measured and scales",
+        "CES vs NPS vs CSAT",
+        "Observable effort: repeat contacts, transfers, resubmissions",
+        "Limits of CES",
+        "Using effort signals in operations"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Table pairing survey CES with behavioural effort signals that can be computed from events.",
+      "external_references": [
+        {
+          "name": "IBM Think: What is customer effort score?",
+          "url": "https://www.ibm.com/think/topics/customer-effort-score",
+          "supports": "CES definition, survey formats and its 2010 origin at CEB"
+        },
+        {
+          "name": "Harvard Business Review: Stop Trying to Delight Your Customers (Dixon, Freeman, Toman, 2010)",
+          "url": "https://hbr.org/2010/07/stop-trying-to-delight-your-customers",
+          "supports": "Origin of the argument that reducing effort matters more than delight"
+        },
+        {
+          "name": "Wikipedia: Net promoter score",
+          "url": "https://en.wikipedia.org/wiki/Net_promoter_score",
+          "supports": "NPS definition, for comparing survey metrics"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/customer-experience/",
+        "/use-cases/customer-journey-friction/",
+        "/resources/knowledge/what-is-customer-journey-analytics/"
+      ],
+      "nearest_existing_page": "No existing page covers CES.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-023",
+      "type": "industry",
+      "cluster": "industries",
+      "priority": 23,
+      "keyword": "travel and hospitality operations monitoring",
+      "secondary_keywords": [
+        "booking to stay",
+        "hotel operations visibility",
+        "travel booking failures",
+        "hospitality revenue leakage"
+      ],
+      "intent": "commercial investigation",
+      "url": "/solutions/industries/travel-hospitality/",
+      "meta_title": "Travel & Hospitality Operations Monitoring",
+      "h1": "Travel and hospitality operations monitoring from booking to stay",
+      "angle": "SERP is hotel revenue-management and distribution vendors focused on rate parity. Gap: the operational chain from booking through payment, changes, fulfilment (stay/trip) and refunds across PMS, channel and payment systems. UK hook: Package Travel Regulations refund obligations make refund timeliness a commitment.",
+      "serp_notes": "Observed: RateGain, Smartness, Revenue Hub, Mews, Hospitality Net with vendor statistics. Revenue/distribution centric; little on booking-to-refund operations.",
+      "outline_h2": [
+        "Bookings cross channels, payment and property systems",
+        "Value streams: booking and payment, changes and cancellations, arrival and stay, refunds and complaints",
+        "Indicators worth watching",
+        "Illustrative investigation",
+        "Capabilities",
+        "FAQs"
+      ],
+      "target_length_words": "1200-1600",
+      "original_asset": "Indicator table and fictional investigation (refund backlog after a schedule change).",
+      "external_references": [
+        {
+          "name": "legislation.gov.uk: Package Travel and Linked Travel Arrangements Regulations 2018",
+          "url": "https://www.legislation.gov.uk/uksi/2018/634/contents",
+          "supports": "UK obligations to package travellers (refunds, changes)"
+        },
+        {
+          "name": "Wikipedia: RevPAR",
+          "url": "https://en.wikipedia.org/wiki/RevPAR",
+          "supports": "RevPAR definition"
+        },
+        {
+          "name": "Wikipedia: Yield management",
+          "url": "https://en.wikipedia.org/wiki/Yield_management",
+          "supports": "Revenue/yield management in travel and hospitality"
+        },
+        {
+          "name": "Wikipedia: Property management system",
+          "url": "https://en.wikipedia.org/wiki/Property_management_system",
+          "supports": "Hotel PMS definition"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/industries/",
+        "/solutions/industries/marketplaces/",
+        "/use-cases/sla-monitoring/",
+        "/platform/journey-intelligence/"
+      ],
+      "nearest_existing_page": "No travel page exists; /solutions/industries/marketplaces/ covers two-sided platforms generally.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-024",
+      "type": "blog",
+      "cluster": "process-ops",
+      "priority": 24,
+      "keyword": "exception management",
+      "secondary_keywords": [
+        "exception handling process",
+        "operational exceptions",
+        "exception queue",
+        "manage by exception"
+      ],
+      "intent": "informational",
+      "url": "/blog/exception-management-in-operations/",
+      "meta_title": "Exception Management in Operations",
+      "h1": "Exception management: run operations by the work that does not flow",
+      "angle": "SERP is RPA/vendor glossaries and product docs on exception queues. Gap: exception management as an operating discipline: define what counts as an exception, measure exception rate and age, route by consequence, and feed recurring exceptions back into process design.",
+      "serp_notes": "Observed: Moxo glossary, Logistics Viewpoints, Oracle/Informatica docs, Blue Prism forum. Product- and RPA-centric; no general method.",
+      "outline_h2": [
+        "What counts as an exception",
+        "Exception rate, age and value",
+        "Routing by consequence, not arrival order",
+        "Recurring exceptions are design feedback",
+        "Straight-through processing as the goal",
+        "A weekly exception review"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Exception register template and an illustrative triage matrix (consequence x urgency).",
+      "external_references": [
+        {
+          "name": "Wikipedia: Management by exception",
+          "url": "https://en.wikipedia.org/wiki/Management_by_exception",
+          "supports": "Management by exception definition"
+        },
+        {
+          "name": "Wikipedia: Straight-through processing",
+          "url": "https://en.wikipedia.org/wiki/Straight-through_processing",
+          "supports": "Definition of straight-through processing"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-process-monitoring/",
+        "/platform/actions-automation/",
+        "/use-cases/operational-efficiency/",
+        "GR-002"
+      ],
+      "nearest_existing_page": "GR-002 is the order-exceptions use case; this is the cross-process management method.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-025",
+      "type": "use-case",
+      "cluster": "customer-journey",
+      "priority": 25,
+      "keyword": "churn early warning",
+      "secondary_keywords": [
+        "churn warning signs",
+        "churn risk signals",
+        "at-risk customers",
+        "predict churn"
+      ],
+      "intent": "commercial investigation",
+      "url": "/use-cases/churn-early-warning/",
+      "meta_title": "Churn Early Warning From Operational Signals",
+      "h1": "Churn early warning from operational signals",
+      "angle": "SERP is CS-platform vendor blogs with unverified windows and multipliers. Angle: many churn signals are operational (failed payments, unresolved cases, missed commitments, onboarding delays) and live outside the CS tool; combine them with usage on one timeline and route to an owner while there is time.",
+      "serp_notes": "Observed: vendor blogs (Marmeto, Statisfy, Saber, Supportbench) with unsourced statistics. Usage/health-score centric; operational causes under-covered.",
+      "outline_h2": [
+        "Churn starts upstream",
+        "Operational signals that precede churn",
+        "Combining signals on one customer timeline",
+        "From signal to owner",
+        "Measuring whether intervention worked"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative account timeline (fictional) showing operational events preceding a non-renewal.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Customer attrition",
+          "url": "https://en.wikipedia.org/wiki/Customer_attrition",
+          "supports": "Voluntary vs involuntary churn and churn prediction"
+        },
+        {
+          "name": "Wikipedia: Churn rate",
+          "url": "https://en.wikipedia.org/wiki/Churn_rate",
+          "supports": "Churn rate definition"
+        },
+        {
+          "name": "Wikipedia: Cohort analysis",
+          "url": "https://en.wikipedia.org/wiki/Cohort_analysis",
+          "supports": "Cohort analysis definition"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/customer-experience/",
+        "/solutions/industries/saas/",
+        "/platform/business-graph/",
+        "/platform/actions-automation/",
+        "GR-037"
+      ],
+      "nearest_existing_page": "No churn use case exists; /solutions/industries/saas/ mentions renewal signals in passing.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-026",
+      "type": "knowledge",
+      "cluster": "customer-journey",
+      "priority": 26,
+      "keyword": "first contact resolution",
+      "secondary_keywords": [
+        "FCR",
+        "first call resolution",
+        "FCR formula",
+        "how to measure first contact resolution"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-first-contact-resolution/",
+      "meta_title": "What Is First Contact Resolution (FCR)?",
+      "h1": "What is first contact resolution (FCR)?",
+      "angle": "SERP is contact-centre vendors, with the useful caveat that FCR has no standard definition. Angle: show the definitional choices (window, channel, transfers) explicitly, and measure FCR from repeat contacts on the customer timeline rather than agent self-report.",
+      "serp_notes": "Observed: eesel, Macha, TechTarget, Gladly, Kustomer, Call Centre Helper, RingCentral. Formula + benchmarks; definitional ambiguity acknowledged but not resolved.",
+      "outline_h2": [
+        "First contact resolution in one sentence",
+        "Definitional choices that change the number",
+        "How to measure it from events",
+        "FCR and customer effort",
+        "Pitfalls: gaming and deflection",
+        "Using FCR operationally"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Definition-choice table (window, channel, transfer rules) with the effect each has on the figure.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Call centre",
+          "url": "https://en.wikipedia.org/wiki/Call_centre",
+          "supports": "Contact centre context and common measures (definition only)"
+        },
+        {
+          "name": "Wikipedia: Customer service",
+          "url": "https://en.wikipedia.org/wiki/Customer_service",
+          "supports": "Customer service definition"
+        },
+        {
+          "name": "Wikipedia: Goodhart's law",
+          "url": "https://en.wikipedia.org/wiki/Goodhart%27s_law",
+          "supports": "Goodhart's law statement"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/customer-experience/",
+        "/blog/kpi-definition-template/",
+        "GR-022"
+      ],
+      "nearest_existing_page": "No existing page covers FCR.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-027",
+      "type": "glossary",
+      "cluster": "customer-journey",
+      "priority": 27,
+      "keyword": "average handle time",
+      "secondary_keywords": [
+        "contact rate",
+        "CES definition",
+        "FCR definition"
+      ],
+      "intent": "informational",
+      "url": "/resources/business-observability-glossary/#first-contact-resolution",
+      "meta_title": "Glossary: customer service terms",
+      "h1": "Glossary additions: customer service",
+      "angle": "Adds customer-service measures for the CX cluster, cross-linked to the knowledge pages.",
+      "serp_notes": "Observed for \"average handle time\": contact-centre vendor glossaries. Support content.",
+      "outline_h2": [
+        "(glossary entries, no H2s)"
+      ],
+      "target_length_words": "150-300 (definitions only)",
+      "original_asset": "Four cross-linked definitions.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Call centre",
+          "url": "https://en.wikipedia.org/wiki/Call_centre",
+          "supports": "Contact centre context and common measures (definition only)"
+        },
+        {
+          "name": "IBM Think: What is customer effort score?",
+          "url": "https://www.ibm.com/think/topics/customer-effort-score",
+          "supports": "CES definition, survey formats and its 2010 origin at CEB"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-glossary/",
+        "/solutions/customer-experience/",
+        "GR-022",
+        "GR-026"
+      ],
+      "nearest_existing_page": "/resources/business-observability-glossary/ (new terms).",
+      "terms": [
+        "First contact resolution (FCR)",
+        "Customer effort score (CES)",
+        "Average handle time (AHT)",
+        "Contact rate"
+      ],
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-028",
+      "type": "blog",
+      "cluster": "metrics-kpis",
+      "priority": 28,
+      "keyword": "leading indicators of revenue",
+      "secondary_keywords": [
+        "leading vs lagging indicators examples",
+        "revenue leading indicators",
+        "early indicators of revenue",
+        "predictive business metrics"
+      ],
+      "intent": "informational",
+      "url": "/blog/leading-indicators-of-revenue/",
+      "meta_title": "Leading Indicators of Revenue, Tested",
+      "h1": "Leading indicators of revenue, and how to test them",
+      "angle": "Ranking content lists generic leading indicators. Angle: a candidate leading indicator is a hypothesis; show how to test lead time and stability against history, and why operational indicators (onboarding time, payment failure, backlog age) often lead revenue more reliably than pipeline activity.",
+      "serp_notes": "Observed for leading-indicator queries: listicles and economics definitions; little on testing whether an indicator actually leads.",
+      "outline_h2": [
+        "A leading indicator is a hypothesis",
+        "Candidates across the revenue chain",
+        "Testing lead time and stability",
+        "Operational indicators that lead revenue",
+        "When an indicator stops leading",
+        "Building them into review"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Illustrative test table for three candidate indicators (lag, stability, mechanism), with clearly hypothetical data.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Economic indicator",
+          "url": "https://en.wikipedia.org/wiki/Economic_indicator",
+          "supports": "Leading, lagging and coincident indicator definitions"
+        },
+        {
+          "name": "Wikipedia: Goodhart's law",
+          "url": "https://en.wikipedia.org/wiki/Goodhart%27s_law",
+          "supports": "Goodhart's law statement"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-health-metrics/",
+        "/blog/how-to-build-a-kpi-tree/",
+        "/solutions/revenue/",
+        "/resources/how-business-events-connect-to-outcomes/"
+      ],
+      "nearest_existing_page": "/resources/business-health-metrics/ explains leading vs lagging conceptually; this article is a testing method focused on revenue. Avoid the BO-17 keyword \"business observability metrics\".",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-029",
+      "type": "knowledge",
+      "cluster": "metrics-kpis",
+      "priority": 29,
+      "keyword": "north star metric",
+      "secondary_keywords": [
+        "north star framework",
+        "north star metric examples",
+        "input metrics",
+        "one metric that matters"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-a-north-star-metric/",
+      "meta_title": "What Is a North Star Metric? Uses and Limits",
+      "h1": "What is a north star metric?",
+      "angle": "SERP is product-analytics vendors (Mixpanel, Amplitude, Statsig). Angle: a neutral definition plus the operational side they skip: a north star needs input metrics that teams can act on, and health checks around it so it is not hit at the cost of service or margin (Goodhart).",
+      "serp_notes": "Observed: Mixpanel, Statsig, Spotify Confidence, Metabase, Amplitude, LogRocket. Product-team framing; weak on guardrails and operational inputs.",
+      "outline_h2": [
+        "North star metric in one sentence",
+        "Criteria for a good north star",
+        "Input metrics",
+        "North star vs KPIs vs OKRs",
+        "Guardrails and health checks",
+        "Common mistakes"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative north star with inputs and guardrails for a hypothetical subscription and a hypothetical marketplace.",
+      "external_references": [
+        {
+          "name": "Amplitude: North Star Playbook",
+          "url": "https://amplitude.com/books/north-star",
+          "supports": "Amplitude's own playbook for the North Star Framework (what Amplitude says about its framework)"
+        },
+        {
+          "name": "Wikipedia: Objectives and key results",
+          "url": "https://en.wikipedia.org/wiki/Objectives_and_key_results",
+          "supports": "OKR definition, for contrast with a north star"
+        },
+        {
+          "name": "Wikipedia: Goodhart's law",
+          "url": "https://en.wikipedia.org/wiki/Goodhart%27s_law",
+          "supports": "Goodhart's law statement"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-health-metrics/",
+        "/blog/how-to-build-a-kpi-tree/",
+        "/solutions/executives/"
+      ],
+      "nearest_existing_page": "/blog/how-to-build-a-kpi-tree/ targets \"KPI tree\"; this page targets the north star concept and links to the KPI tree for decomposition.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-030",
+      "type": "industry",
+      "cluster": "industries",
+      "priority": 30,
+      "keyword": "energy and utilities operations monitoring",
+      "secondary_keywords": [
+        "utility billing accuracy",
+        "meter to cash",
+        "energy supplier operations",
+        "utility customer operations"
+      ],
+      "intent": "commercial investigation",
+      "url": "/solutions/industries/energy-utilities/",
+      "meta_title": "Energy & Utilities Operations Monitoring",
+      "h1": "Energy and utilities operations monitoring from meter to cash",
+      "angle": "Utility SERPs are grid/OT and billing-system vendors. Gap: the retail/customer side from switch-in and meter reads through billing, payment and complaints. UK hook: Ofgem back-billing limit means late or estimated bills carry regulatory cost, so read-to-bill timeliness is a business signal. No grid/OT claims.",
+      "serp_notes": "Observed: billing and utility-audit vendors; Ofgem consumer pages. Grid/OT-heavy; little business-observability framing of meter-to-cash.",
+      "outline_h2": [
+        "Accurate bills depend on many hand-offs",
+        "Value streams: switching and onboarding, meter reads to bill, payments and debt, complaints",
+        "Indicators worth watching",
+        "Illustrative investigation",
+        "Capabilities",
+        "FAQs"
+      ],
+      "target_length_words": "1200-1600",
+      "original_asset": "Indicator table (estimated-bill share, read-to-bill lag, back-bill exposure, complaint rate) and fictional investigation.",
+      "external_references": [
+        {
+          "name": "Ofgem: What to do if you get a back bill",
+          "url": "https://www.ofgem.gov.uk/your-energy-supply/your-energy-bill/what-do-if-you-get-back-bill",
+          "supports": "UK 12-month back-billing limit for households and microbusinesses"
+        },
+        {
+          "name": "Ofgem press release: ban on back-billing beyond 12 months",
+          "url": "https://www.ofgem.gov.uk/press-release/ofgem-bans-suppliers-backbilling-customers-beyond-12-months",
+          "supports": "Regulatory reason billing accuracy and timeliness matter in energy"
+        },
+        {
+          "name": "Wikipedia: Smart meter",
+          "url": "https://en.wikipedia.org/wiki/Smart_meter",
+          "supports": "Smart meter definition (meter reads feeding billing)"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/industries/",
+        "/use-cases/sla-monitoring/",
+        "/solutions/finance/",
+        "GR-017"
+      ],
+      "nearest_existing_page": "No utilities page exists.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-031",
+      "type": "blog",
+      "cluster": "customer-journey",
+      "priority": 31,
+      "keyword": "customer health score",
+      "secondary_keywords": [
+        "customer health score model",
+        "health score metrics",
+        "customer health scoring",
+        "why health scores fail"
+      ],
+      "intent": "informational",
+      "url": "/blog/customer-health-score/",
+      "meta_title": "Customer Health Scores: Why They Mislead",
+      "h1": "Customer health scores: why they mislead and what to watch instead",
+      "angle": "SERP is CS-platform how-tos with weighted formulas. Opinion angle (consistent with the glossary's composite-score warning): a single weighted score hides the failing component; show components with a worst-component floor, include operational signals, and test the score against actual renewals.",
+      "serp_notes": "Observed: HubSpot, Planhat, ChurnZero, ZoomInfo, TechTarget, Gainsight-style guides. Formula templates; little validation advice or critique.",
+      "outline_h2": [
+        "Why health scores are popular",
+        "How a composite hides problems",
+        "Components, floors and segments",
+        "Adding operational signals",
+        "Testing the score against renewals",
+        "What to show instead"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Illustrative comparison: two hypothetical accounts with the same score and very different component profiles.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Customer attrition",
+          "url": "https://en.wikipedia.org/wiki/Customer_attrition",
+          "supports": "Voluntary vs involuntary churn and churn prediction"
+        },
+        {
+          "name": "Wikipedia: Customer success",
+          "url": "https://en.wikipedia.org/wiki/Customer_success",
+          "supports": "Customer success function definition"
+        },
+        {
+          "name": "Wikipedia: Goodhart's law",
+          "url": "https://en.wikipedia.org/wiki/Goodhart%27s_law",
+          "supports": "Goodhart's law statement"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/customer-experience/",
+        "/resources/business-health-metrics/",
+        "/resources/business-observability-glossary/",
+        "GR-025"
+      ],
+      "nearest_existing_page": "/resources/business-health-metrics/ warns about composite scores generally; this applies it to the customer-success health score.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-032",
+      "type": "role",
+      "cluster": "roles",
+      "priority": 32,
+      "keyword": "business outcomes for product teams",
+      "secondary_keywords": [
+        "product operations",
+        "product teams business outcomes",
+        "product analytics vs business observability",
+        "product managers"
+      ],
+      "intent": "commercial investigation",
+      "url": "/solutions/product/",
+      "meta_title": "Business Observability for Product Teams",
+      "h1": "Business outcomes for product teams, beyond the click",
+      "angle": "Product teams already have product analytics; the gap is seeing what happens after the click: fulfilment, billing, support and renewal outcomes of a product change. Angle: connect releases (change events) to business outcomes across systems, not just in-app funnels.",
+      "serp_notes": "Observed: product-analytics vendor pages dominate adjacent queries; none frame post-click business outcomes for product teams.",
+      "outline_h2": [
+        "After the click: outcomes product analytics cannot see",
+        "Releases as change events",
+        "Questions product teams ask",
+        "Working with operations and finance"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Table: product change, in-app metric, downstream business outcome to watch.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Product management",
+          "url": "https://en.wikipedia.org/wiki/Product_management",
+          "supports": "Product management function definition"
+        },
+        {
+          "name": "Wikipedia: Product manager",
+          "url": "https://en.wikipedia.org/wiki/Product_manager",
+          "supports": "Product manager role definition"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/",
+        "/platform/root-cause-analysis/",
+        "/resources/knowledge/what-is-customer-journey-analytics/",
+        "/platform/journey-intelligence/"
+      ],
+      "nearest_existing_page": "No product role page exists; /solutions/customer-experience/ is CX-led.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-033",
+      "type": "knowledge",
+      "cluster": "revenue-finance",
+      "priority": 33,
+      "keyword": "net revenue retention",
+      "secondary_keywords": [
+        "NRR",
+        "net dollar retention",
+        "NRR formula",
+        "NRR vs GRR"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-net-revenue-retention/",
+      "meta_title": "What Is Net Revenue Retention (NRR)?",
+      "h1": "What is net revenue retention (NRR)?",
+      "angle": "SERP is billing/subscription vendor glossaries with consistent formulas. Angle: NRR vs GRR side by side, the definitional choices that change NRR (cohort vs period, currency, re-activations), and which operational events (failed payments, onboarding delay, unresolved cases) move the inputs.",
+      "serp_notes": "Observed: Recharge, Baremetrics, Maxio, Count, Motley Fool, Klipfolio, Amplitude. Formula repetition; little on definitional choices or drivers.",
+      "outline_h2": [
+        "Net revenue retention in one sentence",
+        "Formula and worked example",
+        "NRR vs gross revenue retention",
+        "Definitional choices",
+        "What moves NRR operationally",
+        "Limits of NRR"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative cohort NRR/GRR bridge (starting, expansion, contraction, churn) for a hypothetical cohort.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Annual recurring revenue",
+          "url": "https://en.wikipedia.org/wiki/Annual_recurring_revenue",
+          "supports": "Definition of ARR, the base for retention metrics"
+        },
+        {
+          "name": "Wikipedia: Churn rate",
+          "url": "https://en.wikipedia.org/wiki/Churn_rate",
+          "supports": "Churn rate definition"
+        },
+        {
+          "name": "Wikipedia: Cohort analysis",
+          "url": "https://en.wikipedia.org/wiki/Cohort_analysis",
+          "supports": "Cohort analysis definition"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/industries/saas/",
+        "/solutions/revenue/",
+        "/resources/business-health-metrics/"
+      ],
+      "nearest_existing_page": "No existing page covers NRR.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-034",
+      "type": "glossary",
+      "cluster": "revenue-finance",
+      "priority": 34,
+      "keyword": "gross revenue retention",
+      "secondary_keywords": [
+        "NRR definition",
+        "involuntary churn meaning",
+        "expansion revenue meaning"
+      ],
+      "intent": "informational",
+      "url": "/resources/business-observability-glossary/#net-revenue-retention",
+      "meta_title": "Glossary: retention terms",
+      "h1": "Glossary additions: retention",
+      "angle": "Adds retention vocabulary for SaaS and subscription content.",
+      "serp_notes": "Observed for \"gross revenue retention\": SaaS metrics glossaries. Support content.",
+      "outline_h2": [
+        "(glossary entries, no H2s)"
+      ],
+      "target_length_words": "150-300 (definitions only)",
+      "original_asset": "Four cross-linked definitions.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Customer attrition",
+          "url": "https://en.wikipedia.org/wiki/Customer_attrition",
+          "supports": "Voluntary vs involuntary churn and churn prediction"
+        },
+        {
+          "name": "Wikipedia: Annual recurring revenue",
+          "url": "https://en.wikipedia.org/wiki/Annual_recurring_revenue",
+          "supports": "Definition of ARR, the base for retention metrics"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-glossary/",
+        "/solutions/industries/saas/",
+        "GR-033"
+      ],
+      "nearest_existing_page": "/resources/business-observability-glossary/ (new terms; \"Cohort\" exists).",
+      "terms": [
+        "Net revenue retention (NRR)",
+        "Gross revenue retention (GRR)",
+        "Involuntary churn",
+        "Expansion revenue"
+      ],
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-035",
+      "type": "blog",
+      "cluster": "revenue-finance",
+      "priority": 35,
+      "keyword": "measure the impact of a price change",
+      "secondary_keywords": [
+        "price increase impact",
+        "pricing change analysis",
+        "price change churn",
+        "did the price change work"
+      ],
+      "intent": "informational",
+      "url": "/blog/measure-price-change-impact/",
+      "meta_title": "How to Measure a Price Change Honestly",
+      "h1": "How to measure the impact of a price change honestly",
+      "angle": "SERP is pricing-consultancy FAQs and billing-vendor docs with before/after comparisons and unverified timing claims. Angle: treat the price change as a change event, build a seasonal baseline, use a comparison group where possible, and separate price-driven from background churn; state what cannot be known.",
+      "serp_notes": "Observed: Monetizely, Recurly docs, Mather Economics, Bruin. Before/after focus; comparison groups rare; seasonality often ignored.",
+      "outline_h2": [
+        "Record the change as an event",
+        "Baseline and seasonality",
+        "Comparison groups",
+        "Revenue, conversion and churn together",
+        "Price-driven vs background churn",
+        "Reporting with uncertainty"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Illustrative analysis plan checklist and a hypothetical difference-in-differences table.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Difference in differences",
+          "url": "https://en.wikipedia.org/wiki/Difference_in_differences",
+          "supports": "Comparison-group method for estimating the effect of a change"
+        },
+        {
+          "name": "Wikipedia: Interrupted time series",
+          "url": "https://en.wikipedia.org/wiki/Interrupted_time_series",
+          "supports": "Before/after design with a time series baseline"
+        },
+        {
+          "name": "Wikipedia: Price elasticity of demand",
+          "url": "https://en.wikipedia.org/wiki/Price_elasticity_of_demand",
+          "supports": "Definition of price elasticity"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/revenue/",
+        "/use-cases/business-anomalies/",
+        "/platform/root-cause-analysis/",
+        "/resources/business-observability-glossary/"
+      ],
+      "nearest_existing_page": "No existing page covers pricing changes; /use-cases/business-anomalies/ handles unexpected change, this handles a deliberate one.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-036",
+      "type": "use-case",
+      "cluster": "process-ops",
+      "priority": 36,
+      "keyword": "fulfilment delays",
+      "secondary_keywords": [
+        "late deliveries",
+        "delivery promise monitoring",
+        "on-time delivery",
+        "promised date"
+      ],
+      "intent": "commercial investigation",
+      "url": "/use-cases/fulfilment-delays/",
+      "meta_title": "Fulfilment Delays: Keep Delivery Promises",
+      "h1": "Fulfilment delays: keep the promises made at checkout",
+      "angle": "SERP is WMS/carrier vendor content. Angle: measure against the promise made to the customer (date shown at order), not internal stage SLAs; find which stage and segment consumed the slack; connect late orders to contacts, refunds and repeat purchase.",
+      "serp_notes": "Observed for fulfilment-delay queries: WMS/3PL and carrier blogs; inventory-focused; little on promise-based measurement.",
+      "outline_h2": [
+        "Measure against the promise",
+        "Where the slack went: stage by stage",
+        "Segments: carrier, site, product, promotion",
+        "Downstream cost: contacts and refunds",
+        "Acting before the promise breaks"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative promise-slack table by stage for late vs on-time orders.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Order fulfillment",
+          "url": "https://en.wikipedia.org/wiki/Order_fulfillment",
+          "supports": "Order fulfilment stages"
+        },
+        {
+          "name": "ASCM: SCOR model",
+          "url": "https://www.ascm.org/topics/scor/",
+          "supports": "Supply chain reference model including delivery reliability measures"
+        },
+        {
+          "name": "Wikipedia: Supply chain operations reference",
+          "url": "https://en.wikipedia.org/wiki/Supply_chain_operations_reference",
+          "supports": "SCOR overview (definition only)"
+        }
+      ],
+      "internal_links_to": [
+        "/use-cases/sla-monitoring/",
+        "/solutions/industries/ecommerce-retail/",
+        "/solutions/industries/logistics-supply-chain/",
+        "/platform/process-intelligence/"
+      ],
+      "nearest_existing_page": "/use-cases/sla-monitoring/ covers time-to-breach on any committed work; this page is specifically delivery promises to customers and links there for the general method.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-037",
+      "type": "knowledge",
+      "cluster": "customer-journey",
+      "priority": 37,
+      "keyword": "churn analysis",
+      "secondary_keywords": [
+        "customer churn analysis",
+        "how to do churn analysis",
+        "churn analysis methods",
+        "voluntary vs involuntary churn"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-churn-analysis/",
+      "meta_title": "What Is Churn Analysis? Methods and Pitfalls",
+      "h1": "What is churn analysis?",
+      "angle": "SERP is Stripe and CS/analytics vendor how-tos. Angle: define churn analysis and its methods (cohort retention, survival curves, driver analysis), warn about stated reasons vs observed causes, and include operational/involuntary churn that customer-success tools miss.",
+      "serp_notes": "Observed: Stripe, Churnkey, Clozd, Amplitude, ThoughtSpot, DevSquad. How-to lists; involuntary churn and operational causes underplayed.",
+      "outline_h2": [
+        "Churn analysis in one sentence",
+        "Define churn first",
+        "Methods: cohorts, survival curves, drivers",
+        "Stated reasons vs observed causes",
+        "Involuntary churn",
+        "From analysis to early warning"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative cohort retention table and a stated-vs-observed reason comparison.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Customer attrition",
+          "url": "https://en.wikipedia.org/wiki/Customer_attrition",
+          "supports": "Voluntary vs involuntary churn and churn prediction"
+        },
+        {
+          "name": "Wikipedia: Survival analysis",
+          "url": "https://en.wikipedia.org/wiki/Survival_analysis",
+          "supports": "Time-to-event analysis used for retention curves"
+        },
+        {
+          "name": "Wikipedia: Cohort analysis",
+          "url": "https://en.wikipedia.org/wiki/Cohort_analysis",
+          "supports": "Cohort analysis definition"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/customer-experience/",
+        "/resources/knowledge/what-is-customer-journey-analytics/",
+        "GR-025",
+        "GR-033"
+      ],
+      "nearest_existing_page": "GR-025 is the operational early-warning use case; this is the analytical definition.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-038",
+      "type": "blog",
+      "cluster": "process-ops",
+      "priority": 38,
+      "keyword": "business incident postmortem",
+      "secondary_keywords": [
+        "blameless postmortem for business",
+        "operational incident review",
+        "after-action review business",
+        "incident review template"
+      ],
+      "intent": "informational",
+      "url": "/blog/business-incident-postmortem/",
+      "meta_title": "Postmortems for Business Incidents",
+      "h1": "Business incident postmortem: reviews for more than outages",
+      "angle": "Postmortem SERP is entirely SRE/IT tooling (incident.io, PagerDuty, Rootly). Gap: applying blameless review to business incidents (a billing run error, a missed batch of deliveries, a pricing mistake): triggers, timeline from business events, impact in business terms, contributing factors and action items with owners.",
+      "serp_notes": "Observed: Eficode, Pluralsight, incident.io, PagerDuty, Rootly. All IT-focused; one notes business teams should be involved but no business template exists.",
+      "outline_h2": [
+        "When a business incident deserves a review",
+        "Building the timeline from business events",
+        "Impact in business terms",
+        "Contributing factors, not a culprit",
+        "Action items that get done",
+        "Template"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Copyable business-incident postmortem template with an illustrative (fictional) filled example.",
+      "external_references": [
+        {
+          "name": "Google SRE book: Postmortem culture",
+          "url": "https://sre.google/sre-book/postmortem-culture/",
+          "supports": "Blameless postmortem principles and triggers"
+        },
+        {
+          "name": "Google SRE workbook: Postmortem culture",
+          "url": "https://sre.google/workbook/postmortem-culture/",
+          "supports": "Worked postmortem examples and action-item practice"
+        },
+        {
+          "name": "Wikipedia: After-action review",
+          "url": "https://en.wikipedia.org/wiki/After-action_review",
+          "supports": "After-action review as a non-IT learning review format"
+        },
+        {
+          "name": "Wikipedia: Swiss cheese model",
+          "url": "https://en.wikipedia.org/wiki/Swiss_cheese_model",
+          "supports": "Multiple contributing factors model of failure"
+        }
+      ],
+      "internal_links_to": [
+        "/platform/root-cause-analysis/",
+        "/platform/actions-automation/",
+        "/resources/business-observability-vs-system-observability/",
+        "/resources/business-observability-glossary/"
+      ],
+      "nearest_existing_page": "/platform/root-cause-analysis/ is product-led; this is a vendor-neutral review practice.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-039",
+      "type": "glossary",
+      "cluster": "process-ops",
+      "priority": 39,
+      "keyword": "straight-through processing",
+      "secondary_keywords": [
+        "exception meaning operations",
+        "first-pass yield",
+        "order fallout meaning"
+      ],
+      "intent": "informational",
+      "url": "/resources/business-observability-glossary/#exception",
+      "meta_title": "Glossary: exception terms",
+      "h1": "Glossary additions: exceptions and flow",
+      "angle": "Adds exception vocabulary for the process cluster and the order-exceptions use case.",
+      "serp_notes": "Observed for \"straight-through processing\": finance/payments definitions and Wikipedia. Support content.",
+      "outline_h2": [
+        "(glossary entries, no H2s)"
+      ],
+      "target_length_words": "150-300 (definitions only)",
+      "original_asset": "Four cross-linked definitions linking to Rework and Flow efficiency.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Straight-through processing",
+          "url": "https://en.wikipedia.org/wiki/Straight-through_processing",
+          "supports": "Definition of straight-through processing"
+        },
+        {
+          "name": "Wikipedia: Management by exception",
+          "url": "https://en.wikipedia.org/wiki/Management_by_exception",
+          "supports": "Management by exception definition"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-glossary/",
+        "/resources/business-process-monitoring/",
+        "GR-002",
+        "GR-024"
+      ],
+      "nearest_existing_page": "/resources/business-observability-glossary/ (new terms; \"Rework\" exists).",
+      "terms": [
+        "Exception",
+        "Straight-through processing",
+        "First-pass yield",
+        "Fallout"
+      ],
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-040",
+      "type": "knowledge",
+      "cluster": "data-foundations",
+      "priority": 40,
+      "keyword": "data observability",
+      "secondary_keywords": [
+        "data observability pillars",
+        "data observability vs data quality",
+        "data observability vs business observability",
+        "data pipeline monitoring"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-data-observability/",
+      "meta_title": "What Is Data Observability? Pillars, Limits",
+      "h1": "What is data observability?",
+      "angle": "SERP is data-observability vendors with the five pillars. Angle: neutral definition plus the distinction they blur: data observability asks \"is the data healthy?\", business observability asks \"is the business healthy?\"; both are needed, and a metric move can be either a data incident or a real change.",
+      "serp_notes": "Observed: Monte Carlo, IBM, Databricks, Alation, Sifflet, Acceldata, Fivetran. Vendor-led; consistent five pillars; few explain the boundary with business-level monitoring.",
+      "outline_h2": [
+        "Data observability in one sentence",
+        "The five pillars",
+        "Data observability vs data quality testing",
+        "Data observability vs business observability",
+        "Data incident or business change?",
+        "Where each belongs in the stack"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Comparison table: data observability vs business observability vs system observability (question, signals, owner).",
+      "external_references": [
+        {
+          "name": "IBM Think: What is data observability?",
+          "url": "https://www.ibm.com/think/topics/data-observability",
+          "supports": "Data observability definition and five pillars (freshness, distribution, volume, schema, lineage)"
+        },
+        {
+          "name": "Wikipedia: Data quality",
+          "url": "https://en.wikipedia.org/wiki/Data_quality",
+          "supports": "Data quality dimensions"
+        },
+        {
+          "name": "Wikipedia: Data lineage",
+          "url": "https://en.wikipedia.org/wiki/Data_lineage",
+          "supports": "Data lineage definition"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-vs-system-observability/",
+        "/resources/what-is-business-observability/",
+        "/integrations/data-sources/",
+        "/resources/knowledge/what-is-a-semantic-layer/"
+      ],
+      "nearest_existing_page": "/resources/business-observability-vs-system-observability/ compares with infrastructure monitoring, not data pipelines. Keep H1 on data observability to avoid BO-07 overlap.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-041",
+      "type": "industry",
+      "cluster": "industries",
+      "priority": 41,
+      "keyword": "healthcare administrative operations",
+      "secondary_keywords": [
+        "healthcare operations visibility",
+        "referral backlog",
+        "patient administration",
+        "healthcare revenue cycle operations"
+      ],
+      "intent": "commercial investigation",
+      "url": "/solutions/industries/healthcare-operations/",
+      "meta_title": "Healthcare Administrative Operations",
+      "h1": "Healthcare administrative operations: referrals, scheduling and billing",
+      "angle": "SERP is RCM and workflow-automation vendors with unsourced statistics. Gap: an administrative-only view (referral intake, scheduling, waiting lists, billing and claims) without clinical claims. UK hook: NHS RTT statistics show waiting time is measured from referral. Must state clearly that Panoptes makes no clinical claims and handles no clinical decisions.",
+      "serp_notes": "Observed: Verisma, Innovaccer, CDW, SysGenPro, HealthcareITNews. Vendor-led; mixes US RCM and admin; statistics untraced.",
+      "outline_h2": [
+        "Administrative work decides how long patients wait",
+        "Value streams: referral intake, scheduling, waiting list, billing and claims",
+        "Indicators worth watching",
+        "Illustrative investigation",
+        "Capabilities",
+        "Scope: administrative only",
+        "FAQs"
+      ],
+      "target_length_words": "1200-1600",
+      "original_asset": "Indicator table (referral-to-booking time, unprocessed referral age, DNA rate, claim denial rate) and a fictional, non-clinical investigation.",
+      "external_references": [
+        {
+          "name": "NHS England: Referral to treatment (RTT) waiting times statistics",
+          "url": "https://www.england.nhs.uk/statistics/statistical-work-areas/rtt-waiting-times/",
+          "supports": "Official waiting-time measures from referral to treatment"
+        },
+        {
+          "name": "NHS.uk: Guide to NHS waiting times in England",
+          "url": "https://www.nhs.uk/nhs-services/hospitals/guide-to-nhs-waiting-times-in-england/",
+          "supports": "Patient-facing explanation of waiting time rights"
+        },
+        {
+          "name": "Wikipedia: Revenue cycle management",
+          "url": "https://en.wikipedia.org/wiki/Revenue_cycle_management",
+          "supports": "Healthcare revenue cycle definition (administrative)"
+        },
+        {
+          "name": "Wikipedia: Medical billing",
+          "url": "https://en.wikipedia.org/wiki/Medical_billing",
+          "supports": "Claims and billing process (administrative)"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/industries/",
+        "/integrations/security-governance/",
+        "/use-cases/operational-bottlenecks/",
+        "/trust/"
+      ],
+      "nearest_existing_page": "No healthcare page exists. Hold for legal/compliance review of data-handling statements before publishing.",
+      "status": "held",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": "Healthcare (administrative scope): needs a human compliance review of the angle and wording before the maintainer may write it. Clear this hold to release it.",
+      "covered_by": null
+    },
+    {
+      "id": "GR-042",
+      "type": "blog",
+      "cluster": "data-foundations",
+      "priority": 42,
+      "keyword": "data issue or business change",
+      "secondary_keywords": [
+        "is it the data or the business",
+        "metric dropped data quality",
+        "data incident vs real change",
+        "investigate a metric drop"
+      ],
+      "intent": "informational",
+      "url": "/blog/data-issue-or-business-change/",
+      "meta_title": "Data Issue or Real Change? How to Tell",
+      "h1": "Data issue or business change? How to tell when a metric moves",
+      "angle": "No SERP serves this question directly; results are data-observability vendor posts. Angle: a short triage protocol (freshness, volume, definition change, then segment and mechanism checks) that data and business teams can share, so they stop arguing about whether a drop is real.",
+      "serp_notes": "Observed for adjacent queries: Sifflet/Monte Carlo \"business-aware data observability\" posts. Vendor-led; no shared triage protocol.",
+      "outline_h2": [
+        "The first question after a metric moves",
+        "Data checks: freshness, volume, schema, definition",
+        "Business checks: segment, mechanism, change events",
+        "A shared triage protocol",
+        "Who owns which answer",
+        "Worked example"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Triage flowchart as a table (check, what it rules out, owner) and an illustrative example.",
+      "external_references": [
+        {
+          "name": "IBM Think: What is data observability?",
+          "url": "https://www.ibm.com/think/topics/data-observability",
+          "supports": "Data observability definition and five pillars (freshness, distribution, volume, schema, lineage)"
+        },
+        {
+          "name": "Wikipedia: Data quality",
+          "url": "https://en.wikipedia.org/wiki/Data_quality",
+          "supports": "Data quality dimensions"
+        }
+      ],
+      "internal_links_to": [
+        "/use-cases/business-anomalies/",
+        "/resources/business-observability-glossary/",
+        "/platform/anomaly-detection/",
+        "GR-040"
+      ],
+      "nearest_existing_page": "/use-cases/business-anomalies/ separates real change from noise; this adds the data-incident branch and a shared protocol.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-043",
+      "type": "knowledge",
+      "cluster": "data-foundations",
+      "priority": 43,
+      "keyword": "data contract",
+      "secondary_keywords": [
+        "data contracts",
+        "data contract example",
+        "open data contract standard",
+        "data contract vs schema"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-a-data-contract/",
+      "meta_title": "What Is a Data Contract? Contents, Examples",
+      "h1": "What is a data contract?",
+      "angle": "SERP is data-catalogue and observability vendors with mixed framings. Angle: neutral definition, contents per the Open Data Contract Standard, and the business-event angle: a contract for operational events (order placed, payment failed) is what keeps business metrics stable when upstream systems change.",
+      "serp_notes": "Observed: IBM, Collibra, DataHub, Monte Carlo, Metabase, MotherDuck. Pipeline-table framing; little on events from operational systems.",
+      "outline_h2": [
+        "Data contract in one sentence",
+        "What a data contract contains",
+        "Data contract vs schema vs SLA",
+        "Contracts for business events",
+        "Who owns a contract",
+        "Getting started"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative minimal contract for a hypothetical \"payment failed\" event (fields, guarantees, owner), as a table.",
+      "external_references": [
+        {
+          "name": "Bitol (Linux Foundation): Open Data Contract Standard",
+          "url": "https://bitol-io.github.io/open-data-contract-standard/latest/",
+          "supports": "Open standard structure for a data contract (schema, quality, SLA, ownership)"
+        },
+        {
+          "name": "Wikipedia: Data governance",
+          "url": "https://en.wikipedia.org/wiki/Data_governance",
+          "supports": "Data governance definition"
+        },
+        {
+          "name": "CloudEvents (CNCF)",
+          "url": "https://cloudevents.io/",
+          "supports": "Vendor-neutral specification for describing event data"
+        }
+      ],
+      "internal_links_to": [
+        "/integrations/api/",
+        "/resources/how-business-events-connect-to-outcomes/",
+        "/resources/knowledge/what-is-a-semantic-layer/",
+        "/integrations/security-governance/"
+      ],
+      "nearest_existing_page": "No existing page covers data contracts; /integrations/api/ is product-specific.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-044",
+      "type": "glossary",
+      "cluster": "data-foundations",
+      "priority": 44,
+      "keyword": "data lineage",
+      "secondary_keywords": [
+        "data contract definition",
+        "data freshness meaning",
+        "semantic layer definition"
+      ],
+      "intent": "informational",
+      "url": "/resources/business-observability-glossary/#data-contract",
+      "meta_title": "Glossary: data foundation terms",
+      "h1": "Glossary additions: data foundations",
+      "angle": "Adds data-foundation terms for the data cluster, linking to the semantic layer and data contract pages.",
+      "serp_notes": "Observed for \"data lineage\": IBM, Wikipedia, catalogue vendors. Support content.",
+      "outline_h2": [
+        "(glossary entries, no H2s)"
+      ],
+      "target_length_words": "150-300 (definitions only)",
+      "original_asset": "Four cross-linked definitions.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Data lineage",
+          "url": "https://en.wikipedia.org/wiki/Data_lineage",
+          "supports": "Data lineage definition"
+        },
+        {
+          "name": "IBM Think: What is data lineage?",
+          "url": "https://www.ibm.com/think/topics/data-lineage",
+          "supports": "Data lineage definition"
+        },
+        {
+          "name": "Bitol (Linux Foundation): Open Data Contract Standard",
+          "url": "https://bitol-io.github.io/open-data-contract-standard/latest/",
+          "supports": "Open standard structure for a data contract (schema, quality, SLA, ownership)"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-glossary/",
+        "/resources/knowledge/what-is-a-semantic-layer/",
+        "GR-040",
+        "GR-043"
+      ],
+      "nearest_existing_page": "/resources/business-observability-glossary/ (new terms; \"Business event\" and \"Entity\" exist).",
+      "terms": [
+        "Data contract",
+        "Data lineage",
+        "Data freshness",
+        "Semantic layer"
+      ],
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-045",
+      "type": "blog",
+      "cluster": "data-foundations",
+      "priority": 45,
+      "keyword": "business event tracking plan",
+      "secondary_keywords": [
+        "event tracking plan",
+        "event naming conventions",
+        "event taxonomy",
+        "server-side business events"
+      ],
+      "intent": "informational",
+      "url": "/blog/business-event-tracking-plan/",
+      "meta_title": "A Tracking Plan for Business Events",
+      "h1": "Business event tracking plan: record what the business does, not just clicks",
+      "angle": "Tracking-plan SERP is product-analytics docs (Snowplow, Amplitude, Mixpanel, Avo) about client-side clickstream. Gap: a plan for operational events emitted by back-office systems (orders, invoices, cases), with entity IDs, timestamps, ownership and versioning.",
+      "serp_notes": "Observed: Snowplow, Trackingplan, Mixpanel, Amplitude, mParticle, Avo docs. Clickstream-centric; little on server-side business events or entity identifiers.",
+      "outline_h2": [
+        "Clicks are not business events",
+        "Object-action naming for operational events",
+        "Entity identifiers and timestamps",
+        "Ownership and versioning",
+        "Starting with one value stream",
+        "Template"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Tracking-plan template for business events with an illustrative order-to-cash example.",
+      "external_references": [
+        {
+          "name": "Snowplow docs: Tracking design best practice",
+          "url": "https://docs.snowplow.io/docs/fundamentals/tracking-design-best-practice/",
+          "supports": "One schema per action vs grouped schemas (Snowplow's own guidance)"
+        },
+        {
+          "name": "Twilio Segment docs: Tracking plan best practices",
+          "url": "https://www.twilio.com/docs/segment/protocols/tracking-plan/best-practices",
+          "supports": "Object-action naming and tracking-plan governance (Segment's own guidance)"
+        },
+        {
+          "name": "CloudEvents specification on GitHub",
+          "url": "https://github.com/cloudevents/spec",
+          "supports": "Required event attributes (id, source, type, time)"
+        },
+        {
+          "name": "Martin Fowler: What do you mean by \"Event-Driven\"?",
+          "url": "https://martinfowler.com/articles/201701-event-driven.html",
+          "supports": "Event notification vs event-carried state vs event sourcing"
+        }
+      ],
+      "internal_links_to": [
+        "/integrations/api/",
+        "/resources/how-business-events-connect-to-outcomes/",
+        "/blog/customer-journey-mapping-from-event-data/",
+        "GR-043"
+      ],
+      "nearest_existing_page": "/resources/how-business-events-connect-to-outcomes/ defines good events conceptually; this is a hands-on planning template.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-046",
+      "type": "knowledge",
+      "cluster": "metrics-kpis",
+      "priority": 46,
+      "keyword": "SLA vs SLO",
+      "secondary_keywords": [
+        "SLA SLO SLI",
+        "difference between SLA and SLO",
+        "service level objective",
+        "SLO for business processes"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-an-slo/",
+      "meta_title": "SLA vs SLO: What Is an SLO?",
+      "h1": "What is an SLO, and how is it different from an SLA (SLA vs SLO)?",
+      "angle": "SERP is entirely SRE/incident tooling with uptime examples. Gap: the same distinction for business commitments (delivery dates, resolution times, onboarding times): the SLA is the promise, the SLO the internal objective with headroom, the indicator the measured event pair.",
+      "serp_notes": "Observed: FireHydrant, Blameless, Splunk, Palo Alto, UptimeRobot, Rootly. All system-reliability examples; no business-process framing.",
+      "outline_h2": [
+        "SLA, SLO and SLI in one table",
+        "Why the SLO sits inside the SLA",
+        "Business examples",
+        "Error budgets for business commitments",
+        "Common mistakes"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Table translating SLA/SLO/SLI into three business examples (delivery, support, onboarding).",
+      "external_references": [
+        {
+          "name": "Google SRE book: Service level objectives",
+          "url": "https://sre.google/sre-book/service-level-objectives/",
+          "supports": "SLI / SLO / SLA definitions and the difference between objective and agreement"
+        },
+        {
+          "name": "Wikipedia: Service-level agreement",
+          "url": "https://en.wikipedia.org/wiki/Service-level_agreement",
+          "supports": "SLA definition"
+        },
+        {
+          "name": "Wikipedia: Service level objective",
+          "url": "https://en.wikipedia.org/wiki/Service_level_objective",
+          "supports": "SLO definition"
+        }
+      ],
+      "internal_links_to": [
+        "/use-cases/sla-monitoring/",
+        "/resources/business-observability-glossary/",
+        "/solutions/operations/"
+      ],
+      "nearest_existing_page": "/use-cases/sla-monitoring/ targets \"SLA monitoring\" (how to watch commitments); glossary defines SLA and SLO separately. This page targets the comparison query.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-047",
+      "type": "blog",
+      "cluster": "metrics-kpis",
+      "priority": 47,
+      "keyword": "vanity metrics",
+      "secondary_keywords": [
+        "vanity metrics vs actionable metrics",
+        "vanity metrics examples",
+        "actionable metrics",
+        "metrics that matter"
+      ],
+      "intent": "informational",
+      "url": "/blog/vanity-metrics/",
+      "meta_title": "Vanity Metrics in Operations, Not Marketing",
+      "h1": "Vanity metrics hide in operations too",
+      "angle": "SERP is marketing-analytics content (followers, page views). Opinion angle: operations and finance have vanity metrics too (tickets closed, orders processed, utilisation) that rise while outcomes fall; a test for spotting them and the outcome metric to pair each with.",
+      "serp_notes": "Observed: Ruler Analytics, Mailchimp, HubSpot, Usermaven, Basedash. Marketing examples only.",
+      "outline_h2": [
+        "Where the term comes from",
+        "Operational vanity metrics",
+        "A three-question test",
+        "Pair, do not delete",
+        "Examples by function"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Table pairing ten operational activity metrics with the outcome metric each should be shown beside.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Lean startup",
+          "url": "https://en.wikipedia.org/wiki/Lean_startup",
+          "supports": "Origin of the vanity vs actionable metrics distinction"
+        },
+        {
+          "name": "Wikipedia: Goodhart's law",
+          "url": "https://en.wikipedia.org/wiki/Goodhart%27s_law",
+          "supports": "Goodhart's law statement"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-health-metrics/",
+        "/blog/kpi-definition-template/",
+        "/resources/why-dashboards-miss-the-full-picture/"
+      ],
+      "nearest_existing_page": "/resources/why-dashboards-miss-the-full-picture/ critiques dashboards; this critiques individual metric choice.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-048",
+      "type": "knowledge",
+      "cluster": "ai-operations",
+      "priority": 48,
+      "keyword": "agentic AI in operations",
+      "secondary_keywords": [
+        "agentic AI business operations",
+        "AI agents in operations",
+        "agentic workflows",
+        "agentic AI examples"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-agentic-ai-in-operations/",
+      "meta_title": "What Is Agentic AI in Business Operations?",
+      "h1": "What is agentic AI in operations?",
+      "angle": "SERP is vendor hype with adoption statistics. Angle: sober definition (workflow vs agent), what operational work suits agents (preparation, follow-up, triage), what needs human approval, and why agents need a governed model of the business to act safely. Panoptes AI is product vision only.",
+      "serp_notes": "Observed: BPM, IBM IBV, Moxo, Aziro, Vega IT, many \"revolutionising\" posts. Hype-heavy; few distinguish workflows from agents or discuss oversight.",
+      "outline_h2": [
+        "Agentic AI in one sentence",
+        "Workflows vs agents",
+        "Operational work that suits agents",
+        "What should stay with people",
+        "What agents need: context, permissions, audit",
+        "Governance frameworks"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Table of operational tasks rated by suitability for an agent and required oversight (illustrative).",
+      "external_references": [
+        {
+          "name": "Anthropic: Building effective agents",
+          "url": "https://www.anthropic.com/research/building-effective-agents",
+          "supports": "Distinction between predefined workflows and agents that direct their own tool use"
+        },
+        {
+          "name": "IBM Think: What is agentic AI?",
+          "url": "https://www.ibm.com/think/topics/agentic-ai",
+          "supports": "Agentic AI definition"
+        },
+        {
+          "name": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+          "supports": "Governance and risk practices for AI systems"
+        },
+        {
+          "name": "OECD AI Principles",
+          "url": "https://oecd.ai/en/ai-principles",
+          "supports": "Human oversight, transparency and accountability principles"
+        }
+      ],
+      "internal_links_to": [
+        "/platform/ai-intelligence/",
+        "/blog/ai-chief-of-staff/",
+        "/company/vision/",
+        "/integrations/security-governance/"
+      ],
+      "nearest_existing_page": "/platform/ai-intelligence/ is the product-vision page; BO-15 targets \"AI-powered business observability\". This is a neutral concept page on agentic AI in operations.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-049",
+      "type": "blog",
+      "cluster": "ai-operations",
+      "priority": 49,
+      "keyword": "business context for AI agents",
+      "secondary_keywords": [
+        "context for AI agents",
+        "AI agents need a business model",
+        "grounding AI agents",
+        "AI agents operations data"
+      ],
+      "intent": "informational",
+      "url": "/blog/ai-agents-need-business-context/",
+      "meta_title": "AI Agents Need a Model of the Business",
+      "h1": "Business context for AI agents: why they need a model of the business first",
+      "angle": "Opinion piece: agents fail in operations less from model capability than from missing context (which customer, which commitment, who owns it). Argues a governed entity model, definitions and permissions come first. Must present Panoptes AI as direction, not capability.",
+      "serp_notes": "Observed for adjacent queries: vendor posts on \"context engineering\" and RAG; no operations-specific argument.",
+      "outline_h2": [
+        "Where agents go wrong in operations",
+        "Context an agent needs",
+        "Definitions, entities and ownership",
+        "Permissions and audit",
+        "What to build first"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Checklist: context an agent must have before it is allowed to act on a business process.",
+      "external_references": [
+        {
+          "name": "Anthropic: Building effective agents",
+          "url": "https://www.anthropic.com/research/building-effective-agents",
+          "supports": "Distinction between predefined workflows and agents that direct their own tool use"
+        },
+        {
+          "name": "IBM Think: What are AI agents?",
+          "url": "https://www.ibm.com/think/topics/ai-agents",
+          "supports": "AI agent definition"
+        },
+        {
+          "name": "NCSC: Guidelines for secure AI system development",
+          "url": "https://www.ncsc.gov.uk/collection/guidelines-secure-ai-system-development",
+          "supports": "UK security guidance for AI systems"
+        }
+      ],
+      "internal_links_to": [
+        "/platform/business-graph/",
+        "/blog/semantic-layer-vs-business-model/",
+        "/blog/ai-chief-of-staff/",
+        "/platform/ai-intelligence/"
+      ],
+      "nearest_existing_page": "/blog/ai-chief-of-staff/ is about one role; this is about the data foundations any operational agent needs.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-050",
+      "type": "glossary",
+      "cluster": "ai-operations",
+      "priority": 50,
+      "keyword": "agentic workflow",
+      "secondary_keywords": [
+        "AI agent definition",
+        "human in the loop definition",
+        "AI guardrail meaning"
+      ],
+      "intent": "informational",
+      "url": "/resources/business-observability-glossary/#ai-agent",
+      "meta_title": "Glossary: AI and automation terms",
+      "h1": "Glossary additions: AI and automation",
+      "angle": "Adds AI vocabulary used across the AI cluster with careful, non-promotional definitions.",
+      "serp_notes": "Observed for \"agentic workflow\": AI vendor glossaries and blogs. Support content.",
+      "outline_h2": [
+        "(glossary entries, no H2s)"
+      ],
+      "target_length_words": "150-300 (definitions only)",
+      "original_asset": "Four cross-linked definitions.",
+      "external_references": [
+        {
+          "name": "Anthropic: Building effective agents",
+          "url": "https://www.anthropic.com/research/building-effective-agents",
+          "supports": "Distinction between predefined workflows and agents that direct their own tool use"
+        },
+        {
+          "name": "Wikipedia: Human-in-the-loop",
+          "url": "https://en.wikipedia.org/wiki/Human-in-the-loop",
+          "supports": "Human-in-the-loop definition"
+        },
+        {
+          "name": "Wikipedia: Intelligent agent",
+          "url": "https://en.wikipedia.org/wiki/Intelligent_agent",
+          "supports": "Intelligent agent definition"
+        }
+      ],
+      "internal_links_to": [
+        "/resources/business-observability-glossary/",
+        "/platform/ai-intelligence/",
+        "GR-048",
+        "GR-051"
+      ],
+      "nearest_existing_page": "/resources/business-observability-glossary/ (new terms).",
+      "terms": [
+        "AI agent",
+        "Agentic workflow",
+        "Human in the loop",
+        "Guardrail"
+      ],
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-051",
+      "type": "blog",
+      "cluster": "ai-operations",
+      "priority": 51,
+      "keyword": "human in the loop for AI agents",
+      "secondary_keywords": [
+        "human oversight AI operations",
+        "human in the loop automation",
+        "approval workflows AI",
+        "AI decision rights"
+      ],
+      "intent": "informational",
+      "url": "/blog/human-in-the-loop-ai-operations/",
+      "meta_title": "Human in the Loop for AI in Operations",
+      "h1": "Human in the loop for AI agents in operations",
+      "angle": "SERP is ML-labelling and generic HITL explainers. Gap: a decision-rights framework for operations: classify actions by reversibility and impact, set approval levels, and log every action for review. Grounded in NIST AI RMF, OECD principles and the EU AI Act human-oversight article without legal advice.",
+      "serp_notes": "Observed for HITL queries: IBM, Wikipedia, ML data-labelling vendors. ML-training framing; little on operational decision rights.",
+      "outline_h2": [
+        "Human in the loop, on the loop, out of the loop",
+        "Classify actions by reversibility and impact",
+        "Approval levels",
+        "Audit and review",
+        "Where regulation points"
+      ],
+      "target_length_words": "1400-2000",
+      "original_asset": "Decision-rights matrix (reversibility x impact) with illustrative operational actions.",
+      "external_references": [
+        {
+          "name": "IBM Think: What is human-in-the-loop?",
+          "url": "https://www.ibm.com/think/topics/human-in-the-loop",
+          "supports": "Human-in-the-loop definition"
+        },
+        {
+          "name": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+          "supports": "Governance and risk practices for AI systems"
+        },
+        {
+          "name": "EU AI Act, Article 14: Human oversight (artificialintelligenceact.eu)",
+          "url": "https://artificialintelligenceact.eu/article/14/",
+          "supports": "Text of the human oversight requirement for high-risk AI systems"
+        },
+        {
+          "name": "OECD AI Principles",
+          "url": "https://oecd.ai/en/ai-principles",
+          "supports": "Human oversight, transparency and accountability principles"
+        }
+      ],
+      "internal_links_to": [
+        "/platform/actions-automation/",
+        "/integrations/security-governance/",
+        "/blog/ai-chief-of-staff/",
+        "GR-048"
+      ],
+      "nearest_existing_page": "No existing page covers oversight levels; /platform/actions-automation/ is product-led.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    },
+    {
+      "id": "GR-052",
+      "type": "knowledge",
+      "cluster": "revenue-finance",
+      "priority": 52,
+      "keyword": "cash conversion cycle",
+      "secondary_keywords": [
+        "CCC formula",
+        "how to calculate cash conversion cycle",
+        "negative cash conversion cycle",
+        "DIO DSO DPO"
+      ],
+      "intent": "informational",
+      "url": "/resources/knowledge/what-is-the-cash-conversion-cycle/",
+      "meta_title": "What Is the Cash Conversion Cycle (CCC)?",
+      "h1": "What is the cash conversion cycle?",
+      "angle": "SERP is Wikipedia, finance education and FP&A vendors. Angle: formula plus the operational processes behind each component (inventory flow, O2C for DSO, P2P for DPO) and why a negative CCC is a business-model property, not a target for everyone.",
+      "serp_notes": "Observed: Wikipedia, Pigment, AccountingTools, CFI, Versapay, Fathom. Formula-centric; little on operational drivers.",
+      "outline_h2": [
+        "Cash conversion cycle in one sentence",
+        "Formula and worked example",
+        "Each component and the process behind it",
+        "Negative CCC",
+        "Limits"
+      ],
+      "target_length_words": "900-1300",
+      "original_asset": "Illustrative CCC worked example and a component-to-process mapping table.",
+      "external_references": [
+        {
+          "name": "Wikipedia: Cash conversion cycle",
+          "url": "https://en.wikipedia.org/wiki/Cash_conversion_cycle",
+          "supports": "CCC = DIO + DSO - DPO definition"
+        },
+        {
+          "name": "AFP glossary: Days sales outstanding",
+          "url": "https://www.financialprofessionals.org/glossary/days-sales-outstanding-dso",
+          "supports": "DSO = (average AR / net revenue) x 365, from the Association for Financial Professionals"
+        },
+        {
+          "name": "Microsoft Learn: Business process guidance overview",
+          "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/business-processes/overview",
+          "supports": "End-to-end process taxonomy (O2C, P2P, R2R and others)"
+        }
+      ],
+      "internal_links_to": [
+        "/solutions/finance/",
+        "/resources/knowledge/what-is-order-to-cash/",
+        "GR-004",
+        "GR-011"
+      ],
+      "nearest_existing_page": "No existing page covers CCC.",
+      "status": "queued",
+      "shipped_on": null,
+      "qa_findings": [],
+      "hold_reason": null,
+      "covered_by": null
+    }
+  ]
+}

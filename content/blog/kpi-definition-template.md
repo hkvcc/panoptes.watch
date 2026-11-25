@@ -3,7 +3,7 @@ title: "KPI Definition Template for Reliable Metrics"
 meta_description: "A KPI definition template covering purpose, formula, grain, filters, owner, expected range and response, with a worked example and a review checklist for teams."
 author: "kieran-lovell"
 published: "2026-10-28"
-category: "Metrics and modelling"
+category: "Metrics and KPIs"
 tags: ["KPI design", "Metric definitions", "Data governance", "Business operating system"]
 primary_keyword: "KPI definition template"
 ---
