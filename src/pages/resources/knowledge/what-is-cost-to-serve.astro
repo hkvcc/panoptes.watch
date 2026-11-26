@@ -1,0 +1,92 @@
+---
+import KnowledgeArticle from '../../../components/knowledge/KnowledgeArticle.astro';
+
+const faqs = [
+  { q: 'Is cost to serve the same as cost of goods sold?', a: 'No. Cost of goods sold covers what it costs to make or buy the product itself. Cost to serve covers what it costs to get that product to one customer and keep them happy afterwards, such as delivery, support contacts, rework and returns.' },
+  { q: 'Can a customer be profitable on paper and still lose money?', a: 'Yes. Two customers can pay the same price and have the same gross margin, yet one may need many more support contacts, corrections and special handling. Once those costs are counted, the second customer can be far less profitable.' },
+  { q: 'Is cost to serve only for logistics?', a: 'No. It started in logistics and distribution, but any business that spends effort on individual customers has a cost to serve: software companies, banks, insurers and services firms included.' },
+  { q: 'How often should we calculate cost to serve?', a: 'Often enough to act on it. A once-a-year study is a good start, but the activities behind it, such as contacts and exceptions, change weekly. Watching the drivers more often shows a problem long before the annual number does.' },
+];
+---
+<KnowledgeArticle
+  title="What is cost to serve?"
+  metaTitle="What Is Cost to Serve? Definition and Drivers"
+  description="What cost to serve is, how it differs from cost of goods sold, what drives it, how to calculate it by activity, and the traps that make the number misleading."
+  crumb="Cost to serve"
+  dek="Two customers can pay you the same amount and leave you with very different profit. The gap is usually the work it takes to serve them."
+  definition="<strong>Cost to serve</strong> is the total cost of everything you do to deliver to, support and look after a particular customer, order or segment, beyond the cost of making or buying the product itself. It includes delivery, handling, support contacts, rework, exceptions and returns."
+  term="Cost to serve"
+  faqs={faqs}
+  related={[
+    { label: 'Operational efficiency', href: '/use-cases/operational-efficiency/', desc: 'Unit cost and rework as an investigation', icon: 'health' },
+    { label: 'Finance teams', href: '/solutions/finance/', desc: 'Revenue, cost and close, observed together', icon: 'revenue' },
+    { label: 'Business health metrics', href: '/resources/business-health-metrics/', desc: 'Measures that show how the business is doing', icon: 'chart' },
+    { label: 'Business Graph', href: '/platform/business-graph/', desc: 'A model of customers, orders and processes', icon: 'graph' },
+    { label: 'What is order to cash?', href: '/resources/knowledge/what-is-order-to-cash/', desc: 'The O2C process, stages and measures', icon: 'revenue' },
+  ]}
+>
+  <h2>Cost to serve in plain terms</h2>
+  <p>Price minus the cost of the product tells you what you earn on a sale. Cost to serve tells you what it cost you to earn it. A customer who orders in full pallets, pays on time and never calls is cheap to serve. A customer who sends many small orders, changes them twice and phones support each time is not.</p>
+
+  <h2>Cost to serve vs cost of goods sold</h2>
+  <table>
+    <thead><tr><th></th><th>Cost of goods sold</th><th>Cost to serve</th></tr></thead>
+    <tbody>
+      <tr><td>Question it answers</td><td>What did the product cost us?</td><td>What did this customer cost us to look after?</td></tr>
+      <tr><td>Typical items</td><td>Materials, production, hosting for the product</td><td>Delivery, order handling, support, rework, returns, credit control</td></tr>
+      <tr><td>Level</td><td>Usually per product</td><td>Per customer, order or segment</td></tr>
+    </tbody>
+  </table>
+  <p>Cost of goods sold usually sits in the accounts under that name. Cost to serve is often spread across several budgets, so nobody sees the whole of it.</p>
+
+  <h2>What goes into cost to serve?</h2>
+  <ul>
+    <li><strong>Order handling:</strong> entering, checking and changing orders.</li>
+    <li><strong>Delivery and fulfilment:</strong> shipping, failed deliveries and re-deliveries.</li>
+    <li><strong>Support:</strong> contacts per customer and the time each one takes.</li>
+    <li><strong>Rework and exceptions:</strong> corrections, stuck orders and manual fixes.</li>
+    <li><strong>Returns and credits:</strong> processing returns and issuing credit notes.</li>
+    <li><strong>Credit control:</strong> chasing late payments.</li>
+  </ul>
+
+  <h2>How do you calculate cost to serve?</h2>
+  <p>The usual method is activity-based costing. You list the activities you perform for customers, work out what each activity costs to run, and then charge each customer for the activities they actually use.</p>
+  <ol>
+    <li>List the main activities, such as "handle an order", "answer a support contact" and "re-deliver a parcel".</li>
+    <li>Work out the cost of each activity over a period. Divide the cost of the team and tools by the number of times the activity happened.</li>
+    <li>Count how many times each customer triggered each activity.</li>
+    <li>Multiply and add up. Compare the total with the revenue and margin for that customer.</li>
+  </ol>
+
+  <h3>A worked example</h3>
+  <div class="callout">
+    <strong>Illustrative example (hypothetical numbers)</strong>
+    Customers A and B each bring in 10,000 in revenue in a quarter, with the same gross margin. The activity costs below are made up for the example.
+  </div>
+  <table>
+    <thead><tr><th>Activity (cost each)</th><th>Customer A</th><th>Customer B</th></tr></thead>
+    <tbody>
+      <tr><td>Orders handled (4)</td><td>10 orders = 40</td><td>60 orders = 240</td></tr>
+      <tr><td>Support contacts (6)</td><td>5 contacts = 30</td><td>45 contacts = 270</td></tr>
+      <tr><td>Rework fixes (15)</td><td>1 fix = 15</td><td>12 fixes = 180</td></tr>
+      <tr><td>Re-deliveries (20)</td><td>0 = 0</td><td>8 = 160</td></tr>
+      <tr><td><strong>Cost to serve</strong></td><td><strong>85</strong></td><td><strong>850</strong></td></tr>
+    </tbody>
+  </table>
+  <p>On revenue and gross margin the two look identical. After cost to serve, Customer B costs ten times as much to look after. That is the kind of difference a single average hides.</p>
+
+  <h2>What drives cost to serve?</h2>
+  <p>Most drivers are business events that can be counted: contacts, order changes, exceptions, failed deliveries and returns. Each one is a sign that something did not go smoothly the first time. That is why cost to serve is as much an operations question as a finance one. Fixing a root cause, such as an unclear order form that causes weekly corrections, lowers the cost for every customer who hits it.</p>
+
+  <h2>Common pitfalls</h2>
+  <ul>
+    <li><strong>Using averages.</strong> An average cost per customer hides the few who cost the most and the many who cost little.</li>
+    <li><strong>Arbitrary allocation.</strong> Splitting shared costs by revenue or head count is easy but often wrong. Allocate by what customers actually use, and say how you did it.</li>
+    <li><strong>Ignoring mix.</strong> A change in the cost to serve may come from a shift in which customers or products you sell, not from a change in efficiency.</li>
+    <li><strong>Treating it as precise.</strong> Allocations involve judgement. Use the result to spot big gaps, not to argue over small ones.</li>
+  </ul>
+
+  <h2>How does it relate to business observability?</h2>
+  <p>The drivers of cost to serve are events that happen in your systems every day. If they are counted per customer or order as they occur, cost to serve can be watched as it moves, rather than worked out once a year. A rise in exceptions for one customer segment, for example, is an early sign that its cost to serve is climbing.</p>
+  <p>Panoptes is designed to connect those events to a model of customers, orders and processes, the <a href="/platform/business-graph/">Business Graph</a>, so that teams can see where the effort goes and investigate why. It is not a costing or accounting tool, and it is designed to sit alongside your finance systems. For a related investigation, see <a href="/use-cases/operational-efficiency/">operational efficiency</a>, or learn how <a href="/solutions/finance/">finance teams</a> use these signals. To talk it through, <a href="/demo/">book a demo</a>.</p>
+</KnowledgeArticle>

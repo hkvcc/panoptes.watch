@@ -11,6 +11,11 @@
       "check": "external_sources",
       "result": "fail",
       "note": "dynatrace.com, gartner.com, ibm.com unreachable (ENOTFOUND) on 2026-11-25."
+    },
+    {
+      "check": "external_sources",
+      "result": "fail",
+      "note": "Retried 2026-11-26: gartner.com, dynatrace.com, ibm.com still blocked by egress proxy (HTTP 403)."
     }
   ],
   "canonical_url": null,

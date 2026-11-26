@@ -175,9 +175,35 @@
         "GR-018"
       ],
       "nearest_existing_page": "/use-cases/operational-efficiency/ covers unit cost and rework as an investigation; this page is the neutral definition of the cost-to-serve concept and links there for the use case.",
-      "status": "queued",
-      "shipped_on": null,
-      "qa_findings": [],
+      "status": "shipped",
+      "shipped_on": "2026-11-26",
+      "qa_findings": [
+        {
+          "check": "external_sources",
+          "result": "not_run",
+          "note": "Wikipedia references unreachable (proxy 403); page cites no external URLs and states only general definitions."
+        },
+        {
+          "check": "cannibalisation",
+          "result": "pass",
+          "note": "/use-cases/operational-efficiency/ is an investigation; new page is the neutral definition and links to it; operational-efficiency now links back."
+        },
+        {
+          "check": "product_truth",
+          "result": "pass",
+          "note": "Design-intent wording; states Panoptes is not a costing tool; worked example labelled hypothetical."
+        },
+        {
+          "check": "flesch_reading_ease",
+          "result": "not_run",
+          "note": "Not computed for the .astro page; short plain sentences."
+        },
+        {
+          "check": "em_dashes",
+          "result": "pass",
+          "note": "grep count 0."
+        }
+      ],
       "hold_reason": null,
       "covered_by": null
     },
@@ -549,9 +575,35 @@
         "/resources/how-business-events-connect-to-outcomes/"
       ],
       "nearest_existing_page": "/platform/root-cause-analysis/ is a product page; this is a vendor-neutral method for finance teams.",
-      "status": "queued",
-      "shipped_on": null,
-      "qa_findings": [],
+      "status": "shipped",
+      "shipped_on": "2026-11-26",
+      "qa_findings": [
+        {
+          "check": "external_sources",
+          "result": "not_run",
+          "note": "Wikipedia references unreachable (proxy 403); post cites no external URLs and makes only general definitional statements."
+        },
+        {
+          "check": "cannibalisation",
+          "result": "pass",
+          "note": "/platform/root-cause-analysis/ is a product page; no existing post covers variance analysis. WebSearch not run."
+        },
+        {
+          "check": "product_truth",
+          "result": "pass",
+          "note": "Design-intent wording; states Panoptes is not an FP&A tool; all numbers labelled fictional/hypothetical."
+        },
+        {
+          "check": "flesch_reading_ease",
+          "result": "not_run",
+          "note": "Not computed; short plain sentences."
+        },
+        {
+          "check": "em_dashes",
+          "result": "pass",
+          "note": "grep count 0."
+        }
+      ],
       "hold_reason": null,
       "covered_by": null
     },
@@ -828,7 +880,7 @@
         {
           "name": "Wikipedia: Little's law",
           "url": "https://en.wikipedia.org/wiki/Little%27s_law",
-          "supports": "Little's law L = \u03bbW"
+          "supports": "Little's law L = λW"
         }
       ],
       "internal_links_to": [
@@ -1060,7 +1112,7 @@
         {
           "name": "Wikipedia: Little's law",
           "url": "https://en.wikipedia.org/wiki/Little%27s_law",
-          "supports": "Little's law L = \u03bbW"
+          "supports": "Little's law L = λW"
         },
         {
           "name": "Wikipedia: Capacity management",
