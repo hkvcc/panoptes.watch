@@ -10,3 +10,13 @@ Append-only. One section per scheduled run.
 - **Backlog:** 50 queued items remain; no replenishment needed. GR-003 marked shipped.
 - **Checks not run:** external source verification for all brief references (network egress blocked: dynatrace.com, docs.dynatrace.com, ibm.com, gartner.com, wikipedia.org, opentelemetry.io fail DNS), so both articles cite no external URLs; automated spellcheck; liveness refresh (no ready records existed).
 - **Human follow-ups:** allow the above hosts in the cloud environment's network settings so held/queued briefs with external references can be verified; confirm both pages live after deploy.
+
+## 2026-11-26
+
+- **Shipped:** GR-001 `/resources/knowledge/what-is-cost-to-serve/` (knowledge, no byline); GR-007 `/blog/variance-analysis-operational-causes/` (Kieran Lovell). Both shipped, to be confirmed live after deploy.
+- **Drafted, not shipped:** BO-05 `real-time-business-monitoring` is committed as `draft: true` (author Florian Andrews per author_map, dated 2026-11-27). `validate_seo.py` requires author_map (Florian) but byline alternation after GR-003 (Florian) requires Kieran, so it could not ship today. Record stays `queued`.
+- **Held:** BO-03 (vendor sources still unreachable), BO-04 (overlaps BO-02; Dynatrace/OTel sources unreachable).
+- **Link updates:** /use-cases/operational-efficiency/ links to cost to serve. BO-02 links to BO-05 deferred until BO-05 is live.
+- **Backlog:** 50 queued/held items remain; no replenishment needed.
+- **Checks not run:** external source verification (egress proxy returns 403 for gartner, dynatrace, ibm, opentelemetry, wikipedia, learn.microsoft), WebSearch, spellcheck, liveness refresh (BO-02 and GR-003 URLs cannot be fetched from this session).
+- **Human follow-ups:** `scripts/validate_seo.py` on main crashes (`NameError: authors` at the check_bylines call; should use `config.get("authors")`). Fix it, and reconcile the author_map in config.json with alternation. Allow blocked hosts in the network settings. Confirm pages are live.
