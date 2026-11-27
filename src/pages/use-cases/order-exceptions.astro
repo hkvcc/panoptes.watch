@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import StoryFlow from '../../components/StoryFlow.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import SignalTable from '../../components/use-cases/SignalTable.astro';
+import ScenarioCard from '../../components/use-cases/ScenarioCard.astro';
+import UseCaseLinks from '../../components/use-cases/UseCaseLinks.astro';
+import { cap } from '../../components/use-cases/data';
+
+const crumbs = [{ label: 'Use Cases', href: '/use-cases/' }, { label: 'Order Exceptions', href: '/use-cases/order-exceptions/' }];
+
+const signals = [
+  { signal: 'Exception rate by stage', tells: 'The share of orders that stop moving at each hand-off: order entry, credit check, fulfilment, invoicing. One overall rate hides which stage is failing.', source: 'Order system · ERP' },
+  { signal: 'Exception age', tells: 'How long the oldest orders have been stuck. A small queue with old items is a bigger problem than a large queue that clears in an hour.', source: 'Order system' },
+  { signal: 'Value at risk', tells: 'The order value sitting in exceptions, so the team clears the costly ones first.', source: 'Order system · finance' },
+  { signal: 'Time to clear', tells: 'How long an exception takes from first flag to resolution, by owner and by cause.', source: 'Ticketing · workflow' },
+  { signal: 'Repeat exceptions', tells: 'Orders that fail, are fixed by hand and fail again. These point to a rule or data problem, not bad luck.', source: 'Order system' },
+  { signal: 'Exceptions after a change', tells: 'Whether the rate moved after a price table, product catalogue or routing rule was updated.', source: 'Change log · order system' },
+];
+---
+<BaseLayout title="Order Exceptions: Find Stuck and Failed Orders" description="How to find order exceptions early: spot orders stuck between systems, rank them by age and value, and trace a spike in fallout to the change behind it." ogImage="/social/og-use-cases.png" breadcrumbs={crumbs}>
+  <PageHero keyword="Order exceptions" title="Find the orders that <span class='gradient-text'>stopped moving.</span>" lede="Most orders flow from entry to invoice without a touch. A few get stuck between systems: a failed credit check, a missing address, a product code the billing system does not know. Nobody owns the gap, so nobody sees it grow." breadcrumbs={crumbs}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/demo/">Book a Demo<Icon name="arrow" class="arrow" /></a>
+      <a class="btn" href="#story">Follow the investigation</a>
+    </div>
+  </PageHero>
+
+  <section class="section" id="story">
+    <div class="container uc-layout">
+      <div class="uc-main">
+        <SectionHead eyebrow="The investigation" title="Where orders stop moving, and what changed just before." lede="An illustrative scenario. The company, figures and timeline are fictional. They show the shape of the reasoning, not a real result." />
+        <StoryFlow>
+          <Fragment slot="problem">
+            <h3>Orders are placed. Some never reach an invoice.</h3>
+            <p>A business sells to other businesses through an online portal and a sales team. An order moves through four systems: order entry, credit, fulfilment and billing. Each system works as designed. Yet the finance team notices that some orders shipped weeks ago have no invoice.</p>
+            <p>The order system shows orders as "in progress". The billing system shows nothing, because the order never arrived. Both reports are right. The exception sits in the hand-off between them.</p>
+          </Fragment>
+          <Fragment slot="signals">
+            <h3>Count exceptions by stage, age and value.</h3>
+            <p>An exception here means an order that has stopped progressing between two systems for longer than it normally should. Counting them by stage shows where they pile up. Splitting them by age shows which ones are urgent. Adding value shows which ones matter most.</p>
+            <table class="uc-table">
+              <caption>Open exceptions by stage and age (illustrative data)</caption>
+              <thead><tr><th scope="col">Stage</th><th scope="col">Under 1 day</th><th scope="col">1 to 3 days</th><th scope="col">Over 3 days</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Order entry to credit</th><td>14</td><td>6</td><td>2</td></tr>
+                <tr><th scope="row">Credit to fulfilment</th><td>9</td><td>4</td><td>1</td></tr>
+                <tr><th scope="row">Fulfilment to invoice</th><td>41</td><td>38</td><td>27</td></tr>
+              </tbody>
+            </table>
+            <p>One stage stands out. Orders are shipping, but they are not reaching the invoice step, and many have waited more than three days.</p>
+          </Fragment>
+          <Fragment slot="investigation">
+            <h3>Trace the spike back to a change.</h3>
+            <p>Panoptes would follow each order through the <a href={cap('business-graph').href}>Business Graph</a> and compare the stuck orders with the ones that passed. The questions are simple:</p>
+            <ul class="checklist">
+              <li><strong>By product:</strong> nearly all stuck orders include items from one product line.</li>
+              <li><strong>By channel:</strong> the portal and the sales team are both affected, so it is not an entry problem.</li>
+              <li><strong>By time:</strong> the first stuck order is dated the day after a price table update.</li>
+              <li><strong>By repeat:</strong> orders fixed by hand fail again when amended.</li>
+            </ul>
+          </Fragment>
+          <Fragment slot="insight">
+            <h3>A price table change lines up with the new fallout.</h3>
+            <p>The likely explanation: the update added new price codes for one product line, and the billing system does not recognise them. Orders with those codes cannot be invoiced, so they wait.</p>
+            <p class="uc-caveat"><Icon name="rootcause" /> <span>This is a <strong>correlation with a plausible mechanism</strong>, not a proven cause. <a href={cap('root-cause-analysis').href}>Root Cause Analysis</a> in Panoptes is designed to keep that distinction visible until someone tests it.</span></p>
+          </Fragment>
+          <Fragment slot="action">
+            <h3>Send it to an owner with the evidence attached.</h3>
+            <p>An exception queue is only useful if each item has a person behind it. Here, the billing operations lead gets the pattern, the list of affected orders and the date the change landed. They might add the missing codes, then replay the stuck orders. A second step, owned by the sales team, is to tell customers whose invoices are late.</p>
+          </Fragment>
+          <Fragment slot="outcome">
+            <h3>Measure the queue draining, not just the fix.</h3>
+            <p>Once the cause is fixed, check that the queue clears and does not refill. Compare each measure with the level before the change:</p>
+            <ul class="checklist">
+              <li>Fallout rate at the fulfilment-to-invoice stage</li>
+              <li>Age of the oldest open exception</li>
+              <li>Value of orders waiting for an invoice</li>
+              <li>Time to clear, from first flag to resolution</li>
+            </ul>
+          </Fragment>
+        </StoryFlow>
+      </div>
+      <div class="uc-side">
+        <ScenarioCard sticky company="A business selling through a portal and a sales team" question="Why are shipped orders missing invoices?" facts={[
+          { k: 'Flow', v: 'Entry, credit, fulfilment, billing' },
+          { k: 'Symptom', v: 'Shipped orders with no invoice' },
+          { k: 'Where', v: 'Fulfilment to invoice hand-off' },
+          { k: 'Candidate', v: 'Price table update' },
+          { k: 'Confidence', v: 'Correlated, to be tested' },
+        ]} caps={['journey-intelligence', 'anomaly-detection', 'root-cause-analysis', 'actions-automation'].map(cap)} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <SectionHead eyebrow="Example signals" title="What to watch to catch exceptions early." lede="One fallout rate is not enough. These signals, connected through one model, show where orders stall and who can unblock them." />
+      <SignalTable rows={signals} caption="Example order exception signals" />
+      <p class="note mt-1">Signals and sources are examples. Which ones apply depends on how your orders flow.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="uc-why reveal">
+        <div>
+          <h3>Why exceptions hide between systems</h3>
+          <p class="muted">Each system reports on orders it knows about. An order that never arrives in billing is not a failure there. It is simply absent. The gap belongs to nobody's dashboard, which is why it often takes a late invoice, or a customer call, to find it. For the full process, see <a href="/resources/knowledge/what-is-order-to-cash/">what order to cash means</a>, and for the stage that follows, <a href="/use-cases/revenue-leakage/">revenue leakage</a>.</p>
+        </div>
+        <div>
+          <h3>Common causes of order exceptions</h3>
+          <ul class="pill-list">
+            {['Failed credit checks', 'Missing or invalid data', 'Unknown product codes', 'Stock or capacity gaps', 'Integration errors', 'Manual re-keying'].map((p) => <li>{p}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <UseCaseLinks
+    caps={[
+      { slug: 'journey-intelligence', why: 'Follow each order from entry to invoice and see where it stopped.' },
+      { slug: 'anomaly-detection', why: 'Notice when the exception rate leaves its usual range, by stage.' },
+      { slug: 'root-cause-analysis', why: 'Line up change events against the affected orders and keep correlation and cause apart.' },
+      { slug: 'actions-automation', why: 'Route each finding to an owner and track whether the queue clears.' },
+    ]}
+    roles={[
+      { slug: 'finance', why: 'Invoices that should exist, explained operationally' },
+      { slug: 'revenue', why: 'Order-to-cash conversion, beyond the booking' },
+      { slug: 'executives', why: 'Revenue at risk in context, ranked by value' },
+    ]}
+    related={[
+      { slug: 'revenue-leakage', why: 'When money goes missing after the invoice' },
+      { slug: 'operational-bottlenecks', why: 'Where work waits, and why' },
+      { slug: 'business-anomalies', why: 'Separating a real shift from noise' },
+    ]} />
+
+  <CTA title="Find the orders that stopped." text="Walk through your order flow with us and see how Panoptes would model it end to end." />
+</BaseLayout>
+
+<style>
+  .uc-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .uc-side { padding-top: 8px; height: 100%; }
+  .uc-main :global(.checklist) { margin: 1rem 0; color: var(--text-2); }
+  .uc-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: .95rem; }
+  .uc-table caption { text-align: left; color: var(--text-2); padding-bottom: 8px; font-size: .9rem; }
+  .uc-table th, .uc-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+  .uc-caveat { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--border); font-size: .95rem; }
+  .uc-caveat :global(svg) { width: 20px; height: 20px; flex: none; color: var(--accent-text); margin-top: 2px; }
+  .uc-why { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); }
+  .uc-why h3 { font-size: 1.2rem; }
+  @media (max-width: 960px) {
+    .uc-layout { grid-template-columns: minmax(0, 1fr); }
+    .uc-side { order: -1; height: auto; }
+    .uc-why { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

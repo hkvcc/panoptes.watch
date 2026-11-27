@@ -70,6 +70,14 @@ export const CASES: CaseMeta[] = [
     caps: ['process-intelligence', 'business-graph', 'business-health', 'actions-automation'],
     scenario: 'A wholesale food distributor',
   },
+  {
+    slug: 'order-exceptions', label: 'Order exceptions', icon: 'clock',
+    question: 'Which orders stopped moving between systems, and why?',
+    summary: 'Shipped orders with no invoice. Rank exceptions by stage, age and value, then trace the spike to a change.',
+    domains: ['operations', 'finance'], roles: ['operations', 'finance', 'revenue'],
+    caps: ['journey-intelligence', 'anomaly-detection', 'root-cause-analysis', 'actions-automation'],
+    scenario: 'A business selling through a portal and a sales team',
+  },
 ];
 
 const bySlug = (list: { href: string }[], base: string, slug: string) => list.find((l) => l.href === `${base}${slug}/`);

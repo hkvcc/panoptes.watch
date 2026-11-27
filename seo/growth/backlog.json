@@ -260,9 +260,30 @@
         "GR-005"
       ],
       "nearest_existing_page": "/use-cases/revenue-leakage/ follows payments from attempt to ledger; this page covers orders that stall before they are ever invoiced, a different stage and owner.",
-      "status": "queued",
-      "shipped_on": null,
-      "qa_findings": [],
+      "status": "shipped",
+      "shipped_on": "2026-11-27",
+      "qa_findings": [
+        {
+          "check": "external_sources",
+          "result": "not_run",
+          "note": "external_references (Microsoft Learn, Wikipedia) not fetchable from this session (proxy 403); page cites none and makes no external factual claims"
+        },
+        {
+          "check": "cannibalisation",
+          "result": "not_run",
+          "note": "Cannibalisation: /use-cases/revenue-leakage/ covers post-invoice payment leakage, this page covers orders stalled before invoicing; WebSearch not run"
+        },
+        {
+          "check": "illustrative_labelling_style_links",
+          "result": "pass",
+          "note": "Scenario and table labelled illustrative/fictional; no em dashes; internal links exist; meta_title 46 chars"
+        },
+        {
+          "check": "registration_and_links",
+          "result": "pass",
+          "note": "Registered in USE_CASES, use-case hub data, and linked from what-is-order-to-cash"
+        }
+      ],
       "hold_reason": null,
       "covered_by": null
     },

@@ -1,20 +1,62 @@
 {
   "id": "BO-05",
   "keyword": "real-time business monitoring",
-  "status": "queued",
-  "markdown": null,
-  "metadata": null,
+  "status": "ready",
+  "markdown": "content/blog/real-time-business-monitoring.md",
+  "metadata": {
+    "title": "Real-Time Business Monitoring: A Practical Guide",
+    "meta_description": "What real-time business monitoring means, how fresh your data needs to be, which KPIs to watch, and how to set alerts that people trust instead of mute.",
+    "h1": "Real-time business monitoring: how fresh is fresh enough?",
+    "slug": "/blog/real-time-business-monitoring/",
+    "author": "florian-andrews",
+    "category": "Business observability",
+    "tags": [
+      "Business observability",
+      "Alerting",
+      "KPIs"
+    ],
+    "word_count": 1479
+  },
   "validated_external_urls": [],
-  "validated_internal_urls": [],
+  "validated_internal_urls": [
+    "/blog/how-to-build-a-kpi-tree/",
+    "/blog/kpi-definition-template/",
+    "/business-observability/",
+    "/demo/",
+    "/platform/anomaly-detection/",
+    "/resources/business-observability-vs-bi/",
+    "/resources/business-observability-vs-system-observability/",
+    "/resources/business-process-monitoring/"
+  ],
   "qa_findings": [
     {
-      "check": "drafted",
+      "check": "external_sources",
+      "result": "not_run",
+      "note": "Egress proxy blocks external hosts; article cites no external URLs and makes no statistical claims."
+    },
+    {
+      "check": "flesch_reading_ease",
       "result": "pass",
-      "note": "Article drafted 2026-11-26 as content/blog/real-time-business-monitoring.md with draft: true and author florian-andrews (config author_map). Not shipped today because byline alternation (last post GR-003 by Florian) conflicts with author_map; ship tomorrow after today's Kieran post by removing draft: true, setting published/reviewed dates, and filling the record."
+      "note": "about 55 (own script); no em dashes (grep count 0)"
+    },
+    {
+      "check": "product_claims",
+      "result": "pass",
+      "note": "Panoptes capabilities phrased as design intent; no latency claims; examples labelled illustrative"
+    },
+    {
+      "check": "byline_alternation",
+      "result": "pass",
+      "note": "Previous post by Kieran Lovell (2026-11-26); this one Florian Andrews"
+    },
+    {
+      "check": "internal_links",
+      "result": "pass",
+      "note": "All routes exist; checked by validator and check:links"
     }
   ],
-  "canonical_url": null,
-  "publish_timestamp": null,
+  "canonical_url": "https://panoptes.watch/blog/real-time-business-monitoring/",
+  "publish_timestamp": "2026-11-27T07:00:00Z",
   "next_link_update_tasks": [],
   "hold_reason": null,
   "merged_into": null,
