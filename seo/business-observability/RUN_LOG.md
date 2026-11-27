@@ -20,3 +20,12 @@ Append-only. One section per scheduled run.
 - **Backlog:** 50 queued/held items remain; no replenishment needed.
 - **Checks not run:** external source verification (egress proxy returns 403 for gartner, dynatrace, ibm, opentelemetry, wikipedia, learn.microsoft), WebSearch, spellcheck, liveness refresh (BO-02 and GR-003 URLs cannot be fetched from this session).
 - **Human follow-ups:** `scripts/validate_seo.py` on main crashes (`NameError: authors` at the check_bylines call; should use `config.get("authors")`). Fix it, and reconcile the author_map in config.json with alternation. Allow blocked hosts in the network settings. Confirm pages are live.
+
+## 2026-11-27
+
+- **Shipped:** BO-05 `/blog/real-time-business-monitoring/` (Florian Andrews; draft from 2026-11-26 published, alternation now correct after Kieran's GR-007); GR-002 `/use-cases/order-exceptions/` (use case, no byline). Both to be confirmed live after deploy.
+- **Held/covered:** none. BO-03 and BO-04 remain held (vendor sources unreachable).
+- **Link updates:** BO-02 now links to BO-05; `what-is-order-to-cash` links to order exceptions; use-case hub text no longer says "six".
+- **Backlog:** 49 queued items remain; no replenishment needed.
+- **Checks not run:** external source verification (proxy 403), WebSearch, liveness refresh. `scripts/validate_seo.py` on main crashes (`NameError: authors`), so it was run from a scratch copy with `authors = config.get("authors")`; repo script not edited.
+- **Human follow-ups:** fix the validator one-liner; allow blocked hosts; confirm both pages live.

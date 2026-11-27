@@ -59,6 +59,11 @@
       "check": "scorecard_illustrative",
       "result": "pass",
       "note": "Weights labelled illustrative."
+    },
+    {
+      "check": "link_update",
+      "result": "pass",
+      "note": "2026-11-27: added link to BO-05 real-time-business-monitoring in alerts section"
     }
   ],
   "canonical_url": "https://panoptes.watch/blog/business-observability-platform/",

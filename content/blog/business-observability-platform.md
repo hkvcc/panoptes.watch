@@ -8,6 +8,7 @@ primary_keyword: "business observability platform"
 author: "kieran-lovell"
 reviewed: "2026-11-25"
 published: "2026-11-25"
+updated: "2026-11-27"
 category: "Buying and evaluation"
 tags: ["Business observability", "Platform evaluation", "Architecture and data"]
 ---
@@ -61,7 +62,7 @@ On the action side, the test is whether a finding becomes an owned piece of work
 - Does the platform separate **correlation** from **verified cause**? Any tool that implies a cause from co-movement alone is overstating. See [root cause analysis](/platform/root-cause-analysis/) for how we approach the distinction.
 - Are automated actions optional and reviewable? Automated execution is, in our own product, a vision area rather than a shipped feature, and buyers should be equally careful with the same claim elsewhere.
 
-Alert fatigue is a real cost. During a demo, ask how many alerts a typical week would produce and how a team tunes them.
+Alert fatigue is a real cost, and how fresh your data needs to be is a separate question. Our guide to [real-time business monitoring](/blog/real-time-business-monitoring/) covers both. During a demo, ask how many alerts a typical week would produce and how a team tunes them.
 
 ## Security and governance
 

@@ -6,9 +6,8 @@ slug: "/blog/real-time-business-monitoring/"
 canonical_url: "https://panoptes.watch/blog/real-time-business-monitoring/"
 primary_keyword: "real-time business monitoring"
 author: "florian-andrews"
-reviewed: "2026-11-26"
+reviewed: "2026-11-27"
 published: "2026-11-27"
-draft: true
 category: "Business observability"
 tags: ["Business observability", "Alerting", "KPIs"]
 ---

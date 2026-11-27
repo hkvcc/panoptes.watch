@@ -48,6 +48,7 @@ export const USE_CASES: NavLink[] = [
   { label: 'Business Anomalies', href: '/use-cases/business-anomalies/', desc: 'Separate real change from noise', icon: 'anomaly' },
   { label: 'SLA Monitoring', href: '/use-cases/sla-monitoring/', desc: 'Watch commitments before they break', icon: 'target' },
   { label: 'Operational Efficiency', href: '/use-cases/operational-efficiency/', desc: 'Cost, effort and rework, in context', icon: 'spark' },
+  { label: 'Order Exceptions', href: '/use-cases/order-exceptions/', desc: 'Find orders that stopped moving', icon: 'clock' },
 ];
 
 export const INTEGRATIONS: NavLink[] = [
