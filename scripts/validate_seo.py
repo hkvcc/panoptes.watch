@@ -168,6 +168,7 @@ def main():
     cap = config.get("max_articles_per_run", 2)
     content_dir = ROOT / config.get("content_dir", "content/blog")
     author_map = config.get("author_map") or {}
+    authors = sorted(config.get("authors") or {})
     categories = set(config.get("categories") or [])
     route_set = routes(content_dir)
 
