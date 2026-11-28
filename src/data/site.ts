@@ -81,6 +81,7 @@ export const KNOWLEDGE: NavLink[] = [
   { label: 'What is order to cash?', href: '/resources/knowledge/what-is-order-to-cash/', desc: 'The O2C process, stages and measures', icon: 'revenue' },
   { label: 'What is a semantic layer?', href: '/resources/knowledge/what-is-a-semantic-layer/', desc: 'One definition for every metric', icon: 'database' },
   { label: 'What is cost to serve?', href: '/resources/knowledge/what-is-cost-to-serve/', desc: 'What it costs to look after a customer', icon: 'revenue' },
+  { label: 'What is days sales outstanding?', href: '/resources/knowledge/what-is-days-sales-outstanding/', desc: 'DSO formula, variants and what moves it', icon: 'revenue' },
 ];
 
 export const BLOG: NavLink = { label: 'Blog', href: '/blog/', desc: 'Articles and analysis on business observability', icon: 'book' };

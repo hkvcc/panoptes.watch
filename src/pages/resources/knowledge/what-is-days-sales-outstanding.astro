@@ -1,0 +1,86 @@
+---
+import KnowledgeArticle from '../../../components/knowledge/KnowledgeArticle.astro';
+
+const faqs = [
+  { q: 'What is a good DSO?', a: 'There is no single good number. It depends on your payment terms, your customers and your industry. A useful comparison is your own DSO against your own terms, for example whether customers on 30-day terms are paying in about 30 days, and how that trend moves over time.' },
+  { q: 'Is a lower DSO always better?', a: 'Not always. A very low DSO can mean you are asking for payment up front or on very short terms, which may cost you sales. Treat it as a signal to understand, not a target to minimise at any price.' },
+  { q: 'What is the difference between DSO and average days to pay?', a: 'DSO is calculated from your receivables balance and your sales. Average days to pay looks at invoices that have actually been paid and measures how long each took. DSO can move because of how much you sold or invoiced; days to pay isolates customer payment behaviour.' },
+  { q: 'Should I use total sales or credit sales?', a: 'Use credit sales if you can separate them, because cash sales never enter receivables and dilute the figure. Many companies only have total sales to hand. Whichever you choose, state it and keep it the same from period to period.' },
+];
+---
+<KnowledgeArticle
+  title="What is days sales outstanding (DSO)?"
+  metaTitle="What Is Days Sales Outstanding (DSO)?"
+  description="What days sales outstanding (DSO) is, the formula and its variants, a worked example, and why DSO moves for reasons that have nothing to do with collections."
+  crumb="Days sales outstanding"
+  dek="DSO tells you roughly how long it takes to turn a sale into cash. It does not tell you why. Often the reason sits well before the collections team."
+  definition="<strong>Days sales outstanding (DSO)</strong> is the average number of days it takes a business to collect payment after a sale made on credit. It is usually calculated as accounts receivable divided by sales, multiplied by the number of days in the period."
+  term="Days sales outstanding"
+  faqs={faqs}
+  related={[
+    { label: 'What is order to cash?', href: '/resources/knowledge/what-is-order-to-cash/', desc: 'The O2C process, stages and measures', icon: 'revenue' },
+    { label: 'Revenue leakage', href: '/use-cases/revenue-leakage/', desc: 'Where billed or earned revenue goes missing', icon: 'revenue' },
+    { label: 'Order exceptions', href: '/use-cases/order-exceptions/', desc: 'Stuck and failed orders as an investigation', icon: 'health' },
+    { label: 'Finance teams', href: '/solutions/finance/', desc: 'Revenue, cost and close, observed together', icon: 'revenue' },
+    { label: 'What is cost to serve?', href: '/resources/knowledge/what-is-cost-to-serve/', desc: 'What it costs to look after a customer', icon: 'revenue' },
+  ]}
+>
+  <h2>DSO in one sentence</h2>
+  <p>DSO is a ratio that says how many days of sales are currently sitting unpaid in accounts receivable. If your DSO is 45, then on average it takes about 45 days from making a credit sale to getting the cash.</p>
+
+  <h2>The formula and its variants</h2>
+  <p>The core idea is always the same: receivables divided by sales, scaled to days. The variants differ in which receivables figure and which sales figure you use.</p>
+  <table>
+    <thead><tr><th>Variant</th><th>Formula</th><th>Good for</th><th>Watch out for</th></tr></thead>
+    <tbody>
+      <tr><td>Period-end</td><td>Receivables at period end / sales in the period x days in the period</td><td>A quick, simple figure from the balance sheet</td><td>A big invoice run just before period end inflates it</td></tr>
+      <tr><td>Average receivables</td><td>Average receivables over the period / sales in the period x days in the period</td><td>Smoothing out spikes at the end of a period</td><td>Needs opening and closing balances; hides intra-period swings</td></tr>
+      <tr><td>Credit sales only</td><td>Receivables / credit sales x days</td><td>Businesses with a mix of cash and credit sales</td><td>Needs sales split by payment type</td></tr>
+    </tbody>
+  </table>
+  <p>Pick one, write down which, and keep it consistent. Comparing a period-end DSO from one quarter with an average-receivables DSO from another tells you nothing.</p>
+
+  <h2>Worked example</h2>
+  <div class="callout">
+    <strong>Illustrative example (hypothetical numbers)</strong>
+    A fictional business sells 900,000 on credit over a 90-day quarter. Receivables were 280,000 at the start and 360,000 at the end.
+  </div>
+  <table>
+    <thead><tr><th>Variant</th><th>Calculation</th><th>DSO</th></tr></thead>
+    <tbody>
+      <tr><td>Period-end</td><td>360,000 / 900,000 x 90</td><td>36 days</td></tr>
+      <tr><td>Average receivables</td><td>((280,000 + 360,000) / 2) / 900,000 x 90</td><td>32 days</td></tr>
+    </tbody>
+  </table>
+  <p>Same business, same quarter, two answers four days apart. Neither is wrong. The gap itself is a clue: receivables grew during the quarter, so the closing balance is higher than the average.</p>
+
+  <h2>Why DSO moves: collections, billing delays, disputes and mix</h2>
+  <p>When DSO rises, the first instinct is that customers are paying late. That is sometimes true. But DSO is a ratio, and several things that have nothing to do with collections can move it.</p>
+  <table>
+    <thead><tr><th>What changed</th><th>Effect on DSO</th><th>Is it a collections problem?</th></tr></thead>
+    <tbody>
+      <tr><td>Customers paying later than terms</td><td>Rises</td><td>Yes</td></tr>
+      <tr><td>Invoices sent late, or stuck before sending</td><td>Rises; the clock starts later than the sale</td><td>No, it is a billing delay</td></tr>
+      <tr><td>Disputed invoices held open</td><td>Rises; the disputed amount stays in receivables</td><td>Partly; the cause is usually an order or pricing error</td></tr>
+      <tr><td>More sales late in the period</td><td>Rises on the period-end variant; those invoices are not due yet</td><td>No</td></tr>
+      <tr><td>Shift to customers on longer terms</td><td>Rises</td><td>No, it is a change in sales mix</td></tr>
+      <tr><td>Growth in sales</td><td>Can fall or rise depending on timing</td><td>No</td></tr>
+    </tbody>
+  </table>
+  <p>This is why chasing harder does not always help. If invoices are leaving a week late, the collections team cannot get that week back.</p>
+
+  <h2>DSO and the cash conversion cycle</h2>
+  <p>DSO is one part of the cash conversion cycle, which looks at how long cash is tied up between paying suppliers and collecting from customers. DSO covers the collecting half. The other parts, inventory days and days payable, matter more or less depending on whether you hold stock.</p>
+
+  <h2>Limits of DSO as a single number</h2>
+  <ul>
+    <li><strong>It is an average.</strong> A DSO of 40 can mean most customers pay in 40 days, or most pay in 20 and a few pay in 120.</li>
+    <li><strong>It lags.</strong> It reflects invoices raised and balances built up over the period, so it moves after the cause.</li>
+    <li><strong>It mixes causes.</strong> As the table above shows, billing, disputes, terms and timing all feed one number.</li>
+    <li><strong>It depends on definitions.</strong> Variant, period length and sales basis change the answer.</li>
+  </ul>
+
+  <h2>Watching what sits upstream of DSO</h2>
+  <p>Because many causes of a rising DSO happen before the invoice is even due, the events worth watching sit earlier in the process: how long it takes to invoice after delivery, how many orders are stuck with errors, how many invoices are disputed and why, and how old the open balances are. Each is an event that can be counted as it happens, rather than discovered in the month-end figure. They are part of the wider <a href="/resources/knowledge/what-is-order-to-cash/">order-to-cash</a> process.</p>
+  <p>Panoptes is designed to connect those events across systems to a model of customers, orders and invoices, so that a team can see where in the process a number such as DSO is being pushed, and investigate the cause, treating any explanation as a hypothesis until it is checked. It is not an accounting or collections tool and is designed to sit alongside your finance systems. For related investigations, see <a href="/use-cases/revenue-leakage/">revenue leakage</a> and <a href="/use-cases/order-exceptions/">order exceptions</a>, or read how <a href="/solutions/finance/">finance teams</a> use these signals. To talk it through, <a href="/demo/">book a demo</a>.</p>
+</KnowledgeArticle>

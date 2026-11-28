@@ -29,3 +29,12 @@ Append-only. One section per scheduled run.
 - **Backlog:** 49 queued items remain; no replenishment needed.
 - **Checks not run:** external source verification (proxy 403), WebSearch, liveness refresh. `scripts/validate_seo.py` on main crashes (`NameError: authors`), so it was run from a scratch copy with `authors = config.get("authors")`; repo script not edited.
 - **Human follow-ups:** fix the validator one-liner; allow blocked hosts; confirm both pages live.
+
+## 2026-11-28
+
+- **Shipped:** GR-004 `/resources/knowledge/what-is-days-sales-outstanding/` (knowledge, no byline); GR-012 `/blog/cross-functional-handoffs/` (Kieran Lovell; alternation after Florian's BO-05). To be confirmed live after deploy.
+- **Held:** BO-03, BO-04 (vendor sources still unreachable: curl returns no connection for dynatrace.com, ibm.com, opentelemetry.io, wikipedia.org). BO-06 not shipped: `config.json` author_map assigns it to Florian, but byline alternation requires Kieran after BO-05, so it cannot satisfy both checks. It also overlaps `/resources/business-process-monitoring/`, so it needs an identity/correlation-ID angle. Record stays `queued`.
+- **Covered/merged:** none. **Link updates:** `what-is-order-to-cash` now links to the DSO page; DSO page added to the knowledge nav list (`src/data/site.ts`).
+- **Backlog:** 47 queued/held items remain; no replenishment needed.
+- **Checks not run:** external source verification (egress blocked), WebSearch, liveness refresh (BO-02 and BO-05 fetched, HTTP 200 with matching H1, set to live), spellcheck. `validate_seo.py` crashes on main (`NameError: authors`); run from a scratch copy with `authors = config.get("authors")`, repo script not edited.
+- **Human follow-ups:** fix the validator one-liner; reconcile `author_map` with alternation (BO-06 conflict); allow blocked hosts in network settings; confirm both pages live.

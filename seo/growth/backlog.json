@@ -420,9 +420,30 @@
         "GR-052"
       ],
       "nearest_existing_page": "No existing page targets DSO; /resources/knowledge/what-is-order-to-cash/ names DSO as an O2C measure only in passing.",
-      "status": "queued",
-      "shipped_on": null,
-      "qa_findings": [],
+      "status": "shipped",
+      "shipped_on": "2026-11-28",
+      "qa_findings": [
+        {
+          "check": "external_sources",
+          "result": "not_run",
+          "note": "External hosts unreachable from this session (curl 000); page cites no external URLs."
+        },
+        {
+          "check": "cannibalisation",
+          "result": "pass",
+          "note": "No existing DSO page; O2C page mentions DSO in passing and now links to it."
+        },
+        {
+          "check": "product_truth",
+          "result": "pass",
+          "note": "Design-intent wording; examples labelled hypothetical; no performance claims."
+        },
+        {
+          "check": "em_dashes",
+          "result": "pass",
+          "note": "grep count 0."
+        }
+      ],
       "hold_reason": null,
       "covered_by": null
     },
@@ -911,9 +932,30 @@
         "/resources/business-process-monitoring/"
       ],
       "nearest_existing_page": "/resources/understanding-business-bottlenecks/ is about capacity constraints; hand-off gaps are waiting caused by ownership, not capacity. Glossary has \"Hand-off\" as a term only.",
-      "status": "queued",
-      "shipped_on": null,
-      "qa_findings": [],
+      "status": "shipped",
+      "shipped_on": "2026-11-28",
+      "qa_findings": [
+        {
+          "check": "external_sources",
+          "result": "not_run",
+          "note": "External hosts unreachable from this session (curl 000); page cites no external URLs."
+        },
+        {
+          "check": "cannibalisation",
+          "result": "pass",
+          "note": "/resources/understanding-business-bottlenecks/ is about capacity; this post covers ownership gaps between teams and links to it."
+        },
+        {
+          "check": "product_truth",
+          "result": "pass",
+          "note": "Design-intent wording; examples labelled hypothetical; no performance claims."
+        },
+        {
+          "check": "em_dashes",
+          "result": "pass",
+          "note": "grep count 0."
+        }
+      ],
       "hold_reason": null,
       "covered_by": null
     },
