@@ -6,7 +6,13 @@
   "metadata": null,
   "validated_external_urls": [],
   "validated_internal_urls": [],
-  "qa_findings": [],
+  "qa_findings": [
+    {
+      "check": "byline_conflict",
+      "result": "fail",
+      "note": "author_map says florian-andrews but alternation requires kieran-lovell after BO-05 (2026-11-28). Needs human reconciliation. Also overlaps /resources/business-process-monitoring/; use an identity/correlation-ID angle."
+    }
+  ],
   "canonical_url": null,
   "publish_timestamp": null,
   "next_link_update_tasks": [],
